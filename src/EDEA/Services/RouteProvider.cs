@@ -228,7 +228,6 @@ public class RouteProvider
     {
         IsLocked = false;
         deleteLockedRouteFile();
-        DeletePlotterRoute();
     }
 
     /// <summary>Imports SpanshRouteFile.</summary>
