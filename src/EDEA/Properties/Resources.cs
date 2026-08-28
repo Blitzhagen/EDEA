@@ -1,0 +1,472 @@
+using System.Globalization;
+using System.Resources;
+
+namespace EDEA.Properties;
+
+public static class Resources
+{
+    private static readonly ResourceManager _resourceManager = new("EDEA.Properties.Resources", typeof(Resources).Assembly);
+
+    private static CultureInfo _culture = CultureInfo.CurrentUICulture;
+
+    public static CultureInfo Culture
+    {
+        get => _culture;
+        set => _culture = value;
+    }
+
+    private static string Get(string name)
+    {
+        return _resourceManager.GetString(name, _culture)
+            ?? _resourceManager.GetString(name, new CultureInfo("en"))
+            ?? $"[{name}]";
+    }
+
+    public static string MainWindow_Title => Get(nameof(MainWindow_Title));
+    public static string ApplicationLanguage => Get(nameof(ApplicationLanguage));
+
+    public static string MenuItem_ReloadEdsm => Get(nameof(MenuItem_ReloadEdsm));
+    public static string MenuItem_ResetTripData => Get(nameof(MenuItem_ResetTripData));
+    public static string MenuItem_ImportJournalHistory => Get(nameof(MenuItem_ImportJournalHistory));
+    public static string MenuItem_DeleteExplorationHistory => Get(nameof(MenuItem_DeleteExplorationHistory));
+    public static string MenuItem_Preferences => Get(nameof(MenuItem_Preferences));
+    public static string MenuItem_FeedbackReportIssue => Get(nameof(MenuItem_FeedbackReportIssue));
+    public static string MenuItem_About => Get(nameof(MenuItem_About));
+
+    public static string StatusBar_CurrentSystem => Get(nameof(StatusBar_CurrentSystem));
+    public static string StatusBar_DiscoveredBodies => Get(nameof(StatusBar_DiscoveredBodies));
+    public static string StatusBar_NonBodySignals => Get(nameof(StatusBar_NonBodySignals));
+    public static string StatusBar_CurrentActivity => Get(nameof(StatusBar_CurrentActivity));
+
+    public static string HudWindow_Title => Get(nameof(HudWindow_Title));
+
+    public static string AboutWindow_Title => Get(nameof(AboutWindow_Title));
+    public static string AboutWindow_AppName => Get(nameof(AboutWindow_AppName));
+    public static string AboutWindow_Version => Get(nameof(AboutWindow_Version));
+    public static string AboutWindow_Description => Get(nameof(AboutWindow_Description));
+    public static string AboutWindow_License => Get(nameof(AboutWindow_License));
+    public static string AboutWindow_OK => Get(nameof(AboutWindow_OK));
+
+    public static string FeedbackReportIssueWindow_Title => Get(nameof(FeedbackReportIssueWindow_Title));
+    public static string FeedbackReportIssueWindow_Headline => Get(nameof(FeedbackReportIssueWindow_Headline));
+    public static string FeedbackReportIssueWindow_Description => Get(nameof(FeedbackReportIssueWindow_Description));
+    public static string FeedbackReportIssueWindow_Name => Get(nameof(FeedbackReportIssueWindow_Name));
+    public static string FeedbackReportIssueWindow_Email => Get(nameof(FeedbackReportIssueWindow_Email));
+    public static string FeedbackReportIssueWindow_Message => Get(nameof(FeedbackReportIssueWindow_Message));
+    public static string FeedbackReportIssueWindow_Send => Get(nameof(FeedbackReportIssueWindow_Send));
+    public static string FeedbackReportIssueWindow_Cancel => Get(nameof(FeedbackReportIssueWindow_Cancel));
+
+    public static string PreferencesWindow_Title => Get(nameof(PreferencesWindow_Title));
+    public static string PreferencesWindow_Save => Get(nameof(PreferencesWindow_Save));
+    public static string PreferencesWindow_Cancel => Get(nameof(PreferencesWindow_Cancel));
+    public static string PreferencesWindow_ResetPreferences => Get(nameof(PreferencesWindow_ResetPreferences));
+    public static string PreferencesWindow_ResetWarning => Get(nameof(PreferencesWindow_ResetWarning));
+
+    public static string RoutePlotterWindow_NoShipData => Get(nameof(RoutePlotterWindow_NoShipData));
+    public static string RoutePlotterWindow_ErrorMessage => Get(nameof(RoutePlotterWindow_ErrorMessage));
+    public static string RoutePlotterWindow_TryAgain => Get(nameof(RoutePlotterWindow_TryAgain));
+    public static string RoutePlotterWindow_Cancel => Get(nameof(RoutePlotterWindow_Cancel));
+    public static string RoutePlotterWindow_GenerateRoute => Get(nameof(RoutePlotterWindow_GenerateRoute));
+    public static string RoutePlotterWindow_ShipName => Get(nameof(RoutePlotterWindow_ShipName));
+    public static string RoutePlotterWindow_FrameShiftDrive => Get(nameof(RoutePlotterWindow_FrameShiftDrive));
+    public static string RoutePlotterWindow_FsdBooster => Get(nameof(RoutePlotterWindow_FsdBooster));
+    public static string RoutePlotterWindow_Class => Get(nameof(RoutePlotterWindow_Class));
+    public static string RoutePlotterWindow_Rating => Get(nameof(RoutePlotterWindow_Rating));
+    public static string RoutePlotterWindow_CargoCount => Get(nameof(RoutePlotterWindow_CargoCount));
+    public static string RoutePlotterWindow_Supercharged => Get(nameof(RoutePlotterWindow_Supercharged));
+    public static string RoutePlotterWindow_FsdOptimalMass => Get(nameof(RoutePlotterWindow_FsdOptimalMass));
+    public static string RoutePlotterWindow_SourceSystem => Get(nameof(RoutePlotterWindow_SourceSystem));
+    public static string RoutePlotterWindow_DestinationSystem => Get(nameof(RoutePlotterWindow_DestinationSystem));
+    public static string RoutePlotterWindow_Algorithm => Get(nameof(RoutePlotterWindow_Algorithm));
+    public static string RoutePlotterWindow_UseSupercharge => Get(nameof(RoutePlotterWindow_UseSupercharge));
+    public static string RoutePlotterWindow_UseFsdInjections => Get(nameof(RoutePlotterWindow_UseFsdInjections));
+    public static string RoutePlotterWindow_ExcludeSecondaryStars => Get(nameof(RoutePlotterWindow_ExcludeSecondaryStars));
+    public static string RoutePlotterWindow_RefuelEveryScoopable => Get(nameof(RoutePlotterWindow_RefuelEveryScoopable));
+    public static string RoutePlotterWindow_Efficiency => Get(nameof(RoutePlotterWindow_Efficiency));
+
+    public static string JournalHistoryImportWindow_Title => Get(nameof(JournalHistoryImportWindow_Title));
+    public static string JournalHistoryImportWindow_JournalFilesProcessed => Get(nameof(JournalHistoryImportWindow_JournalFilesProcessed));
+    public static string JournalHistoryImportWindow_DetectingStarSystems => Get(nameof(JournalHistoryImportWindow_DetectingStarSystems));
+    public static string JournalHistoryImportWindow_DetectingBodies => Get(nameof(JournalHistoryImportWindow_DetectingBodies));
+    public static string JournalHistoryImportWindow_DetectingAdditionalData => Get(nameof(JournalHistoryImportWindow_DetectingAdditionalData));
+    public static string JournalHistoryImportWindow_NewSystemsAdded => Get(nameof(JournalHistoryImportWindow_NewSystemsAdded));
+    public static string JournalHistoryImportWindow_SystemsUpdated => Get(nameof(JournalHistoryImportWindow_SystemsUpdated));
+    public static string JournalHistoryImportWindow_SystemsIgnored => Get(nameof(JournalHistoryImportWindow_SystemsIgnored));
+    public static string JournalHistoryImportWindow_StartImport => Get(nameof(JournalHistoryImportWindow_StartImport));
+    public static string JournalHistoryImportWindow_StopImport => Get(nameof(JournalHistoryImportWindow_StopImport));
+
+    public static string InputStringDialogWindow_Title => Get(nameof(InputStringDialogWindow_Title));
+    public static string InputStringDialogWindow_OK => Get(nameof(InputStringDialogWindow_OK));
+    public static string InputStringDialogWindow_Cancel => Get(nameof(InputStringDialogWindow_Cancel));
+
+    public static string InputStringListDialogWindow_Title => Get(nameof(InputStringListDialogWindow_Title));
+    public static string InputStringListDialogWindow_OK => Get(nameof(InputStringListDialogWindow_OK));
+    public static string InputStringListDialogWindow_Cancel => Get(nameof(InputStringListDialogWindow_Cancel));
+
+    public static string PreferencesWindow_Tab_Appearance => Get(nameof(PreferencesWindow_Tab_Appearance));
+    public static string PreferencesWindow_Tab_HudWindow => Get(nameof(PreferencesWindow_Tab_HudWindow));
+    public static string PreferencesWindow_Tab_Speech => Get(nameof(PreferencesWindow_Tab_Speech));
+    public static string PreferencesWindow_Tab_PlanetsOfInterest => Get(nameof(PreferencesWindow_Tab_PlanetsOfInterest));
+    public static string PreferencesWindow_SubTab_BasicAttributes => Get(nameof(PreferencesWindow_SubTab_BasicAttributes));
+    public static string PreferencesWindow_SubTab_SurfaceConditions => Get(nameof(PreferencesWindow_SubTab_SurfaceConditions));
+    public static string PreferencesWindow_SubTab_RingRelated => Get(nameof(PreferencesWindow_SubTab_RingRelated));
+    public static string PreferencesWindow_SubTab_ParentPlanet => Get(nameof(PreferencesWindow_SubTab_ParentPlanet));
+    public static string PreferencesWindow_Tab_GlobalHotkeys => Get(nameof(PreferencesWindow_Tab_GlobalHotkeys));
+    public static string PreferencesWindow_Tab_Configuration => Get(nameof(PreferencesWindow_Tab_Configuration));
+
+    public static string ColumnHeaderName => Get(nameof(ColumnHeaderName));
+    public static string ColumnHeaderType => Get(nameof(ColumnHeaderType));
+    public static string ColumnHeaderTemperature => Get(nameof(ColumnHeaderTemperature));
+    public static string ColumnHeaderAtmosphere => Get(nameof(ColumnHeaderAtmosphere));
+    public static string ColumnHeaderEdsmDiscoverer => Get(nameof(ColumnHeaderEdsmDiscoverer));
+    public static string ColumnHeaderCartographicValue => Get(nameof(ColumnHeaderCartographicValue));
+    public static string ColumnHeaderOverallProgress => Get(nameof(ColumnHeaderOverallProgress));
+    public static string ColumnHeaderDistance => Get(nameof(ColumnHeaderDistance));
+    public static string ColumnHeaderJump => Get(nameof(ColumnHeaderJump));
+    public static string ColumnHeaderSystemName => Get(nameof(ColumnHeaderSystemName));
+    public static string ColumnHeaderStarClass => Get(nameof(ColumnHeaderStarClass));
+    public static string ColumnHeaderDiscoveryStatus => Get(nameof(ColumnHeaderDiscoveryStatus));
+    public static string ColumnHeaderSpecies => Get(nameof(ColumnHeaderSpecies));
+    public static string ColumnHeaderVariant => Get(nameof(ColumnHeaderVariant));
+    public static string ColumnHeaderScans => Get(nameof(ColumnHeaderScans));
+    public static string ColumnHeaderClonalColonyRange => Get(nameof(ColumnHeaderClonalColonyRange));
+    public static string ColumnHeader1stScanDistance => Get(nameof(ColumnHeader1stScanDistance));
+    public static string ColumnHeader2ndScanDistance => Get(nameof(ColumnHeader2ndScanDistance));
+    public static string ColumnHeaderVistaGenomicsValue => Get(nameof(ColumnHeaderVistaGenomicsValue));
+
+    public static string MenuItem_ClearGalaxyPlotterRoute => Get(nameof(MenuItem_ClearGalaxyPlotterRoute));
+    public static string MenuItem_GenerateGalaxyPlotterRoute => Get(nameof(MenuItem_GenerateGalaxyPlotterRoute));
+    public static string MenuItem_UnlockRoute => Get(nameof(MenuItem_UnlockRoute));
+    public static string MenuItem_LockRoute => Get(nameof(MenuItem_LockRoute));
+    public static string MenuItem_ExportLockedRoute => Get(nameof(MenuItem_ExportLockedRoute));
+    public static string MenuItem_ImportLockedRoute => Get(nameof(MenuItem_ImportLockedRoute));
+    public static string MenuItem_OpenHudWindow => Get(nameof(MenuItem_OpenHudWindow));
+    public static string MenuItem_CloseHudWindow => Get(nameof(MenuItem_CloseHudWindow));
+    public static string MenuItem_EnableHudMousePassThrough => Get(nameof(MenuItem_EnableHudMousePassThrough));
+    public static string MenuItem_DisableHudMousePassThrough => Get(nameof(MenuItem_DisableHudMousePassThrough));
+
+    public static string TooltipJournalIcon => Get(nameof(TooltipJournalIcon));
+    public static string TooltipEdsmOnly => Get(nameof(TooltipEdsmOnly));
+    public static string TooltipNewIcon => Get(nameof(TooltipNewIcon));
+    public static string TooltipValuableBodyIcon => Get(nameof(TooltipValuableBodyIcon));
+    public static string TooltipValuableGenusIcon => Get(nameof(TooltipValuableGenusIcon));
+    public static string TooltipValuableGenusPredictedIcon => Get(nameof(TooltipValuableGenusPredictedIcon));
+    public static string TooltipLoadingIcon => Get(nameof(TooltipLoadingIcon));
+    public static string TooltipPopulatedIcon => Get(nameof(TooltipPopulatedIcon));
+    public static string TooltipTerraformableIcon => Get(nameof(TooltipTerraformableIcon));
+    public static string TooltipLandableIcon => Get(nameof(TooltipLandableIcon));
+    public static string TooltipTouchdownIcon => Get(nameof(TooltipTouchdownIcon));
+    public static string TooltipLandableTouchdownCombiIcon => Get(nameof(TooltipLandableTouchdownCombiIcon));
+    public static string TooltipRingsIcon => Get(nameof(TooltipRingsIcon));
+    public static string TooltipGeologicalsIcon => Get(nameof(TooltipGeologicalsIcon));
+    public static string TooltipBiologicalsIcon => Get(nameof(TooltipBiologicalsIcon));
+    public static string TooltipScoopableIcon => Get(nameof(TooltipScoopableIcon));
+    public static string TooltipCurrentBodyIcon => Get(nameof(TooltipCurrentBodyIcon));
+    public static string TooltipCurrentSystemIcon => Get(nameof(TooltipCurrentSystemIcon));
+    public static string TooltipJumpDestinationSystemIcon => Get(nameof(TooltipJumpDestinationSystemIcon));
+    public static string TooltipSurfaceScannedStatusIcon => Get(nameof(TooltipSurfaceScannedStatusIcon));
+    public static string TooltipScannedAndWasMappedIcon => Get(nameof(TooltipScannedAndWasMappedIcon));
+    public static string TooltipScannedAndFirstMappedIcon => Get(nameof(TooltipScannedAndFirstMappedIcon));
+    public static string TooltipUnscannedAndWasMappedIcon => Get(nameof(TooltipUnscannedAndWasMappedIcon));
+    public static string TooltipUnknownSurfaceScanStatusIcon => Get(nameof(TooltipUnknownSurfaceScanStatusIcon));
+    public static string TooltipAnalysisCompleteIcon => Get(nameof(TooltipAnalysisCompleteIcon));
+    public static string TooltipPlanetOfInterestIcon => Get(nameof(TooltipPlanetOfInterestIcon));
+    public static string TooltipGenusIsFirstDiscovery => Get(nameof(TooltipGenusIsFirstDiscovery));
+    public static string TooltipDistanceToPreviousSystem => Get(nameof(TooltipDistanceToPreviousSystem));
+    public static string TooltipDistanceToCurrentSystem => Get(nameof(TooltipDistanceToCurrentSystem));
+
+    public static string PreferencesWindow_Label_Colors => Get(nameof(PreferencesWindow_Label_Colors));
+    public static string PreferencesWindow_Label_DisplaySize => Get(nameof(PreferencesWindow_Label_DisplaySize));
+    public static string PreferencesWindow_Radio_Small => Get(nameof(PreferencesWindow_Radio_Small));
+    public static string PreferencesWindow_Radio_Standard => Get(nameof(PreferencesWindow_Radio_Standard));
+    public static string PreferencesWindow_Radio_Large => Get(nameof(PreferencesWindow_Radio_Large));
+    public static string PreferencesWindow_Radio_Huge => Get(nameof(PreferencesWindow_Radio_Huge));
+    public static string PreferencesWindow_Label_Behavior => Get(nameof(PreferencesWindow_Label_Behavior));
+    public static string PreferencesWindow_Checkbox_AutomaticTabSwitching => Get(nameof(PreferencesWindow_Checkbox_AutomaticTabSwitching));
+    public static string PreferencesWindow_Label_Columns => Get(nameof(PreferencesWindow_Label_Columns));
+    public static string PreferencesWindow_Bodies => Get(nameof(PreferencesWindow_Bodies));
+    public static string PreferencesWindow_Route => Get(nameof(PreferencesWindow_Route));
+    public static string PreferencesWindow_Biologicals => Get(nameof(PreferencesWindow_Biologicals));
+    public static string PreferencesWindow_BodiesColumn_SurfaceScanIcon => Get(nameof(PreferencesWindow_BodiesColumn_SurfaceScanIcon));
+    public static string PreferencesWindow_BodiesColumn_PlanetOfInterestIcon => Get(nameof(PreferencesWindow_BodiesColumn_PlanetOfInterestIcon));
+    public static string PreferencesWindow_BodiesColumn_ValuableBodyIcon => Get(nameof(PreferencesWindow_BodiesColumn_ValuableBodyIcon));
+    public static string PreferencesWindow_BodiesColumn_RingsIcon => Get(nameof(PreferencesWindow_BodiesColumn_RingsIcon));
+    public static string PreferencesWindow_BodiesColumn_GeologicalsIcon => Get(nameof(PreferencesWindow_BodiesColumn_GeologicalsIcon));
+    public static string PreferencesWindow_BodiesColumn_BiologicalsIcon => Get(nameof(PreferencesWindow_BodiesColumn_BiologicalsIcon));
+    public static string PreferencesWindow_BodiesColumn_TerraformableIcon => Get(nameof(PreferencesWindow_BodiesColumn_TerraformableIcon));
+    public static string PreferencesWindow_BodiesColumn_LandableIcon => Get(nameof(PreferencesWindow_BodiesColumn_LandableIcon));
+    public static string PreferencesWindow_BodiesColumn_FirstDiscoveryIcon => Get(nameof(PreferencesWindow_BodiesColumn_FirstDiscoveryIcon));
+    public static string PreferencesWindow_RouteColumn_ScoopableStarIconStarClass => Get(nameof(PreferencesWindow_RouteColumn_ScoopableStarIconStarClass));
+    public static string PreferencesWindow_RouteColumn_ExplorationStatusIcon => Get(nameof(PreferencesWindow_RouteColumn_ExplorationStatusIcon));
+    public static string PreferencesWindow_RouteColumn_PlanetOfInterestIcon => Get(nameof(PreferencesWindow_RouteColumn_PlanetOfInterestIcon));
+    public static string PreferencesWindow_RouteColumn_ValuableBodiesIcon => Get(nameof(PreferencesWindow_RouteColumn_ValuableBodiesIcon));
+    public static string PreferencesWindow_RouteColumn_TerraformablesIcon => Get(nameof(PreferencesWindow_RouteColumn_TerraformablesIcon));
+    public static string PreferencesWindow_RouteColumn_LandablesIcon => Get(nameof(PreferencesWindow_RouteColumn_LandablesIcon));
+    public static string PreferencesWindow_RouteColumn_PopulatedIcon => Get(nameof(PreferencesWindow_RouteColumn_PopulatedIcon));
+    public static string PreferencesWindow_GenusColumn_AnalysisCompleteIcon => Get(nameof(PreferencesWindow_GenusColumn_AnalysisCompleteIcon));
+    public static string PreferencesWindow_GenusColumn_ValuableSpeciesIcon => Get(nameof(PreferencesWindow_GenusColumn_ValuableSpeciesIcon));
+    public static string PreferencesWindow_GenusColumn_FirstDiscoveryIcon => Get(nameof(PreferencesWindow_GenusColumn_FirstDiscoveryIcon));
+    public static string PreferencesWindow_Label_Opacity => Get(nameof(PreferencesWindow_Label_Opacity));
+    public static string PreferencesWindow_Label_View => Get(nameof(PreferencesWindow_Label_View));
+    public static string PreferencesWindow_Radio_SyncedWithMainWindow => Get(nameof(PreferencesWindow_Radio_SyncedWithMainWindow));
+    public static string PreferencesWindow_Label_AutomaticHideOn => Get(nameof(PreferencesWindow_Label_AutomaticHideOn));
+    public static string PreferencesWindow_Label_InShipSrvFighter => Get(nameof(PreferencesWindow_Label_InShipSrvFighter));
+    public static string PreferencesWindow_HideOn_NoActivePanel => Get(nameof(PreferencesWindow_HideOn_NoActivePanel));
+    public static string PreferencesWindow_HideOn_InternalPanel => Get(nameof(PreferencesWindow_HideOn_InternalPanel));
+    public static string PreferencesWindow_HideOn_ExternalPanel => Get(nameof(PreferencesWindow_HideOn_ExternalPanel));
+    public static string PreferencesWindow_HideOn_CommsPanel => Get(nameof(PreferencesWindow_HideOn_CommsPanel));
+    public static string PreferencesWindow_HideOn_RolePanel => Get(nameof(PreferencesWindow_HideOn_RolePanel));
+    public static string PreferencesWindow_HideOn_StationServices => Get(nameof(PreferencesWindow_HideOn_StationServices));
+    public static string PreferencesWindow_HideOn_GalaxyMap => Get(nameof(PreferencesWindow_HideOn_GalaxyMap));
+    public static string PreferencesWindow_HideOn_SystemMap => Get(nameof(PreferencesWindow_HideOn_SystemMap));
+    public static string PreferencesWindow_HideOn_Orrery => Get(nameof(PreferencesWindow_HideOn_Orrery));
+    public static string PreferencesWindow_HideOn_FssMode => Get(nameof(PreferencesWindow_HideOn_FssMode));
+    public static string PreferencesWindow_HideOn_SaaMode => Get(nameof(PreferencesWindow_HideOn_SaaMode));
+    public static string PreferencesWindow_HideOn_Codex => Get(nameof(PreferencesWindow_HideOn_Codex));
+    public static string PreferencesWindow_Label_OnFoot => Get(nameof(PreferencesWindow_Label_OnFoot));
+    public static string PreferencesWindow_HideOn_Always => Get(nameof(PreferencesWindow_HideOn_Always));
+    public static string PreferencesWindow_Label_Outputs => Get(nameof(PreferencesWindow_Label_Outputs));
+    public static string PreferencesWindow_Label_SpeechOutputText => Get(nameof(PreferencesWindow_Label_SpeechOutputText));
+    public static string PreferencesWindow_Label_TextPlaceholder => Get(nameof(PreferencesWindow_Label_TextPlaceholder));
+    public static string PreferencesWindow_Label_Example => Get(nameof(PreferencesWindow_Label_Example));
+    public static string PreferencesWindow_Button_TestSpeechOutput => Get(nameof(PreferencesWindow_Button_TestSpeechOutput));
+    public static string PreferencesWindow_Label_Voice => Get(nameof(PreferencesWindow_Label_Voice));
+    public static string PreferencesWindow_Label_Rate => Get(nameof(PreferencesWindow_Label_Rate));
+    public static string PreferencesWindow_Label_Volume => Get(nameof(PreferencesWindow_Label_Volume));
+    public static string PreferencesWindow_Label_CriteriaSets => Get(nameof(PreferencesWindow_Label_CriteriaSets));
+    public static string PreferencesWindow_Button_Add => Get(nameof(PreferencesWindow_Button_Add));
+    public static string PreferencesWindow_Button_Rename => Get(nameof(PreferencesWindow_Button_Rename));
+    public static string PreferencesWindow_Button_Delete => Get(nameof(PreferencesWindow_Button_Delete));
+    public static string PreferencesWindow_Label_DistanceToMainStar => Get(nameof(PreferencesWindow_Label_DistanceToMainStar));
+    public static string PreferencesWindow_Label_HigherThan => Get(nameof(PreferencesWindow_Label_HigherThan));
+    public static string PreferencesWindow_Label_AndLowerThan => Get(nameof(PreferencesWindow_Label_AndLowerThan));
+    public static string PreferencesWindow_Label_BodyRadius => Get(nameof(PreferencesWindow_Label_BodyRadius));
+    public static string PreferencesWindow_Label_OrbitalInclination => Get(nameof(PreferencesWindow_Label_OrbitalInclination));
+    public static string PreferencesWindow_Label_IsLandable => Get(nameof(PreferencesWindow_Label_IsLandable));
+    public static string PreferencesWindow_Label_PlanetClassOneOf => Get(nameof(PreferencesWindow_Label_PlanetClassOneOf));
+    public static string PreferencesWindow_Button_Set => Get(nameof(PreferencesWindow_Button_Set));
+    public static string PreferencesWindow_Label_StarClassOneOf => Get(nameof(PreferencesWindow_Label_StarClassOneOf));
+    public static string PreferencesWindow_Label_Gravity => Get(nameof(PreferencesWindow_Label_Gravity));
+    public static string PreferencesWindow_Label_Temperature => Get(nameof(PreferencesWindow_Label_Temperature));
+    public static string PreferencesWindow_Label_AtmosphereOneOf => Get(nameof(PreferencesWindow_Label_AtmosphereOneOf));
+    public static string PreferencesWindow_Label_VolcanismOneOf => Get(nameof(PreferencesWindow_Label_VolcanismOneOf));
+    public static string PreferencesWindow_Label_RingsTotalWidth => Get(nameof(PreferencesWindow_Label_RingsTotalWidth));
+    public static string PreferencesWindow_Label_RingWidth => Get(nameof(PreferencesWindow_Label_RingWidth));
+    public static string PreferencesWindow_Label_RingDensity => Get(nameof(PreferencesWindow_Label_RingDensity));
+    public static string PreferencesWindow_Label_RingTypeOneOf => Get(nameof(PreferencesWindow_Label_RingTypeOneOf));
+    public static string PreferencesWindow_Label_RingReserveLevelOneOf => Get(nameof(PreferencesWindow_Label_RingReserveLevelOneOf));
+    public static string PreferencesWindow_Label_CriteriaSetForParentPlanet => Get(nameof(PreferencesWindow_Label_CriteriaSetForParentPlanet));
+    public static string PreferencesWindow_Label_Assignment => Get(nameof(PreferencesWindow_Label_Assignment));
+    public static string PreferencesWindow_Label_JournalFilesPath => Get(nameof(PreferencesWindow_Label_JournalFilesPath));
+    public static string PreferencesWindow_Label_Thresholds => Get(nameof(PreferencesWindow_Label_Thresholds));
+    public static string PreferencesWindow_Label_ValuableBodies => Get(nameof(PreferencesWindow_Label_ValuableBodies));
+    public static string PreferencesWindow_Label_ValuableSpecies => Get(nameof(PreferencesWindow_Label_ValuableSpecies));
+    public static string PreferencesWindow_Label_BiologicalsViewAltitude => Get(nameof(PreferencesWindow_Label_BiologicalsViewAltitude));
+    public static string PreferencesWindow_Label_ResetPreferences => Get(nameof(PreferencesWindow_Label_ResetPreferences));
+
+    public static string StatusNoData => Get(nameof(StatusNoData));
+    public static string StatusSingleBody => Get(nameof(StatusSingleBody));
+    public static string UnitBodySingular => Get(nameof(UnitBodySingular));
+    public static string UnitBodyPlural => Get(nameof(UnitBodyPlural));
+    public static string UnitCredits => Get(nameof(UnitCredits));
+    public static string UnitPercent => Get(nameof(UnitPercent));
+
+    public static string TabHeader_PlotterRoute => Get(nameof(TabHeader_PlotterRoute));
+    public static string TabHeader_LockedRoute => Get(nameof(TabHeader_LockedRoute));
+    public static string TabHeader_Route => Get(nameof(TabHeader_Route));
+
+    public static string TabHeader_Bodies => Get(nameof(TabHeader_Bodies));
+    public static string TabHeader_Biologicals => Get(nameof(TabHeader_Biologicals));
+
+    public static string TabHeader_Surroundings => Get(nameof(TabHeader_Surroundings));
+    public static string TabHeader_History => Get(nameof(TabHeader_History));
+
+    public static string NoSurroundingsInfo => Get(nameof(NoSurroundingsInfo));
+
+    public static string RoutePlotterWindow_Loading_Part1 => Get(nameof(RoutePlotterWindow_Loading_Part1));
+    public static string RoutePlotterWindow_Loading_Line2 => Get(nameof(RoutePlotterWindow_Loading_Line2));
+    public static string RoutePlotterWindow_Loading_Line4 => Get(nameof(RoutePlotterWindow_Loading_Line4));
+    public static string RoutePlotterWindow_Loading_Line5 => Get(nameof(RoutePlotterWindow_Loading_Line5));
+
+    public static string NoRouteInfo => Get(nameof(NoRouteInfo));
+    public static string NoBodiesInfo => Get(nameof(NoBodiesInfo));
+    public static string Hud_BodyExplorationStatus => Get(nameof(Hud_BodyExplorationStatus));
+    public static string Hud_NonBodyExplorationStatus => Get(nameof(Hud_NonBodyExplorationStatus));
+    public static string RoutePlotterWindow_Title => Get(nameof(RoutePlotterWindow_Title));
+    public static string MessageBoxTitle_Error => Get(nameof(MessageBoxTitle_Error));
+
+    public static string Templates_Tooltip_Status => Get(nameof(Templates_Tooltip_Status));
+    public static string Templates_Tooltip_BodyCount => Get(nameof(Templates_Tooltip_BodyCount));
+    public static string Templates_Tooltip_Journal => Get(nameof(Templates_Tooltip_Journal));
+    public static string Templates_Tooltip_AllBodiesFound => Get(nameof(Templates_Tooltip_AllBodiesFound));
+    public static string Templates_Tooltip_EDSM => Get(nameof(Templates_Tooltip_EDSM));
+    public static string Templates_Tooltip_CartographicProgress => Get(nameof(Templates_Tooltip_CartographicProgress));
+    public static string Templates_Tooltip_ValueAchieved => Get(nameof(Templates_Tooltip_ValueAchieved));
+    public static string Templates_Tooltip_AchievableValue => Get(nameof(Templates_Tooltip_AchievableValue));
+    public static string Templates_Tooltip_VistaGenomicsProgress => Get(nameof(Templates_Tooltip_VistaGenomicsProgress));
+    public static string Templates_Tooltip_ValueAchievedLabel => Get(nameof(Templates_Tooltip_ValueAchievedLabel));
+    public static string Templates_Tooltip_BiologicalsAnalyzed => Get(nameof(Templates_Tooltip_BiologicalsAnalyzed));
+    public static string Templates_Tooltip_OverallProgress => Get(nameof(Templates_Tooltip_OverallProgress));
+    public static string Templates_Tooltip_TotalValueAchieved => Get(nameof(Templates_Tooltip_TotalValueAchieved));
+    public static string Templates_Tooltip_BaseValue => Get(nameof(Templates_Tooltip_BaseValue));
+    public static string Templates_Tooltip_SurfaceScanValue => Get(nameof(Templates_Tooltip_SurfaceScanValue));
+    public static string Templates_Tooltip_BonusesValue => Get(nameof(Templates_Tooltip_BonusesValue));
+    public static string Templates_Tooltip_Radius => Get(nameof(Templates_Tooltip_Radius));
+    public static string Templates_Tooltip_Gravity => Get(nameof(Templates_Tooltip_Gravity));
+    public static string Templates_Tooltip_Mass => Get(nameof(Templates_Tooltip_Mass));
+    public static string Templates_Tooltip_OrbitalInclination => Get(nameof(Templates_Tooltip_OrbitalInclination));
+    public static string Templates_Tooltip_FirstDiscoveryBonus => Get(nameof(Templates_Tooltip_FirstDiscoveryBonus));
+    public static string Templates_Tooltip_FirstSurfaceScanBonus => Get(nameof(Templates_Tooltip_FirstSurfaceScanBonus));
+    public static string Templates_Tooltip_EfficientlyScannedBonus => Get(nameof(Templates_Tooltip_EfficientlyScannedBonus));
+    public static string Templates_Tooltip_MatchingCriteriaSets => Get(nameof(Templates_Tooltip_MatchingCriteriaSets));
+    public static string Templates_Tooltip_PlanetsOfInterest => Get(nameof(Templates_Tooltip_PlanetsOfInterest));
+    public static string Templates_Tooltip_TotalWidthOfRings => Get(nameof(Templates_Tooltip_TotalWidthOfRings));
+    public static string Templates_Tooltip_ReserveLevel => Get(nameof(Templates_Tooltip_ReserveLevel));
+    public static string Templates_Tooltip_BiologicalSignalsDetected => Get(nameof(Templates_Tooltip_BiologicalSignalsDetected));
+    public static string Templates_Tooltip_AnalysedDiscoveredBiologicals => Get(nameof(Templates_Tooltip_AnalysedDiscoveredBiologicals));
+    public static string Templates_Tooltip_FirstDiscoveryBonusApplicable => Get(nameof(Templates_Tooltip_FirstDiscoveryBonusApplicable));
+    public static string Templates_Tooltip_Yes => Get(nameof(Templates_Tooltip_Yes));
+    public static string Templates_Tooltip_No => Get(nameof(Templates_Tooltip_No));
+    public static string Templates_Tooltip_PossibleOccurrences => Get(nameof(Templates_Tooltip_PossibleOccurrences));
+    public static string History_Headline_CurrentExplorationTrip => Get(nameof(History_Headline_CurrentExplorationTrip));
+    public static string History_Headline_EntireExplorationHistory => Get(nameof(History_Headline_EntireExplorationHistory));
+    public static string History_Group_EstimatedTotalValueOfExplorationData => Get(nameof(History_Group_EstimatedTotalValueOfExplorationData));
+    public static string History_Group_EstimatedCartographicValues => Get(nameof(History_Group_EstimatedCartographicValues));
+    public static string History_Group_EstimatedVistaGenomicsValues => Get(nameof(History_Group_EstimatedVistaGenomicsValues));
+    public static string History_Group_Systems => Get(nameof(History_Group_Systems));
+    public static string History_Group_Bodies => Get(nameof(History_Group_Bodies));
+    public static string History_Group_Rings => Get(nameof(History_Group_Rings));
+    public static string History_Group_Biologicals => Get(nameof(History_Group_Biologicals));
+    public static string History_Panel_Base => Get(nameof(History_Panel_Base));
+    public static string History_Panel_SurfaceScan => Get(nameof(History_Panel_SurfaceScan));
+    public static string History_Panel_Bonuses => Get(nameof(History_Panel_Bonuses));
+    public static string History_Panel_FirstDiscoveryBonus => Get(nameof(History_Panel_FirstDiscoveryBonus));
+    public static string History_Panel_Discovered => Get(nameof(History_Panel_Discovered));
+    public static string History_Panel_FirstDiscovery => Get(nameof(History_Panel_FirstDiscovery));
+    public static string History_Panel_MostFrequent => Get(nameof(History_Panel_MostFrequent));
+    public static string History_Panel_Rarest => Get(nameof(History_Panel_Rarest));
+    public static string History_Panel_Signals => Get(nameof(History_Panel_Signals));
+    public static string History_Panel_Mapped => Get(nameof(History_Panel_Mapped));
+    public static string History_Panel_Terraformable => Get(nameof(History_Panel_Terraformable));
+    public static string History_Panel_WithTouchdowns => Get(nameof(History_Panel_WithTouchdowns));
+    public static string History_Panel_Valuable => Get(nameof(History_Panel_Valuable));
+    public static string History_Panel_WithRings => Get(nameof(History_Panel_WithRings));
+    public static string History_Panel_Analysed => Get(nameof(History_Panel_Analysed));
+    public static string History_Panel_MostFrequentAnalysed => Get(nameof(History_Panel_MostFrequentAnalysed));
+    public static string History_Panel_RarestAnalysed => Get(nameof(History_Panel_RarestAnalysed));
+    public static string GenusTable_PossibleOccurrences => Get(nameof(GenusTable_PossibleOccurrences));
+    public static string GenusHud_PossibleOccurrences => Get(nameof(GenusHud_PossibleOccurrences));
+
+    public static string CurrentStatus_WaitingForGame => Get(nameof(CurrentStatus_WaitingForGame));
+    public static string CurrentStatus_ExploringSystem => Get(nameof(CurrentStatus_ExploringSystem));
+    public static string CurrentStatus_UsingPlotterRoute => Get(nameof(CurrentStatus_UsingPlotterRoute));
+    public static string CurrentStatus_UsingLockedRoute => Get(nameof(CurrentStatus_UsingLockedRoute));
+    public static string CurrentStatus_PlanningRoute => Get(nameof(CurrentStatus_PlanningRoute));
+    public static string CurrentStatus_Jumping => Get(nameof(CurrentStatus_Jumping));
+    public static string CurrentStatus_ExploringPlanet => Get(nameof(CurrentStatus_ExploringPlanet));
+    public static string CurrentStatus_Loitering => Get(nameof(CurrentStatus_Loitering));
+
+    public static string Styles_TextBoxPlaceholder_Any => Get(nameof(Styles_TextBoxPlaceholder_Any));
+
+    public static string Status_Unknown => Get(nameof(Status_Unknown));
+    public static string Status_Unexplored => Get(nameof(Status_Unexplored));
+    public static string Status_Unscanned => Get(nameof(Status_Unscanned));
+    public static string Status_Incomplete => Get(nameof(Status_Incomplete));
+    public static string Status_Complete => Get(nameof(Status_Complete));
+
+    public static string UnitFileSingular => Get(nameof(UnitFileSingular));
+    public static string UnitFilePlural => Get(nameof(UnitFilePlural));
+    public static string UnitSystemSingular => Get(nameof(UnitSystemSingular));
+    public static string UnitSystemPlural => Get(nameof(UnitSystemPlural));
+    public static string Button_Close => Get(nameof(Button_Close));
+    public static string JournalHistoryImport_IntroText_Found => Get(nameof(JournalHistoryImport_IntroText_Found));
+    public static string JournalHistoryImport_IntroText_None => Get(nameof(JournalHistoryImport_IntroText_None));
+
+    public static string RouteIsLoading_PleaseWait => Get(nameof(RouteIsLoading_PleaseWait));
+
+    public static string Speech_Welcome => Get(nameof(Speech_Welcome));
+    public static string Speech_Goodbye => Get(nameof(Speech_Goodbye));
+    public static string Speech_GeologicalSignals => Get(nameof(Speech_GeologicalSignals));
+    public static string Speech_BiologicalSignals => Get(nameof(Speech_BiologicalSignals));
+    public static string Speech_FirstDiscoverySystem => Get(nameof(Speech_FirstDiscoverySystem));
+    public static string Speech_FirstDiscoveryBody => Get(nameof(Speech_FirstDiscoveryBody));
+    public static string Speech_Terraformable => Get(nameof(Speech_Terraformable));
+    public static string Speech_Landable => Get(nameof(Speech_Landable));
+    public static string Speech_ValuableBody => Get(nameof(Speech_ValuableBody));
+    public static string Speech_ValuableGenusPredicted => Get(nameof(Speech_ValuableGenusPredicted));
+    public static string Speech_ValuableGeneraPredicted => Get(nameof(Speech_ValuableGeneraPredicted));
+    public static string Speech_LeaveClonalColonyRange => Get(nameof(Speech_LeaveClonalColonyRange));
+    public static string Speech_EnterClonalColonyRange => Get(nameof(Speech_EnterClonalColonyRange));
+    public static string Speech_MatchingClassificationsFound => Get(nameof(Speech_MatchingClassificationsFound));
+    public static string Speech_MatchingClassificationFound => Get(nameof(Speech_MatchingClassificationFound));
+    public static string Speech_Ring => Get(nameof(Speech_Ring));
+    public static string Speech_RingCount => Get(nameof(Speech_RingCount));
+    public static string RingType_Unknown => Get(nameof(RingType_Unknown));
+    public static string RingType_MetalRich => Get(nameof(RingType_MetalRich));
+    public static string RingType_Metallic => Get(nameof(RingType_Metallic));
+    public static string RingType_Rocky => Get(nameof(RingType_Rocky));
+    public static string RingType_Icy => Get(nameof(RingType_Icy));
+    public static string RingReserveLevel_Unknown => Get(nameof(RingReserveLevel_Unknown));
+    public static string RingReserveLevel_Pristine => Get(nameof(RingReserveLevel_Pristine));
+    public static string RingReserveLevel_Major => Get(nameof(RingReserveLevel_Major));
+    public static string RingReserveLevel_Common => Get(nameof(RingReserveLevel_Common));
+    public static string RingReserveLevel_Low => Get(nameof(RingReserveLevel_Low));
+    public static string RingReserveLevel_Depleted => Get(nameof(RingReserveLevel_Depleted));
+    public static string SpeechOutput_Ring => Get(nameof(SpeechOutput_Ring));
+    public static string SpeechOutput_RingCount => Get(nameof(SpeechOutput_RingCount));
+    public static string SpeechOutput_Welcome => Get(nameof(SpeechOutput_Welcome));
+    public static string SpeechOutput_Goodbye => Get(nameof(SpeechOutput_Goodbye));
+    public static string SpeechOutput_GeologicalSignals => Get(nameof(SpeechOutput_GeologicalSignals));
+    public static string SpeechOutput_BiologicalSignals => Get(nameof(SpeechOutput_BiologicalSignals));
+    public static string SpeechOutput_FirstDiscoverySystem => Get(nameof(SpeechOutput_FirstDiscoverySystem));
+    public static string SpeechOutput_FirstDiscoveryBody => Get(nameof(SpeechOutput_FirstDiscoveryBody));
+    public static string SpeechOutput_Terraformable => Get(nameof(SpeechOutput_Terraformable));
+    public static string SpeechOutput_Landable => Get(nameof(SpeechOutput_Landable));
+    public static string SpeechOutput_ValuableBody => Get(nameof(SpeechOutput_ValuableBody));
+    public static string SpeechOutput_ValuableGenusPredicted => Get(nameof(SpeechOutput_ValuableGenusPredicted));
+    public static string SpeechOutput_ValuableGeneraPredicted => Get(nameof(SpeechOutput_ValuableGeneraPredicted));
+    public static string SpeechOutput_LeaveClonalColonyRange => Get(nameof(SpeechOutput_LeaveClonalColonyRange));
+    public static string SpeechOutput_EnterClonalColonyRange => Get(nameof(SpeechOutput_EnterClonalColonyRange));
+    public static string SpeechOutput_MatchingClassificationFound => Get(nameof(SpeechOutput_MatchingClassificationFound));
+    public static string SpeechOutput_MatchingClassificationsFound => Get(nameof(SpeechOutput_MatchingClassificationsFound));
+    public static string UnitLightYears => Get(nameof(UnitLightYears));
+    public static string UnitLightSeconds => Get(nameof(UnitLightSeconds));
+    public static string UnitMeters => Get(nameof(UnitMeters));
+    public static string UnitKilometers => Get(nameof(UnitKilometers));
+    public static string WordOf => Get(nameof(WordOf));
+    public static string PlanetOfInterest_NearbyHMC => Get(nameof(PlanetOfInterest_NearbyHMC));
+    public static string PlanetOfInterest_HighGravityLandable => Get(nameof(PlanetOfInterest_HighGravityLandable));
+    public static string PlanetOfInterest_GuardianRuins => Get(nameof(PlanetOfInterest_GuardianRuins));
+    public static string BodyTypeStar => Get(nameof(BodyTypeStar));
+    public static string BodyTypePlanet => Get(nameof(BodyTypePlanet));
+    public static string TerraformingState_Terraformable => Get(nameof(TerraformingState_Terraformable));
+    public static string TerraformingState_CandidateForTerraforming => Get(nameof(TerraformingState_CandidateForTerraforming));
+    public static string CommanderNamePrefix => Get(nameof(CommanderNamePrefix));
+    public static string MenuItem_PlotterRouteGenerate => Get(nameof(MenuItem_PlotterRouteGenerate));
+    public static string MenuItem_PlotterRouteClear => Get(nameof(MenuItem_PlotterRouteClear));
+    public static string MenuItem_RouteLock => Get(nameof(MenuItem_RouteLock));
+    public static string MenuItem_RouteUnlock => Get(nameof(MenuItem_RouteUnlock));
+    public static string MenuItem_RouteImport => Get(nameof(MenuItem_RouteImport));
+    public static string MenuItem_RouteExport => Get(nameof(MenuItem_RouteExport));
+    public static string MenuItem_HudOpen => Get(nameof(MenuItem_HudOpen));
+    public static string MenuItem_HudClose => Get(nameof(MenuItem_HudClose));
+    public static string MenuItem_HudPassThroughEnable => Get(nameof(MenuItem_HudPassThroughEnable));
+    public static string MenuItem_HudPassThroughDisable => Get(nameof(MenuItem_HudPassThroughDisable));
+    public static string FeedbackReportIssueMailSubject => Get(nameof(FeedbackReportIssueMailSubject));
+    public static string GenusTable_UnknownBiologicalSignalsInfo => Get(nameof(GenusTable_UnknownBiologicalSignalsInfo));
+    public static string RoutePlotter_No => Get(nameof(RoutePlotter_No));
+    public static string RoutePlotter_Yes => Get(nameof(RoutePlotter_Yes));
+    public static string Preferences_ParentPlanetNone => Get(nameof(Preferences_ParentPlanetNone));
+    public static string PreferencesWindow_Combo_DoesNotMatter => Get(nameof(PreferencesWindow_Combo_DoesNotMatter));
+    public static string PreferencesWindow_Combo_No => Get(nameof(PreferencesWindow_Combo_No));
+    public static string PreferencesWindow_Combo_Yes => Get(nameof(PreferencesWindow_Combo_Yes));
+    public static string PreferencesWindow_Tooltip_ParentPlanetCriteria => Get(nameof(PreferencesWindow_Tooltip_ParentPlanetCriteria));
+    public static string PreferencesWindow_Info_BodyValueThreshold => Get(nameof(PreferencesWindow_Info_BodyValueThreshold));
+    public static string PreferencesWindow_Info_SpeciesValueThreshold => Get(nameof(PreferencesWindow_Info_SpeciesValueThreshold));
+    public static string PreferencesWindow_Info_BiologicalsViewAltitude => Get(nameof(PreferencesWindow_Info_BiologicalsViewAltitude));
+    public static string WordStar => Get(nameof(WordStar));
+    public static string StatusBodiesExploredOfTotal => Get(nameof(StatusBodiesExploredOfTotal));
+    public static string StatusNonBodyBelts => Get(nameof(StatusNonBodyBelts));
+    public static string StatusScanMissing => Get(nameof(StatusScanMissing));
+    public static string StatusBodiesMissing => Get(nameof(StatusBodiesMissing));
+}

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="EDEA.Views.GenusHudTableView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:EDEA.Views" xmlns:mns="clr-namespace:EDEA" xmlns:properties="clr-namespace:EDEA.Properties">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <TextBlock Grid.Row="0" Style="{StaticResource TableViewInfoHudBanner}" Text="{Binding UnknownBiologicalsInfo}" Visibility="{Binding Path=AreBiologicalsUnknown, Converter={StaticResource BoolToVis}}" />
+    <DataGrid Name="GenusDataGrid" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" Style="{StaticResource DataGridHudStyle}" HeadersVisibility="None" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" ItemsSource="{Binding Genuses}" Visibility="{Binding Path=AreBiologicalsKnown, Converter={StaticResource BoolToVis}}">
+      <DataGrid.RowStyle>
+        <Style BasedOn="{StaticResource DataGridHudRowStyle}" TargetType="{x:Type DataGridRow}" />
+      </DataGrid.RowStyle>
+      <DataGrid.CellStyle>
+        <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="{x:Type DataGridCell}">
+          <Style.Triggers>
+            <Trigger Property="DataGridCell.IsSelected" Value="True">
+              <Setter Property="Background" Value="#00FFFFFF" />
+            </Trigger>
+          </Style.Triggers>
+        </Style>
+      </DataGrid.CellStyle>
+      <FrameworkElement.Resources>
+        <ResourceDictionary>
+          <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource MainScrollBarStyle}" />
+          <mns:BindingProxy x:Key="proxy" Data="{Binding}" />
+        </ResourceDictionary>
+      </FrameworkElement.Resources>
+      <DataGrid.Columns>
+        <DataGridTextColumn ElementStyle="{StaticResource TextColumnBasicStyle}" Binding="{Binding Name}" />
+        <DataGridTextColumn ElementStyle="{StaticResource TextColumnBasicStyle}" Binding="{Binding SpeciesShort}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnSpeciesVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+        <DataGridTextColumn ElementStyle="{StaticResource TextColumnBasicStyle}" Binding="{Binding VariantShort}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnVariantVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+        <DataGridTemplateColumn CellTemplate="{StaticResource IconGenusAnalysisCompleteTemplate}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnAnalysisCompleteIconVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+        <DataGridTextColumn ElementStyle="{StaticResource TextColumnBasicStyle}" Binding="{Binding ScanCount}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnScansVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+        <DataGridTextColumn ElementStyle="{StaticResource TextColumnAlignedRight}" Binding="{Binding ClonalColonyRange}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnClonalColonyRangeVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+        <DataGridTemplateColumn CellTemplate="{StaticResource TextGenus1stScanDistanceTemplate}" Visibility="{Binding Data.GeneraInAnalysisAvailabe, Source={StaticResource proxy}, Converter={StaticResource BoolToVis}}" />
+        <DataGridTemplateColumn CellTemplate="{StaticResource TextGenus2ndScanDistanceTemplate}" Visibility="{Binding Data.GeneraInAnalysisAvailabe, Source={StaticResource proxy}, Converter={StaticResource BoolToVis}}" />
+        <DataGridTemplateColumn CellTemplate="{StaticResource TextGenusVistaGenomicsValueTemplate}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnVistaGenomicsValueVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+        <DataGridTemplateColumn CellTemplate="{StaticResource IconGenusValuableTemplate}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnValuableIconVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+        <DataGridTemplateColumn CellTemplate="{StaticResource IconGenusFirstDiscoveryTemplate}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnNewIconVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+      </DataGrid.Columns>
+    </DataGrid>
+    <TextBlock Grid.Row="1" Text="{x:Static properties:Resources.GenusHud_PossibleOccurrences}" Style="{StaticResource TableViewDataGridHudHeadline}" Visibility="{Binding Path=PredictedSpeciesAvailable, Converter={StaticResource BoolToVis}}" />
+    <DataGrid Grid.Row="2" HeadersVisibility="None" AutoGenerateColumns="False" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" Style="{StaticResource DataGridInverseHudStyle}" ItemsSource="{Binding PredictedSpecies}" Visibility="{Binding Path=PredictedSpeciesAvailable, Converter={StaticResource BoolToVis}}">
+      <FrameworkElement.Resources>
+        <ResourceDictionary>
+          <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource InverseScrollBarStyle}" />
+        </ResourceDictionary>
+      </FrameworkElement.Resources>
+      <DataGrid.RowStyle>
+        <Style BasedOn="{StaticResource DataGridHudRowStyle}" TargetType="{x:Type DataGridRow}" />
+      </DataGrid.RowStyle>
+      <DataGrid.CellStyle>
+        <Style BasedOn="{StaticResource DataGridCellInverseStyle}" TargetType="{x:Type DataGridCell}">
+          <Style.Triggers>
+            <Trigger Property="DataGridCell.IsSelected" Value="True">
+              <Setter Property="Background" Value="#00FFFFFF" />
+            </Trigger>
+          </Style.Triggers>
+        </Style>
+      </DataGrid.CellStyle>
+      <DataGrid.ColumnHeaderStyle>
+        <Style BasedOn="{StaticResource DataGridColumnHeaderInverseStyle}" TargetType="{x:Type DataGridColumnHeader}" />
+      </DataGrid.ColumnHeaderStyle>
+      <DataGrid.Columns>
+        <DataGridTextColumn ElementStyle="{StaticResource TextColumnInverseStyle}" Binding="{Binding Name}" />
+        <DataGridTextColumn ElementStyle="{StaticResource TextColumnInverseStyle}" Binding="{Binding SpeciesShort}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnSpeciesVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+        <DataGridTextColumn ElementStyle="{StaticResource TextColumnInverseAlignedRight}" Binding="{Binding ClonalColonyRange}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnClonalColonyRangeVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+        <DataGridTemplateColumn CellTemplate="{StaticResource TextPredictedSpeciesVistaGenomicsValueTemplate}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnVistaGenomicsValueVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+        <DataGridTemplateColumn CellTemplate="{StaticResource IconPredictedSpeciesValuableTemplate}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnValuableIconVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+        <DataGridTemplateColumn CellTemplate="{StaticResource IconPredictedSpeciesFirstDiscoveryTemplate}" Visibility="{Binding Source={x:Static mns:Preferences.HudWindow}, Path=GenusColumnNewIconVisible, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

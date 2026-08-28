@@ -1,0 +1,565 @@
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text.Json.Nodes;
+using System.Threading.Tasks;
+using EDEA.Models;
+using EDEA.ViewModels;
+using log4net;
+
+namespace EDEA.Services;
+
+public delegate void SystemsOnRouteChangedEventHandler(object? sender, ConcurrentDictionary<long, StarSystem> systemsOnRoute, bool firstRead);
+
+public class RouteProvider
+{
+    private static RouteProvider? instance;
+
+    private static readonly ILog log = LogManager.GetLogger(typeof(RouteProvider));
+
+    private readonly StarSystemProvider _starSystemProvider;
+
+    private readonly EDFileWatcher _fileWatcher;
+
+    private readonly JournalProvider _journalProvider;
+
+    private Task? readStarsSystemsTask;
+
+    private JsonArray? _plotterJumps;
+    private bool _isLocked;
+    private readonly string _lockedRouteFilePath;
+
+    public List<RouteView> Route { get; } = new List<RouteView>();
+
+    public bool IsCustomRoute => _plotterJumps != null && _plotterJumps.Count > 1;
+
+    public bool IsLocked
+    {
+        get => _isLocked;
+        private set
+        {
+            _isLocked = value;
+            log.Info($"Route {(value ? "locked" : "unlocked")}");
+        }
+    }
+
+    private void saveLockedRoute()
+    {
+        try
+        {
+            if (_plotterJumps == null)
+            {
+                return;
+            }
+
+            JsonObject lockedRoute = new JsonObject
+            {
+                ["isLocked"] = true,
+                ["jumps"] = _plotterJumps
+            };
+            Directory.CreateDirectory(Path.GetDirectoryName(_lockedRouteFilePath)!);
+            File.WriteAllText(_lockedRouteFilePath, lockedRoute.ToJsonString());
+            log.Debug($"Saved locked route to {_lockedRouteFilePath}");
+        }
+        catch (Exception exception)
+        {
+            log.Error($"Cannot save locked route to {_lockedRouteFilePath}", exception);
+        }
+    }
+
+    private void deleteLockedRouteFile()
+    {
+        try
+        {
+            if (File.Exists(_lockedRouteFilePath))
+            {
+                File.Delete(_lockedRouteFilePath);
+                log.Debug($"Deleted locked route file {_lockedRouteFilePath}");
+            }
+        }
+        catch (Exception exception)
+        {
+            log.Error($"Cannot delete locked route file {_lockedRouteFilePath}", exception);
+        }
+    }
+
+    private void loadLockedRoute()
+    {
+        try
+        {
+            if (!File.Exists(_lockedRouteFilePath))
+            {
+                return;
+            }
+
+            string content = File.ReadAllText(_lockedRouteFilePath);
+            JsonNode? node = JsonNode.Parse(content);
+            if (node is not JsonObject routeObject || !routeObject.ContainsKey("jumps"))
+            {
+                return;
+            }
+
+            if (routeObject["jumps"] is not JsonArray jumps)
+            {
+                return;
+            }
+
+            _plotterJumps = jumps;
+            IsLocked = true;
+            log.Info($"Loaded locked route from {_lockedRouteFilePath}");
+        }
+        catch (Exception exception)
+        {
+            log.Error($"Cannot load locked route from {_lockedRouteFilePath}", exception);
+        }
+    }
+
+    public event Action? RouteChanged = delegate { };
+
+    public event SystemsOnRouteChangedEventHandler SystemsOnRouteChanged = delegate { };
+
+    private RouteProvider(EDFileWatcher eDFileWatcher, StarSystemProvider starSystemProvider, JournalProvider journalProvider)
+    {
+        _fileWatcher = eDFileWatcher;
+        _starSystemProvider = starSystemProvider;
+        _starSystemProvider.RegisterProvider(this);
+        _journalProvider = journalProvider;
+        _lockedRouteFilePath = Path.Combine(Globals.AppDataFolder, "lockedroute.json");
+        readStarsSystemsTask = firstRead();
+    }
+
+    public static RouteProvider Instance(EDFileWatcher eDFileWatcher, StarSystemProvider starSystemProvider, JournalProvider journalProvider)
+    {
+        if (instance == null)
+        {
+            instance = new RouteProvider(eDFileWatcher, starSystemProvider, journalProvider);
+        }
+        return instance;
+    }
+
+    public void DeletePlotterRoute()
+    {
+        if (IsLocked)
+        {
+            log.Warn("Cannot delete plotter route while it is locked");
+            return;
+        }
+        _plotterJumps = null;
+        readStarsSystemsTask = ReadStarsSystems();
+    }
+
+    public bool ImportPlotterRoute(JsonArray plotterRouteJumps)
+    {
+        try
+        {
+            if (IsLocked)
+            {
+                log.Warn("Cannot import plotter route while it is locked");
+                return false;
+            }
+            if (plotterRouteJumps == null || plotterRouteJumps.Count < 2)
+            {
+                log.Warn("Invalid plotter route, at least two jumps required");
+                return false;
+            }
+
+            log.Info("Importing plotter route in memory");
+            _plotterJumps = plotterRouteJumps;
+            readStarsSystemsTask = ReadStarsSystems();
+            return true;
+        }
+        catch (Exception exception)
+        {
+            log.Error("Can not import plotter route", exception);
+        }
+        return false;
+    }
+
+    public void LockRoute()
+    {
+        IsLocked = true;
+        saveLockedRoute();
+    }
+
+    public void UnlockRoute()
+    {
+        IsLocked = false;
+        deleteLockedRouteFile();
+        DeletePlotterRoute();
+    }
+
+    public bool ImportSpanshRouteFile(string filePath)
+    {
+        try
+        {
+            if (IsLocked)
+            {
+                log.Warn("Cannot import route while it is locked");
+                return false;
+            }
+            if (!File.Exists(filePath))
+            {
+                log.Warn($"Spansh route file not found: {filePath}");
+                return false;
+            }
+
+            string fileContent = File.ReadAllText(filePath);
+            JsonArray? jumps = null;
+            if (string.Equals(Path.GetExtension(filePath), ".json", StringComparison.OrdinalIgnoreCase))
+            {
+                jumps = ParseSpanshJsonRoute(fileContent);
+            }
+            else if (string.Equals(Path.GetExtension(filePath), ".csv", StringComparison.OrdinalIgnoreCase))
+            {
+                jumps = ParseSpanshCsvRoute(fileContent);
+            }
+            else
+            {
+                log.Warn($"Unsupported file type for Spansh route import: {Path.GetExtension(filePath)}");
+                return false;
+            }
+
+            return jumps != null && ImportPlotterRoute(jumps);
+        }
+        catch (Exception exception)
+        {
+            log.Error($"Can not import Spansh route from {filePath}", exception);
+            return false;
+        }
+    }
+
+    private static JsonArray? ParseSpanshJsonRoute(string fileContent)
+    {
+        try
+        {
+            JsonNode? routeJson = JsonNode.Parse(fileContent);
+            if (routeJson is not JsonObject routeObj)
+            {
+                return null;
+            }
+
+            JsonNode? resultNode = Helpsters.ConvertJObjectValue<JsonNode?>(routeObj, "result");
+            if (resultNode is not JsonObject resultObj)
+            {
+                return null;
+            }
+
+            JsonNode? jumpsNode = Helpsters.ConvertJObjectValue<JsonNode?>(resultObj, "system_jumps");
+            if (jumpsNode is not JsonArray jumps)
+            {
+                return null;
+            }
+
+            JsonArray plotterJumps = new JsonArray();
+            foreach (JsonNode? node in jumps)
+            {
+                if (node is not JsonObject item)
+                {
+                    continue;
+                }
+
+                long systemId = Helpsters.ConvertJObjectValue(item, "id64", 0L);
+                string? systemName = Helpsters.ConvertJObjectValue<string?>(item, "system");
+                if (systemId == 0L || string.IsNullOrEmpty(systemName))
+                {
+                    continue;
+                }
+
+                double distance = Helpsters.ConvertJObjectValue(item, "distance_jumped", 0.0);
+                bool isNeutron = Helpsters.ConvertJObjectValue(item, "neutron_star", false);
+
+                plotterJumps.Add(new JsonObject
+                {
+                    ["id64"] = systemId,
+                    ["name"] = systemName,
+                    ["distance"] = distance,
+                    ["has_neutron"] = isNeutron,
+                    ["is_refuel"] = false,
+                    ["is_scoopable"] = false
+                });
+            }
+
+            return plotterJumps.Count > 1 ? plotterJumps : null;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    private static JsonArray? ParseSpanshCsvRoute(string fileContent)
+    {
+        try
+        {
+            using var reader = new StringReader(fileContent);
+            string? header = reader.ReadLine();
+            if (string.IsNullOrEmpty(header))
+            {
+                return null;
+            }
+
+            JsonArray plotterJumps = new JsonArray();
+            double previousDistanceToArrival = 0.0;
+            string? line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
+
+                string[] columns = line.Split(',');
+                if (columns.Length < 5)
+                {
+                    continue;
+                }
+
+                for (int i = 0; i < columns.Length; i++)
+                {
+                    columns[i] = columns[i].Trim('"');
+                }
+
+                string systemName = columns[0];
+                if (string.IsNullOrEmpty(systemName))
+                {
+                    continue;
+                }
+
+                if (!double.TryParse(columns[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double distanceToArrival))
+                {
+                    continue;
+                }
+
+                double distance = plotterJumps.Count == 0 ? 0.0 : distanceToArrival - previousDistanceToArrival;
+                previousDistanceToArrival = distanceToArrival;
+                bool isNeutron = string.Equals(columns[3], "Yes", StringComparison.OrdinalIgnoreCase);
+
+                plotterJumps.Add(new JsonObject
+                {
+                    ["id64"] = (long)systemName.GetHashCode(),
+                    ["name"] = systemName,
+                    ["distance"] = distance,
+                    ["has_neutron"] = isNeutron,
+                    ["is_refuel"] = false,
+                    ["is_scoopable"] = false
+                });
+            }
+
+            return plotterJumps.Count > 1 ? plotterJumps : null;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    private async Task firstRead()
+    {
+        loadLockedRoute();
+        await ReadStarsSystems(firstRead: true);
+        _fileWatcher.NavRouteFileChanged += FileWatcher_NavRouteFileChanged;
+    }
+
+    public async Task ReadStarsSystems(bool firstRead = false)
+    {
+        _starSystemProvider.SetRouteIsLoadingStatus(status: true, "Preparing ...");
+        ConcurrentDictionary<long, StarSystem> starSystemsOnRoute = new ConcurrentDictionary<long, StarSystem>();
+        if (IsCustomRoute)
+        {
+            log.Info("In-memory plotter route active, using plotter route mode");
+            starSystemsOnRoute = await appendStarSystemsFromPlotterJumps(starSystemsOnRoute);
+        }
+        else
+        {
+            starSystemsOnRoute = await appendStarSystemsFromNavRouteFile(starSystemsOnRoute);
+        }
+        BuildRoute(starSystemsOnRoute);
+        SystemsOnRouteChanged?.Invoke(this, starSystemsOnRoute, firstRead);
+        readStarsSystemsTask = null;
+    }
+
+    private void BuildRoute(ConcurrentDictionary<long, StarSystem> starSystemsOnRoute)
+    {
+        Route.Clear();
+        StarSystem? previous = null;
+        foreach (StarSystem star in starSystemsOnRoute.Values.OrderBy(x => x.JumpDistance))
+        {
+            var view = new RouteView
+            {
+                Jump = star.JumpDistance + 1,
+                SystemName = star.Name,
+                StarClass = star.StarClass ?? string.Empty,
+                PrimaryStarIsScoopable = Helpsters.CheckStarClassForScoopable(star.StarClass),
+                DiscoveryStatus = string.Empty,
+                X = star.StarPositionX,
+                Y = star.StarPositionY,
+                Z = star.StarPositionZ
+            };
+            if (previous != null && view.X.HasValue && previous.StarPositionX.HasValue)
+            {
+                double dx = view.X.Value - previous.StarPositionX.Value;
+                double dy = view.Y!.Value - previous.StarPositionY!.Value;
+                double dz = view.Z!.Value - previous.StarPositionZ!.Value;
+                view.Distance = Math.Sqrt(dx * dx + dy * dy + dz * dz).ToString("F2");
+            }
+            else if (star.JumpDistanceLy > 0)
+            {
+                view.Distance = star.JumpDistanceLy.ToString("F2");
+            }
+            Route.Add(view);
+            previous = star;
+        }
+        RouteChanged?.Invoke();
+    }
+
+    private void FileWatcher_NavRouteFileChanged(object? sender, EdFileEvent e)
+    {
+        if (!IsCustomRoute && !IsLocked)
+        {
+            readStarsSystemsTask = ReadStarsSystems();
+        }
+    }
+
+    private async Task<ConcurrentDictionary<long, StarSystem>> appendStarSystemsFromPlotterJumps(ConcurrentDictionary<long, StarSystem> starSystemsOnRoute)
+    {
+        await Task.Run(delegate
+        {
+            try
+            {
+                if (_plotterJumps == null)
+                {
+                    return;
+                }
+
+                int jumpIndex = 0;
+                foreach (JsonNode? node in _plotterJumps)
+                {
+                    if (node is not JsonObject item)
+                    {
+                        continue;
+                    }
+
+                    long systemId = Helpsters.ConvertJObjectValue(item, "id64", 0L);
+                    string? systemName = Helpsters.ConvertJObjectValue<string?>(item, "name");
+                    if (systemId == 0L || string.IsNullOrEmpty(systemName))
+                    {
+                        continue;
+                    }
+
+                    string starClass = Globals.PlotterStarClasses["Unknown"];
+                    if (Helpsters.ConvertJObjectValue(item, "is_refuel", false))
+                    {
+                        starClass = Globals.PlotterStarClasses["Refuel"];
+                    }
+                    else if (Helpsters.ConvertJObjectValue(item, "has_neutron", false))
+                    {
+                        starClass = Globals.PlotterStarClasses["Neutron"];
+                    }
+                    else if (Helpsters.ConvertJObjectValue(item, "is_scoopable", false))
+                    {
+                        starClass = Globals.PlotterStarClasses["Refuel"];
+                    }
+
+                    StarSystem starSystem = new StarSystem(systemId, systemName)
+                    {
+                        JumpDistanceLy = Helpsters.ConvertJObjectValue(item, "distance", 0.0),
+                        StarClass = starClass,
+                        JumpDistance = jumpIndex
+                    };
+                    starSystemsOnRoute.TryAdd(starSystem.Id, starSystem);
+                    log.Debug($"system {starSystem.Name} ({starSystem.Id}) added to route");
+                    jumpIndex++;
+                    _starSystemProvider.SetRouteIsLoadingStatus(status: true, $"Reading from route: {jumpIndex} systems");
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Can not parse in-memory plotter route", exception);
+                _plotterJumps = null;
+            }
+        });
+        return starSystemsOnRoute;
+    }
+
+    private async Task<ConcurrentDictionary<long, StarSystem>> appendStarSystemsFromNavRouteFile(ConcurrentDictionary<long, StarSystem> starSystemsOnRoute)
+    {
+        if (string.IsNullOrEmpty(_fileWatcher.NavRouteFilePath) || !File.Exists(_fileWatcher.NavRouteFilePath))
+        {
+            return starSystemsOnRoute;
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            try
+            {
+                string routeFileContent;
+                using (var stream = File.Open(_fileWatcher.NavRouteFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var reader = new StreamReader(stream))
+                {
+                    routeFileContent = await reader.ReadToEndAsync();
+                }
+                if (string.IsNullOrEmpty(routeFileContent))
+                {
+                    break;
+                }
+                JsonNode? routeJson = JsonNode.Parse(routeFileContent);
+                if (routeJson is not JsonObject obj || !obj.ContainsKey("Route"))
+                {
+                    break;
+                }
+                log.Debug("Route file " + _fileWatcher.NavRouteFilePath + " read");
+                JsonArray? routeArray = Helpsters.ConvertJObjectValue<JsonArray?>(obj, "Route");
+                if (routeArray == null || routeArray.Count < 2)
+                {
+                    log.Info("No route found in route file " + _fileWatcher.NavRouteFilePath);
+                    break;
+                }
+                StarSystem? previousSystem = null;
+                for (int j = 0; j < routeArray.Count; j++)
+                {
+                    JsonNode? routeItemNode = routeArray[j];
+                    if (routeItemNode is not JsonObject item)
+                    {
+                        continue;
+                    }
+                    StarSystem newSystem = new StarSystem(Helpsters.ConvertJObjectValue(item, "SystemAddress", 0L), Helpsters.ConvertJObjectValue<string?>(item, "StarSystem") ?? string.Empty);
+                    JsonArray? starPos = Helpsters.ConvertJObjectValue<JsonArray?>(item, "StarPos");
+                    if (starPos != null && starPos.Count >= 3)
+                    {
+                        newSystem.StarPositionX = starPos[0]?.GetValue<double>();
+                        newSystem.StarPositionY = starPos[1]?.GetValue<double>();
+                        newSystem.StarPositionZ = starPos[2]?.GetValue<double>();
+                    }
+                    newSystem.StarClass = Helpsters.ConvertJObjectValue<string?>(item, "StarClass") ?? string.Empty;
+                    newSystem.JumpDistance = j;
+                    StarSystem systemToAdd = newSystem;
+                    if (systemToAdd.JumpDistance > 0 && previousSystem != null && Helpsters.CalculateDistanceBetweenSystems(systemToAdd, previousSystem, out double distanceInLightYears))
+                    {
+                        systemToAdd.JumpDistanceLy = distanceInLightYears;
+                    }
+                    starSystemsOnRoute.TryAdd(systemToAdd.Id, systemToAdd);
+                    previousSystem = systemToAdd;
+                    _starSystemProvider.SetRouteIsLoadingStatus(status: true, $"Reading from route file: {j} systems");
+                }
+            }
+            catch (Exception exception)
+            {
+                if (10 - i > 1)
+                {
+                    log.Warn($"Route file {_fileWatcher.NavRouteFilePath} missing or locked, waiting for {500}ms, retry {i + 1} of {10}", exception);
+                }
+                else
+                {
+                    log.Error($"Route file {_fileWatcher.NavRouteFilePath} missing or locked, giving up after {i + 1} retries", exception);
+                }
+                await Task.Delay(500);
+                continue;
+            }
+            break;
+        }
+        return starSystemsOnRoute;
+    }
+}

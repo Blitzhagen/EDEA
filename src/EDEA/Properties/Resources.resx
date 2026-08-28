@@ -1,0 +1,1269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="MainWindow_Title" xml:space="preserve">
+    <value>Elite Dangerous Exploration Assistent</value>
+  </data>
+  <data name="ApplicationLanguage" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="MenuItem_ReloadEdsm" xml:space="preserve">
+    <value>Reload EDSM Data For Current System</value>
+  </data>
+  <data name="MenuItem_ResetTripData" xml:space="preserve">
+    <value>Reset Exploration Trip Data</value>
+  </data>
+  <data name="MenuItem_ImportJournalHistory" xml:space="preserve">
+    <value>Import Journal Exploration History</value>
+  </data>
+  <data name="MenuItem_DeleteExplorationHistory" xml:space="preserve">
+    <value>Delete Entire Exploration History</value>
+  </data>
+  <data name="MenuItem_Preferences" xml:space="preserve">
+    <value>Preferences</value>
+  </data>
+  <data name="MenuItem_FeedbackReportIssue" xml:space="preserve">
+    <value>Feedback/Report Issue</value>
+  </data>
+  <data name="MenuItem_About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="StatusBar_CurrentSystem" xml:space="preserve">
+    <value>Current System</value>
+  </data>
+  <data name="StatusBar_DiscoveredBodies" xml:space="preserve">
+    <value>Discovered Bodies</value>
+  </data>
+  <data name="StatusBar_NonBodySignals" xml:space="preserve">
+    <value>Non-Body Signals</value>
+  </data>
+  <data name="StatusBar_CurrentActivity" xml:space="preserve">
+    <value>Current Activity</value>
+  </data>
+  <data name="HudWindow_Title" xml:space="preserve">
+    <value>EDEA HUD</value>
+  </data>
+  <data name="AboutWindow_Title" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AboutWindow_AppName" xml:space="preserve">
+    <value>Elite Dangerous Exploration Assistent</value>
+  </data>
+  <data name="AboutWindow_Version" xml:space="preserve">
+    <value>Version 0.1</value>
+  </data>
+  <data name="AboutWindow_Description" xml:space="preserve">
+    <value>Open-source Elite Dangerous Exploration Assistent</value>
+  </data>
+  <data name="AboutWindow_License" xml:space="preserve">
+    <value>Licensed under the MIT License. No telemetry, no auto-updater, no original assets used.</value>
+  </data>
+  <data name="AboutWindow_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Title" xml:space="preserve">
+    <value>Feedback / Report Issue</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Headline" xml:space="preserve">
+    <value>Feedback / Report Issue</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Description" xml:space="preserve">
+    <value>Your feedback helps improve EDEA.</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Name" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Email" xml:space="preserve">
+    <value>Email:</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Message" xml:space="preserve">
+    <value>Message:</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="PreferencesWindow_Title" xml:space="preserve">
+    <value>Preferences</value>
+  </data>
+  <data name="PreferencesWindow_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="PreferencesWindow_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="PreferencesWindow_ResetPreferences" xml:space="preserve">
+    <value>Reset Preferences</value>
+  </data>
+  <data name="PreferencesWindow_ResetWarning" xml:space="preserve">
+    <value>WARNING: Clicking the button below will reset ALL preferences to their default values. The preferences window will be closed.</value>
+  </data>
+  <data name="RoutePlotterWindow_NoShipData" xml:space="preserve">
+    <value>No ship data is available. Ship data is required for route generation. Please board a ship to generate a route.</value>
+  </data>
+  <data name="RoutePlotterWindow_ErrorMessage" xml:space="preserve">
+    <value>An error has occurred. The route could not be generated. You can try again or cancel.</value>
+  </data>
+  <data name="RoutePlotterWindow_TryAgain" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="RoutePlotterWindow_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="RoutePlotterWindow_GenerateRoute" xml:space="preserve">
+    <value>Generate Route</value>
+  </data>
+  <data name="RoutePlotterWindow_ShipName" xml:space="preserve">
+    <value>Ship Name</value>
+  </data>
+  <data name="RoutePlotterWindow_FrameShiftDrive" xml:space="preserve">
+    <value>Frame Shift Drive</value>
+  </data>
+  <data name="RoutePlotterWindow_FsdBooster" xml:space="preserve">
+    <value>FSD Booster</value>
+  </data>
+  <data name="RoutePlotterWindow_Class" xml:space="preserve">
+    <value>Class</value>
+  </data>
+  <data name="RoutePlotterWindow_Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="RoutePlotterWindow_CargoCount" xml:space="preserve">
+    <value>Cargo Count</value>
+  </data>
+  <data name="RoutePlotterWindow_Supercharged" xml:space="preserve">
+    <value>Supercharged</value>
+  </data>
+  <data name="RoutePlotterWindow_FsdOptimalMass" xml:space="preserve">
+    <value>FSD Optimal Mass</value>
+  </data>
+  <data name="RoutePlotterWindow_SourceSystem" xml:space="preserve">
+    <value>Source System</value>
+  </data>
+  <data name="RoutePlotterWindow_DestinationSystem" xml:space="preserve">
+    <value>Destination System</value>
+  </data>
+  <data name="RoutePlotterWindow_Algorithm" xml:space="preserve">
+    <value>Algorithm</value>
+  </data>
+  <data name="RoutePlotterWindow_UseSupercharge" xml:space="preserve">
+    <value>Use Supercharge</value>
+  </data>
+  <data name="RoutePlotterWindow_UseFsdInjections" xml:space="preserve">
+    <value>Use FSD Injections</value>
+  </data>
+  <data name="RoutePlotterWindow_ExcludeSecondaryStars" xml:space="preserve">
+    <value>Exclude Secondary Stars</value>
+  </data>
+  <data name="RoutePlotterWindow_RefuelEveryScoopable" xml:space="preserve">
+    <value>Refuel Every Scoopable</value>
+  </data>
+  <data name="JournalHistoryImportWindow_Title" xml:space="preserve">
+    <value>Import Journal Exploration History</value>
+  </data>
+  <data name="JournalHistoryImportWindow_JournalFilesProcessed" xml:space="preserve">
+    <value>Journal files processed:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_DetectingStarSystems" xml:space="preserve">
+    <value>Detecting star systems:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_DetectingBodies" xml:space="preserve">
+    <value>Detecting bodies:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_DetectingAdditionalData" xml:space="preserve">
+    <value>Detecting additional data:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_NewSystemsAdded" xml:space="preserve">
+    <value>New systems added to the history:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_SystemsUpdated" xml:space="preserve">
+    <value>Systems updated in the history:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_SystemsIgnored" xml:space="preserve">
+    <value>Systems ignored from the journal:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_StartImport" xml:space="preserve">
+    <value>Start Import</value>
+  </data>
+  <data name="JournalHistoryImportWindow_StopImport" xml:space="preserve">
+    <value>Stop Import</value>
+  </data>
+  <data name="InputStringDialogWindow_Title" xml:space="preserve">
+    <value>Input</value>
+  </data>
+  <data name="InputStringDialogWindow_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="InputStringDialogWindow_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="InputStringListDialogWindow_Title" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="InputStringListDialogWindow_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="InputStringListDialogWindow_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="PreferencesWindow_Tab_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="PreferencesWindow_Tab_HudWindow" xml:space="preserve">
+    <value>HUD Window</value>
+  </data>
+  <data name="PreferencesWindow_Tab_Speech" xml:space="preserve">
+    <value>Speech</value>
+  </data>
+  <data name="PreferencesWindow_Tab_PlanetsOfInterest" xml:space="preserve">
+    <value>Planets Of Interest</value>
+  </data>
+  <data name="PreferencesWindow_SubTab_BasicAttributes" xml:space="preserve">
+    <value>Basic attributes</value>
+  </data>
+  <data name="PreferencesWindow_SubTab_SurfaceConditions" xml:space="preserve">
+    <value>Surface conditions</value>
+  </data>
+  <data name="PreferencesWindow_SubTab_RingRelated" xml:space="preserve">
+    <value>Ring-related</value>
+  </data>
+  <data name="PreferencesWindow_SubTab_ParentPlanet" xml:space="preserve">
+    <value>Parent planet</value>
+  </data>
+  <data name="PreferencesWindow_Tab_GlobalHotkeys" xml:space="preserve">
+    <value>Global Hotkeys</value>
+  </data>
+  <data name="PreferencesWindow_Tab_Configuration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="ColumnHeaderName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ColumnHeaderType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="ColumnHeaderTemperature" xml:space="preserve">
+    <value>Temperature</value>
+  </data>
+  <data name="ColumnHeaderAtmosphere" xml:space="preserve">
+    <value>Atmosphere</value>
+  </data>
+  <data name="ColumnHeaderEdsmDiscoverer" xml:space="preserve">
+    <value>EDSM Discoverer</value>
+  </data>
+  <data name="ColumnHeaderCartographicValue" xml:space="preserve">
+    <value>Cartographic Value</value>
+  </data>
+  <data name="ColumnHeaderOverallProgress" xml:space="preserve">
+    <value>Progress</value>
+  </data>
+  <data name="ColumnHeaderDistance" xml:space="preserve">
+    <value>Distance</value>
+  </data>
+  <data name="ColumnHeaderJump" xml:space="preserve">
+    <value>Jump</value>
+  </data>
+  <data name="ColumnHeaderSystemName" xml:space="preserve">
+    <value>System Name</value>
+  </data>
+  <data name="ColumnHeaderStarClass" xml:space="preserve">
+    <value>Star Class</value>
+  </data>
+  <data name="ColumnHeaderDiscoveryStatus" xml:space="preserve">
+    <value>Discovery status</value>
+  </data>
+  <data name="ColumnHeaderSpecies" xml:space="preserve">
+    <value>Species</value>
+  </data>
+  <data name="ColumnHeaderVariant" xml:space="preserve">
+    <value>Variant</value>
+  </data>
+  <data name="ColumnHeaderScans" xml:space="preserve">
+    <value>Scans</value>
+  </data>
+  <data name="ColumnHeaderClonalColonyRange" xml:space="preserve">
+    <value>Clonal Colony Range</value>
+  </data>
+  <data name="ColumnHeader1stScanDistance" xml:space="preserve">
+    <value>1st Scan Distance</value>
+  </data>
+  <data name="ColumnHeader2ndScanDistance" xml:space="preserve">
+    <value>2nd Scan Distance</value>
+  </data>
+  <data name="ColumnHeaderVistaGenomicsValue" xml:space="preserve">
+    <value>Vista Genomics Value</value>
+  </data>
+  <data name="MenuItem_ClearGalaxyPlotterRoute" xml:space="preserve">
+    <value>Clear Neutron Plotter Route</value>
+  </data>
+  <data name="MenuItem_GenerateGalaxyPlotterRoute" xml:space="preserve">
+    <value>Generate Neutron Plotter Route</value>
+  </data>
+  <data name="MenuItem_UnlockRoute" xml:space="preserve">
+    <value>Unlock Route</value>
+  </data>
+  <data name="MenuItem_LockRoute" xml:space="preserve">
+    <value>Lock Route</value>
+  </data>
+  <data name="MenuItem_ExportLockedRoute" xml:space="preserve">
+    <value>Export Locked Route</value>
+  </data>
+  <data name="MenuItem_ImportLockedRoute" xml:space="preserve">
+    <value>Import Spansh Route</value>
+  </data>
+  <data name="MenuItem_OpenHudWindow" xml:space="preserve">
+    <value>Open HUD Window</value>
+  </data>
+  <data name="MenuItem_CloseHudWindow" xml:space="preserve">
+    <value>Close HUD Window</value>
+  </data>
+  <data name="MenuItem_EnableHudMousePassThrough" xml:space="preserve">
+    <value>Enable HUD Window Mouse Pass Through</value>
+  </data>
+  <data name="MenuItem_DisableHudMousePassThrough" xml:space="preserve">
+    <value>Disable HUD Window Mouse Pass Through</value>
+  </data>
+  <data name="TooltipJournalIcon" xml:space="preserve">
+    <value>Body data read from local journal file</value>
+  </data>
+  <data name="TooltipEdsmOnly" xml:space="preserve">
+    <value>Data based on EDSM only</value>
+  </data>
+  <data name="TooltipNewIcon" xml:space="preserve">
+    <value>First discovery</value>
+  </data>
+  <data name="TooltipValuableBodyIcon" xml:space="preserve">
+    <value>Valuable body</value>
+  </data>
+  <data name="TooltipValuableGenusIcon" xml:space="preserve">
+    <value>Valuable species</value>
+  </data>
+  <data name="TooltipValuableGenusPredictedIcon" xml:space="preserve">
+    <value>Possible occurrences of valuable species</value>
+  </data>
+  <data name="TooltipLoadingIcon" xml:space="preserve">
+    <value>Loading data ...</value>
+  </data>
+  <data name="TooltipPopulatedIcon" xml:space="preserve">
+    <value>Populated system</value>
+  </data>
+  <data name="TooltipTerraformableIcon" xml:space="preserve">
+    <value>Terraformable body</value>
+  </data>
+  <data name="TooltipLandableIcon" xml:space="preserve">
+    <value>Landable body</value>
+  </data>
+  <data name="TooltipTouchdownIcon" xml:space="preserve">
+    <value>Touchdown on landable body</value>
+  </data>
+  <data name="TooltipLandableTouchdownCombiIcon" xml:space="preserve">
+    <value>Landable body/Touchdown</value>
+  </data>
+  <data name="TooltipRingsIcon" xml:space="preserve">
+    <value>Body has rings</value>
+  </data>
+  <data name="TooltipGeologicalsIcon" xml:space="preserve">
+    <value>Body has geological signals</value>
+  </data>
+  <data name="TooltipBiologicalsIcon" xml:space="preserve">
+    <value>Body has biological signals</value>
+  </data>
+  <data name="TooltipScoopableIcon" xml:space="preserve">
+    <value>Star is scoopable</value>
+  </data>
+  <data name="TooltipCurrentBodyIcon" xml:space="preserve">
+    <value>Current body in system</value>
+  </data>
+  <data name="TooltipCurrentSystemIcon" xml:space="preserve">
+    <value>Current system in route</value>
+  </data>
+  <data name="TooltipJumpDestinationSystemIcon" xml:space="preserve">
+    <value>Jump destination system</value>
+  </data>
+  <data name="TooltipSurfaceScannedStatusIcon" xml:space="preserve">
+    <value>Status of planet surface scans</value>
+  </data>
+  <data name="TooltipScannedAndWasMappedIcon" xml:space="preserve">
+    <value>Planet was surface scanned by me</value>
+  </data>
+  <data name="TooltipScannedAndFirstMappedIcon" xml:space="preserve">
+    <value>Planet was first surface scanned by me</value>
+  </data>
+  <data name="TooltipUnscannedAndWasMappedIcon" xml:space="preserve">
+    <value>Planet was first surface scanned by another commander</value>
+  </data>
+  <data name="TooltipUnknownSurfaceScanStatusIcon" xml:space="preserve">
+    <value>Surface scan status is unknown&#10;(Data based on EDSM only)</value>
+  </data>
+  <data name="TooltipAnalysisCompleteIcon" xml:space="preserve">
+    <value>Analysis is complete</value>
+  </data>
+  <data name="TooltipPlanetOfInterestIcon" xml:space="preserve">
+    <value>Planet of interest</value>
+  </data>
+  <data name="TooltipGenusIsFirstDiscovery" xml:space="preserve">
+    <value>First discovery bonus applicable&#10;(Planet was not surface scanned by another commander)</value>
+  </data>
+  <data name="TooltipDistanceToPreviousSystem" xml:space="preserve">
+    <value>Distance from previous system</value>
+  </data>
+  <data name="TooltipDistanceToCurrentSystem" xml:space="preserve">
+    <value>Distance from current system</value>
+  </data>
+  <data name="PreferencesWindow_Label_Colors" xml:space="preserve">
+    <value>Colors</value>
+  </data>
+  <data name="PreferencesWindow_Label_DisplaySize" xml:space="preserve">
+    <value>Display Size</value>
+  </data>
+  <data name="PreferencesWindow_Radio_Small" xml:space="preserve">
+    <value>Small</value>
+  </data>
+  <data name="PreferencesWindow_Radio_Standard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="PreferencesWindow_Radio_Large" xml:space="preserve">
+    <value>Large</value>
+  </data>
+  <data name="PreferencesWindow_Radio_Huge" xml:space="preserve">
+    <value>Huge</value>
+  </data>
+  <data name="PreferencesWindow_Label_Behavior" xml:space="preserve">
+    <value>Behavior</value>
+  </data>
+  <data name="PreferencesWindow_Checkbox_AutomaticTabSwitching" xml:space="preserve">
+    <value>Automatic Tab Switching</value>
+  </data>
+  <data name="PreferencesWindow_Label_Columns" xml:space="preserve">
+    <value>Columns</value>
+  </data>
+  <data name="PreferencesWindow_Bodies" xml:space="preserve">
+    <value>Bodies</value>
+  </data>
+  <data name="PreferencesWindow_Route" xml:space="preserve">
+    <value>Route</value>
+  </data>
+  <data name="PreferencesWindow_Biologicals" xml:space="preserve">
+    <value>Biologicals</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_SurfaceScanIcon" xml:space="preserve">
+    <value>Surface Scan Icon</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_PlanetOfInterestIcon" xml:space="preserve">
+    <value>Planet Of Interest Icon</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_ValuableBodyIcon" xml:space="preserve">
+    <value>Valuable Body Icon</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_RingsIcon" xml:space="preserve">
+    <value>Rings Icon</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_GeologicalsIcon" xml:space="preserve">
+    <value>Geologicals Icon</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_BiologicalsIcon" xml:space="preserve">
+    <value>Biologicals Icon</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_TerraformableIcon" xml:space="preserve">
+    <value>Terraformable Icon</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_LandableIcon" xml:space="preserve">
+    <value>Landable Icon</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_FirstDiscoveryIcon" xml:space="preserve">
+    <value>First Discovery Icon</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_ScoopableStarIconStarClass" xml:space="preserve">
+    <value>Scoopable Star Icon/Star Class</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_ExplorationStatusIcon" xml:space="preserve">
+    <value>Exploration Status Icon</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_PlanetOfInterestIcon" xml:space="preserve">
+    <value>Planet Of Interest Icon</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_ValuableBodiesIcon" xml:space="preserve">
+    <value>Valuable Bodies Icon</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_TerraformablesIcon" xml:space="preserve">
+    <value>Terraformables Icon</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_LandablesIcon" xml:space="preserve">
+    <value>Landables Icon</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_PopulatedIcon" xml:space="preserve">
+    <value>Populated Icon</value>
+  </data>
+  <data name="PreferencesWindow_GenusColumn_AnalysisCompleteIcon" xml:space="preserve">
+    <value>Analysis Complete Icon</value>
+  </data>
+  <data name="PreferencesWindow_GenusColumn_ValuableSpeciesIcon" xml:space="preserve">
+    <value>Valuable Species Icon</value>
+  </data>
+  <data name="PreferencesWindow_GenusColumn_FirstDiscoveryIcon" xml:space="preserve">
+    <value>First Discovery Icon</value>
+  </data>
+  <data name="PreferencesWindow_Label_Opacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="PreferencesWindow_Label_View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="PreferencesWindow_Radio_SyncedWithMainWindow" xml:space="preserve">
+    <value>Synced With Main Window</value>
+  </data>
+  <data name="PreferencesWindow_Label_AutomaticHideOn" xml:space="preserve">
+    <value>Automatic Hide On</value>
+  </data>
+  <data name="PreferencesWindow_Label_InShipSrvFighter" xml:space="preserve">
+    <value>In Ship, SRV, Fighter</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_NoActivePanel" xml:space="preserve">
+    <value>No Active Panel</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_InternalPanel" xml:space="preserve">
+    <value>Internal Panel</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_ExternalPanel" xml:space="preserve">
+    <value>External Panel</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_CommsPanel" xml:space="preserve">
+    <value>Comms Panel</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_RolePanel" xml:space="preserve">
+    <value>Role Panel</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_StationServices" xml:space="preserve">
+    <value>Station Services</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_GalaxyMap" xml:space="preserve">
+    <value>Galaxy Map</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_SystemMap" xml:space="preserve">
+    <value>System Map</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_Orrery" xml:space="preserve">
+    <value>Orrery</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_FssMode" xml:space="preserve">
+    <value>FSS Mode</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_SaaMode" xml:space="preserve">
+    <value>SAA Mode</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_Codex" xml:space="preserve">
+    <value>Codex</value>
+  </data>
+  <data name="PreferencesWindow_Label_OnFoot" xml:space="preserve">
+    <value>On Foot</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_Always" xml:space="preserve">
+    <value>Always</value>
+  </data>
+  <data name="PreferencesWindow_Label_Outputs" xml:space="preserve">
+    <value>Outputs</value>
+  </data>
+  <data name="PreferencesWindow_Label_SpeechOutputText" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="PreferencesWindow_Label_TextPlaceholder" xml:space="preserve">
+    <value>Text Placeholder</value>
+  </data>
+  <data name="PreferencesWindow_Label_Example" xml:space="preserve">
+    <value>Example</value>
+  </data>
+  <data name="PreferencesWindow_Button_TestSpeechOutput" xml:space="preserve">
+    <value>Test Speech Output</value>
+  </data>
+  <data name="PreferencesWindow_Label_Voice" xml:space="preserve">
+    <value>Voice</value>
+  </data>
+  <data name="PreferencesWindow_Label_Rate" xml:space="preserve">
+    <value>Rate</value>
+  </data>
+  <data name="PreferencesWindow_Label_Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="PreferencesWindow_Label_CriteriaSets" xml:space="preserve">
+    <value>Criteria Sets</value>
+  </data>
+  <data name="PreferencesWindow_Button_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="PreferencesWindow_Button_Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="PreferencesWindow_Button_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="PreferencesWindow_Label_DistanceToMainStar" xml:space="preserve">
+    <value>Distance to main star (Ls)</value>
+  </data>
+  <data name="PreferencesWindow_Label_HigherThan" xml:space="preserve">
+    <value>higher than</value>
+  </data>
+  <data name="PreferencesWindow_Label_AndLowerThan" xml:space="preserve">
+    <value>and lower than</value>
+  </data>
+  <data name="PreferencesWindow_Label_BodyRadius" xml:space="preserve">
+    <value>Body radius (Km)</value>
+  </data>
+  <data name="PreferencesWindow_Label_OrbitalInclination" xml:space="preserve">
+    <value>Orbital inclination (°)</value>
+  </data>
+  <data name="PreferencesWindow_Label_IsLandable" xml:space="preserve">
+    <value>Is landable</value>
+  </data>
+  <data name="PreferencesWindow_Label_PlanetClassOneOf" xml:space="preserve">
+    <value>Planet class one of the following</value>
+  </data>
+  <data name="PreferencesWindow_Button_Set" xml:space="preserve">
+    <value>Set</value>
+  </data>
+  <data name="PreferencesWindow_Label_StarClassOneOf" xml:space="preserve">
+    <value>Star class (orbited) one of the following</value>
+  </data>
+  <data name="PreferencesWindow_Label_Gravity" xml:space="preserve">
+    <value>Gravity (g)</value>
+  </data>
+  <data name="PreferencesWindow_Label_Temperature" xml:space="preserve">
+    <value>Temperature (K)</value>
+  </data>
+  <data name="PreferencesWindow_Label_AtmosphereOneOf" xml:space="preserve">
+    <value>Atmosphere one of the following</value>
+  </data>
+  <data name="PreferencesWindow_Label_VolcanismOneOf" xml:space="preserve">
+    <value>Volcanism one of the following</value>
+  </data>
+  <data name="PreferencesWindow_Label_RingsTotalWidth" xml:space="preserve">
+    <value>Rings total width (Km)</value>
+  </data>
+  <data name="PreferencesWindow_Label_RingWidth" xml:space="preserve">
+    <value>Ring width (Km)</value>
+  </data>
+  <data name="PreferencesWindow_Label_RingDensity" xml:space="preserve">
+    <value>Ring density (Mt/km²)</value>
+  </data>
+  <data name="PreferencesWindow_Label_RingTypeOneOf" xml:space="preserve">
+    <value>Ring type one of the following</value>
+  </data>
+  <data name="PreferencesWindow_Label_RingReserveLevelOneOf" xml:space="preserve">
+    <value>Ring reserve level one of the following</value>
+  </data>
+  <data name="PreferencesWindow_Label_CriteriaSetForParentPlanet" xml:space="preserve">
+    <value>Criteria Set for parent planet</value>
+  </data>
+  <data name="PreferencesWindow_Label_Assignment" xml:space="preserve">
+    <value>Assignment</value>
+  </data>
+  <data name="PreferencesWindow_Label_JournalFilesPath" xml:space="preserve">
+    <value>Journal Files Path</value>
+  </data>
+  <data name="PreferencesWindow_Label_Thresholds" xml:space="preserve">
+    <value>Thresholds</value>
+  </data>
+  <data name="PreferencesWindow_Label_ValuableBodies" xml:space="preserve">
+    <value>Valuable Bodies (Cr)</value>
+  </data>
+  <data name="PreferencesWindow_Label_ValuableSpecies" xml:space="preserve">
+    <value>Valuable Species (Cr)</value>
+  </data>
+  <data name="PreferencesWindow_Label_BiologicalsViewAltitude" xml:space="preserve">
+    <value>Biologicals View Altitude (m)</value>
+  </data>
+  <data name="PreferencesWindow_Label_ResetPreferences" xml:space="preserve">
+    <value>Reset Preferences</value>
+  </data>
+  <data name="StatusNoData" xml:space="preserve">
+    <value>No data</value>
+  </data>
+  <data name="StatusSingleBody" xml:space="preserve">
+    <value>single body</value>
+  </data>
+  <data name="UnitBodySingular" xml:space="preserve">
+    <value>body</value>
+  </data>
+  <data name="UnitBodyPlural" xml:space="preserve">
+    <value>bodies</value>
+  </data>
+  <data name="UnitCredits" xml:space="preserve">
+    <value>Cr</value>
+  </data>
+  <data name="UnitPercent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="TabHeader_PlotterRoute" xml:space="preserve">
+    <value>Plotter Route</value>
+  </data>
+  <data name="TabHeader_LockedRoute" xml:space="preserve">
+    <value>Locked Route</value>
+  </data>
+  <data name="TabHeader_Route" xml:space="preserve">
+    <value>Route</value>
+  </data>
+  <data name="TabHeader_Bodies" xml:space="preserve">
+    <value>Bodies</value>
+  </data>
+  <data name="TabHeader_Biologicals" xml:space="preserve">
+    <value>Biologicals</value>
+  </data>
+  <data name="TabHeader_Surroundings" xml:space="preserve">
+    <value>Surroundings</value>
+  </data>
+  <data name="TabHeader_History" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="NoSurroundingsInfo" xml:space="preserve">
+    <value>No surroundings available from EDSM.</value>
+  </data>
+  <data name="RoutePlotterWindow_Loading_Part1" xml:space="preserve">
+    <value>Route is being generated at </value>
+  </data>
+  <data name="RoutePlotterWindow_Loading_Line2" xml:space="preserve">
+    <value>This may take some time, please be patient and keep this window open.</value>
+  </data>
+  <data name="RoutePlotterWindow_Loading_Line4" xml:space="preserve">
+    <value>Once the route has been successfully generated, this window will close</value>
+  </data>
+  <data name="RoutePlotterWindow_Loading_Line5" xml:space="preserve">
+    <value>and the route view will open in the main window.</value>
+  </data>
+  <data name="NoRouteInfo" xml:space="preserve">
+    <value>No route available.</value>
+  </data>
+  <data name="NoBodiesInfo" xml:space="preserve">
+    <value>No bodies explored so far.</value>
+  </data>
+  <data name="Hud_BodyExplorationStatus" xml:space="preserve">
+    <value>Bodies: </value>
+  </data>
+  <data name="Hud_NonBodyExplorationStatus" xml:space="preserve">
+    <value>Non-Bodies: </value>
+  </data>
+  <data name="RoutePlotterWindow_Title" xml:space="preserve">
+    <value>Generate Neutron Plotter Route - https://www.spansh.co.uk/plotter</value>
+  </data>
+  <data name="MessageBoxTitle_Error" xml:space="preserve">
+    <value>EDEA Error</value>
+  </data>
+  <data name="Templates_Tooltip_Status" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="Templates_Tooltip_BodyCount" xml:space="preserve">
+    <value>Body count:</value>
+  </data>
+  <data name="Templates_Tooltip_Journal" xml:space="preserve">
+    <value>Journal</value>
+  </data>
+  <data name="Templates_Tooltip_AllBodiesFound" xml:space="preserve">
+    <value>All bodies have been found.</value>
+  </data>
+  <data name="Templates_Tooltip_EDSM" xml:space="preserve">
+    <value>EDSM</value>
+  </data>
+  <data name="Templates_Tooltip_CartographicProgress" xml:space="preserve">
+    <value>Cartographic progress:</value>
+  </data>
+  <data name="Templates_Tooltip_ValueAchieved" xml:space="preserve">
+    <value>Value achieved:</value>
+  </data>
+  <data name="Templates_Tooltip_AchievableValue" xml:space="preserve">
+    <value>Achievable value:</value>
+  </data>
+  <data name="Templates_Tooltip_VistaGenomicsProgress" xml:space="preserve">
+    <value>Vista Genomics progress:</value>
+  </data>
+  <data name="Templates_Tooltip_ValueAchievedLabel" xml:space="preserve">
+    <value>Value achieved</value>
+  </data>
+  <data name="Templates_Tooltip_BiologicalsAnalyzed" xml:space="preserve">
+    <value>Biologicals analyzed:</value>
+  </data>
+  <data name="Templates_Tooltip_OverallProgress" xml:space="preserve">
+    <value>Overall progress</value>
+  </data>
+  <data name="Templates_Tooltip_TotalValueAchieved" xml:space="preserve">
+    <value>Total value achieved</value>
+  </data>
+  <data name="Templates_Tooltip_BaseValue" xml:space="preserve">
+    <value>Base value:</value>
+  </data>
+  <data name="Templates_Tooltip_SurfaceScanValue" xml:space="preserve">
+    <value>Surface scan value:</value>
+  </data>
+  <data name="Templates_Tooltip_BonusesValue" xml:space="preserve">
+    <value>Bonuses value:</value>
+  </data>
+  <data name="Templates_Tooltip_Radius" xml:space="preserve">
+    <value>Radius: </value>
+  </data>
+  <data name="Templates_Tooltip_Gravity" xml:space="preserve">
+    <value>Gravity: </value>
+  </data>
+  <data name="Templates_Tooltip_Mass" xml:space="preserve">
+    <value>Mass: </value>
+  </data>
+  <data name="Templates_Tooltip_OrbitalInclination" xml:space="preserve">
+    <value>Orbital Inclination: </value>
+  </data>
+  <data name="Templates_Tooltip_FirstDiscoveryBonus" xml:space="preserve">
+    <value>First discovery bonus:</value>
+  </data>
+  <data name="Templates_Tooltip_FirstSurfaceScanBonus" xml:space="preserve">
+    <value>First surface scan bonus:</value>
+  </data>
+  <data name="Templates_Tooltip_EfficientlyScannedBonus" xml:space="preserve">
+    <value>Efficiently scanned bonus:</value>
+  </data>
+  <data name="Templates_Tooltip_MatchingCriteriaSets" xml:space="preserve">
+    <value>Matching criteria sets:</value>
+  </data>
+  <data name="Templates_Tooltip_PlanetsOfInterest" xml:space="preserve">
+    <value>Planets of interest:</value>
+  </data>
+  <data name="Templates_Tooltip_TotalWidthOfRings" xml:space="preserve">
+    <value>Total width of rings:</value>
+  </data>
+  <data name="Templates_Tooltip_ReserveLevel" xml:space="preserve">
+    <value>Reserve level:</value>
+  </data>
+  <data name="Templates_Tooltip_BiologicalSignalsDetected" xml:space="preserve">
+    <value>Biological signals detected:</value>
+  </data>
+  <data name="Templates_Tooltip_AnalysedDiscoveredBiologicals" xml:space="preserve">
+    <value>Analysed / discovered biologicals:</value>
+  </data>
+  <data name="Templates_Tooltip_FirstDiscoveryBonusApplicable" xml:space="preserve">
+    <value>First discovery bonus applicable:</value>
+  </data>
+  <data name="Templates_Tooltip_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Templates_Tooltip_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Templates_Tooltip_PossibleOccurrences" xml:space="preserve">
+    <value>Possible occurrences</value>
+  </data>
+  <data name="History_Headline_CurrentExplorationTrip" xml:space="preserve">
+    <value>Current Exploration Trip</value>
+  </data>
+  <data name="History_Headline_EntireExplorationHistory" xml:space="preserve">
+    <value>Entire Exploration History</value>
+  </data>
+  <data name="History_Group_EstimatedTotalValueOfExplorationData" xml:space="preserve">
+    <value>Estimated Total Value Of Exploration Data</value>
+  </data>
+  <data name="History_Group_EstimatedCartographicValues" xml:space="preserve">
+    <value>Estimated Cartographic Values</value>
+  </data>
+  <data name="History_Group_EstimatedVistaGenomicsValues" xml:space="preserve">
+    <value>Estimated Vista Genomics Values</value>
+  </data>
+  <data name="History_Group_Systems" xml:space="preserve">
+    <value>Systems</value>
+  </data>
+  <data name="History_Group_Bodies" xml:space="preserve">
+    <value>Bodies</value>
+  </data>
+  <data name="History_Group_Rings" xml:space="preserve">
+    <value>Rings</value>
+  </data>
+  <data name="History_Group_Biologicals" xml:space="preserve">
+    <value>Biologicals</value>
+  </data>
+  <data name="History_Panel_Base" xml:space="preserve">
+    <value>Base</value>
+  </data>
+  <data name="History_Panel_SurfaceScan" xml:space="preserve">
+    <value>Surface Scan</value>
+  </data>
+  <data name="History_Panel_Bonuses" xml:space="preserve">
+    <value>Bonuses</value>
+  </data>
+  <data name="History_Panel_FirstDiscoveryBonus" xml:space="preserve">
+    <value>First Discovery Bonus</value>
+  </data>
+  <data name="History_Panel_Discovered" xml:space="preserve">
+    <value>Discovered</value>
+  </data>
+  <data name="History_Panel_FirstDiscovery" xml:space="preserve">
+    <value>First Discovery</value>
+  </data>
+  <data name="History_Panel_MostFrequent" xml:space="preserve">
+    <value>Most Frequent</value>
+  </data>
+  <data name="History_Panel_Rarest" xml:space="preserve">
+    <value>Rarest</value>
+  </data>
+  <data name="History_Panel_Signals" xml:space="preserve">
+    <value>Signals</value>
+  </data>
+  <data name="History_Panel_Mapped" xml:space="preserve">
+    <value>Mapped</value>
+  </data>
+  <data name="History_Panel_Terraformable" xml:space="preserve">
+    <value>Terraformable</value>
+  </data>
+  <data name="History_Panel_WithTouchdowns" xml:space="preserve">
+    <value>With Touchdowns</value>
+  </data>
+  <data name="History_Panel_Valuable" xml:space="preserve">
+    <value>Valuable</value>
+  </data>
+  <data name="History_Panel_WithRings" xml:space="preserve">
+    <value>With Rings</value>
+  </data>
+  <data name="History_Panel_Analysed" xml:space="preserve">
+    <value>Analysed</value>
+  </data>
+  <data name="History_Panel_MostFrequentAnalysed" xml:space="preserve">
+    <value>Most Frequent Analysed</value>
+  </data>
+  <data name="History_Panel_RarestAnalysed" xml:space="preserve">
+    <value>Rarest Analysed</value>
+  </data>
+  <data name="GenusTable_PossibleOccurrences" xml:space="preserve">
+    <value>Possible occurrences</value>
+  </data>
+  <data name="GenusHud_PossibleOccurrences" xml:space="preserve">
+    <value>Possible occurrences</value>
+  </data>
+  <data name="CurrentStatus_WaitingForGame" xml:space="preserve">
+    <value>Waiting for game</value>
+  </data>
+  <data name="CurrentStatus_ExploringSystem" xml:space="preserve">
+    <value>Exploring system</value>
+  </data>
+  <data name="CurrentStatus_UsingPlotterRoute" xml:space="preserve">
+    <value>Using plotter route</value>
+  </data>
+  <data name="CurrentStatus_UsingLockedRoute" xml:space="preserve">
+    <value>Using locked route</value>
+  </data>
+  <data name="CurrentStatus_PlanningRoute" xml:space="preserve">
+    <value>Planning route</value>
+  </data>
+  <data name="CurrentStatus_Jumping" xml:space="preserve">
+    <value>Jumping</value>
+  </data>
+  <data name="CurrentStatus_ExploringPlanet" xml:space="preserve">
+    <value>Exploring planet </value>
+  </data>
+  <data name="CurrentStatus_Loitering" xml:space="preserve">
+    <value>Loitering</value>
+  </data>
+  <data name="Styles_TextBoxPlaceholder_Any" xml:space="preserve">
+    <value>any</value>
+  </data>
+  <data name="Status_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Status_Unexplored" xml:space="preserve">
+    <value>Unexplored</value>
+  </data>
+  <data name="Status_Unscanned" xml:space="preserve">
+    <value>Unscanned</value>
+  </data>
+  <data name="Status_Incomplete" xml:space="preserve">
+    <value>Incomplete</value>
+  </data>
+  <data name="Status_Complete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="UnitFileSingular" xml:space="preserve">
+    <value>file</value>
+  </data>
+  <data name="UnitFilePlural" xml:space="preserve">
+    <value>files</value>
+  </data>
+  <data name="UnitSystemSingular" xml:space="preserve">
+    <value>system</value>
+  </data>
+  <data name="UnitSystemPlural" xml:space="preserve">
+    <value>systems</value>
+  </data>
+  <data name="Button_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="JournalHistoryImport_IntroText_Found" xml:space="preserve">
+    <value>{0} historical journal files were found for import. If data from the files already exists in the history, the history is updated. New data is added to the history.</value>
+  </data>
+  <data name="JournalHistoryImport_IntroText_None" xml:space="preserve">
+    <value>No historical journal files were found for the import. Please create additional journal files by playing Elite Dangerous for several days.</value>
+  </data>
+  <data name="RouteIsLoading_PleaseWait" xml:space="preserve">
+    <value>Please wait ...</value>
+  </data>
+  <data name="Speech_Welcome" xml:space="preserve">
+    <value>o7 Commander {CommanderName}, EDEA at your service!</value>
+  </data>
+  <data name="Speech_Goodbye" xml:space="preserve">
+    <value>See you in the black!</value>
+  </data>
+  <data name="Speech_GeologicalSignals" xml:space="preserve">
+    <value>{PlanetGeoCount} geological signals found on {PlanetType} {PlanetName}.</value>
+  </data>
+  <data name="Speech_BiologicalSignals" xml:space="preserve">
+    <value>{PlanetBioCount} biological signals found on {PlanetType} {PlanetName}.</value>
+  </data>
+  <data name="Speech_FirstDiscoverySystem" xml:space="preserve">
+    <value>First discoverer of star system {SystemName} with primary star of type {SystemStarType}.</value>
+  </data>
+  <data name="Speech_FirstDiscoveryBody" xml:space="preserve">
+    <value>First discoverer of {BodyType} {BodyName}.</value>
+  </data>
+  <data name="Speech_Terraformable" xml:space="preserve">
+    <value>{PlanetType} {PlanetName}, is terraformable.</value>
+  </data>
+  <data name="Speech_Landable" xml:space="preserve">
+    <value>{PlanetType} {PlanetName}, is landable at a distance of {PlanetDistance} Lightseconds with {PlanetAtmosphere} atmosphere, a temperature of {PlanetTemperature} Kelvin, a gravity of {PlanetGravity} g, {PlanetVolcanism} volcanism, a radius of {PlanetRadius} kilometer, {PlanetGeoCount} geological and {PlanetBioCount} biological signals.</value>
+  </data>
+  <data name="Speech_ValuableBody" xml:space="preserve">
+    <value>{BodyType} {BodyName} has a potential exploration value of {BodyAchievableValue} Credits.</value>
+  </data>
+  <data name="Speech_ValuableGenusPredicted" xml:space="preserve">
+    <value>Possible occurrence of valuable species {SpeciesName} predicted on {PlanetType} {PlanetName}.</value>
+  </data>
+  <data name="Speech_ValuableGeneraPredicted" xml:space="preserve">
+    <value>Possible occurrences of {ValuableSpeciesCount} potentially valuable species predicted on {PlanetType} {PlanetName}.</value>
+  </data>
+  <data name="Speech_LeaveClonalColonyRange" xml:space="preserve">
+    <value>Leaving {SpeciesClonColRng} meter clonal colony range of {SpeciesName}, scan count is {SpeciesScanCount}.</value>
+  </data>
+  <data name="Speech_EnterClonalColonyRange" xml:space="preserve">
+    <value>Entering clonal colony range of {SpeciesName}.</value>
+  </data>
+  <data name="Speech_MatchingClassificationsFound" xml:space="preserve">
+    <value>{PlanetType} {PlanetName}, is a planet of interest with {PoiCriteriaSetsCount} matching criteria sets.</value>
+  </data>
+  <data name="Speech_MatchingClassificationFound" xml:space="preserve">
+    <value>{PlanetType} {PlanetName}, is a {PoiCriteriaSetName} planet of interest.</value>
+  </data>
+  <data name="Speech_Ring" xml:space="preserve">
+    <value>{RingType} ring with a density of {RingDensity} mega tonnes per square kilometer and {RingsReserveLevel} reserve levels at {BodyType} {BodyName}.</value>
+  </data>
+  <data name="Speech_RingCount" xml:space="preserve">
+    <value>{BodyType} {BodyName}, is a ring body with {RingsReserveLevel} ring reserve levels, ring count is {RingsCount}.</value>
+  </data>
+  <data name="RoutePlotterWindow_Efficiency" xml:space="preserve">
+    <value>Efficiency</value>
+  </data>
+  <data name="RingType_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="RingType_MetalRich" xml:space="preserve">
+    <value>Metal Rich</value>
+  </data>
+  <data name="RingType_Metallic" xml:space="preserve">
+    <value>Metallic</value>
+  </data>
+  <data name="RingType_Rocky" xml:space="preserve">
+    <value>Rocky</value>
+  </data>
+  <data name="RingType_Icy" xml:space="preserve">
+    <value>Icy</value>
+  </data>
+  <data name="RingReserveLevel_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="RingReserveLevel_Pristine" xml:space="preserve">
+    <value>Pristine</value>
+  </data>
+  <data name="RingReserveLevel_Major" xml:space="preserve">
+    <value>Major</value>
+  </data>
+  <data name="RingReserveLevel_Common" xml:space="preserve">
+    <value>Common</value>
+  </data>
+  <data name="RingReserveLevel_Low" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="RingReserveLevel_Depleted" xml:space="preserve">
+    <value>Depleted</value>
+  </data>
+  <data name="SpeechOutput_Ring" xml:space="preserve">
+    <value>Ring</value>
+  </data>
+  <data name="SpeechOutput_RingCount" xml:space="preserve">
+    <value>Ring Body</value>
+  </data>
+  <data name="SpeechOutput_Welcome" xml:space="preserve">
+    <value>Welcome Message</value>
+  </data>
+  <data name="SpeechOutput_Goodbye" xml:space="preserve">
+    <value>Goodbye Message</value>
+  </data>
+  <data name="SpeechOutput_GeologicalSignals" xml:space="preserve">
+    <value>Geological Signals</value>
+  </data>
+  <data name="SpeechOutput_BiologicalSignals" xml:space="preserve">
+    <value>Biological Signals</value>
+  </data>
+  <data name="SpeechOutput_FirstDiscoverySystem" xml:space="preserve">
+    <value>First Discovery System</value>
+  </data>
+  <data name="SpeechOutput_FirstDiscoveryBody" xml:space="preserve">
+    <value>First Discovery Body</value>
+  </data>
+  <data name="SpeechOutput_Terraformable" xml:space="preserve">
+    <value>Terraformable Planet</value>
+  </data>
+  <data name="SpeechOutput_Landable" xml:space="preserve">
+    <value>Landable Planet</value>
+  </data>
+  <data name="SpeechOutput_ValuableBody" xml:space="preserve">
+    <value>Valuable Body</value>
+  </data>
+  <data name="SpeechOutput_ValuableGenusPredicted" xml:space="preserve">
+    <value>Valuable Species</value>
+  </data>
+  <data name="SpeechOutput_ValuableGeneraPredicted" xml:space="preserve">
+    <value>Valuable Species Count</value>
+  </data>
+  <data name="SpeechOutput_LeaveClonalColonyRange" xml:space="preserve">
+    <value>Leave Colony Range</value>
+  </data>
+  <data name="SpeechOutput_EnterClonalColonyRange" xml:space="preserve">
+    <value>Enter Colony Range</value>
+  </data>
+  <data name="SpeechOutput_MatchingClassificationFound" xml:space="preserve">
+    <value>POI Criteria Set</value>
+  </data>
+  <data name="SpeechOutput_MatchingClassificationsFound" xml:space="preserve">
+    <value>POI Criteria Set Count</value>
+  </data>
+  <data name="UnitLightYears" xml:space="preserve">
+    <value>Ly</value>
+  </data>
+  <data name="UnitLightSeconds" xml:space="preserve">
+    <value>Ls</value>
+  </data>
+  <data name="UnitMeters" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="UnitKilometers" xml:space="preserve">
+    <value>km</value>
+  </data>
+  <data name="WordOf" xml:space="preserve">
+    <value>of</value>
+  </data>
+  <data name="PlanetOfInterest_NearbyHMC" xml:space="preserve">
+    <value>Nearby HMC</value>
+  </data>
+  <data name="PlanetOfInterest_HighGravityLandable" xml:space="preserve">
+    <value>High Gravity Landable</value>
+  </data>
+  <data name="PlanetOfInterest_GuardianRuins" xml:space="preserve">
+    <value>Guardian Ruins?</value>
+  </data>
+  <data name="BodyTypeStar" xml:space="preserve">
+    <value>Star</value>
+  </data>
+  <data name="BodyTypePlanet" xml:space="preserve">
+    <value>Planet</value>
+  </data>
+  <data name="TerraformingState_Terraformable" xml:space="preserve">
+    <value>Terraformable</value>
+  </data>
+  <data name="TerraformingState_CandidateForTerraforming" xml:space="preserve">
+    <value>Candidate for terraforming</value>
+  </data>
+  <data name="CommanderNamePrefix" xml:space="preserve">
+    <value>CMDR </value>
+  </data>
+  <data name="MenuItem_PlotterRouteGenerate" xml:space="preserve">
+    <value>Generate Neutron Plotter Route</value>
+  </data>
+  <data name="MenuItem_PlotterRouteClear" xml:space="preserve">
+    <value>Clear Neutron Plotter Route</value>
+  </data>
+  <data name="MenuItem_RouteLock" xml:space="preserve">
+    <value>Lock Route</value>
+  </data>
+  <data name="MenuItem_RouteUnlock" xml:space="preserve">
+    <value>Unlock Route</value>
+  </data>
+  <data name="MenuItem_RouteImport" xml:space="preserve">
+    <value>Import Locked Route</value>
+  </data>
+  <data name="MenuItem_RouteExport" xml:space="preserve">
+    <value>Export Locked Route</value>
+  </data>
+  <data name="MenuItem_HudOpen" xml:space="preserve">
+    <value>Open HUD Window</value>
+  </data>
+  <data name="MenuItem_HudClose" xml:space="preserve">
+    <value>Close HUD Window</value>
+  </data>
+  <data name="MenuItem_HudPassThroughEnable" xml:space="preserve">
+    <value>Enable HUD Window Mouse Pass Through</value>
+  </data>
+  <data name="MenuItem_HudPassThroughDisable" xml:space="preserve">
+    <value>Disable HUD Window Mouse Pass Through</value>
+  </data>
+  <data name="FeedbackReportIssueMailSubject" xml:space="preserve">
+    <value>EDEA Feedback/Issue</value>
+  </data>
+  <data name="GenusTable_UnknownBiologicalSignalsInfo" xml:space="preserve">
+    <value>Planet has {0} unknown biological signals.</value>
+  </data>
+  <data name="RoutePlotter_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="RoutePlotter_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Preferences_ParentPlanetNone" xml:space="preserve">
+    <value>none</value>
+  </data>
+  <data name="PreferencesWindow_Combo_DoesNotMatter" xml:space="preserve">
+    <value>does not matter</value>
+  </data>
+  <data name="PreferencesWindow_Combo_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="PreferencesWindow_Combo_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="PreferencesWindow_Tooltip_ParentPlanetCriteria" xml:space="preserve">
+    <value>Here you can select a Criteria Set for the parent planet of the planet to be evaluated. If selected, a POI marker will only be placed if there is a parent planet and it meets the criteria. The set selected here will always be evaluated, regardless of whether it is active as a Criteria Set itself or not.</value>
+  </data>
+  <data name="PreferencesWindow_Info_BodyValueThreshold" xml:space="preserve">
+    <value>Bodies with a value below the threshold are not considered valuable.</value>
+  </data>
+  <data name="PreferencesWindow_Info_SpeciesValueThreshold" xml:space="preserve">
+    <value>Species with a value below the threshold are not considered valuable.</value>
+  </data>
+  <data name="PreferencesWindow_Info_BiologicalsViewAltitude" xml:space="preserve">
+    <value>Below this altitude, the Biologicals View is displayed for planets with bio signals.</value>
+  </data>
+  <data name="WordStar" xml:space="preserve">
+    <value>Star</value>
+  </data>
+  <data name="StatusBodiesExploredOfTotal" xml:space="preserve">
+    <value>{0} of {1}</value>
+  </data>
+  <data name="StatusNonBodyBelts" xml:space="preserve">
+    <value>{0}  |  {1} belts</value>
+  </data>
+  <data name="StatusScanMissing" xml:space="preserve">
+    <value>{0}, scan missing</value>
+  </data>
+  <data name="StatusBodiesMissing" xml:space="preserve">
+    <value>{0} missing</value>
+  </data>
+</root>

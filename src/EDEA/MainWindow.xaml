@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="EDEA.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EDEA"
+        xmlns:properties="clr-namespace:EDEA.Properties"
+        xmlns:views="clr-namespace:EDEA.Views"
+        xmlns:converter="clr-namespace:EDEA.Converters"
+        xmlns:selectors="clr-namespace:EDEA.Selectors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        Height="900" Width="1080"
+        ResizeMode="CanResizeWithGrip"
+        MinHeight="479" MinWidth="1070"
+        WindowStyle="None"
+        Icon="/EDEA;component/Resources/app.ico"
+        AllowsTransparency="True"
+        Background="{StaticResource MainBackgroundColor}"
+        Title="{Binding Title}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <converter:SystemExplorationStatusToBrushColorConverter x:Key="SystemExplorationStatusToBrushColorConverter" />
+            <selectors:TabTemplateSelector x:Key="TabTemplateSelector" />
+            <DataTemplate x:Key="Route">
+                <views:RouteTableView  />
+            </DataTemplate>
+            <DataTemplate x:Key="Bodies">
+                <views:BodyTableView  />
+            </DataTemplate>
+            <DataTemplate x:Key="Biologicals">
+                <views:GenusTableView  />
+            </DataTemplate>
+            <DataTemplate x:Key="Surroundings">
+                <views:SurroundingsTableView  />
+            </DataTemplate>
+            <DataTemplate x:Key="History">
+                <views:HistoryTableView  />
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="{StaticResource TitleBarColor}" BorderBrush="{StaticResource MainColor}" BorderThickness="0,0,0,0" Height="30" MouseDown="CustomTitleBar_MouseDown">
+            <DockPanel LastChildFill="True">
+                <Image Height="20" Margin="7,0,0,0" Source="/EDEA;component/Resources/app.ico" VerticalAlignment="Center" />
+                <TextBlock Foreground="{StaticResource MainColor}" VerticalAlignment="Center" Margin="10,0" FontWeight="Bold" Text="{Binding Title}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="—" Width="30" Background="#00FFFFFF" Foreground="{StaticResource MainColor}" BorderThickness="0" Click="MinimizeButton_Click" />
+                    <Button Content="▢" Width="30" Background="#00FFFFFF" Foreground="{StaticResource MainColor}" BorderThickness="0" Click="MaximizeRestoreButton_Click" />
+                    <Button Content="✕" Width="30" Background="#00FFFFFF" Foreground="{StaticResource MainColor}" BorderThickness="0" Click="CloseButton_Click" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Background="#00FFFFFF" Orientation="Horizontal">
+                <Menu Background="#00FFFFFF">
+                    <MenuItem Margin="4,5,4,4" Padding="0">
+                        <MenuItem.Icon>
+                            <ContentControl ContentTemplate="{StaticResource MenuIcon}" Foreground="{StaticResource MainColor}" />
+                        </MenuItem.Icon>
+                        <MenuItem Header="{Binding OpenCloseHudWindowCommandMenuItemString}" Command="{Binding OpenCloseHudWindowCommand}" InputGestureText="{Binding Hotkeys[ToggleHudWindow].FullKey}" />
+                        <MenuItem Header="{Binding EnableDisableHudWindowMousePassThroughCommandMenuItemString}" Command="{Binding EnableDisableHudWindowMousePassThroughCommand}" IsChecked="{Binding HudWindowMousePassThroughEnabled, Mode=OneWay}" InputGestureText="{Binding Hotkeys[ToggleHudMousePassThrough].FullKey}" />
+                        <Separator />
+                        <MenuItem Header="{x:Static properties:Resources.MenuItem_ReloadEdsm}" Command="{Binding ReloadEdsmDataCommand}" IsEnabled="{Binding CurrentSystemAvailable}" />
+                        <Separator />
+                        <MenuItem Header="{Binding GenerateClearPlotterRouteCommandMenuItemString}" Command="{Binding GenerateClearPlotterRouteCommand}" />
+                        <MenuItem Header="{Binding LockUnlockRouteCommandMenuItemString}" Command="{Binding LockUnlockRouteCommand}" IsEnabled="{Binding IsRouteAvailable}" />
+                        <MenuItem Header="{x:Static properties:Resources.MenuItem_ImportLockedRoute}" Command="{Binding ImportSpanshRouteCommand}" />
+                        <Separator />
+                        <MenuItem Header="{x:Static properties:Resources.MenuItem_ResetTripData}" CommandParameter="Trip" Command="{Binding ClearHistoryCommand}" />
+                        <MenuItem Header="{x:Static properties:Resources.MenuItem_ImportJournalHistory}" Command="{Binding ImportJournalHistoryCommand}" />
+                        <MenuItem Header="{x:Static properties:Resources.MenuItem_DeleteExplorationHistory}" Command="{Binding ClearHistoryCommand}" />
+                        <Separator />
+                        <MenuItem Header="{x:Static properties:Resources.MenuItem_Preferences}" Command="{Binding ShowPreferencesWindowCommand}" />
+                        <Separator />
+                        <MenuItem Header="{x:Static properties:Resources.MenuItem_FeedbackReportIssue}" Command="{Binding ShowFeedbackReportIssueWindowCommand}" />
+                        <MenuItem Header="{x:Static properties:Resources.MenuItem_About}" Command="{Binding ShowAboutWindowCommand}" />
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+            <StackPanel Grid.Column="6">
+                <Button ContentTemplate="{StaticResource LoadingIconAnimated}" Margin="0,10,0,0" Style="{StaticResource IconButtonStyle}" Visibility="{Binding Path=DataIsLoading, Converter={StaticResource BoolToVis}}">
+                    <FrameworkElement.ToolTip>
+                        <TextBlock Text="{x:Static local:Globals.TooltipLoadingIcon}" />
+                    </FrameworkElement.ToolTip>
+                </Button>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Static properties:Resources.StatusBar_CurrentSystem}">
+                        <FrameworkElement.Style>
+                            <Style BasedOn="{StaticResource StatusBarHeadline}" TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextBlock.Padding" Value="5,11,5,2" />
+                            </Style>
+                        </FrameworkElement.Style>
+                    </TextBlock>
+                    <Grid>
+                        <Rectangle Width="{Binding Width, ElementName=ExplorationStatusTextBlock}" Height="{Binding Height, ElementName=ExplorationStatusTextBlock}">
+                            <FrameworkElement.Style>
+                                <Style BasedOn="{StaticResource StatusBarExplorationStatusBubble}" TargetType="{x:Type Rectangle}">
+                                    <Setter Property="Fill" Value="{Binding Path=CurrentSystemViewModel, Converter={StaticResource SystemExplorationStatusToBrushColorConverter}}" />
+                                </Style>
+                            </FrameworkElement.Style>
+                        </Rectangle>
+                        <TextBlock Name="ExplorationStatusTextBlock" Style="{StaticResource StatusBarExplorationStatus}" Text="{Binding ExplorationStatus}">
+                            <FrameworkElement.ToolTip>
+                                <ContentControl ContentTemplate="{StaticResource ToolTipDiscoveryStatusTemplate}" Content="{Binding Path=CurrentSystemViewModel}" />
+                            </FrameworkElement.ToolTip>
+                        </TextBlock>
+                    </Grid>
+                </StackPanel>
+                <Grid>
+                    <Popup Name="CopyToClipboardPopup" IsOpen="False" StaysOpen="True" Placement="Mouse">
+                        <Border Style="{StaticResource CopyToClipboardBorder}">
+                            <TextBlock Style="{StaticResource CopyToClipboardTextBlock}" Text="" />
+                        </Border>
+                    </Popup>
+                    <ContentControl>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding Path=DataContext.CopySystemNameToClipboardCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}}" CommandParameter="{Binding Path=Parent, ElementName=CopyToClipboardPopup}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <TextBlock Name="CopyToClipboardTextBlock" Style="{StaticResource StatusBarContent}" Text="{Binding SystemName}" />
+                    </ContentControl>
+                </Grid>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <TextBlock Text="{x:Static properties:Resources.StatusBar_DiscoveredBodies}" Style="{StaticResource StatusBarHeadline}" />
+                <TextBlock Style="{StaticResource StatusBarContent}" Text="{Binding BodyExplorationStatus}" />
+            </StackPanel>
+            <StackPanel Grid.Column="3">
+                <TextBlock Text="{x:Static properties:Resources.StatusBar_NonBodySignals}" Style="{StaticResource StatusBarHeadline}" />
+                <TextBlock Style="{StaticResource StatusBarContent}" Text="{Binding NonBodyExplorationStatus}" />
+            </StackPanel>
+            <StackPanel Grid.Column="4">
+                <TextBlock Text="{x:Static local:Globals.ColumnHeaderOverallProgress}" Style="{StaticResource StatusBarHeadline}" />
+                <TextBlock Text="{Binding Path=CurrentSystemViewModel.OverallProgress}">
+                    <FrameworkElement.Style>
+                        <Style BasedOn="{StaticResource StatusBarContent}" TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Value="True" Binding="{Binding Path=CurrentSystemViewModel.HasOverallProgress}">
+                                    <Setter Property="FrameworkElement.ToolTip">
+                                        <Setter.Value>
+                                            <ContentControl ContentTemplate="{DynamicResource ToolTipProgressTemplate}" Content="{Binding CurrentSystemViewModel}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </FrameworkElement.Style>
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Column="5">
+                <TextBlock Text="{x:Static properties:Resources.StatusBar_CurrentActivity}" Style="{StaticResource StatusBarHeadline}" />
+                <TextBlock Style="{StaticResource StatusBarContent}" Text="{Binding CurrentStatus}" />
+            </StackPanel>
+        </Grid>
+        <TabControl Style="{StaticResource MainTabControl}" TabStripPlacement="Left" Grid.Row="2" Background="#00FFFFFF" ItemsSource="{Binding TabViewModels}" SelectedIndex="{Binding SelectedTabIndex}" ContentTemplateSelector="{StaticResource TabTemplateSelector}">
+            <ItemsControl.ItemContainerStyle>
+                <Style BasedOn="{StaticResource TabItemStyle}" TargetType="{x:Type TabItem}">
+                    <Setter Property="Header" Value="{Binding TabHeader}" />
+                    <Setter Property="Visibility" Value="{Binding TabVisibility}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </TabControl>
+    </Grid>
+</Window>

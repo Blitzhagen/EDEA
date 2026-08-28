@@ -1,0 +1,517 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="EDEA.Views.HistoryTableView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:EDEA.Views" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:converter="clr-namespace:EDEA.Converters" xmlns:viewmodels="clr-namespace:EDEA.ViewModels" xmlns:properties="clr-namespace:EDEA.Properties">
+  <Grid Name="HistoryGrid">
+    <Border Style="{StaticResource TabViewBorder}" />
+    <ScrollViewer Style="{StaticResource HistoryContentView}">
+      <FrameworkElement.Resources>
+        <ResourceDictionary>
+          <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource MainScrollBarStyle}" />
+        </ResourceDictionary>
+      </FrameworkElement.Resources>
+      <StackPanel>
+        <Grid Margin="0,0,0,25">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+          <Popup Name="CopyToClipboardPopup" IsOpen="False" StaysOpen="True" Placement="Mouse">
+            <Border Style="{StaticResource CopyToClipboardBorder}">
+              <TextBlock Style="{StaticResource CopyToClipboardTextBlock}" Text="" />
+            </Border>
+          </Popup>
+          <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Static properties:Resources.History_Headline_CurrentExplorationTrip}" Style="{StaticResource HistoryHeadline}" />
+          <StackPanel Grid.Row="1" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_EstimatedTotalValueOfExplorationData}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel Orientation="Horizontal">
+                <Border Style="{StaticResource HistoryPanel}">
+                  <StackPanel>
+                    <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTotalValueTemplate}" Content="{Binding HistoryData.TripTotalExplorationDataValueSum}" />
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="2" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_EstimatedCartographicValues}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Base}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripBodyCartographicBaseValueSum}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_SurfaceScan}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripBodyCartographicSurfaceScanValueSum}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Bonuses}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripBodyCartographicBonusValueSum}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="3" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_EstimatedVistaGenomicsValues}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Base}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripGenusVistaGenomicsBaseValueSum}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_FirstDiscoveryBonus}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripGenusVistaGenomicsFirstDiscoveryBonusValueSum}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="4" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_Systems}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Discovered}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripSystemCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_FirstDiscovery}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripSystemFirstDiscoveryCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_MostFrequent}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripSystemMostFrequentStarClass}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Rarest}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripSystemRarestStarClass}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="5" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_Bodies}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Signals}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripBodySignalSum}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Discovered}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripBodyCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_FirstDiscovery}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripBodyFirstDiscoveryCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Mapped}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripBodySurfaceScanCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Terraformable}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripBodyTerraformableCount}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_WithTouchdowns}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripBodyTouchdownCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Valuable}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripBodyValuableCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_WithRings}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripBodyRingBodyCount}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="6" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_Rings}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel Orientation="Horizontal">
+                <Border Style="{StaticResource HistoryPanel}">
+                  <StackPanel>
+                    <TextBlock Text="{x:Static properties:Resources.History_Panel_Discovered}" Style="{StaticResource HistoryPanelHeadline}" />
+                    <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripRingCount}" />
+                  </StackPanel>
+                </Border>
+                <Border Style="{StaticResource HistoryPanel}">
+                  <StackPanel>
+                    <TextBlock Text="{x:Static properties:Resources.History_Panel_FirstDiscovery}" Style="{StaticResource HistoryPanelHeadline}" />
+                    <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripRingFirstDiscoveryCount}" />
+                  </StackPanel>
+                </Border>
+                <Border Style="{StaticResource HistoryPanel}">
+                  <StackPanel>
+                    <TextBlock Text="{x:Static properties:Resources.History_Panel_MostFrequent}" Style="{StaticResource HistoryPanelHeadline}" />
+                    <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripRingMostFrequentType}" />
+                  </StackPanel>
+                </Border>
+                <Border Style="{StaticResource HistoryPanel}">
+                  <StackPanel>
+                    <TextBlock Text="{x:Static properties:Resources.History_Panel_Rarest}" Style="{StaticResource HistoryPanelHeadline}" />
+                    <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripRingRarestType}" />
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="7" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_Biologicals}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Signals}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripGenusSignalSum}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Discovered}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripGenusCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_FirstDiscovery}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripGenusFirstDiscoveryCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Analysed}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripGenusAnalysisCompleteCount}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_MostFrequentAnalysed}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripGenusMostFrequentSpecies}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_RarestAnalysed}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.TripGenusRarestSpecies}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Grid>
+        <Rectangle HorizontalAlignment="Stretch" Fill="{StaticResource InactiveMainColor}" Height="1" />
+        <Grid Margin="0,34,0,25">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+          <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Static properties:Resources.History_Headline_EntireExplorationHistory}" Style="{StaticResource HistoryHeadline}" />
+          <StackPanel Grid.Row="1" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_EstimatedTotalValueOfExplorationData}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel Orientation="Horizontal">
+                <Border Style="{StaticResource HistoryPanel}">
+                  <StackPanel>
+                    <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTotalValueTemplate}" Content="{Binding HistoryData.TotalExplorationDataValueSum}" />
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="2" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_EstimatedCartographicValues}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Base}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.BodyCartographicBaseValueSum}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_SurfaceScan}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.BodyCartographicSurfaceScanValueSum}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Bonuses}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.BodyCartographicBonusValueSum}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="3" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_EstimatedVistaGenomicsValues}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Base}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.GenusVistaGenomicsBaseValueSum}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_FirstDiscoveryBonus}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.GenusVistaGenomicsFirstDiscoveryBonusValueSum}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="4" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_Systems}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Discovered}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.SystemCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_FirstDiscovery}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.SystemFirstDiscoveryCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_MostFrequent}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.SystemMostFrequentStarClass}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Rarest}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.SystemRarestStarClass}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="5" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_Bodies}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Signals}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.BodySignalSum}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Discovered}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.BodyCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_FirstDiscovery}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.BodyFirstDiscoveryCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Mapped}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.BodySurfaceScanCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Terraformable}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.BodyTerraformableCount}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_WithTouchdowns}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.BodyTouchdownCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Valuable}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.BodyValuableCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_WithRings}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.BodyRingBodyCount}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="6" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_Rings}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel Orientation="Horizontal">
+                <Border Style="{StaticResource HistoryPanel}">
+                  <StackPanel>
+                    <TextBlock Text="{x:Static properties:Resources.History_Panel_Discovered}" Style="{StaticResource HistoryPanelHeadline}" />
+                    <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.RingCount}" />
+                  </StackPanel>
+                </Border>
+                <Border Style="{StaticResource HistoryPanel}">
+                  <StackPanel>
+                    <TextBlock Text="{x:Static properties:Resources.History_Panel_FirstDiscovery}" Style="{StaticResource HistoryPanelHeadline}" />
+                    <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.RingFirstDiscoveryCount}" />
+                  </StackPanel>
+                </Border>
+                <Border Style="{StaticResource HistoryPanel}">
+                  <StackPanel>
+                    <TextBlock Text="{x:Static properties:Resources.History_Panel_MostFrequent}" Style="{StaticResource HistoryPanelHeadline}" />
+                    <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.RingMostFrequentType}" />
+                  </StackPanel>
+                </Border>
+                <Border Style="{StaticResource HistoryPanel}">
+                  <StackPanel>
+                    <TextBlock Text="{x:Static properties:Resources.History_Panel_Rarest}" Style="{StaticResource HistoryPanelHeadline}" />
+                    <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.RingRarestType}" />
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Row="7" Grid.Column="1">
+            <TextBlock Text="{x:Static properties:Resources.History_Group_Biologicals}" Style="{StaticResource HistoryGroupHeadline}" />
+            <Border Style="{StaticResource HistoryGroup}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Signals}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.GenusSignalSum}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Discovered}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.GenusCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_FirstDiscovery}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.GenusFirstDiscoveryCount}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_Analysed}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.GenusAnalysisCompleteCount}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_MostFrequentAnalysed}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.GenusMostFrequentSpecies}" />
+                    </StackPanel>
+                  </Border>
+                  <Border Style="{StaticResource HistoryPanel}">
+                    <StackPanel>
+                      <TextBlock Text="{x:Static properties:Resources.History_Panel_RarestAnalysed}" Style="{StaticResource HistoryPanelHeadline}" />
+                      <ContentControl ContentTemplate="{StaticResource TextHistoryPanelTemplate}" Content="{Binding HistoryData.GenusRarestSpecies}" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Grid>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

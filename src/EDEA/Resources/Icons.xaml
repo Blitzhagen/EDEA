@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialIcons="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF">
+  <DataTemplate x:Key="JournalIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Journal"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="EdsmIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Globe"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="NewIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="PlusCircle"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="LoadingIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Cached"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="LoadingIconAnimated">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Sync" Animation="Spin"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="TerraformableIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Terraform"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="GeologicalsIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Pickaxe"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="BiologicalsIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Biohazard"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="ScoopableIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Fuel"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="CurrentEntityIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="GpsFixed"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="JumpDestinationSystemIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="RocketLaunch"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="UnknownIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="HelpCircle"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="UnexploredIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="MapMarkerQuestion"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="UnscannedIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Radar"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="IncompleteIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="ProgressClock"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="CloseIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Close"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="ResizeIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Resize"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="MenuIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Menu"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="LandableIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="AirplaneLanding"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="TouchdownIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="ArrowDownBoldCircle"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="ValuableIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="DiamondStone"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="SurfaceScannedIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Check"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="CompleteIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="CheckCircle"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="PlanetOfInterestIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="StarCircle"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="PopulatedIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="AccountGroup"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+  <DataTemplate x:Key="RingsIcon">
+    <Viewbox Stretch="Uniform">
+      <materialIcons:MaterialIcon Kind="Orbit"
+          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+          Width="24" Height="24" />
+    </Viewbox>
+  </DataTemplate>
+</ResourceDictionary>

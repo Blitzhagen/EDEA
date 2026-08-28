@@ -1,0 +1,49 @@
+<Window x:Class="EDEA.Windows.JournalHistoryImportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="clr-namespace:EDEA.Properties"
+        Title="{x:Static properties:Resources.JournalHistoryImportWindow_Title}" MinHeight="300" SizeToContent="Height" MinWidth="450" MaxWidth="450"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow"
+        Background="{StaticResource MainBackgroundColor}">
+    <Grid Margin="17,16,17,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.62*" />
+            <ColumnDefinition Width="0.38*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="42" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="70" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" TextWrapping="Wrap" Style="{StaticResource AboutTitle}" Margin="0,0,0,7" Text="{Binding IntroText}" />
+        <ProgressBar Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Height="22" Minimum="0" Maximum="100" VerticalAlignment="Center" Style="{StaticResource ProgressBarGeneric}" Value="{Binding ProgressBarValue, Mode=OneWay}" />
+        <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource AboutTitle}" Padding="0,0,0,1" Text="{Binding StatusPercentage, Mode=OneWay}" />
+        <TextBlock Grid.Column="0" Grid.Row="3" Text="{x:Static properties:Resources.JournalHistoryImportWindow_JournalFilesProcessed}" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutHeader}" />
+        <TextBlock Grid.Column="1" Grid.Row="3" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutContent}" Text="{Binding JournalFilesProcessed, Mode=OneWay}" />
+        <TextBlock Grid.Column="0" Grid.Row="4" Text="{x:Static properties:Resources.JournalHistoryImportWindow_DetectingStarSystems}" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutHeader}" />
+        <TextBlock Grid.Column="1" Grid.Row="4" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutContent}" Text="{Binding SystemsScanProgress, Mode=OneWay}" />
+        <TextBlock Grid.Column="0" Grid.Row="5" Text="{x:Static properties:Resources.JournalHistoryImportWindow_DetectingBodies}" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutHeader}" />
+        <TextBlock Grid.Column="1" Grid.Row="5" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutContent}" Text="{Binding BodiesScanProgress, Mode=OneWay}" />
+        <TextBlock Grid.Column="0" Grid.Row="6" Text="{x:Static properties:Resources.JournalHistoryImportWindow_DetectingAdditionalData}" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutHeader}" />
+        <TextBlock Grid.Column="1" Grid.Row="6" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutContent}" Text="{Binding AdditionalDataScanProgress, Mode=OneWay}" />
+        <TextBlock Grid.Column="0" Grid.Row="7" Text="{x:Static properties:Resources.JournalHistoryImportWindow_NewSystemsAdded}" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutHeader}" />
+        <TextBlock Grid.Column="1" Grid.Row="7" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutContent}" Text="{Binding AddedToHistoryCount, Mode=OneWay}" />
+        <TextBlock Grid.Column="0" Grid.Row="8" Text="{x:Static properties:Resources.JournalHistoryImportWindow_SystemsUpdated}" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutHeader}" />
+        <TextBlock Grid.Column="1" Grid.Row="8" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutContent}" Text="{Binding UpdatedInHistoryCount, Mode=OneWay}" />
+        <TextBlock Grid.Column="0" Grid.Row="9" Text="{x:Static properties:Resources.JournalHistoryImportWindow_SystemsIgnored}" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutHeader}" />
+        <TextBlock Grid.Column="1" Grid.Row="9" Foreground="{StaticResource MainColor}" Style="{StaticResource AboutContent}" Text="{Binding IgnoredSystemsCount, Mode=OneWay}" />
+        <Grid Grid.Column="0" Grid.Row="11" Grid.ColumnSpan="2" VerticalAlignment="Top">
+            <Button x:Name="StartImportButton" Content="{x:Static properties:Resources.JournalHistoryImportWindow_StartImport}" Style="{StaticResource UpdateButton}" />
+            <Button x:Name="StopImportCloseButton" Content="{x:Static properties:Resources.JournalHistoryImportWindow_StopImport}" Style="{StaticResource UpdateButton}" />
+        </Grid>
+    </Grid>
+</Window>
