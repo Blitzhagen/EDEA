@@ -20,9 +20,8 @@
 ## 2. Quellcode-Dokumentation
 
 **Geprüfte C#-Quelldateien (git-tracked):** 186 Dateien  
-**Mit XML-Dokumentationskommentaren versehen:** 184 Dateien  
-**Ausgenommen (Metadaten/Designer, unverändert):**
-- `src/EDEA/Properties/Resources.cs`
+**Mit XML-Dokumentationskommentaren versehen:** 185 Dateien  
+**Ausgenommen (Metadaten, unverändert):**
 - `src/EDEA/AssemblyInfo.cs`
 
 | Ordner | Anzahl `.cs` | XML-Dokumentation | Zugehörige High-Level-Doku |
@@ -33,7 +32,7 @@
 | `Enums/` | 6 | ✅ | `doc/HELPERS_ENUMS_STORES.md` |
 | `Helpers/` | 2 | ✅ | `doc/HELPERS_ENUMS_STORES.md` |
 | `Models/` | 67 | ✅ | `doc/MODELS.md` |
-| `Properties/` | 1 | ⚠ `Resources.cs` unverändert | `doc/HELPERS_ENUMS_STORES.md` |
+| `Properties/` | 1 | ✅ | `doc/HELPERS_ENUMS_STORES.md` |
 | `Services/` | 18 | ✅ | `doc/SERVICES.md`, `doc/API_INTEGRATION.md` |
 | `Stores/` | 1 | ✅ | `doc/DATABASE.md`, `doc/HELPERS_ENUMS_STORES.md` |
 | `ViewModels/` | 26 | ✅ | `doc/VIEWMODELS.md` |
@@ -108,7 +107,7 @@ dotnet build "EDEA.slnx"
 ## 8. Offene Punkte / Hinweise
 
 - `.gitignore` weist noch eine unabhängige, unversionierte Änderung auf (wurde nicht Teil dieser Dokumentationsarbeit).
-- `AssemblyInfo.cs` und `Resources.cs` wurden nicht mit XML-Dokumentation versehen, da sie keine öffentlichen/erweiterbaren API-Mitglieder enthalten.
+- `AssemblyInfo.cs` wurde nicht mit XML-Dokumentation versehen, da es keine öffentlichen/erweiterbaren API-Mitglieder enthält.
 - Mermaid-Diagramme sind als Markdown-Code-Blöcke eingebettet; Rendering ist abhängig vom Markdown-Viewer.
 
 ---
