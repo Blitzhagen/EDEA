@@ -5,7 +5,8 @@ using EDEA.ViewModels;
 namespace EDEA.Commands;
 
 /// <summary>
-/// Command that either clears an existing custom plotter route or opens the route plotter window.
+/// Command that clears an existing, unlocked custom plotter route or opens the route plotter window.
+/// Deletion is disabled while the route is locked.
 /// </summary>
 public class GenerateClearPlotterRouteCommand : CommandBase
 {

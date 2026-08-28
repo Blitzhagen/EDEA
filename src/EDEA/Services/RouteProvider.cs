@@ -223,7 +223,7 @@ public class RouteProvider
         saveLockedRoute();
     }
 
-    /// <summary>Performs the UnlockRoute operation.</summary>
+    /// <summary>Unlocks the route by deleting the locked route file without clearing the in-memory plotter route.</summary>
     public void UnlockRoute()
     {
         IsLocked = false;

@@ -59,11 +59,11 @@ Alle ViewModels basieren auf `CommunityToolkit.Mvvm`:
 | `ShowFeedbackReportIssueWindowCommand` | Feedback-/Fehlermelde-Fenster öffnen |
 | `ShowPreferencesWindowCommand` | Einstellungsfenster öffnen |
 | `ClearHistoryCommand` | Historie/Expedition zurücksetzen |
-| `GenerateClearPlotterRouteCommand` | Neutronen-Route erzeugen oder löschen |
+| `GenerateClearPlotterRouteCommand` | Neutronen-Route erzeugen oder (falls nicht gesperrt) löschen |
 | `CopySystemNameToClipboardCommand` | Systemname in die Zwischenablage kopieren |
 | `ImportJournalHistoryCommand` | Journal-Historie importieren |
 | `EnableDisableHudWindowMousePassThroughCommand` | Maus-Durchklick für HUD umschalten |
-| `LockUnlockRouteCommand` | Aktuelle Route sperren/entsperren |
+| `LockUnlockRouteCommand` | Aktuelle Route sperren/entsperren (ohne Löschen der Plotter-Route) |
 | `ImportSpanshRouteCommand` | Spansh-Route importieren |
 
 ## Tab-Verwaltung

@@ -24,11 +24,11 @@ Dieses Dokument beschreibt alle in `src/EDEA/Commands/` implementierten Befehle.
 | `CloseWindowCommand` | Schließt das zugehörige WPF-Fenster. | `CommandBase` | `Window window` |
 | `CopyToClipboardCommand` | Kopiert Texte oder numerische Werte in die Zwischenablage und zeigt optional ein Popup an. | `CommandBase` | `Execute(parameter)`: `object?` (Text, Zahl oder `CopyToClipboardCommandParameter`) |
 | `EnableDisableHudWindowMousePassThroughCommand` | Schaltet den Maus-Durchgriff des HUD-Fensters um. | `CommandBase` | `HudViewModel hudViewModel` |
-| `GenerateClearPlotterRouteCommand` | Löscht eine vorhandene Plotter-Route oder öffnet das Routen-Plotter-Fenster. | `CommandBase` | `RoutePlotterViewModel routePlotterViewModel`, `RouteProvider routeProvider`, `Action? onCleared` |
+| `GenerateClearPlotterRouteCommand` | Löscht eine vorhandene, nicht gesperrte Plotter-Route oder öffnet das Routen-Plotter-Fenster. Der Löschmodus ist deaktiviert, solange die Route gesperrt ist. | `CommandBase` | `RoutePlotterViewModel routePlotterViewModel`, `RouteProvider routeProvider`, `Action? onCleared` |
 | `ImportJournalHistoryCommand` | Öffnet das Fenster zum Importieren der Journal-Historie. | `CommandBase` | `JournalHistoryImportViewModel importJournalHistoryViewModel` |
 | `ImportSpanshRouteCommand` | Importiert eine Spansh-Routen-Datei in die Anwendung. | `CommandBase` | `MainViewModel mainViewModel`, `RouteProvider routeProvider` |
 | `LoadEdsmSystemDataCommand` | Lädt EDSM-Systemdaten und wechselt in den Bodies-Tab. | `CommandBase` | `MainViewModel mainViewModel`, `StarSystemProvider starSystemProvider` |
-| `LockUnlockRouteCommand` | Sperrt oder entsperrt die aktuelle Route. | `CommandBase` | `MainViewModel mainViewModel`, `RouteProvider routeProvider` |
+| `LockUnlockRouteCommand` | Sperrt die aktuelle Route oder hebt die Sperre auf, ohne die Plotter-Route zu löschen. | `CommandBase` | `MainViewModel mainViewModel`, `RouteProvider routeProvider` |
 | `MailToFeedbackReportIssueMailAddressCommand` | Öffnet das Standard-Mailprogramm mit vorkonfiguriertem Feedback. | `CommandBase` | – |
 | `OpenCloseHudWindowCommand` | Öffnet oder schließt das HUD-Fenster je nach aktuellem Zustand. | `CommandBase` | `HudViewModel hudViewModel` |
 | `OpenLogfileFolderCommand` | Öffnet den Anwendungs-Logordner im Windows-Explorer. | `CommandBase` | – |
