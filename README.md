@@ -15,3 +15,13 @@ Provide a feature-rich exploration companion for Elite Dangerous with a clean, m
 - CommunityToolkit.Mvvm
 - log4net
 - MIT License
+
+## Dokumentation
+
+Weitere technische Dokumentation befindet sich im Ordner `doc/`:
+
+- [Dokumentationsplanung](doc/DOCS_PLAN.md)
+- [Architektur](doc/ARCHITECTURE.md)
+- [Erste Schritte](doc/GETTING_STARTED.md)
+
+Den vollständigen Überblick über alle Artikel gibt der `doc/`-Ordner.
