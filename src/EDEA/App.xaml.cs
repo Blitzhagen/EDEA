@@ -22,16 +22,44 @@ using Microsoft.Win32;
 
 namespace EDEA;
 
+/// <summary>
+/// Main application class that configures logging, initializes providers and shows the main window.
+/// </summary>
 public partial class App : Application
 {
+    /// <summary>
+    /// Mutex that ensures only one application instance can run at a time.
+    /// </summary>
     private static readonly Mutex singletonApp = new(true, "EDEA7062a413-faf0-406d-bae5-cddf0541e295");
+
+    /// <summary>
+    /// Shared <see cref="HttpClient"/> used for web API calls.
+    /// </summary>
     private static readonly HttpClient httpClient = new();
+
+    /// <summary>
+    /// Logger for the application.
+    /// </summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(App));
 
+    /// <summary>
+    /// Persistent SQLite data store.
+    /// </summary>
     private SQLiteStore? _sqliteStore;
+
+    /// <summary>
+    /// Provider that manages application settings.
+    /// </summary>
     private SettingsProvider? _settingsProvider;
+
+    /// <summary>
+    /// Provider that manages the current star system.
+    /// </summary>
     private StarSystemProvider? _starSystemProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="App"/> class.
+    /// </summary>
     public App()
     {
         ConfigureLog4Net();
@@ -79,6 +107,9 @@ public partial class App : Application
         AppDomain.CurrentDomain.UnhandledException += OnCurrentDomainUnhandledException;
     }
 
+    /// <summary>
+    /// Configures log4net from an embedded configuration string.
+    /// </summary>
     private static void ConfigureLog4Net()
     {
         string logFileFullPath = Path.Combine(Globals.AppDataFolder, "log", (Assembly.GetEntryAssembly()?.GetName().Name ?? "EDEA") + ".log");
@@ -124,6 +155,11 @@ public partial class App : Application
         XmlConfigurator.Configure(stream);
     }
 
+    /// <summary>
+    /// Called when the application is starting.
+    /// </summary>
+    /// <param name="e">The startup event data.</param>
+    /// <exception cref="Exception">Re-throws any exception that occurs during startup after logging it.</exception>
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -138,6 +174,9 @@ public partial class App : Application
         }
     }
 
+    /// <summary>
+    /// Creates and wires up all application providers, then shows the main window.
+    /// </summary>
     private void RunStartup()
     {
         _settingsProvider = new SettingsProvider();
@@ -191,6 +230,9 @@ public partial class App : Application
 
     }
 
+    /// <summary>
+    /// Sets the current UI and thread culture based on the configured language.
+    /// </summary>
     private void ApplyLanguage()
     {
         var supported = new[] { "en", "de", "es", "fr", "ru", "pt-BR" };
@@ -217,12 +259,21 @@ public partial class App : Application
         global::EDEA.Properties.Resources.Culture = culture;
     }
 
+    /// <summary>
+    /// Called when the application is exiting.
+    /// </summary>
+    /// <param name="e">The exit event data.</param>
     protected override void OnExit(ExitEventArgs e)
     {
         _starSystemProvider?.HandleApplicationShutdown();
         base.OnExit(e);
     }
 
+    /// <summary>
+    /// Logs and shows an error message for unhandled dispatcher exceptions.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The unhandled exception event data.</param>
     private static void OnDispatcherUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
     {
         log.Error("An unhandled exception occurred!", e.Exception);
@@ -238,6 +289,11 @@ public partial class App : Application
         Current?.Shutdown(1);
     }
 
+    /// <summary>
+    /// Logs unhandled AppDomain exceptions.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The unhandled exception event data.</param>
     private static void OnCurrentDomainUnhandledException(object? sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception ex)

@@ -12,30 +12,50 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Represents a method that handles the SystemsOnRouteChanged event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="systemsOnRoute">The ConcurrentDictionary<long, StarSystem> value of the systemsOnRoute parameter.</param>
+/// <param name="firstRead">The bool value of the firstRead parameter.</param>
 public delegate void SystemsOnRouteChangedEventHandler(object? sender, ConcurrentDictionary<long, StarSystem> systemsOnRoute, bool firstRead);
 
+/// <summary>Represents the RouteProvider class.</summary>
 public class RouteProvider
 {
+    /// <summary>The instance field.</summary>
     private static RouteProvider? instance;
 
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(RouteProvider));
 
+    /// <summary>The _starSystemProvider field.</summary>
     private readonly StarSystemProvider _starSystemProvider;
 
+    /// <summary>The _fileWatcher field.</summary>
     private readonly EDFileWatcher _fileWatcher;
 
+    /// <summary>The _journalProvider field.</summary>
     private readonly JournalProvider _journalProvider;
 
+    /// <summary>The readStarsSystemsTask field.</summary>
     private Task? readStarsSystemsTask;
 
+    /// <summary>The _plotterJumps field.</summary>
     private JsonArray? _plotterJumps;
+    /// <summary>The _isLocked field.</summary>
     private bool _isLocked;
+    /// <summary>The _lockedRouteFilePath field.</summary>
     private readonly string _lockedRouteFilePath;
 
+    /// <summary>Gets the Route.</summary>
+    /// <value>A List<RouteView> value.</value>
     public List<RouteView> Route { get; } = new List<RouteView>();
 
+    /// <summary>Gets the IsCustomRoute.</summary>
+    /// <value>A bool value.</value>
     public bool IsCustomRoute => _plotterJumps != null && _plotterJumps.Count > 1;
 
+    /// <summary>Gets the IsLocked.</summary>
+    /// <value>A bool value.</value>
     public bool IsLocked
     {
         get => _isLocked;
@@ -46,6 +66,7 @@ public class RouteProvider
         }
     }
 
+    /// <summary>Performs the saveLockedRoute operation.</summary>
     private void saveLockedRoute()
     {
         try
@@ -70,6 +91,7 @@ public class RouteProvider
         }
     }
 
+    /// <summary>Performs the deleteLockedRouteFile operation.</summary>
     private void deleteLockedRouteFile()
     {
         try
@@ -86,6 +108,7 @@ public class RouteProvider
         }
     }
 
+    /// <summary>Performs the loadLockedRoute operation.</summary>
     private void loadLockedRoute()
     {
         try
@@ -117,10 +140,16 @@ public class RouteProvider
         }
     }
 
+    /// <summary>Occurs when the RouteChanged event is raised.</summary>
     public event Action? RouteChanged = delegate { };
 
+    /// <summary>Occurs when the SystemsOnRouteChanged event is raised.</summary>
     public event SystemsOnRouteChangedEventHandler SystemsOnRouteChanged = delegate { };
 
+    /// <summary>Initializes a new instance of the RouteProvider class.</summary>
+    /// <param name="eDFileWatcher">The EDFileWatcher value of the eDFileWatcher parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
+    /// <param name="journalProvider">The JournalProvider value of the journalProvider parameter.</param>
     private RouteProvider(EDFileWatcher eDFileWatcher, StarSystemProvider starSystemProvider, JournalProvider journalProvider)
     {
         _fileWatcher = eDFileWatcher;
@@ -131,6 +160,11 @@ public class RouteProvider
         readStarsSystemsTask = firstRead();
     }
 
+    /// <summary>Performs the Instance operation.</summary>
+    /// <param name="eDFileWatcher">The EDFileWatcher value of the eDFileWatcher parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
+    /// <param name="journalProvider">The JournalProvider value of the journalProvider parameter.</param>
+    /// <returns>A RouteProvider result.</returns>
     public static RouteProvider Instance(EDFileWatcher eDFileWatcher, StarSystemProvider starSystemProvider, JournalProvider journalProvider)
     {
         if (instance == null)
@@ -140,6 +174,7 @@ public class RouteProvider
         return instance;
     }
 
+    /// <summary>Removes PlotterRoute.</summary>
     public void DeletePlotterRoute()
     {
         if (IsLocked)
@@ -151,6 +186,9 @@ public class RouteProvider
         readStarsSystemsTask = ReadStarsSystems();
     }
 
+    /// <summary>Imports PlotterRoute.</summary>
+    /// <param name="plotterRouteJumps">The JsonArray value of the plotterRouteJumps parameter.</param>
+    /// <returns>A bool result.</returns>
     public bool ImportPlotterRoute(JsonArray plotterRouteJumps)
     {
         try
@@ -178,12 +216,14 @@ public class RouteProvider
         return false;
     }
 
+    /// <summary>Performs the LockRoute operation.</summary>
     public void LockRoute()
     {
         IsLocked = true;
         saveLockedRoute();
     }
 
+    /// <summary>Performs the UnlockRoute operation.</summary>
     public void UnlockRoute()
     {
         IsLocked = false;
@@ -191,6 +231,9 @@ public class RouteProvider
         DeletePlotterRoute();
     }
 
+    /// <summary>Imports SpanshRouteFile.</summary>
+    /// <param name="filePath">The string value of the filePath parameter.</param>
+    /// <returns>A bool result.</returns>
     public bool ImportSpanshRouteFile(string filePath)
     {
         try
@@ -231,6 +274,9 @@ public class RouteProvider
         }
     }
 
+    /// <summary>Performs the ParseSpanshJsonRoute operation.</summary>
+    /// <param name="fileContent">The string value of the fileContent parameter.</param>
+    /// <returns>A JsonArray? result.</returns>
     private static JsonArray? ParseSpanshJsonRoute(string fileContent)
     {
         try
@@ -290,6 +336,9 @@ public class RouteProvider
         }
     }
 
+    /// <summary>Performs the ParseSpanshCsvRoute operation.</summary>
+    /// <param name="fileContent">The string value of the fileContent parameter.</param>
+    /// <returns>A JsonArray? result.</returns>
     private static JsonArray? ParseSpanshCsvRoute(string fileContent)
     {
         try
@@ -356,6 +405,8 @@ public class RouteProvider
         }
     }
 
+    /// <summary>Performs the firstRead operation.</summary>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     private async Task firstRead()
     {
         loadLockedRoute();
@@ -363,6 +414,9 @@ public class RouteProvider
         _fileWatcher.NavRouteFileChanged += FileWatcher_NavRouteFileChanged;
     }
 
+    /// <summary>Retrieves StarsSystems.</summary>
+    /// <param name="firstRead">The bool value of the firstRead parameter.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task ReadStarsSystems(bool firstRead = false)
     {
         _starSystemProvider.SetRouteIsLoadingStatus(status: true, "Preparing ...");
@@ -381,6 +435,8 @@ public class RouteProvider
         readStarsSystemsTask = null;
     }
 
+    /// <summary>Creates Route.</summary>
+    /// <param name="starSystemsOnRoute">The ConcurrentDictionary<long, StarSystem> value of the starSystemsOnRoute parameter.</param>
     private void BuildRoute(ConcurrentDictionary<long, StarSystem> starSystemsOnRoute)
     {
         Route.Clear();
@@ -415,6 +471,9 @@ public class RouteProvider
         RouteChanged?.Invoke();
     }
 
+    /// <summary>Performs the FileWatcher_NavRouteFileChanged operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void FileWatcher_NavRouteFileChanged(object? sender, EdFileEvent e)
     {
         if (!IsCustomRoute && !IsLocked)
@@ -423,6 +482,9 @@ public class RouteProvider
         }
     }
 
+    /// <summary>Performs the appendStarSystemsFromPlotterJumps operation.</summary>
+    /// <param name="starSystemsOnRoute">The ConcurrentDictionary<long, StarSystem> value of the starSystemsOnRoute parameter.</param>
+    /// <returns>A Task<ConcurrentDictionary<long, StarSystem>> representing the asynchronous operation.</returns>
     private async Task<ConcurrentDictionary<long, StarSystem>> appendStarSystemsFromPlotterJumps(ConcurrentDictionary<long, StarSystem> starSystemsOnRoute)
     {
         await Task.Run(delegate
@@ -484,6 +546,9 @@ public class RouteProvider
         return starSystemsOnRoute;
     }
 
+    /// <summary>Performs the appendStarSystemsFromNavRouteFile operation.</summary>
+    /// <param name="starSystemsOnRoute">The ConcurrentDictionary<long, StarSystem> value of the starSystemsOnRoute parameter.</param>
+    /// <returns>A Task<ConcurrentDictionary<long, StarSystem>> representing the asynchronous operation.</returns>
     private async Task<ConcurrentDictionary<long, StarSystem>> appendStarSystemsFromNavRouteFile(ConcurrentDictionary<long, StarSystem> starSystemsOnRoute)
     {
         if (string.IsNullOrEmpty(_fileWatcher.NavRouteFilePath) || !File.Exists(_fileWatcher.NavRouteFilePath))

@@ -5,8 +5,15 @@ using EDEA;
 
 namespace EDEA.Models;
 
+/// <summary>
+/// Provides speech output placeholders for a planet.
+/// </summary>
 public class SpeechOutputPlanet : SpeechOutput
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SpeechOutputPlanet"/> class.
+    /// </summary>
+    /// <param name="planet">The planet to describe.</param>
     public SpeechOutputPlanet(Planet planet)
     {
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetType, planet.PlanetClass);

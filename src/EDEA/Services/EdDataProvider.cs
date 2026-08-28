@@ -10,12 +10,19 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Provides EdDataProvider functionality.</summary>
 public static class EdDataProvider
 {
+    /// <summary>The ModuleClassifications field.</summary>
     public static Dictionary<string, ModuleClassification> ModuleClassifications = new Dictionary<string, ModuleClassification>();
 
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType ?? typeof(EdDataProvider));
 
+    /// <summary>Retrieves EdDataFile.</summary>
+    /// <param name="fileName">The string value of the fileName parameter.</param>
+    /// <returns>A string result.</returns>
+    /// <exception cref="FileNotFoundException">Thrown when the operation fails.</exception>
     private static string ReadEdDataFile(string fileName)
     {
         string rootPath = Path.Combine(Globals.ApplicationFolder, fileName);
@@ -33,6 +40,7 @@ public static class EdDataProvider
         throw new FileNotFoundException($"Could not find ED data file '{fileName}'", resourcesPath);
     }
 
+    /// <summary>Initializes the EdDataProvider class.</summary>
     static EdDataProvider()
     {
         try

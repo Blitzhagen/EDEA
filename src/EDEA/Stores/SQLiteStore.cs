@@ -11,15 +11,34 @@ using log4net;
 
 namespace EDEA.Stores;
 
+/// <summary>
+/// Provides SQLite database access for storing and retrieving star systems, bodies, rings, and genera.
+/// </summary>
 public class SQLiteStore
 {
+    /// <summary>
+    /// The singleton instance of the store.
+    /// </summary>
     private static SQLiteStore? instance;
 
+    /// <summary>
+    /// The connection string used to open the SQLite database.
+    /// </summary>
     private readonly string _connectionString;
+
+    /// <summary>
+    /// Whether the database schema has already been initialized.
+    /// </summary>
     private bool _initialized;
 
+    /// <summary>
+    /// The logger used by this store.
+    /// </summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(SQLiteStore));
 
+    /// <summary>
+    /// Occurs when the star systems table has been updated.
+    /// </summary>
     public event EventHandler? DatabaseStarSystemTableUpdated;
 
     private const string UPSERT_STAR_SYSTEM_SQL = @"
@@ -396,6 +415,11 @@ public class SQLiteStore
                 WasLogged = @WasLogged
         ";
 
+    /// <summary>
+    /// Returns the singleton instance of the <see cref="SQLiteStore"/>.
+    /// </summary>
+    /// <param name="dbPath">Optional path to the SQLite database file.</param>
+    /// <returns>The <see cref="SQLiteStore"/> instance.</returns>
     public static SQLiteStore Instance(string? dbPath = null)
     {
         if (instance == null)
@@ -405,6 +429,10 @@ public class SQLiteStore
         return instance;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SQLiteStore"/> class.
+    /// </summary>
+    /// <param name="dbPath">The path to the SQLite database file, or <c>null</c> to use the default path.</param>
     private SQLiteStore(string? dbPath)
     {
         var path = dbPath ?? Path.Combine(
@@ -416,8 +444,15 @@ public class SQLiteStore
         EnsureSchema();
     }
 
+    /// <summary>
+    /// Opens a new database connection.
+    /// </summary>
+    /// <returns>An open database connection.</returns>
     private IDbConnection Connect() => new SqliteConnection(_connectionString);
 
+    /// <summary>
+    /// Creates the database schema if it does not already exist.
+    /// </summary>
     private void EnsureSchema()
     {
         if (_initialized) return;
@@ -536,6 +571,11 @@ public class SQLiteStore
         _initialized = true;
     }
 
+    /// <summary>
+    /// Retrieves a star system by its Id64.
+    /// </summary>
+    /// <param name="id64">The star system identifier.</param>
+    /// <returns>The star system, or <c>null</c> when not found.</returns>
     public StarSystem? GetStarSystem(long id64)
     {
         using var db = Connect();
@@ -549,6 +589,16 @@ public class SQLiteStore
             new { id64 });
     }
 
+    /// <summary>
+    /// Gets an existing star system or creates it when it does not exist.
+    /// </summary>
+    /// <param name="id64">The star system identifier.</param>
+    /// <param name="name">The star system name.</param>
+    /// <param name="x">The X coordinate.</param>
+    /// <param name="y">The Y coordinate.</param>
+    /// <param name="z">The Z coordinate.</param>
+    /// <param name="starClass">The optional star class.</param>
+    /// <returns>The existing or newly created star system.</returns>
     public StarSystem GetOrCreateStarSystem(long id64, string name, double x, double y, double z, string? starClass)
     {
         using var db = Connect();
@@ -572,6 +622,10 @@ public class SQLiteStore
         return s;
     }
 
+    /// <summary>
+    /// Reads basic data for all star systems.
+    /// </summary>
+    /// <returns>A list of star systems with basic data.</returns>
     public List<StarSystem> ReadAllStarSystemBasicData()
     {
         using var db = Connect();
@@ -588,6 +642,11 @@ public class SQLiteStore
         return new List<StarSystem>();
     }
 
+    /// <summary>
+    /// Reads a star system and all associated bodies from the database.
+    /// </summary>
+    /// <param name="starSystemId">The star system identifier.</param>
+    /// <returns>The star system with its bodies, or <c>null</c> when not found.</returns>
     public StarSystem? ReadStarSystem(long starSystemId)
     {
         if (starSystemId == 0L)
@@ -684,6 +743,10 @@ public class SQLiteStore
         return null;
     }
 
+    /// <summary>
+    /// Inserts or updates a body in the database.
+    /// </summary>
+    /// <param name="body">The body to persist.</param>
     public void UpsertBody(Body body)
     {
         body.HasBiological = body is Planet biologicalPlanet && biologicalPlanet.BiologicalCount > 0;
@@ -707,6 +770,11 @@ public class SQLiteStore
         }
     }
 
+    /// <summary>
+    /// Gets a body by its Id64.
+    /// </summary>
+    /// <param name="id64">The body identifier.</param>
+    /// <returns>The body, or <c>null</c> when not found.</returns>
     public Body? GetBody(long id64)
     {
         using var db = Connect();
@@ -715,6 +783,11 @@ public class SQLiteStore
             "SELECT * FROM Bodies WHERE Id64 = @id64", new { id64 });
     }
 
+    /// <summary>
+    /// Gets all bodies belonging to the specified star system.
+    /// </summary>
+    /// <param name="systemId64">The star system identifier.</param>
+    /// <returns>The bodies in the star system.</returns>
     public IEnumerable<Body> GetBodies(long systemId64)
     {
         using var db = Connect();
@@ -723,6 +796,12 @@ public class SQLiteStore
             "SELECT * FROM Bodies WHERE StarSystemId = @systemId64", new { systemId64 });
     }
 
+    /// <summary>
+    /// Replaces the rings for a body with the specified rings.
+    /// </summary>
+    /// <param name="systemId64">The star system identifier.</param>
+    /// <param name="bodyId">The body identifier.</param>
+    /// <param name="rings">The rings to persist.</param>
     public void SaveRingsForBody(long systemId64, int bodyId, IEnumerable<Ring> rings)
     {
         using var db = Connect();
@@ -739,6 +818,12 @@ public class SQLiteStore
         }
     }
 
+    /// <summary>
+    /// Gets all rings for the specified body.
+    /// </summary>
+    /// <param name="systemId64">The star system identifier.</param>
+    /// <param name="bodyId">The body identifier.</param>
+    /// <returns>The rings of the body.</returns>
     public IEnumerable<Ring> GetRingsForBody(long systemId64, int bodyId)
     {
         using var db = Connect();
@@ -747,6 +832,10 @@ public class SQLiteStore
             "SELECT * FROM Rings WHERE StarSystemId = @systemId64 AND BodyId = @bodyId", new { systemId64, bodyId });
     }
 
+    /// <summary>
+    /// Inserts or updates a genus in the database.
+    /// </summary>
+    /// <param name="genus">The genus to persist.</param>
     public void UpsertGenus(Genus genus)
     {
         using var db = Connect();
@@ -761,6 +850,12 @@ public class SQLiteStore
         }
     }
 
+    /// <summary>
+    /// Gets all genera for the specified body.
+    /// </summary>
+    /// <param name="systemId64">The star system identifier.</param>
+    /// <param name="bodyId">The body identifier.</param>
+    /// <returns>The genera of the body.</returns>
     public IEnumerable<Genus> GetGeneraForBody(long systemId64, int bodyId)
     {
         using var db = Connect();
@@ -769,6 +864,11 @@ public class SQLiteStore
             "SELECT * FROM Genera WHERE StarSystemId = @systemId64 AND BodyId = @bodyId", new { systemId64, bodyId });
     }
 
+    /// <summary>
+    /// Counts the bodies in the specified star system.
+    /// </summary>
+    /// <param name="systemId64">The star system identifier.</param>
+    /// <returns>The number of bodies.</returns>
     public int GetBodyCount(long systemId64)
     {
         using var db = Connect();
@@ -777,6 +877,12 @@ public class SQLiteStore
             "SELECT COUNT(*) FROM Bodies WHERE StarSystemId = @systemId64", new { systemId64 });
     }
 
+    /// <summary>
+    /// Inserts or updates a star system and all its bodies asynchronously.
+    /// </summary>
+    /// <param name="starSystem">The star system to persist.</param>
+    /// <param name="raiseDatabaseStarSystemTableUpdatedEvent">Whether to raise the <see cref="DatabaseStarSystemTableUpdated"/> event after persisting.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task InsertOrUpdateStarSystemAsync(StarSystem starSystem, bool raiseDatabaseStarSystemTableUpdatedEvent = true)
     {
         using var db = Connect();
@@ -849,6 +955,10 @@ public class SQLiteStore
         }
     }
 
+    /// <summary>
+    /// Clears all data from the star systems, bodies, rings, and genera tables.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task ClearAllStarSystems()
     {
         using var db = Connect();
@@ -867,6 +977,10 @@ public class SQLiteStore
         DatabaseStarSystemTableUpdated?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Resets the trip history flag for all star systems.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task ResetTripHistory()
     {
         using var db = Connect();
@@ -882,6 +996,10 @@ public class SQLiteStore
         DatabaseStarSystemTableUpdated?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Resets the incomplete analysis data for all genera.
+    /// </summary>
+    /// <returns>The number of updated rows.</returns>
     public async Task<int> ResetIncompleteAnalysisForGenera()
     {
         using var db = Connect();
@@ -900,6 +1018,10 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Reads all planet classifications from the database.
+    /// </summary>
+    /// <returns>A list of planet classifications.</returns>
     public List<PlanetClassification> ReadAllPlanetClassifications()
     {
         using var db = Connect();
@@ -917,6 +1039,11 @@ public class SQLiteStore
 
     #region HistoryProvider support
 
+    /// <summary>
+    /// Gets the count of first discovery systems.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The first discovery system count.</returns>
     public async Task<int> GetSystemFirstDiscoveryCount(bool tripOnly = false)
     {
         var sql = "SELECT count(StarSystems.Id64) FROM StarSystems LEFT JOIN Bodies ON StarSystems.PrimaryStarName = Bodies.Name AND Bodies.StarSystemId = StarSystems.Id64 WHERE Bodies.WasDiscovered = 0" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -933,6 +1060,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the sum of cartographic base values for all bodies.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the sum to the current trip.</param>
+    /// <returns>The total cartographic base value.</returns>
     public async Task<long> GetBodyCartographicBaseValueSum(bool tripOnly = false)
     {
         var sql = "SELECT ifnull(sum(Bodies.CartographicBaseValue),0) FROM Bodies LEFT JOIN StarSystems ON Bodies.StarSystemId = StarSystems.Id64 WHERE Bodies.WasReadFromJournal = 1" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -949,6 +1081,11 @@ public class SQLiteStore
         return 0L;
     }
 
+    /// <summary>
+    /// Gets statistics about star class frequencies.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the statistics to the current trip.</param>
+    /// <returns>The star class statistics.</returns>
     public async Task<HistoryStatistics> GetSystemStarClassStatistics(bool tripOnly = false)
     {
         var sql = "SELECT StarClass, count(*) as Amount from StarSystems WHERE StarClass IS NOT NULL" + (tripOnly ? " AND IsTripHistory = 1" : string.Empty) + " GROUP BY StarClass ORDER BY Amount DESC";
@@ -973,6 +1110,11 @@ public class SQLiteStore
         return starClassStats;
     }
 
+    /// <summary>
+    /// Gets the highest sum of discovery and EDSM body counts.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the sum to the current trip.</param>
+    /// <returns>The body signal sum.</returns>
     public async Task<int> GetBodySignalSum(bool tripOnly = false)
     {
         var sql = "SELECT ifnull(sum(TotalBodyCount),0) as Discovery, ifnull(sum(EdsmTotalBodyCount), 0) as Edsm FROM StarSystems" + (tripOnly ? " WHERE IsTripHistory = 1" : string.Empty);
@@ -993,6 +1135,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the count of bodies.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The body count.</returns>
     public async Task<int> GetBodyCount(bool tripOnly = false)
     {
         var sql = "SELECT count(Bodies.Id64) FROM Bodies LEFT JOIN StarSystems ON Bodies.StarSystemId = StarSystems.Id64 WHERE Bodies.Type != 0" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1009,6 +1156,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the count of first discovery bodies.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The first discovery body count.</returns>
     public async Task<int> GetBodyFirstDiscoveryCount(bool tripOnly = false)
     {
         var sql = "SELECT count(Bodies.Id64) FROM Bodies LEFT JOIN StarSystems ON Bodies.StarSystemId = StarSystems.Id64 WHERE Bodies.Type != 0 AND Bodies.WasDiscovered = 0" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1025,6 +1177,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the count of terraformable bodies.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The terraformable body count.</returns>
     public async Task<int> GetBodyTerraformableCount(bool tripOnly = false)
     {
         var sql = "SELECT count(Bodies.Id64) FROM Bodies LEFT JOIN StarSystems ON Bodies.StarSystemId = StarSystems.Id64 WHERE (Bodies.TerraformingState = 'Terraformable' OR Bodies.TerraformingState = 'Candidate for terraforming')" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1041,6 +1198,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the count of valuable bodies.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The valuable body count.</returns>
     public async Task<int> GetBodyValuableBodyCount(bool tripOnly = false)
     {
         var sql = "SELECT count(Bodies.Id64) FROM Bodies LEFT JOIN StarSystems ON Bodies.StarSystemId = StarSystems.Id64 WHERE Bodies.CartographicMaxValue >= @threshold" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1057,6 +1219,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the sum of cartographic surface scan values for all bodies.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the sum to the current trip.</param>
+    /// <returns>The total surface scan value.</returns>
     public async Task<long> GetBodyCartographicSurfaceScanValueSum(bool tripOnly = false)
     {
         var sql = "SELECT ifnull(sum(Bodies.CartographicSurfaceScanValue),0) FROM Bodies LEFT JOIN StarSystems ON Bodies.StarSystemId = StarSystems.Id64 WHERE Bodies.SurfaceScanned = 1" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1073,6 +1240,11 @@ public class SQLiteStore
         return 0L;
     }
 
+    /// <summary>
+    /// Gets the count of surface scanned bodies.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The surface scan count.</returns>
     public async Task<int> GetBodySurfaceScanCount(bool tripOnly = false)
     {
         var sql = "SELECT count(Bodies.Id64) FROM Bodies LEFT JOIN StarSystems ON Bodies.StarSystemId = StarSystems.Id64 WHERE Bodies.SurfaceScanned = 1" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1089,6 +1261,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the count of bodies with touchdown.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The touchdown count.</returns>
     public async Task<int> GetBodyTouchdownCount(bool tripOnly = false)
     {
         var sql = "SELECT count(Bodies.Id64) FROM Bodies LEFT JOIN StarSystems ON Bodies.StarSystemId = StarSystems.Id64 WHERE Bodies.Touchdown = 1" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1105,6 +1282,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the sum of cartographic values for all bodies.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the sum to the current trip.</param>
+    /// <returns>The total cartographic value.</returns>
     public async Task<long> GetBodyCartographicValueSum(bool tripOnly = false)
     {
         var sql = "SELECT ifnull(sum(Bodies.CartographicValue),0) FROM Bodies LEFT JOIN StarSystems ON Bodies.StarSystemId = StarSystems.Id64" + (tripOnly ? " WHERE StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1121,6 +1303,11 @@ public class SQLiteStore
         return 0L;
     }
 
+    /// <summary>
+    /// Gets the count of distinct bodies that have rings.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The ring body count.</returns>
     public async Task<int> GetBodyRingBodyCount(bool tripOnly = false)
     {
         var sql = "SELECT count(*) FROM (SELECT DISTINCT Rings.StarSystemId, Rings.BodyId FROM Rings LEFT JOIN StarSystems ON Rings.StarSystemId = StarSystems.Id64" + (tripOnly ? " WHERE StarSystems.IsTripHistory = 1" : string.Empty) + ")";
@@ -1137,6 +1324,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the sum of biological counts for all bodies.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the sum to the current trip.</param>
+    /// <returns>The genus signal sum.</returns>
     public async Task<int> GetGenusSignalSum(bool tripOnly = false)
     {
         var sql = "SELECT ifnull(sum(Bodies.BiologicalCount),0) FROM Bodies LEFT JOIN StarSystems ON Bodies.StarSystemId = StarSystems.Id64" + (tripOnly ? " WHERE StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1153,6 +1345,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the count of all genera.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The genus count.</returns>
     public async Task<int> GetGenusCount(bool tripOnly = false)
     {
         var sql = "SELECT count(Genera.Name) FROM Genera LEFT JOIN StarSystems ON Genera.StarSystemId = StarSystems.Id64" + (tripOnly ? " WHERE StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1169,6 +1366,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the count of fully analysed genera.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The analysed genus count.</returns>
     public async Task<int> GetGenusAnalysisCompleteCount(bool tripOnly = false)
     {
         var sql = "SELECT count(Genera.Name) FROM Genera LEFT JOIN StarSystems ON Genera.StarSystemId = StarSystems.Id64 WHERE Genera.IsAnalysed = 1" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1185,6 +1387,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the count of first discovered genera.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The first discovery genus count.</returns>
     public async Task<int> GetGenusFirstDiscoveryCount(bool tripOnly = false)
     {
         var sql = "SELECT count(Genera.Name) FROM Genera LEFT JOIN StarSystems ON Genera.StarSystemId = StarSystems.Id64 WHERE Genera.IsFirstDiscovered = 1" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1201,6 +1408,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the sum of Vista Genomics values for all analysed genera.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the sum to the current trip.</param>
+    /// <returns>The total Vista Genomics value.</returns>
     public async Task<long> GetGenusVistaGenomicsValueSum(bool tripOnly = false)
     {
         var sql = "SELECT ifnull(sum(Genera.VistaGenomicsValue),0) FROM Genera LEFT JOIN StarSystems ON Genera.StarSystemId = StarSystems.Id64 WHERE Genera.IsAnalysed = 1" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1217,6 +1429,11 @@ public class SQLiteStore
         return 0L;
     }
 
+    /// <summary>
+    /// Gets the sum of Vista Genomics base values for all analysed genera.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the sum to the current trip.</param>
+    /// <returns>The total Vista Genomics base value.</returns>
     public async Task<long> GetGenusVistaGenomicsBaseValueSum(bool tripOnly = false)
     {
         var sql = "SELECT ifnull(sum(Genera.VistaGenomicsBaseValue),0) FROM Genera LEFT JOIN StarSystems ON Genera.StarSystemId = StarSystems.Id64 WHERE Genera.IsAnalysed = 1" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1233,6 +1450,11 @@ public class SQLiteStore
         return 0L;
     }
 
+    /// <summary>
+    /// Gets the most and least frequent genus statistics.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the statistics to the current trip.</param>
+    /// <returns>The genus statistics.</returns>
     public async Task<HistoryStatistics> GetGenusStatistics(bool tripOnly = false)
     {
         var sql = "SELECT Genera.Name, count(Genera.Name) AS Amount FROM Genera LEFT JOIN StarSystems ON Genera.StarSystemId = StarSystems.Id64 WHERE Genera.IsAnalysed = 1" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty) + " GROUP BY Genera.Name ORDER BY Amount DESC";
@@ -1257,6 +1479,11 @@ public class SQLiteStore
         return bioStats;
     }
 
+    /// <summary>
+    /// Gets the count of rings.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The ring count.</returns>
     public async Task<int> GetRingCount(bool tripOnly = false)
     {
         var sql = "SELECT count(Rings.Name) FROM Rings LEFT JOIN StarSystems ON Rings.StarSystemId = StarSystems.Id64" + (tripOnly ? " WHERE StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1273,6 +1500,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the count of first discovery rings.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the count to the current trip.</param>
+    /// <returns>The first discovery ring count.</returns>
     public async Task<int> GetRingFirstDiscoveryCount(bool tripOnly = false)
     {
         var sql = "SELECT count(Rings.Name) FROM Rings LEFT JOIN Bodies ON Rings.BodyId = Bodies.Id AND Rings.StarSystemId = Bodies.StarSystemId LEFT JOIN StarSystems ON Rings.StarSystemId = StarSystems.Id64 WHERE Bodies.WasDiscovered = 0" + (tripOnly ? " AND StarSystems.IsTripHistory = 1" : string.Empty);
@@ -1289,6 +1521,11 @@ public class SQLiteStore
         return 0;
     }
 
+    /// <summary>
+    /// Gets the most and least frequent ring type statistics.
+    /// </summary>
+    /// <param name="tripOnly">Whether to limit the statistics to the current trip.</param>
+    /// <returns>The ring statistics.</returns>
     public async Task<HistoryStatistics> GetRingStatistics(bool tripOnly = false)
     {
         var sql = "SELECT Rings.Type, count(Rings.Type) as Amount FROM Rings LEFT JOIN StarSystems ON Rings.StarSystemId = StarSystems.Id64" + (tripOnly ? " WHERE StarSystems.IsTripHistory = 1" : string.Empty) + " GROUP BY Rings.Type Order by Amount DESC";

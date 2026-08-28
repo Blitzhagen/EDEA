@@ -24,80 +24,206 @@ using log4net;
 
 namespace EDEA.ViewModels;
 
+/// <summary>
+/// View model that manages the preferences window and its settings.
+/// </summary>
 public class PreferencesViewModel : ViewModelBase
 {
+    /// <summary>
+    /// Logger instance for this class.
+    /// </summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(PreferencesViewModel));
 
+    /// <summary>
+    /// Holds the singleton instance of the preferences window.
+    /// </summary>
     private static PreferencesWindow? preferencesWindow;
 
+    /// <summary>
+    /// The color element list box.
+    /// </summary>
     private ListBox colorElementListBox = null!;
 
+    /// <summary>
+    /// The color picker.
+    /// </summary>
     private SquarePicker squarePicker = null!;
 
+    /// <summary>
+    /// The color sliders.
+    /// </summary>
     private ColorSliders colorSliders = null!;
 
+    /// <summary>
+    /// The hex color text box.
+    /// </summary>
     private HexColorTextBox hexColorTextBox = null!;
 
+    /// <summary>
+    /// The stack panel with hide-on check boxes.
+    /// </summary>
     private StackPanel hideOnStackPanel = null!;
 
+    /// <summary>
+    /// The timer used to delay color application.
+    /// </summary>
     private DispatcherTimer? _colorApplyTimer;
+
+    /// <summary>
+    /// The name of the pending color property.
+    /// </summary>
     private string? _pendingColorPropertyName;
+
+    /// <summary>
+    /// The pending color value.
+    /// </summary>
     private Color _pendingColor;
 
+    /// <summary>
+    /// The speech output list box.
+    /// </summary>
     private ListBox speechOutputListBox = null!;
 
+    /// <summary>
+    /// The speech output text box.
+    /// </summary>
     private TextBox speechOutputTextBox = null!;
 
+    /// <summary>
+    /// The placeholder panel for speech output placeholders.
+    /// </summary>
     private StackPanel speechOutputPlaceholder = null!;
 
+    /// <summary>
+    /// The examples panel for speech outputs.
+    /// </summary>
     private StackPanel speechOutputExamples = null!;
 
+    /// <summary>
+    /// The play button for speech output previews.
+    /// </summary>
     private Button speechOutputPlayButton = null!;
 
+    /// <summary>
+    /// The combo box for selecting a speech output voice.
+    /// </summary>
     private ComboBox speechOutputVoicesComboBox = null!;
 
+    /// <summary>
+    /// The slider for the speech output rate.
+    /// </summary>
     private Slider speechOutputRateSlider = null!;
 
+    /// <summary>
+    /// The slider for the speech output volume.
+    /// </summary>
     private Slider speechOutputVolumeSlider = null!;
 
+    /// <summary>
+    /// The text box for the valuable genus threshold.
+    /// </summary>
     private TextBox valuableGenusThresholdTextBox = null!;
 
+    /// <summary>
+    /// The text box for the valuable body threshold.
+    /// </summary>
     private TextBox valuableBodyThresholdTextBox = null!;
 
+    /// <summary>
+    /// The text box for the biologicals view altitude threshold.
+    /// </summary>
     private TextBox biologicalsViewAltitudeThresholdTextBox = null!;
 
+    /// <summary>
+    /// The combo box for selecting a parent planet classification.
+    /// </summary>
     private ComboBox parentPlanetClassificationsComboBox = null!;
 
+    /// <summary>
+    /// The list box for planets of interest.
+    /// </summary>
     private ListBox planetsOfInterestListBox = null!;
 
+    /// <summary>
+    /// The tab control for planets of interest.
+    /// </summary>
     private TabControl planetsOfInterestTabControl = null!;
 
+    /// <summary>
+    /// The popup shown after copying to clipboard.
+    /// </summary>
     private Popup copyToClipboardPopup = null!;
 
+    /// <summary>
+    /// The HUD view model.
+    /// </summary>
     private readonly HudViewModel _hudViewModel;
 
+    /// <summary>
+    /// The provider for planets of interest data.
+    /// </summary>
     private readonly PlanetsOfInterestProvider _planetsOfInterestProvider;
 
+    /// <summary>
+    /// The provider for star system data.
+    /// </summary>
     private readonly StarSystemProvider _starSystemProvider;
 
+    /// <summary>
+    /// The provider for hotkey data.
+    /// </summary>
     private readonly HotkeyProvider _hotkeyProvider;
 
+    /// <summary>
+    /// The cloned planet classifications being edited.
+    /// </summary>
     private List<PlanetClassification> _planetClassificationClones = null!;
 
+    /// <summary>
+    /// The Elite Dangerous saved game path at the time the preferences were opened.
+    /// </summary>
     private string edSavedGamePathOnPreferencesOpen = string.Empty;
 
+    /// <summary>
+    /// Gets the collection of cloned planet classification view models.
+    /// </summary>
+    /// <value>The planet classification clones.</value>
     public ObservableCollection<PlanetClassificationViewModel> PlanetClassificationClones => new ObservableCollection<PlanetClassificationViewModel>(_planetClassificationClones.Select((PlanetClassification classification) => new PlanetClassificationViewModel(classification)).ToList());
 
+    /// <summary>
+    /// Gets the currently selected planet classification clone.
+    /// </summary>
+    /// <value>The selected clone.</value>
     public PlanetClassificationViewModel SelectedPlanetClassificationClone => (planetsOfInterestListBox.SelectedItem as PlanetClassificationViewModel)!;
 
+    /// <summary>
+    /// Gets the available hotkeys.
+    /// </summary>
+    /// <value>The hotkey view models.</value>
     public Dictionary<string, HotkeyViewModel> Hotkeys => _hotkeyProvider.Hotkeys;
 
+    /// <summary>
+    /// Gets a value indicating whether the preferences window is open.
+    /// </summary>
+    /// <value><c>true</c> if the preferences window is open; otherwise, <c>false</c>.</value>
     public bool PreferencesWindowOpen => preferencesWindow != null;
 
+    /// <summary>
+    /// Gets a value indicating whether the speech output is ready to play.
+    /// </summary>
+    /// <value><c>true</c> if speech output is ready; otherwise, <c>false</c>.</value>
     public bool SpeechOutputReady => !SpeechProvider.IsSpeaking;
 
+    /// <summary>
+    /// Gets or sets a value indicating whether a restart is required.
+    /// </summary>
+    /// <value><c>true</c> if a restart is required; otherwise, <c>false</c>.</value>
     public bool restartRequired { get; set; }
 
+    /// <summary>
+    /// Gets or sets the display size.
+    /// </summary>
+    /// <value>The display size.</value>
     public DisplaySize DisplaySize
     {
         get
@@ -111,6 +237,10 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Gets or sets the view model displayed in the HUD window.
+    /// </summary>
+    /// <value>The HUD window tab view model.</value>
     public HudWindowTabViewModel HudWindowTabViewModel
     {
         get
@@ -124,30 +254,85 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Gets the list of available speech output voices.
+    /// </summary>
+    /// <value>The voice names.</value>
     public List<string> SpeechOutputVoices => SpeechProvider.GetVoiceNames();
 
+    /// <summary>
+    /// Gets the command that closes the preferences window.
+    /// </summary>
+    /// <value>The close command, or <c>null</c>.</value>
     public ICommand? CloseWindowCommand { get; private set; }
 
+    /// <summary>
+    /// Gets the command that saves the preferences and closes the window.
+    /// </summary>
+    /// <value>The save and close command, or <c>null</c>.</value>
     public ICommand? SaveAndClosePreferencesCommand { get; private set; }
 
+    /// <summary>
+    /// Gets the command that restores default preferences.
+    /// </summary>
+    /// <value>The restore defaults command, or <c>null</c>.</value>
     public ICommand? RestoreDefaultPreferencesCommand { get; private set; }
 
+    /// <summary>
+    /// Gets the command that plays a speech output preview.
+    /// </summary>
+    /// <value>The play speech command, or <c>null</c>.</value>
     public ICommand? PlaySpeechCommand { get; private set; }
 
+    /// <summary>
+    /// Gets the command that adds a custom planet filter.
+    /// </summary>
+    /// <value>The add custom planet filter command, or <c>null</c>.</value>
     public ICommand? AddCustomPlanetFilterCommand { get; private set; }
 
+    /// <summary>
+    /// Gets the command that renames a custom planet filter.
+    /// </summary>
+    /// <value>The rename custom planet filter command, or <c>null</c>.</value>
     public ICommand? RenameCustomPlanetFilterCommand { get; private set; }
 
+    /// <summary>
+    /// Gets the command that removes a custom planet filter.
+    /// </summary>
+    /// <value>The remove custom planet filter command, or <c>null</c>.</value>
     public ICommand? RemoveCustomPlanetFilterCommand { get; private set; }
 
+    /// <summary>
+    /// Gets the command that opens the string list selection dialog.
+    /// </summary>
+    /// <value>The select strings command, or <c>null</c>.</value>
     public ICommand? SelectStringsFromStringListCommand { get; private set; }
 
+    /// <summary>
+    /// Gets the command that sets the journal folder.
+    /// </summary>
+    /// <value>The set journal folder command, or <c>null</c>.</value>
     public ICommand? SetJournalFolderCommand { get; private set; }
 
+    /// <summary>
+    /// Gets the command that copies a speech placeholder to the clipboard.
+    /// </summary>
+    /// <value>The copy placeholder command.</value>
     public ICommand CopySpeechPlaceholderToClipboardCommand { get; }
 
+    /// <summary>
+    /// Gets the command that assigns a hotkey.
+    /// </summary>
+    /// <value>The assign hotkey command, or <c>null</c>.</value>
     public ICommand? AssignHotkeyCommand { get; private set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PreferencesViewModel"/> class.
+    /// </summary>
+    /// <param name="hudViewModel">The HUD view model.</param>
+    /// <param name="planetsOfInterestProvider">The provider for planets of interest.</param>
+    /// <param name="starSystemProvider">The provider for star system data.</param>
+    /// <param name="hotkeyProvider">The provider for hotkey data.</param>
     public PreferencesViewModel(HudViewModel hudViewModel, PlanetsOfInterestProvider planetsOfInterestProvider, StarSystemProvider starSystemProvider, HotkeyProvider hotkeyProvider)
     {
         _hudViewModel = hudViewModel;
@@ -158,6 +343,9 @@ public class PreferencesViewModel : ViewModelBase
         setDisplaySize();
     }
 
+    /// <summary>
+    /// Applies the current display size to application resources.
+    /// </summary>
     private void setDisplaySize()
     {
         int displaySizeOffset = Preferences.Other.DisplaySize - 2;
@@ -177,6 +365,9 @@ public class PreferencesViewModel : ViewModelBase
         Application.Current.Resources["TabViewInverseBorderSizes"] = inverseBorderThickness;
     }
 
+    /// <summary>
+    /// Shows the preferences window or activates it if already open.
+    /// </summary>
     public void ShowPreferencesWindow()
     {
         if (preferencesWindow == null)
@@ -260,6 +451,11 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Handles the parent planet classification combo box selection change.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void parentPlanetClassificationsComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
     {
         if (parentPlanetClassificationsComboBox.SelectedItem is TextBlock textBlock && SelectedPlanetClassificationClone != null && (string)textBlock.Tag != SelectedPlanetClassificationClone.Id && SelectedPlanetClassificationClone.ParentPlanetClassificationId != (string)textBlock.Tag)
@@ -269,6 +465,11 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Handles the planets of interest list box selection change.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void planetsOfInterestListBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
     {
         parentPlanetClassificationsComboBox.Items.Clear();
@@ -304,6 +505,11 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Handles the planets of interest tab control selection change.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void planetsOfInterestTabControl_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
     {
         Application.Current?.Dispatcher.BeginInvoke((ThreadStart)delegate
@@ -312,27 +518,52 @@ public class PreferencesViewModel : ViewModelBase
         });
     }
 
+    /// <summary>
+    /// Handles text input in threshold text boxes by allowing only numeric input.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void thresholdValueTextBox_PreviewTextInput(object? sender, TextCompositionEventArgs e)
     {
         Regex regex = new Regex("[^0-9]+");
         e.Handled = regex.IsMatch(e.Text);
     }
 
+    /// <summary>
+    /// Handles speech synthesizer state changes.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void speechProvider_SpeechSynthesizerStateChanged(object? sender, EventArgs e)
     {
         OnPropertyChanged("SpeechOutputReady");
     }
 
+    /// <summary>
+    /// Handles the voices loaded event.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void speechProvider_VoicesLoaded(object? sender, EventArgs e)
     {
         OnPropertyChanged("SpeechOutputVoices");
     }
 
+    /// <summary>
+    /// Handles changes to speech output voice parameters.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void SpeechOutputVoiceParameterChanged(object? sender, EventArgs e)
     {
         SpeechProvider.UpdateSpeechSynthesizerParameter();
     }
 
+    /// <summary>
+    /// Handles the <see cref="PreferencesWindow.Loaded"/> event.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void preferencesWindow_Loaded(object? sender, RoutedEventArgs e)
     {
         colorElementListBox_SelectionChanged(null, null);
@@ -346,11 +577,19 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Handles changes to the hide-on check boxes.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void hideOnCheckboxChanged(object? sender, RoutedEventArgs e)
     {
         _hudViewModel.UpdateVisibilityBasedOnSettings();
     }
 
+    /// <summary>
+    /// Saves all user preferences and applies the planet classifications.
+    /// </summary>
     public void SaveAllPreferences()
     {
         _planetsOfInterestProvider.SetPlanetClassifications(_planetClassificationClones);
@@ -358,6 +597,9 @@ public class PreferencesViewModel : ViewModelBase
         checkRestart();
     }
 
+    /// <summary>
+    /// Cancels the preference changes and reloads the saved settings.
+    /// </summary>
     public void Cancel()
     {
         Preferences.ReloadUserSettings();
@@ -365,6 +607,9 @@ public class PreferencesViewModel : ViewModelBase
         generateColorElementListBoxItems();
     }
 
+    /// <summary>
+    /// Resets all preferences to their default values.
+    /// </summary>
     public void ResetAllPreferences()
     {
         Preferences.ResetUserSettings();
@@ -372,6 +617,10 @@ public class PreferencesViewModel : ViewModelBase
         checkRestart();
     }
 
+    /// <summary>
+    /// Gets the currently selected speech output type.
+    /// </summary>
+    /// <returns>The selected speech output type, or <c>null</c> if none is selected.</returns>
     public SpeechProvider.SpeechOutputType? GetSelectedSpeechOutput()
     {
         StackPanel stackPanel = (StackPanel)speechOutputListBox.SelectedItem;
@@ -383,6 +632,10 @@ public class PreferencesViewModel : ViewModelBase
         return (SpeechProvider.SpeechOutputType)Enum.Parse(typeof(SpeechProvider.SpeechOutputType), text);
     }
 
+    /// <summary>
+    /// Adds a planet classification clone to the list.
+    /// </summary>
+    /// <param name="planetClassification">The planet classification to add.</param>
     public void addPlanetClassification(PlanetClassification planetClassification)
     {
         _planetClassificationClones.Add(planetClassification);
@@ -395,6 +648,11 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Renames a planet classification clone.
+    /// </summary>
+    /// <param name="planetClassification">The planet classification to rename.</param>
+    /// <param name="newName">The new name.</param>
     public void renamePlanetClassification(PlanetClassification planetClassification, string newName)
     {
         planetClassification.Name = newName;
@@ -403,6 +661,10 @@ public class PreferencesViewModel : ViewModelBase
         planetsOfInterestListBox.Focus();
     }
 
+    /// <summary>
+    /// Removes a planet classification clone.
+    /// </summary>
+    /// <param name="planetClassification">The planet classification to remove.</param>
     public void removePlanetClassification(PlanetClassification planetClassification)
     {
         _planetClassificationClones.Remove(planetClassification);
@@ -414,6 +676,11 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Handles color changes from the color picker controls.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void colorPickerControl_ColorChanged(object? sender, RoutedEventArgs e)
     {
         Color color = ((dynamic)sender!).SelectedColor;
@@ -452,6 +719,11 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Handles the color element list box selection change.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void colorElementListBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
     {
         StackPanel stackPanel = (StackPanel)colorElementListBox.SelectedItem;
@@ -464,6 +736,9 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Generates the items of the color element list box.
+    /// </summary>
     private void generateColorElementListBoxItems()
     {
         colorElementListBox.Items.Clear();
@@ -487,6 +762,11 @@ public class PreferencesViewModel : ViewModelBase
         colorElementListBox.SelectedIndex = 0;
     }
 
+    /// <summary>
+    /// Handles the speech output list box selection change.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void speechOutputListBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
     {
         StackPanel stackPanel = (StackPanel)speechOutputListBox.SelectedItem;
@@ -529,6 +809,9 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Generates the items of the speech output list box.
+    /// </summary>
     private void generateSpeechOutputListBoxItems()
     {
         speechOutputListBox.Items.Clear();
@@ -571,6 +854,9 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Checks whether a restart is required after saving path-related settings.
+    /// </summary>
     private void checkRestart()
     {
         if (Preferences.Other.EdSavedGamePath != edSavedGamePathOnPreferencesOpen)
@@ -585,6 +871,11 @@ public class PreferencesViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Handles the <see cref="PreferencesWindow.Closed"/> event and cleans up resources.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void preferencesWindow_Closed(object? sender, EventArgs e)
     {
         Preferences.ReloadUserSettings();
@@ -608,4 +899,3 @@ public class PreferencesViewModel : ViewModelBase
         hexColorTextBox = null!;
     }
 }
-

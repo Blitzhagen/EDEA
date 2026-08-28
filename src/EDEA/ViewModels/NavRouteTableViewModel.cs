@@ -17,28 +17,69 @@ using log4net;
 
 namespace EDEA.ViewModels;
 
+/// <summary>
+/// View model that manages the navigation route tab and its data presentation.
+/// </summary>
 public class NavRouteTableViewModel : TabViewModel
 {
+    /// <summary>
+    /// Gets the name of the tab.
+    /// </summary>
+    /// <value>The tab name displayed in the UI.</value>
     public override string TabName => "Route";
 
+    /// <summary>
+    /// Logger instance for this class.
+    /// </summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(NavRouteTableViewModel));
 
+    /// <summary>
+    /// The provider for star system data.
+    /// </summary>
     private readonly StarSystemProvider _starSystemProvider;
 
+    /// <summary>
+    /// The provider for route data.
+    /// </summary>
     private readonly RouteProvider _routeProvider;
 
+    /// <summary>
+    /// The main route table view.
+    /// </summary>
     private RouteTableView navRouteTableView = null!;
 
+    /// <summary>
+    /// The HUD route table view.
+    /// </summary>
     private RouteTableView navRouteHudTableView = null!;
 
+    /// <summary>
+    /// A value indicating whether a refresh task is currently running.
+    /// </summary>
     private bool refreshTaskRunning;
 
+    /// <summary>
+    /// Gets the command that copies the selected system name to the clipboard.
+    /// </summary>
+    /// <value>The copy command.</value>
     public ICommand CopySystemNameToClipboardCommand { get; }
 
+    /// <summary>
+    /// Gets the collection of star systems in the route.
+    /// </summary>
+    /// <value>The route star system view models.</value>
     public IEnumerable<StarSystemViewModel> Route { get; private set; } = Array.Empty<StarSystemViewModel>();
 
+    /// <summary>
+    /// Gets the localized info text shown when no route is available.
+    /// </summary>
+    /// <value>The no route info text.</value>
     public string NoRouteInfo => Resources.NoRouteInfo;
 
+    /// <summary>
+    /// Gets a value indicating whether the no route info should be shown.
+    /// </summary>
+    /// <value><c>true</c> if the no route info is visible; otherwise, <c>false</c>.</value>
     public bool ShowNoRouteInfo
     {
         get
@@ -52,10 +93,22 @@ public class NavRouteTableViewModel : TabViewModel
         }
     }
 
+    /// <summary>
+    /// Gets the current star system in the route.
+    /// </summary>
+    /// <value>The current system, or <c>null</c> if none is found.</value>
     public StarSystemViewModel? CurrentSystem => Route?.FirstOrDefault(starSystem => starSystem.IsCurrentSystemInRoute);
 
+    /// <summary>
+    /// Gets a value indicating whether no current system is present in the route.
+    /// </summary>
+    /// <value><c>true</c> if no current system is present; otherwise, <c>false</c>.</value>
     public bool HasNoCurrentSystem => CurrentSystem == null;
 
+    /// <summary>
+    /// Gets a value indicating whether the route is currently loading.
+    /// </summary>
+    /// <value><c>true</c> if the route is loading; otherwise, <c>false</c>.</value>
     public bool RouteIsLoading
     {
         get
@@ -68,14 +121,37 @@ public class NavRouteTableViewModel : TabViewModel
         }
     }
 
+    /// <summary>
+    /// Gets the loading info text for the route.
+    /// </summary>
+    /// <value>The loading info text.</value>
     public string RouteIsLoadingInfoText { get; private set; }
 
+    /// <summary>
+    /// Gets the current commander name.
+    /// </summary>
+    /// <value>The commander name.</value>
     public string CommanderName => _starSystemProvider.CommanderName;
 
+    /// <summary>
+    /// Gets the list of teammate names.
+    /// </summary>
+    /// <value>The teammate names.</value>
     public List<string> TeammateNames => _starSystemProvider.TeammateNames;
 
+    /// <summary>
+    /// Gets the dictionary of star systems on the route.
+    /// </summary>
+    /// <value>The route systems.</value>
     private ConcurrentDictionary<long, StarSystem> _route => _starSystemProvider.StarSystemsOnRoute;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NavRouteTableViewModel"/> class.
+    /// </summary>
+    /// <param name="tabHeader">The header text for the tab.</param>
+    /// <param name="tabVisibility">The initial visibility of the tab.</param>
+    /// <param name="starSystemProvider">The provider for star system data.</param>
+    /// <param name="routeProvider">The provider for route data.</param>
     public NavRouteTableViewModel(string tabHeader, string tabVisibility, StarSystemProvider starSystemProvider, RouteProvider routeProvider)
         : base(tabHeader, tabVisibility)
     {
@@ -127,6 +203,10 @@ public class NavRouteTableViewModel : TabViewModel
         };
     }
 
+    /// <summary>
+    /// Registers a view for scrolling to the current system.
+    /// </summary>
+    /// <param name="view">The view to register.</param>
     public void registerView(UserControl view)
     {
         if (view.GetType() == typeof(RouteTableView))
@@ -141,6 +221,10 @@ public class NavRouteTableViewModel : TabViewModel
         }
     }
 
+    /// <summary>
+    /// Unregisters a view from scrolling.
+    /// </summary>
+    /// <param name="view">The view to unregister.</param>
     public void unregisterView(UserControl view)
     {
         if (view.GetType() == typeof(RouteTableView))
@@ -153,6 +237,10 @@ public class NavRouteTableViewModel : TabViewModel
         }
     }
 
+    /// <summary>
+    /// Scrolls the specified view to the current system.
+    /// </summary>
+    /// <param name="view">The view to scroll.</param>
     private void scrollToCurrentSystem(dynamic view)
     {
         try
@@ -189,6 +277,10 @@ public class NavRouteTableViewModel : TabViewModel
         }
     }
 
+    /// <summary>
+    /// Refreshes the route data view on the UI thread.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task refreshView()
     {
         log.Debug("EDEA4711: Refresh of NavRouteTable");

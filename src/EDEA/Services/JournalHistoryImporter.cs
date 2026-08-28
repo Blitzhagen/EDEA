@@ -14,44 +14,68 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Represents the JournalHistoryImporter class.</summary>
 public class JournalHistoryImporter
 {
+    /// <summary>The instance field.</summary>
     private static JournalHistoryImporter? instance;
 
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType ?? typeof(JournalHistoryImporter));
 
+    /// <summary>The _historyProvider field.</summary>
     private readonly HistoryProvider _historyProvider;
 
+    /// <summary>The _journalProvider field.</summary>
     private readonly JournalProvider _journalProvider;
 
+    /// <summary>The _starSystemProvider field.</summary>
     private readonly StarSystemProvider _starSystemProvider;
 
+    /// <summary>The _journalPlanetMemory field.</summary>
     private readonly JournalPlanetMemory _journalPlanetMemory;
 
+    /// <summary>The _journalSystemMemory field.</summary>
     private readonly JournalSystemMemory _journalSystemMemory;
 
+    /// <summary>The _memorizedStarSystems field.</summary>
     private readonly ConcurrentDictionary<long, StarSystem> _memorizedStarSystems;
 
+    /// <summary>The journalFiles field.</summary>
     private List<FileInfo>? journalFiles;
 
+    /// <summary>The newStarSystemCount field.</summary>
     private int newStarSystemCount;
 
+    /// <summary>The updatedStarSystemCount field.</summary>
     private int updatedStarSystemCount;
 
+    /// <summary>The ignoredStarSystemCount field.</summary>
     private int ignoredStarSystemCount;
 
+    /// <summary>The importCanceled field.</summary>
     private bool importCanceled;
 
+    /// <summary>The importWorker field.</summary>
     private BackgroundWorker? importWorker;
 
+    /// <summary>Gets or sets the StatusData.</summary>
+    /// <value>A JournalImportReportData value.</value>
     public JournalImportReportData StatusData { get; private set; }
 
+    /// <summary>Gets or sets the StatusPercentage.</summary>
+    /// <value>A int value.</value>
     public int StatusPercentage { get; private set; }
 
+    /// <summary>Occurs when the JournalHistoryImportProgressChanged event is raised.</summary>
     public event EventHandler JournalHistoryImportProgressChanged = delegate
     {
     };
 
+    /// <summary>Initializes a new instance of the JournalHistoryImporter class.</summary>
+    /// <param name="historyProvider">The HistoryProvider value of the historyProvider parameter.</param>
+    /// <param name="journalProvider">The JournalProvider value of the journalProvider parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
     private JournalHistoryImporter(HistoryProvider historyProvider, JournalProvider journalProvider, StarSystemProvider starSystemProvider)
     {
         _historyProvider = historyProvider;
@@ -64,6 +88,11 @@ public class JournalHistoryImporter
         StatusData = new JournalImportReportData();
     }
 
+    /// <summary>Performs the Instance operation.</summary>
+    /// <param name="historyProvider">The HistoryProvider value of the historyProvider parameter.</param>
+    /// <param name="journalProvider">The JournalProvider value of the journalProvider parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
+    /// <returns>A JournalHistoryImporter result.</returns>
     public static JournalHistoryImporter Instance(HistoryProvider historyProvider, JournalProvider journalProvider, StarSystemProvider starSystemProvider)
     {
         if (instance == null)
@@ -73,6 +102,7 @@ public class JournalHistoryImporter
         return instance;
     }
 
+    /// <summary>Performs the StartJournalImport operation.</summary>
     public void StartJournalImport()
     {
         if (importWorker == null)
@@ -88,6 +118,8 @@ public class JournalHistoryImporter
         }
     }
 
+    /// <summary>Retrieves JournalFiles.</summary>
+    /// <returns>A int result.</returns>
     public int ReadJournalFiles()
     {
         journalFiles = (from f in Helpsters.GetJournalFiles(Preferences.Other.EdSavedGamePath)
@@ -101,6 +133,9 @@ public class JournalHistoryImporter
         return 0;
     }
 
+    /// <summary>Performs the importWorker_RunWorkerCompleted operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void importWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
     {
         importWorker?.Dispose();
@@ -118,17 +153,24 @@ public class JournalHistoryImporter
         importCanceled = false;
     }
 
+    /// <summary>Determines whether CancelJournalImport.</summary>
     public void CancelJournalImport()
     {
         importWorker?.CancelAsync();
     }
 
+    /// <summary>Performs the importWorker_ProgressChanged operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void importWorker_ProgressChanged(object? sender, ProgressChangedEventArgs e)
     {
         StatusPercentage = e.ProgressPercentage;
         JournalHistoryImportProgressChanged(this, EventArgs.Empty);
     }
 
+    /// <summary>Performs the importWorker_DoWork operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void importWorker_DoWork(object? sender, DoWorkEventArgs e)
     {
         BackgroundWorker? backgroundWorker = sender as BackgroundWorker;

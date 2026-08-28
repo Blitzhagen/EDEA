@@ -12,40 +12,63 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Represents a method that handles the ParsedJournalDataUpdated event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="shutdown">The bool value of the shutdown parameter.</param>
 public delegate void ParsedJournalDataUpdatedEventHandler(object? sender, bool shutdown);
 
+/// <summary>Represents the JournalProvider class.</summary>
 public class JournalProvider
 {
+    /// <summary>The instance field.</summary>
     private static JournalProvider? instance;
 
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(JournalProvider));
 
+    /// <summary>The _journalStore field.</summary>
     private readonly JournalStore _journalStore;
 
+    /// <summary>The _starSystemProvider field.</summary>
     private readonly StarSystemProvider _starSystemProvider;
 
+    /// <summary>The commanderNameUnread field.</summary>
     private bool commanderNameUnread = true;
 
+    /// <summary>The _journalPlanetMemory field.</summary>
     private readonly JournalPlanetMemory _journalPlanetMemory;
 
+    /// <summary>The _journalSystemMemory field.</summary>
     private readonly JournalSystemMemory _journalSystemMemory;
 
+    /// <summary>The journalShutdown field.</summary>
     private bool journalShutdown;
 
+    /// <summary>The journalParseRunning field.</summary>
     private bool journalParseRunning;
 
+    /// <summary>The parseJournalTask field.</summary>
     private Task? parseJournalTask;
 
+    /// <summary>The _firstParseStarted field.</summary>
     private int _firstParseStarted;
 
+    /// <summary>Gets or sets the JournalFirstParse.</summary>
+    /// <value>A bool value.</value>
     public bool JournalFirstParse { get; private set; }
 
+    /// <summary>Gets the providerSystem.</summary>
+    /// <value>A StarSystem value.</value>
     private StarSystem providerSystem => _starSystemProvider.CurrentSystem;
 
+    /// <summary>Occurs when the ParsedJournalDataUpdated event is raised.</summary>
     public event ParsedJournalDataUpdatedEventHandler ParsedJournalDataUpdated = delegate
     {
     };
 
+    /// <summary>Initializes a new instance of the JournalProvider class.</summary>
+    /// <param name="journalStore">The JournalStore value of the journalStore parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
     private JournalProvider(JournalStore journalStore, StarSystemProvider starSystemProvider)
     {
         _journalStore = journalStore;
@@ -56,6 +79,10 @@ public class JournalProvider
         JournalFirstParse = true;
     }
 
+    /// <summary>Performs the Instance operation.</summary>
+    /// <param name="journalStore">The JournalStore value of the journalStore parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
+    /// <returns>A JournalProvider result.</returns>
     public static JournalProvider Instance(JournalStore journalStore, StarSystemProvider starSystemProvider)
     {
         if (instance == null)
@@ -65,11 +92,16 @@ public class JournalProvider
         return instance;
     }
 
+    /// <summary>Performs the _journalStore_JournalUpdated operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="sequelRead">The bool value of the sequelRead parameter.</param>
+    /// <param name="lastJournnalAddition">The IEnumerable<string> value of the lastJournnalAddition parameter.</param>
     private void _journalStore_JournalUpdated(object? sender, bool sequelRead, IEnumerable<string> lastJournnalAddition)
     {
         parseJournalTask = parseJournal(sequelRead, lastJournnalAddition);
     }
 
+    /// <summary>Performs the Initialize operation.</summary>
     public void Initialize()
     {
         if (JournalFirstParse && Interlocked.CompareExchange(ref _firstParseStarted, 1, 0) == 0)
@@ -78,6 +110,13 @@ public class JournalProvider
         }
     }
 
+    /// <summary>Performs the processJournalScanEvent operation.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    /// <param name="journalPlanetMemory">The JournalPlanetMemory value of the journalPlanetMemory parameter.</param>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider? value of the starSystemProvider parameter.</param>
+    /// <param name="journalFirstParse">The bool value of the journalFirstParse parameter.</param>
+    /// <param name="ignoreSpeechOutput">The bool value of the ignoreSpeechOutput parameter.</param>
     public void processJournalScanEvent(JsonObject jObject, JournalPlanetMemory journalPlanetMemory, StarSystem starSystem, StarSystemProvider? starSystemProvider = null, bool journalFirstParse = false, bool ignoreSpeechOutput = true)
     {
         string bodyName = Helpsters.ConvertJObjectValue<string>(jObject, "BodyName");
@@ -185,6 +224,9 @@ public class JournalProvider
         }
     }
 
+    /// <summary>Performs the processJournalStartJumpEvent operation.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    /// <param name="journalSystemMemory">The JournalSystemMemory value of the journalSystemMemory parameter.</param>
     public void processJournalStartJumpEvent(JsonObject jObject, JournalSystemMemory journalSystemMemory)
     {
         string starClass = Helpsters.ConvertJObjectValue<string>(jObject, "StarClass");
@@ -198,6 +240,10 @@ public class JournalProvider
         }
     }
 
+    /// <summary>Performs the processJournalFSDJumpEvent operation.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    /// <param name="journalSystemMemory">The JournalSystemMemory value of the journalSystemMemory parameter.</param>
+    /// <returns>A StarSystem? result.</returns>
     public StarSystem? processJournalFSDJumpEvent(JsonObject jObject, JournalSystemMemory journalSystemMemory)
     {
         string starSystemName = Helpsters.ConvertJObjectValue<string>(jObject, "StarSystem");
@@ -230,6 +276,9 @@ public class JournalProvider
         return starSystem;
     }
 
+    /// <summary>Performs the processJournalFSSDiscoveryScanEvent operation.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
     public void processJournalFSSDiscoveryScanEvent(JsonObject jObject, StarSystem starSystem)
     {
         var processableEvents = new List<string> { "FSSDiscoveryScan" };
@@ -247,6 +296,9 @@ public class JournalProvider
         }
     }
 
+    /// <summary>Performs the processJournalNavBeaconScanEvent operation.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
     public void processJournalNavBeaconScanEvent(JsonObject jObject, StarSystem starSystem)
     {
         var processableEvents = new List<string> { "NavBeaconScan" };
@@ -257,6 +309,9 @@ public class JournalProvider
         }
     }
 
+    /// <summary>Performs the processJournalFSSAllBodiesFoundEvent operation.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
     public void processJournalFSSAllBodiesFoundEvent(JsonObject jObject, StarSystem starSystem)
     {
         int bodyCount = Helpsters.ConvertJObjectValue(jObject, "Count", 0);
@@ -268,6 +323,11 @@ public class JournalProvider
         }
     }
 
+    /// <summary>Performs the processJournalSAAScanCompleteEvent operation.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
+    /// <param name="journalPlanetMemory">The JournalPlanetMemory value of the journalPlanetMemory parameter.</param>
+    /// <param name="ignoreSpeechOutput">The bool value of the ignoreSpeechOutput parameter.</param>
     public void processJournalSAAScanCompleteEvent(JsonObject jObject, StarSystem starSystem, JournalPlanetMemory journalPlanetMemory, bool ignoreSpeechOutput = true)
     {
         int targetProbeCount = Helpsters.ConvertJObjectValue(jObject, "EfficiencyTarget", 0);
@@ -294,6 +354,12 @@ public class JournalProvider
         }
     }
 
+    /// <summary>Performs the processJournalFSSBodySignalsEvent operation.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    /// <param name="journalPlanetMemory">The JournalPlanetMemory value of the journalPlanetMemory parameter.</param>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider? value of the starSystemProvider parameter.</param>
+    /// <param name="journalFirstParse">The bool value of the journalFirstParse parameter.</param>
     public void processJournalFSSBodySignalsEvent(JsonObject jObject, JournalPlanetMemory journalPlanetMemory, StarSystem starSystem, StarSystemProvider? starSystemProvider = null, bool journalFirstParse = false)
     {
         var processableEvents = new List<string> { "FSSBodySignals", "SAASignalsFound" };
@@ -368,6 +434,9 @@ public class JournalProvider
         journalPlanetMemory.AddOrUpdate(journalPlanetMemoryItem);
     }
 
+    /// <summary>Performs the processJournalTouchdownEvent operation.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
     public void processJournalTouchdownEvent(JsonObject jObject, StarSystem starSystem)
     {
         var processableEvents = new List<string> { "Touchdown" };
@@ -377,6 +446,11 @@ public class JournalProvider
         }
     }
 
+    /// <summary>Performs the processJournalScanOrganicEvent operation.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider? value of the starSystemProvider parameter.</param>
+    /// <param name="journalFirstParse">The bool value of the journalFirstParse parameter.</param>
     public void processJournalScanOrganicEvent(JsonObject jObject, StarSystem starSystem, StarSystemProvider? starSystemProvider = null, bool journalFirstParse = false)
     {
         var processableEvents = new List<string> { "ScanOrganic" };
@@ -404,6 +478,8 @@ public class JournalProvider
         }
     }
 
+    /// <summary>Performs the firstParse operation.</summary>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     private async Task firstParse()
     {
         await parseJournal();
@@ -417,6 +493,10 @@ public class JournalProvider
         _journalStore.JournalUpdated += _journalStore_JournalUpdated;
     }
 
+    /// <summary>Performs the parseJournal operation.</summary>
+    /// <param name="sequelRead">The bool value of the sequelRead parameter.</param>
+    /// <param name="lastJournalAddition">The IEnumerable<string>? value of the lastJournalAddition parameter.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     private async Task parseJournal(bool sequelRead = false, IEnumerable<string>? lastJournalAddition = null)
     {
         if (journalParseRunning)
@@ -552,6 +632,13 @@ public class JournalProvider
         parseJournalTask = null;
     }
 
+    /// <summary>Performs the isProcessable operation.</summary>
+    /// <param name="jObject">The JsonObject? value of the jObject parameter.</param>
+    /// <param name="starSystem">The StarSystem? value of the starSystem parameter.</param>
+    /// <param name="processEvents">The List<string> value of the processEvents parameter.</param>
+    /// <param name="jSystemAddress">The long value of the jSystemAddress parameter.</param>
+    /// <param name="jEvent">The string? value of the jEvent parameter.</param>
+    /// <returns>A bool result.</returns>
     private bool isProcessable(JsonObject? jObject, StarSystem? starSystem, List<string> processEvents, out long jSystemAddress, out string? jEvent)
     {
         jEvent = Helpsters.ConvertJObjectValue<string>(jObject, "event");

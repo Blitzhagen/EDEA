@@ -10,12 +10,16 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Provides GeneraIndexProvider functionality.</summary>
 public static class GeneraIndexProvider
 {
+    /// <summary>The log field.</summary>
     private static readonly ILog log;
 
+    /// <summary>The _genusClassifications field.</summary>
     private static List<GenusClassification> _genusClassifications;
 
+    /// <summary>Initializes the GeneraIndexProvider class.</summary>
     static GeneraIndexProvider()
     {
         log = LogManager.GetLogger(typeof(GeneraIndexProvider));
@@ -60,6 +64,10 @@ public static class GeneraIndexProvider
         }
     }
 
+    /// <summary>Retrieves StringList.</summary>
+    /// <param name="obj">The JsonObject? value of the obj parameter.</param>
+    /// <param name="propertyName">The string value of the propertyName parameter.</param>
+    /// <returns>A List<string> result.</returns>
     private static List<string> ReadStringList(JsonObject? obj, string propertyName)
     {
         var result = new List<string>();
@@ -79,6 +87,10 @@ public static class GeneraIndexProvider
         return result;
     }
 
+    /// <summary>Retrieves GravityRange.</summary>
+    /// <param name="obj">The JsonObject? value of the obj parameter.</param>
+    /// <param name="propertyName">The string value of the propertyName parameter.</param>
+    /// <returns>A GravityRange result.</returns>
     private static GravityRange ReadGravityRange(JsonObject? obj, string propertyName)
     {
         var range = new GravityRange();
@@ -99,6 +111,10 @@ public static class GeneraIndexProvider
         return range;
     }
 
+    /// <summary>Retrieves TemperatureRange.</summary>
+    /// <param name="obj">The JsonObject? value of the obj parameter.</param>
+    /// <param name="propertyName">The string value of the propertyName parameter.</param>
+    /// <returns>A TemperatureRange result.</returns>
     private static TemperatureRange ReadTemperatureRange(JsonObject? obj, string propertyName)
     {
         var range = new TemperatureRange();
@@ -119,6 +135,10 @@ public static class GeneraIndexProvider
         return range;
     }
 
+    /// <summary>Retrieves DistanceRange.</summary>
+    /// <param name="obj">The JsonObject? value of the obj parameter.</param>
+    /// <param name="propertyName">The string value of the propertyName parameter.</param>
+    /// <returns>A DistanceRange result.</returns>
     private static DistanceRange ReadDistanceRange(JsonObject? obj, string propertyName)
     {
         var range = new DistanceRange();
@@ -139,6 +159,10 @@ public static class GeneraIndexProvider
         return range;
     }
 
+    /// <summary>Retrieves LuminosityRange.</summary>
+    /// <param name="obj">The JsonObject? value of the obj parameter.</param>
+    /// <param name="propertyName">The string value of the propertyName parameter.</param>
+    /// <returns>A IntRange result.</returns>
     private static IntRange ReadLuminosityRange(JsonObject? obj, string propertyName)
     {
         var range = new IntRange();
@@ -159,6 +183,9 @@ public static class GeneraIndexProvider
         return range;
     }
 
+    /// <summary>Retrieves VistaGenomicsValueForSpecies.</summary>
+    /// <param name="species">The string value of the species parameter.</param>
+    /// <returns>A int result.</returns>
     public static int GetVistaGenomicsValueForSpecies(string species)
     {
         if (!string.IsNullOrEmpty(species) && _genusClassifications.Any(genusClassification => genusClassification.Species == species))
@@ -168,6 +195,9 @@ public static class GeneraIndexProvider
         return 0;
     }
 
+    /// <summary>Retrieves ClonalColonyRangeForGenus.</summary>
+    /// <param name="name">The string value of the name parameter.</param>
+    /// <returns>A int result.</returns>
     public static int GetClonalColonyRangeForGenus(string name)
     {
         if (!string.IsNullOrEmpty(name) && _genusClassifications.Any(genusClassification => genusClassification.Name == name))
@@ -177,6 +207,8 @@ public static class GeneraIndexProvider
         return 0;
     }
 
+    /// <summary>Performs the PredictOccurrenceOfSpecies operation.</summary>
+    /// <param name="planet">The Planet value of the planet parameter.</param>
     public static void PredictOccurrenceOfSpecies(Planet planet)
     {
         if (planet.BiologicalCount < 1 || planet.StarSystem == null)
@@ -212,6 +244,8 @@ public static class GeneraIndexProvider
         limitOccurrenceOfSpecies(planet);
     }
 
+    /// <summary>Performs the PredictOccurrenceOfSpecies operation.</summary>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
     public static void PredictOccurrenceOfSpecies(StarSystem starSystem)
     {
         if (starSystem == null)
@@ -227,6 +261,8 @@ public static class GeneraIndexProvider
         }
     }
 
+    /// <summary>Performs the limitOccurrenceOfSpecies operation.</summary>
+    /// <param name="planet">The Planet value of the planet parameter.</param>
     private static void limitOccurrenceOfSpecies(Planet planet)
     {
         foreach (GenusClassification predictedSpecies in planet.PredictedSpecies.ToList())
@@ -248,6 +284,8 @@ public static class GeneraIndexProvider
         }
     }
 
+    /// <summary>Performs the generateGenusClassificationData operation.</summary>
+    /// <param name="bioStatsFilePath">The string value of the bioStatsFilePath parameter.</param>
     private static void generateGenusClassificationData(string bioStatsFilePath)
     {
         // Canonn bio stats based generation is not currently triggered in this app.

@@ -9,27 +9,64 @@ using log4net;
 
 namespace EDEA.Models;
 
+/// <summary>
+/// Represents a celestial body within a star system.
+/// </summary>
 public class Body
 {
+    /// <summary>
+    /// The logger for this class.
+    /// </summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(Body));
 
+    /// <summary>
+    /// The rings of this body, keyed by name.
+    /// </summary>
     private readonly ConcurrentDictionary<string, Ring> _rings;
 
     // EDEA-only: retained for SQLiteStore body primary key persistence
+    /// <summary>
+    /// Gets or sets the 64-bit identifier.
+    /// </summary>
+    /// <value>The 64-bit identifier used for primary key persistence.</value>
     public long Id64 { get; set; }
 
+    /// <summary>
+    /// Gets or sets the body identifier.
+    /// </summary>
+    /// <value>The body identifier.</value>
     public int Id { get; protected set; }
 
     // EDEA-only: alias retained for SQLiteStore column mapping
+    /// <summary>
+    /// Gets or sets the body identifier alias.
+    /// </summary>
+    /// <value>The body identifier alias.</value>
     public int BodyId { get => Id; set => Id = value; }
 
+    /// <summary>
+    /// Gets or sets the star system identifier.
+    /// </summary>
+    /// <value>The star system identifier.</value>
     public long StarSystemId { get; set; }
 
     // EDEA-only: alias retained for SQLiteStore column mapping
+    /// <summary>
+    /// Gets or sets the star system 64-bit identifier alias.
+    /// </summary>
+    /// <value>The star system 64-bit identifier alias.</value>
     public long SystemId64 { get => StarSystemId; set => StarSystemId = value; }
 
+    /// <summary>
+    /// Gets or sets the name.
+    /// </summary>
+    /// <value>The name of the body.</value>
     public string Name { get; protected set; }
 
+    /// <summary>
+    /// Gets the short name relative to the star system.
+    /// </summary>
+    /// <value>The short name, or "⁕" if it cannot be determined.</value>
     public string ShortName
     {
         get
@@ -46,76 +83,201 @@ public class Body
         }
     }
 
+    /// <summary>
+    /// Gets or sets the type of the body.
+    /// </summary>
+    /// <value>The type of the body.</value>
     public BodyType Type { get; set; }
 
+    /// <summary>
+    /// Gets a value indicating whether this body is a planet.
+    /// </summary>
+    /// <value><see langword="true"/> if this body is a planet; otherwise, <see langword="false"/>.</value>
     public bool IsPlanet => Type == BodyType.Planet;
 
+    /// <summary>
+    /// Gets a value indicating whether this body is a star.
+    /// </summary>
+    /// <value><see langword="true"/> if this body is a star; otherwise, <see langword="false"/>.</value>
     public bool IsStar => Type == BodyType.Star;
 
+    /// <summary>
+    /// Gets a value indicating whether this body is a planet or a star.
+    /// </summary>
+    /// <value><see langword="true"/> if this body is a planet or a star; otherwise, <see langword="false"/>.</value>
     public bool IsPlanetOrStar => IsPlanet || IsStar;
 
+    /// <summary>
+    /// Gets or sets the distance from the arrival point.
+    /// </summary>
+    /// <value>The distance from the arrival point.</value>
     public double Distance { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether this body was already discovered.
+    /// </summary>
+    /// <value><see langword="true"/> if this body was already discovered; otherwise, <see langword="false"/>.</value>
     public bool WasDiscovered { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether this body was read from a journal.
+    /// </summary>
+    /// <value><see langword="true"/> if this body was read from a journal; otherwise, <see langword="false"/>.</value>
     public bool WasReadFromJournal { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether this body was read from EDSM.
+    /// </summary>
+    /// <value><see langword="true"/> if this body was read from EDSM; otherwise, <see langword="false"/>.</value>
     public bool WasReadFromEdsm { get; set; }
 
+    /// <summary>
+    /// Gets a value indicating whether this body was read from EDSM only.
+    /// </summary>
+    /// <value><see langword="true"/> if this body was read from EDSM and not from a journal; otherwise, <see langword="false"/>.</value>
     public bool WasReadFromEdsmOnly => WasReadFromEdsm && !WasReadFromJournal;
 
+    /// <summary>
+    /// Gets or sets the name of the commander who discovered the body on EDSM.
+    /// </summary>
+    /// <value>The commander name, or <see langword="null"/> if not known.</value>
     public string? EdsmDiscoveryCommander { get; set; }
 
     // EDEA-only: alias retained for SQLiteStore column mapping
+    /// <summary>
+    /// Gets or sets the EDSM discoverer alias.
+    /// </summary>
+    /// <value>The EDSM discoverer alias.</value>
     public string? EdsmDiscoverer
     {
         get => EdsmDiscoveryCommander;
         set => EdsmDiscoveryCommander = value;
     }
 
+    /// <summary>
+    /// Gets or sets the parent star system.
+    /// </summary>
+    /// <value>The parent star system, or <see langword="null"/> if not set.</value>
     public StarSystem? StarSystem { get; set; }
 
+    /// <summary>
+    /// Gets or sets the radius.
+    /// </summary>
+    /// <value>The radius of the body.</value>
     public double Radius { get; set; }
 
+    /// <summary>
+    /// Gets or sets the mass.
+    /// </summary>
+    /// <value>The mass of the body.</value>
     public double Mass { get; set; }
 
+    /// <summary>
+    /// Gets or sets the cartographic value.
+    /// </summary>
+    /// <value>The current cartographic value.</value>
     public int CartographicValue { get; set; }
 
+    /// <summary>
+    /// Gets or sets the maximum cartographic value.
+    /// </summary>
+    /// <value>The maximum cartographic value.</value>
     public int CartographicMaxValue { get; set; }
 
+    /// <summary>
+    /// Gets or sets the base cartographic value.
+    /// </summary>
+    /// <value>The base cartographic value.</value>
     public int CartographicBaseValue { get; set; }
 
+    /// <summary>
+    /// Gets or sets the first discovery bonus value.
+    /// </summary>
+    /// <value>The first discovery bonus value.</value>
     public int CartographicFirstDiscoveryBonusValue { get; set; }
 
+    /// <summary>
+    /// Gets or sets the first discovery bonus value without efficiency.
+    /// </summary>
+    /// <value>The first discovery bonus value without efficiency.</value>
     public int CartographicFirstDiscoveryBonusWithoutEfficiencyValue { get; set; }
 
+    /// <summary>
+    /// Gets or sets the first discovery bonus value without surface scan.
+    /// </summary>
+    /// <value>The first discovery bonus value without surface scan.</value>
     public int CartographicFirstDiscoveryBonusWithoutSurfaceScanValue { get; set; }
 
+    /// <summary>
+    /// Gets the rings of this body.
+    /// </summary>
+    /// <value>A read-only dictionary of rings keyed by name.</value>
     public IReadOnlyDictionary<string, Ring> Rings => _rings;
 
+    /// <summary>
+    /// Gets a value indicating whether this body has rings.
+    /// </summary>
+    /// <value><see langword="true"/> if this body has rings; otherwise, <see langword="false"/>.</value>
     public bool HasRings => _rings.Count > 0;
 
+    /// <summary>
+    /// Gets or sets the reserve level of this body's rings.
+    /// </summary>
+    /// <value>The reserve level of the rings.</value>
     public RingReserveLevel RingsReserveLevel { get; set; }
 
+    /// <summary>
+    /// Gets the total width of all rings.
+    /// </summary>
+    /// <value>The total width of all rings.</value>
     public long RingsTotalWidth => _rings.Sum((KeyValuePair<string, Ring> ring) => ring.Value.Width);
 
+    /// <summary>
+    /// Gets or sets the orbital inclination.
+    /// </summary>
+    /// <value>The orbital inclination, or <see langword="null"/> if not specified.</value>
     public double? OrbitalInclination { get; set; }
 
     // EDEA-only: persisted by SQLiteStore for history statistics
+    /// <summary>
+    /// Gets or sets a value indicating whether this body has biological signals.
+    /// </summary>
+    /// <value><see langword="true"/> if this body has biological signals; otherwise, <see langword="false"/>.</value>
     public bool HasBiological { get; set; }
 
     // EDEA-only: persisted by SQLiteStore for history statistics
+    /// <summary>
+    /// Gets or sets a value indicating whether this body has geological signals.
+    /// </summary>
+    /// <value><see langword="true"/> if this body has geological signals; otherwise, <see langword="false"/>.</value>
     public bool HasGeological { get; set; }
 
     // EDEA-only: persisted by SQLiteStore for history statistics
+    /// <summary>
+    /// Gets or sets a value indicating whether this body is considered valuable.
+    /// </summary>
+    /// <value><see langword="true"/> if this body is valuable; otherwise, <see langword="false"/>.</value>
     public bool IsValuable { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Body"/> class.
+    /// </summary>
     public Body()
     {
         _rings = new ConcurrentDictionary<string, Ring>();
         Name = string.Empty;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Body"/> class.
+    /// </summary>
+    /// <param name="id">The body identifier.</param>
+    /// <param name="starSystemId">The star system identifier.</param>
+    /// <param name="name">The name of the body.</param>
+    /// <param name="distance">The distance from the arrival point.</param>
+    /// <param name="radius">The radius of the body.</param>
+    /// <param name="mass">The mass of the body.</param>
+    /// <param name="orbitalInclination">The orbital inclination, or <see langword="null"/> if not specified.</param>
     public Body(int id, long starSystemId, string name, double distance, double radius, double mass, double? orbitalInclination)
     {
         _rings = new ConcurrentDictionary<string, Ring>();
@@ -132,6 +294,48 @@ public class Body
         RingsReserveLevel = RingReserveLevel.Unknown;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Body"/> class.
+    /// </summary>
+    /// <param name="id">The body identifier.</param>
+    /// <param name="starSystemId">The star system identifier.</param>
+    /// <param name="name">The name of the body.</param>
+    /// <param name="type">The type of the body.</param>
+    /// <param name="distance">The distance from the arrival point.</param>
+    /// <param name="wasDiscovered">Whether this body was already discovered.</param>
+    /// <param name="wasMapped">Whether this body was mapped.</param>
+    /// <param name="wasFootfalled">Whether this body was footfalled, or <see langword="null"/> if not specified.</param>
+    /// <param name="wasReadFromJournal">Whether this body was read from a journal.</param>
+    /// <param name="wasReadFromEdsm">Whether this body was read from EDSM.</param>
+    /// <param name="edsmDiscoveryCommander">The EDSM discovery commander.</param>
+    /// <param name="planetClass">The planet class.</param>
+    /// <param name="isLandable">Whether this body is landable.</param>
+    /// <param name="terraformingState">The terraforming state.</param>
+    /// <param name="surfaceScanned">Whether this body was surface scanned.</param>
+    /// <param name="gravity">The gravity of the body.</param>
+    /// <param name="geologicalCount">The number of geological signals.</param>
+    /// <param name="biologicalCount">The number of biological signals.</param>
+    /// <param name="starType">The star type.</param>
+    /// <param name="surfaceTemperature">The surface temperature.</param>
+    /// <param name="touchdown">Whether touchdown occurred.</param>
+    /// <param name="volcanism">The volcanism description.</param>
+    /// <param name="atmosphere">The atmosphere description.</param>
+    /// <param name="radius">The radius of the body.</param>
+    /// <param name="parentStarId">The parent star identifier, or <see langword="null"/> if not specified.</param>
+    /// <param name="parentPlanetId">The parent planet identifier, or <see langword="null"/> if not specified.</param>
+    /// <param name="mass">The mass of the body.</param>
+    /// <param name="orbitalInclination">The orbital inclination, or <see langword="null"/> if not specified.</param>
+    /// <param name="efficientlyScanned">Whether this body was efficiently scanned.</param>
+    /// <param name="cartographicValue">The cartographic value.</param>
+    /// <param name="cartographicMaxValue">The maximum cartographic value.</param>
+    /// <param name="cartographicBaseValue">The base cartographic value.</param>
+    /// <param name="cartographicFirstDiscoveryBonusValue">The first discovery bonus value.</param>
+    /// <param name="cartographicSurfaceScanValue">The surface scan value.</param>
+    /// <param name="cartographicFirstSurfaceScanBonusValue">The first surface scan bonus value.</param>
+    /// <param name="cartographicEfficientlyScannedBonusValue">The efficiently scanned bonus value.</param>
+    /// <param name="cartographicFirstDiscoveryBonusWithoutEfficiencyValue">The first discovery bonus without efficiency value.</param>
+    /// <param name="cartographicFirstDiscoveryBonusWithoutSurfaceScanValue">The first discovery bonus without surface scan value.</param>
+    /// <param name="ringsReserveLevel">The rings reserve level.</param>
     public Body(long id, long starSystemId, string name, long type, double distance, long wasDiscovered, long wasMapped, long? wasFootfalled, long wasReadFromJournal, long wasReadFromEdsm, string edsmDiscoveryCommander, string planetClass, long isLandable, string terraformingState, long surfaceScanned, double gravity, long geologicalCount, long biologicalCount, string starType, double surfaceTemperature, long touchdown, string volcanism, string atmosphere, double radius, long? parentStarId, long? parentPlanetId, double mass, double? orbitalInclination, long efficientlyScanned, long cartographicValue, long cartographicMaxValue, long cartographicBaseValue, long cartographicFirstDiscoveryBonusValue, long cartographicSurfaceScanValue, long cartographicFirstSurfaceScanBonusValue, long cartographicEfficientlyScannedBonusValue, long cartographicFirstDiscoveryBonusWithoutEfficiencyValue, long cartographicFirstDiscoveryBonusWithoutSurfaceScanValue, long ringsReserveLevel)
         : this(Convert.ToInt32(id), starSystemId, name, distance, radius, mass, orbitalInclination)
     {
@@ -149,6 +353,11 @@ public class Body
         RingsReserveLevel = (RingReserveLevel)ringsReserveLevel;
     }
 
+    /// <summary>
+    /// Updates this body with the data from the specified body and source.
+    /// </summary>
+    /// <param name="body">The body to copy data from.</param>
+    /// <param name="dataSource">The data source that provided the new data.</param>
     public void UpdateBody(Body body, DataSource dataSource)
     {
         switch (dataSource)
@@ -180,6 +389,11 @@ public class Body
         }
     }
 
+    /// <summary>
+    /// Attempts to add or update the specified ring for this body.
+    /// </summary>
+    /// <param name="ring">The ring to add or update.</param>
+    /// <param name="dataSource">The data source that provided the ring.</param>
     public void TryAddOrUpdateRing(Ring ring, DataSource dataSource)
     {
         if (ring.BodyId != Id || ring.StarSystemId != StarSystemId)
@@ -196,6 +410,10 @@ public class Body
         }
     }
 
+    /// <summary>
+    /// Calculates the cartographic value for this body.
+    /// </summary>
+    /// <param name="skipSpeechOutput">Whether to skip speech output.</param>
     public void CalculateCartographicValue(bool skipSpeechOutput)
     {
         if (!IsPlanetOrStar)
@@ -269,6 +487,14 @@ public class Body
         }
     }
 
+    /// <summary>
+    /// Calculates the achievable surface scan and bonus values.
+    /// </summary>
+    /// <param name="baseValue">The base value, passed by reference.</param>
+    /// <param name="surfaceScanValue">The surface scan value, passed by reference.</param>
+    /// <param name="firstSurfaceScanBonusValue">The first surface scan bonus value, passed by reference.</param>
+    /// <param name="efficientlyScannedBonusValue">The efficiently scanned bonus value, passed by reference.</param>
+    /// <param name="surfaceScanPlanet">The planet used for surface scanning, if applicable.</param>
     private void calculateAchievableSurfaceScanAndBonusValues(ref double baseValue, ref double surfaceScanValue, ref double firstSurfaceScanBonusValue, ref double efficientlyScannedBonusValue, out Planet? surfaceScanPlanet)
     {
         if (!IsPlanet)
@@ -309,6 +535,10 @@ public class Body
         efficientlyScannedBonusValue = (baseValue + surfaceScanValue + firstSurfaceScanBonusValue) * 0.25;
     }
 
+    /// <summary>
+    /// Calculates the base cartographic value.
+    /// </summary>
+    /// <param name="baseValue">The base value, passed by reference.</param>
     private void calculateBaseValue(ref double baseValue)
     {
         int baseMultiplier = 0;

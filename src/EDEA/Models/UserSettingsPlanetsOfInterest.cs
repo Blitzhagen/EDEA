@@ -5,16 +5,29 @@ using EDEA.Properties;
 
 namespace EDEA.Models;
 
+/// <summary>
+/// Represents the planets of interest user settings.
+/// </summary>
 public partial class UserSettingsPlanetsOfInterest : ObservableObject
 {
+    /// <summary>
+    /// The list of planet classifications.
+    /// </summary>
     [ObservableProperty]
     private List<PlanetClassification> _planetClassifications = new();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserSettingsPlanetsOfInterest"/> class.
+    /// </summary>
     public UserSettingsPlanetsOfInterest()
     {
         SetDefaultValues();
     }
 
+    /// <summary>
+    /// Returns the default values for the planets of interest settings.
+    /// </summary>
+    /// <returns>A dictionary of property names and default values.</returns>
     protected virtual Dictionary<string, object> GetDefaultValues()
     {
         return new Dictionary<string, object>
@@ -49,6 +62,10 @@ public partial class UserSettingsPlanetsOfInterest : ObservableObject
         };
     }
 
+    /// <summary>
+    /// Sets all or a single setting to its default value.
+    /// </summary>
+    /// <param name="singlePropertyInfo">The property to reset, or <see langword="null"/> to reset all.</param>
     public virtual void SetDefaultValues(PropertyInfo? singlePropertyInfo = null)
     {
         var defaultValues = GetDefaultValues();

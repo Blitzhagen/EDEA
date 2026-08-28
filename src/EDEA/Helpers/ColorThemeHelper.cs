@@ -7,8 +7,14 @@ using System.Windows.Data;
 
 namespace EDEA.Helpers;
 
+/// <summary>
+/// Helper class for applying color theme settings to the application resources.
+/// </summary>
 public static class ColorThemeHelper
 {
+    /// <summary>
+    /// Applies all currently configured colors to the application resources.
+    /// </summary>
     public static void ApplyCurrentColors()
     {
         foreach (var pair in GetColorKeyMapping())
@@ -25,6 +31,11 @@ public static class ColorThemeHelper
         }
     }
 
+    /// <summary>
+    /// Applies the specified color to all matching application resource keys.
+    /// </summary>
+    /// <param name="propertyName">The name of the color property to apply.</param>
+    /// <param name="color">The color to apply.</param>
     public static void ApplyColor(string propertyName, Color color)
     {
         foreach (var pair in GetColorKeyMapping())
@@ -36,6 +47,11 @@ public static class ColorThemeHelper
         }
     }
 
+    /// <summary>
+    /// Updates a single application resource brush with the specified color.
+    /// </summary>
+    /// <param name="key">The resource key of the brush to update.</param>
+    /// <param name="color">The color to set on the brush.</param>
     private static void ApplyBrushColor(object key, Color color)
     {
         try
@@ -48,8 +64,15 @@ public static class ColorThemeHelper
         }
     }
 
+    /// <summary>
+    /// Stores the mapping between application resource keys and color property names.
+    /// </summary>
     private static Dictionary<object, string> _colorKeyMapping = null!;
 
+    /// <summary>
+    /// Builds and returns the mapping between resource keys and color property names.
+    /// </summary>
+    /// <returns>A dictionary with resource keys and color property names.</returns>
     private static Dictionary<object, string> GetColorKeyMapping()
     {
         if (_colorKeyMapping != null)

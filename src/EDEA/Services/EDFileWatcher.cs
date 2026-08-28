@@ -8,42 +8,72 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Represents a method that handles the NavRouteFileChanged event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="e">The event data.</param>
 public delegate void NavRouteFileChangedEventHandler(object? sender, EdFileEvent e);
+/// <summary>Represents a method that handles the StatusFileChanged event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="e">The event data.</param>
 public delegate void StatusFileChangedEventHandler(object? sender, EdFileEvent e);
+/// <summary>Represents a method that handles the JournalFileChanged event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="e">The event data.</param>
+/// <param name="isOldFile">A value indicating whether old file.</param>
 public delegate void JournalFileChangedEventHandler(object? sender, EdFileEvent e, bool isOldFile);
 
+/// <summary>Represents the EDFileWatcher class.</summary>
 public class EDFileWatcher : FileSystemWatcher
 {
+    /// <summary>The instance field.</summary>
     private static EDFileWatcher? instance;
 
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(EDFileWatcher));
 
+    /// <summary>The _edFileEvents field.</summary>
     private readonly ConcurrentDictionary<string, EdFileEvent> _edFileEvents;
 
+    /// <summary>Gets or sets the NavRouteFilePath.</summary>
+    /// <value>A string value.</value>
     public string NavRouteFilePath { get; private set; } = string.Empty;
 
+    /// <summary>Gets the NavRouteFileName.</summary>
+    /// <value>A string value.</value>
     public string NavRouteFileName => System.IO.Path.GetFileName(NavRouteFilePath);
 
+    /// <summary>Gets or sets the JournalFilePath.</summary>
+    /// <value>A string value.</value>
     public string JournalFilePath { get; private set; } = string.Empty;
 
+    /// <summary>Gets the JournalFileName.</summary>
+    /// <value>A string value.</value>
     public string JournalFileName => System.IO.Path.GetFileName(JournalFilePath);
 
+    /// <summary>Gets or sets the StatusFilePath.</summary>
+    /// <value>A string value.</value>
     public string StatusFilePath { get; private set; } = string.Empty;
 
+    /// <summary>Gets the StatusFileName.</summary>
+    /// <value>A string value.</value>
     public string StatusFileName => System.IO.Path.GetFileName(StatusFilePath);
 
+    /// <summary>Occurs when the NavRouteFileChanged event is raised.</summary>
     public event NavRouteFileChangedEventHandler NavRouteFileChanged = delegate
     {
     };
 
+    /// <summary>Occurs when the StatusFileChanged event is raised.</summary>
     public event StatusFileChangedEventHandler StatusFileChanged = delegate
     {
     };
 
+    /// <summary>Occurs when the JournalFileChanged event is raised.</summary>
     public event JournalFileChangedEventHandler JournalFileChanged = delegate
     {
     };
 
+    /// <summary>Initializes a new instance of the EDFileWatcher class.</summary>
     private EDFileWatcher()
     {
         _edFileEvents = new ConcurrentDictionary<string, EdFileEvent>();
@@ -81,6 +111,8 @@ public class EDFileWatcher : FileSystemWatcher
         }
     }
 
+    /// <summary>Performs the Instance operation.</summary>
+    /// <returns>A EDFileWatcher result.</returns>
     public static EDFileWatcher Instance()
     {
         if (instance == null)
@@ -90,6 +122,9 @@ public class EDFileWatcher : FileSystemWatcher
         return instance;
     }
 
+    /// <summary>Performs the eDFileWatcher_EventRaised operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void eDFileWatcher_EventRaised(object? sender, FileSystemEventArgs e)
     {
         EdFileEvent edFileEvent = new EdFileEvent(e);
@@ -105,6 +140,8 @@ public class EDFileWatcher : FileSystemWatcher
         }
     }
 
+    /// <summary>Performs the handleEdFileEvent operation.</summary>
+    /// <param name="edFileEvent">The EdFileEvent value of the edFileEvent parameter.</param>
     private void handleEdFileEvent(EdFileEvent edFileEvent)
     {
         if (edFileEvent.FileName == StatusFileName)

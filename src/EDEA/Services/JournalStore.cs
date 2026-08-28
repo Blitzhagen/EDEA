@@ -11,36 +11,55 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Represents a method that handles the JournalUpdated event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="sequelRead">The bool value of the sequelRead parameter.</param>
+/// <param name="lastJournalAddition">The IEnumerable<string> value of the lastJournalAddition parameter.</param>
 public delegate void JournalUpdatedEventHandler(object? sender, bool sequelRead, IEnumerable<string> lastJournalAddition);
 
+/// <summary>Represents the JournalStore class.</summary>
 public class JournalStore
 {
+    /// <summary>The instance field.</summary>
     private static JournalStore? instance;
 
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(JournalStore));
 
+    /// <summary>The _fileWatcher field.</summary>
     private readonly EDFileWatcher _fileWatcher;
 
+    /// <summary>The _journal field.</summary>
     private readonly List<byte> _journal;
 
+    /// <summary>The _lastJournalAddition field.</summary>
     private readonly List<byte> _lastJournalAddition;
 
+    /// <summary>The _encoding field.</summary>
     private readonly UTF8Encoding _encoding;
 
+    /// <summary>The _readPufferSize field.</summary>
     private readonly int _readPufferSize;
 
+    /// <summary>The _touchJournalFileTimer field.</summary>
     private readonly System.Timers.Timer _touchJournalFileTimer;
 
+    /// <summary>The _touchJournalFileTimerInterval field.</summary>
     private readonly int _touchJournalFileTimerInterval = 5000;
 
+    /// <summary>The journalPosition field.</summary>
     private long journalPosition;
 
+    /// <summary>The readingJournalFile field.</summary>
     private bool readingJournalFile;
 
+    /// <summary>Occurs when the JournalUpdated event is raised.</summary>
     public event JournalUpdatedEventHandler JournalUpdated = delegate
     {
     };
 
+    /// <summary>Initializes a new instance of the JournalStore class.</summary>
+    /// <param name="eDFileWatcher">The EDFileWatcher value of the eDFileWatcher parameter.</param>
     private JournalStore(EDFileWatcher eDFileWatcher)
     {
         _fileWatcher = eDFileWatcher;
@@ -57,6 +76,9 @@ public class JournalStore
         _touchJournalFileTimer.Enabled = true;
     }
 
+    /// <summary>Performs the Instance operation.</summary>
+    /// <param name="eDFileWatcher">The EDFileWatcher value of the eDFileWatcher parameter.</param>
+    /// <returns>A JournalStore result.</returns>
     public static JournalStore Instance(EDFileWatcher eDFileWatcher)
     {
         if (instance == null)
@@ -66,6 +88,10 @@ public class JournalStore
         return instance;
     }
 
+    /// <summary>Performs the _fileWatcher_JournalFileChanged operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    /// <param name="isOldFile">A value indicating whether old file.</param>
     private async void _fileWatcher_JournalFileChanged(object? sender, EdFileEvent e, bool isOldFile)
     {
         try
@@ -88,11 +114,16 @@ public class JournalStore
         }
     }
 
+    /// <summary>Performs the _touchJournalFileTimer_Elapsed operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void _touchJournalFileTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {
         _ = readJournalFile();
     }
 
+    /// <summary>Retrieves Journal.</summary>
+    /// <returns>A Task<IEnumerable<string>> representing the asynchronous operation.</returns>
     public async Task<IEnumerable<string>> GetJournal()
     {
         if (journalPosition == 0L)
@@ -102,6 +133,9 @@ public class JournalStore
         return convertBytesToStrings(_journal);
     }
 
+    /// <summary>Performs the convertBytesToStrings operation.</summary>
+    /// <param name="byteList">The List<byte> value of the byteList parameter.</param>
+    /// <returns>A IEnumerable<string> result.</returns>
     private IEnumerable<string> convertBytesToStrings(List<byte> byteList)
     {
         using var stringReader = new StringReader(_encoding.GetString(byteList.ToArray()));
@@ -114,6 +148,8 @@ public class JournalStore
         return lines;
     }
 
+    /// <summary>Performs the readJournalFile operation.</summary>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     private async Task readJournalFile()
     {
         if (_fileWatcher.JournalFilePath == null)

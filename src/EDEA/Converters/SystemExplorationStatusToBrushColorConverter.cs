@@ -9,10 +9,21 @@ using log4net;
 
 namespace EDEA.Converters;
 
+/// <summary>
+/// Converts a system or route exploration status into a brush color.
+/// </summary>
 public class SystemExplorationStatusToBrushColorConverter : IValueConverter
 {
     private static readonly ILog log = LogManager.GetLogger(typeof(SystemExplorationStatusToBrushColorConverter));
 
+    /// <summary>
+    /// Converts a star system view model or route view to a brush color based on its exploration status.
+    /// </summary>
+    /// <param name="value">The <see cref="StarSystemViewModel"/> or <see cref="RouteView"/> to convert.</param>
+    /// <param name="targetType">The target type of the conversion.</param>
+    /// <param name="parameter">The converter parameter to use.</param>
+    /// <param name="culture">The culture to use in the converter.</param>
+    /// <returns>A brush resource representing the exploration status, or the unknown icon color as fallback.</returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         try
@@ -64,11 +75,25 @@ public class SystemExplorationStatusToBrushColorConverter : IValueConverter
         return GetResource("UnknownIconColor");
     }
 
+    /// <summary>
+    /// Converts a brush color back to a system or route view. Not supported.
+    /// </summary>
+    /// <param name="value">The value to convert back.</param>
+    /// <param name="targetType">The target type of the conversion.</param>
+    /// <param name="parameter">The converter parameter to use.</param>
+    /// <param name="culture">The culture to use in the converter.</param>
+    /// <returns>Not supported; throws a <see cref="NotSupportedException"/>.</returns>
+    /// <exception cref="NotSupportedException">Always thrown because the conversion is not supported.</exception>
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotSupportedException();
     }
 
+    /// <summary>
+    /// Retrieves a brush from the application resources or returns a gray fallback.
+    /// </summary>
+    /// <param name="key">The resource key to look up.</param>
+    /// <returns>The brush associated with the key, or <see cref="Brushes.Gray"/>.</returns>
     private static object GetResource(string key)
     {
         if (Application.Current == null)

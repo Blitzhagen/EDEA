@@ -14,14 +14,28 @@ using log4net;
 
 namespace EDEA;
 
+/// <summary>
+/// Provides general utility helper methods used across the application.
+/// </summary>
 public static class Helpsters
 {
     private static readonly ILog log = LogManager.GetLogger(typeof(Helpsters));
 
+    /// <summary>
+    /// The list of atmosphere and volcanism descriptors to remove from input strings.
+    /// </summary>
     private static readonly ImmutableList<string> _atmosphereAndVolcanismDescriptors;
 
+    /// <summary>
+    /// The list of star classes that are considered scoopable for fuel.
+    /// </summary>
     private static readonly ImmutableList<string> _scoopableStarClasses;
 
+    /// <summary>
+    /// Converts the first letter of a string to uppercase.
+    /// </summary>
+    /// <param name="input">The string to convert.</param>
+    /// <returns>The input string with the first letter in uppercase, or <see cref="string.Empty"/> when the input is too short.</returns>
     public static string FirstLetterToUpperCase(string input)
     {
         if (string.IsNullOrEmpty(input) || input.Length <= 1)
@@ -31,6 +45,11 @@ public static class Helpsters
         return char.ToUpper(input[0]) + input.Substring(1, input.Length - 1);
     }
 
+    /// <summary>
+    /// Removes known atmosphere and volcanism descriptors from the start of the input string.
+    /// </summary>
+    /// <param name="input">The string to clean.</param>
+    /// <returns>The input string without the leading descriptor, or the original input when no descriptor matches.</returns>
     public static string RemoveAtmosphereAndVolcanismDescriptors(string input)
     {
         foreach (string atmosphereAndVolcanismDescriptor in _atmosphereAndVolcanismDescriptors)
@@ -44,6 +63,11 @@ public static class Helpsters
         return input;
     }
 
+    /// <summary>
+    /// Rounds a double value to a human-readable precision depending on its magnitude.
+    /// </summary>
+    /// <param name="journalValue">The double value to round.</param>
+    /// <returns>A rounded string representation of the value in the current culture.</returns>
     public static string DoubleToHumanRounded(double journalValue)
     {
         double absoluteValue = Math.Abs(journalValue);
@@ -86,11 +110,21 @@ public static class Helpsters
         return Convert.ToString(Math.Floor(absoluteValue / 10000000.0) * 10000000.0, CultureInfo.CurrentCulture);
     }
 
+    /// <summary>
+    /// Returns the most recently written journal file in the specified folder.
+    /// </summary>
+    /// <param name="path">The folder to search for journal files.</param>
+    /// <returns>The latest <see cref="FileInfo"/> or <c>null</c> when no journal files are found.</returns>
     public static FileInfo? GetLatestJournalFile(string? path)
     {
         return GetJournalFiles(path)?.FirstOrDefault();
     }
 
+    /// <summary>
+    /// Returns all journal files in the specified folder ordered by last write time.
+    /// </summary>
+    /// <param name="path">The folder to search for journal files.</param>
+    /// <returns>An array of <see cref="FileInfo"/> objects or <c>null</c> when no journal files are found.</returns>
     public static FileInfo[]? GetJournalFiles(string? path)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -109,6 +143,14 @@ public static class Helpsters
         return files.OrderByDescending((FileInfo f) => f.LastWriteTime).ToArray();
     }
 
+    /// <summary>
+    /// Converts a JSON node value to the specified type.
+    /// </summary>
+    /// <typeparam name="T">The target type.</typeparam>
+    /// <param name="jObject">The JSON object containing the value.</param>
+    /// <param name="journalValueName">The name of the property to read.</param>
+    /// <param name="journalValueForNull">The fallback value when the property is missing or cannot be converted.</param>
+    /// <returns>The converted value, or <paramref name="journalValueForNull"/> when conversion fails.</returns>
     public static T ConvertJObjectValue<T>(JsonNode? jObject, string journalValueName, T journalValueForNull = default!)
     {
         try
@@ -142,6 +184,11 @@ public static class Helpsters
         return journalValueForNull;
     }
 
+    /// <summary>
+    /// Determines whether the specified type is an integer type.
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns><c>true</c> if the type is an integer type; otherwise, <c>false</c>.</returns>
     private static bool IsIntegerType(Type type)
     {
         return type == typeof(long) || type == typeof(ulong)
@@ -150,6 +197,12 @@ public static class Helpsters
             || type == typeof(byte) || type == typeof(sbyte);
     }
 
+    /// <summary>
+    /// Determines the parent star and planet IDs of a body from JSON data.
+    /// </summary>
+    /// <param name="jObject">The JSON object containing the body data.</param>
+    /// <param name="dataSource">The data source that indicates the parent property name format.</param>
+    /// <returns>A tuple with the parent star ID and parent planet ID.</returns>
     public static (int? parentStarId, int? parentPlanetId) DetermineParentIdsOfBody(JsonNode? jObject, DataSource dataSource)
     {
         int? parentStarId = null;
@@ -184,6 +237,11 @@ public static class Helpsters
         return (parentStarId: parentStarId, parentPlanetId: parentPlanetId);
     }
 
+    /// <summary>
+    /// Checks whether the given star class is scoopable.
+    /// </summary>
+    /// <param name="starClass">The star class to check.</param>
+    /// <returns><c>true</c> when the first part of the star class is in the scoopable star class list; otherwise, <c>false</c>.</returns>
     public static bool CheckStarClassForScoopable(string? starClass)
     {
         if (!string.IsNullOrEmpty(starClass))
@@ -197,6 +255,13 @@ public static class Helpsters
         return false;
     }
 
+    /// <summary>
+    /// Calculates the distance in light years between two star systems.
+    /// </summary>
+    /// <param name="firstStarSystem">The first star system.</param>
+    /// <param name="secondStarSystem">The second star system.</param>
+    /// <param name="distanceInLightYears">When the method returns, contains the calculated distance.</param>
+    /// <returns><c>true</c> when the distance could be calculated; otherwise, <c>false</c>.</returns>
     public static bool CalculateDistanceBetweenSystems(StarSystem firstStarSystem, StarSystem secondStarSystem, out double distanceInLightYears)
     {
         try
@@ -215,6 +280,12 @@ public static class Helpsters
         }
     }
 
+    /// <summary>
+    /// Returns the EDSM keys that map to the specified journal value.
+    /// </summary>
+    /// <param name="journalValue">The journal value to look up.</param>
+    /// <param name="edsmToJournalDictionary">The dictionary mapping EDSM values to journal values.</param>
+    /// <returns>A list of EDSM keys matching the journal value.</returns>
     public static List<string> GetEdsmValuesFromJournalValue(string journalValue, ImmutableDictionary<string, string> edsmToJournalDictionary)
     {
         return (from edsmPair in edsmToJournalDictionary
@@ -222,6 +293,11 @@ public static class Helpsters
                 select edsmPair.Key).ToList();
     }
 
+    /// <summary>
+    /// Returns a sorted list of unique journal values from the dictionary.
+    /// </summary>
+    /// <param name="edsmToJournalDictionary">The dictionary mapping EDSM values to journal values.</param>
+    /// <returns>A sorted list of unique journal values.</returns>
     public static List<string> GetUniqueJournalValues(ImmutableDictionary<string, string> edsmToJournalDictionary)
     {
         List<string> uniqueValues = new List<string>();
@@ -236,6 +312,11 @@ public static class Helpsters
         return uniqueValues;
     }
 
+    /// <summary>
+    /// Parses a data source ring type description into a <see cref="RingType"/>.
+    /// </summary>
+    /// <param name="dataSourceDescription">The ring type description to parse.</param>
+    /// <returns>The corresponding <see cref="RingType"/> or <see cref="RingType.Unknown"/> when unknown.</returns>
     public static RingType GetRingType(string? dataSourceDescription)
     {
         if (string.IsNullOrEmpty(dataSourceDescription))
@@ -257,6 +338,12 @@ public static class Helpsters
         };
     }
 
+    /// <summary>
+    /// Returns the data source description for the specified ring type.
+    /// </summary>
+    /// <param name="dataSource">The data source to use for the lookup.</param>
+    /// <param name="ringType">The ring type to describe.</param>
+    /// <returns>The data source description, or <see cref="string.Empty"/> when not found.</returns>
     public static string GetRingTypeSourceDesciption(DataSource dataSource, RingType ringType)
     {
         if (Globals.RingTypeDataSourceDescriptions.TryGetValue(dataSource, out var descriptions) && descriptions != null && descriptions.TryGetValue(ringType, out var description) && !string.IsNullOrEmpty(description))
@@ -266,6 +353,11 @@ public static class Helpsters
         return string.Empty;
     }
 
+    /// <summary>
+    /// Returns the localized name for the specified ring type.
+    /// </summary>
+    /// <param name="ringType">The ring type to name.</param>
+    /// <returns>The localized ring type name.</returns>
     public static string GetRingTypeName(RingType ringType)
     {
         return ringType switch
@@ -278,6 +370,11 @@ public static class Helpsters
         };
     }
 
+    /// <summary>
+    /// Returns the localized name for the specified ring reserve level.
+    /// </summary>
+    /// <param name="ringReserveLevel">The ring reserve level to name.</param>
+    /// <returns>The localized ring reserve level name.</returns>
     public static string GetRingReserveLevelName(RingReserveLevel ringReserveLevel)
     {
         return ringReserveLevel switch
@@ -291,6 +388,11 @@ public static class Helpsters
         };
     }
 
+    /// <summary>
+    /// Parses a data source ring reserve level description into a <see cref="RingReserveLevel"/>.
+    /// </summary>
+    /// <param name="dataSourceDescription">The ring reserve level description to parse.</param>
+    /// <returns>The corresponding <see cref="RingReserveLevel"/> or <see cref="RingReserveLevel.Unknown"/> when unknown.</returns>
     public static RingReserveLevel GetRingReserveLevel(string? dataSourceDescription)
     {
         if (string.IsNullOrEmpty(dataSourceDescription))
@@ -308,6 +410,11 @@ public static class Helpsters
         return RingReserveLevel.Unknown;
     }
 
+    /// <summary>
+    /// Opens the URI associated with a hyperlink using the default browser.
+    /// </summary>
+    /// <param name="hyperlink">The hyperlink to open.</param>
+    /// <returns><c>true</c> when the hyperlink was opened; otherwise, <c>false</c>.</returns>
     public static bool OpenHyperlink(Hyperlink? hyperlink)
     {
         try
@@ -328,6 +435,9 @@ public static class Helpsters
         return false;
     }
 
+    /// <summary>
+    /// Initializes the static descriptor and star class lists.
+    /// </summary>
     static Helpsters()
     {
         _atmosphereAndVolcanismDescriptors = new[]

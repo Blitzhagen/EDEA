@@ -4,12 +4,21 @@ using EDEA.ViewModels;
 
 namespace EDEA.Commands;
 
+/// <summary>
+/// Command that clears exploration trip or full exploration history after user confirmation.
+/// </summary>
 public class ClearHistoryCommand : CommandBase
 {
     private readonly MainViewModel _mainViewModel;
     private readonly HistoryProvider _historyProvider;
     private readonly StarSystemProvider _starSystemProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ClearHistoryCommand"/> class.
+    /// </summary>
+    /// <param name="mainViewModel">The main view model used to select the history tab.</param>
+    /// <param name="historyProvider">The provider that manages exploration history data.</param>
+    /// <param name="starSystemProvider">The provider that exposes the current star system.</param>
     public ClearHistoryCommand(MainViewModel mainViewModel, HistoryProvider historyProvider, StarSystemProvider starSystemProvider)
     {
         _mainViewModel = mainViewModel;
@@ -17,6 +26,10 @@ public class ClearHistoryCommand : CommandBase
         _starSystemProvider = starSystemProvider;
     }
 
+    /// <summary>
+    /// Prompts the user for confirmation and clears either the current trip data or the entire exploration history.
+    /// </summary>
+    /// <param name="parameter">A string value; if <c>"Trip"</c>, only trip data is reset. Otherwise the full history is cleared.</param>
     public override void Execute(object? parameter)
     {
         _mainViewModel.SelectTabByName("History");

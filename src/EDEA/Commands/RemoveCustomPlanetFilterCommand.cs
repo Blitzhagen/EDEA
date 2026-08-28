@@ -9,17 +9,28 @@ using log4net;
 
 namespace EDEA.Commands;
 
+/// <summary>
+/// Command that removes a custom planet classification filter after user confirmation.
+/// </summary>
 public class RemoveCustomPlanetFilterCommand : CommandBase
 {
     private static readonly ILog log = LogManager.GetLogger(typeof(RemoveCustomPlanetFilterCommand));
 
     private readonly PreferencesViewModel _preferencesViewModel;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RemoveCustomPlanetFilterCommand"/> class.
+    /// </summary>
+    /// <param name="preferencesViewModel">The preferences view model that holds the planet filter collection.</param>
     public RemoveCustomPlanetFilterCommand(PreferencesViewModel preferencesViewModel)
     {
         _preferencesViewModel = preferencesViewModel;
     }
 
+    /// <summary>
+    /// Prompts the user for confirmation and removes the selected planet classification filter.
+    /// </summary>
+    /// <param name="parameter">The <see cref="PlanetClassificationViewModel"/> to remove.</param>
     public override void Execute(object? parameter)
     {
         try

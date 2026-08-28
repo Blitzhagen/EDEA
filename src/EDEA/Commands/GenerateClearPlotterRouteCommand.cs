@@ -4,12 +4,21 @@ using EDEA.ViewModels;
 
 namespace EDEA.Commands;
 
+/// <summary>
+/// Command that either clears an existing custom plotter route or opens the route plotter window.
+/// </summary>
 public class GenerateClearPlotterRouteCommand : CommandBase
 {
     private readonly RoutePlotterViewModel _routePlotterViewModel;
     private readonly RouteProvider _routeProvider;
     private readonly Action? _onCleared;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GenerateClearPlotterRouteCommand"/> class.
+    /// </summary>
+    /// <param name="routePlotterViewModel">The view model for the route plotter window.</param>
+    /// <param name="routeProvider">The provider that manages route data.</param>
+    /// <param name="onCleared">An optional action invoked after a route has been cleared.</param>
     public GenerateClearPlotterRouteCommand(RoutePlotterViewModel routePlotterViewModel, RouteProvider routeProvider, Action? onCleared = null)
     {
         _routePlotterViewModel = routePlotterViewModel;
@@ -17,6 +26,10 @@ public class GenerateClearPlotterRouteCommand : CommandBase
         _onCleared = onCleared;
     }
 
+    /// <summary>
+    /// Deletes the custom plotter route when one exists; otherwise opens the route plotter window.
+    /// </summary>
+    /// <param name="parameter">Data used by the command. Not used.</param>
     public override void Execute(object? parameter)
     {
         if (_routeProvider.IsCustomRoute)

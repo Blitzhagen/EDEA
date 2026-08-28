@@ -10,20 +10,49 @@ using log4net;
 
 namespace EDEA.ViewModels;
 
+/// <summary>
+/// View model that manages the biologicals tab and its data presentation.
+/// </summary>
 public class GenusTableViewModel : TabViewModel
 {
+    /// <summary>
+    /// Gets the name of the tab.
+    /// </summary>
+    /// <value>The tab name displayed in the UI.</value>
     public override string TabName => "Biologicals";
 
+    /// <summary>
+    /// Logger instance for this class.
+    /// </summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(GenusTableViewModel));
 
+    /// <summary>
+    /// The provider for star system and current planet data.
+    /// </summary>
     private readonly StarSystemProvider _starSystemProvider;
 
+    /// <summary>
+    /// Gets the genuses present on the current planet.
+    /// </summary>
+    /// <value>The genus view models.</value>
     public IEnumerable<GenusViewModel> Genuses => _starSystemProvider.CurrentPlanet?.Genuses.Select((KeyValuePair<string, Genus> genusEntry) => new GenusViewModel(genusEntry.Value)) ?? Enumerable.Empty<GenusViewModel>();
 
+    /// <summary>
+    /// Gets the predicted species for the current planet.
+    /// </summary>
+    /// <value>The predicted species view models.</value>
     public IEnumerable<GenusClassificationViewModel> PredictedSpecies => _starSystemProvider.CurrentPlanet?.PredictedSpecies.Select((GenusClassification species) => new GenusClassificationViewModel(species, _starSystemProvider.CurrentPlanet)).OrderByDescending((GenusClassificationViewModel speciesVm) => speciesVm.VistaGenomicsBaseValueSort) ?? Enumerable.Empty<GenusClassificationViewModel>();
 
+    /// <summary>
+    /// Gets the info text for unknown biological signals.
+    /// </summary>
+    /// <value>The unknown biologicals info text.</value>
     public string UnknownBiologicalsInfo => string.Format(Resources.GenusTable_UnknownBiologicalSignalsInfo, _starSystemProvider.CurrentPlanet?.BiologicalCount);
 
+    /// <summary>
+    /// Gets a value indicating whether biological signals on the current planet are unknown.
+    /// </summary>
+    /// <value><c>true</c> if biologicals are unknown; otherwise, <c>false</c>.</value>
     public bool AreBiologicalsUnknown
     {
         get
@@ -35,8 +64,16 @@ public class GenusTableViewModel : TabViewModel
         }
     }
 
+    /// <summary>
+    /// Gets a value indicating whether biological signals on the current planet are known.
+    /// </summary>
+    /// <value><c>true</c> if biologicals are known; otherwise, <c>false</c>.</value>
     public bool AreBiologicalsKnown => !AreBiologicalsUnknown;
 
+    /// <summary>
+    /// Gets a value indicating whether predicted species are available.
+    /// </summary>
+    /// <value><c>true</c> if predicted species are available; otherwise, <c>false</c>.</value>
     public bool PredictedSpeciesAvailable
     {
         get
@@ -49,6 +86,10 @@ public class GenusTableViewModel : TabViewModel
         }
     }
 
+    /// <summary>
+    /// Gets a value indicating whether any genus is currently in analysis.
+    /// </summary>
+    /// <value><c>true</c> if a genus is in analysis; otherwise, <c>false</c>.</value>
     public bool GeneraInAnalysisAvailabe
     {
         get
@@ -61,6 +102,12 @@ public class GenusTableViewModel : TabViewModel
         }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GenusTableViewModel"/> class.
+    /// </summary>
+    /// <param name="tabHeader">The header text for the tab.</param>
+    /// <param name="tabVisibility">The initial visibility of the tab.</param>
+    /// <param name="starSystemProvider">The provider for star system data.</param>
     public GenusTableViewModel(string tabHeader, string tabVisibility, StarSystemProvider starSystemProvider)
         : base(tabHeader, tabVisibility)
     {
@@ -81,6 +128,9 @@ public class GenusTableViewModel : TabViewModel
         };
     }
 
+    /// <summary>
+    /// Refreshes the view based on the current planet and activity.
+    /// </summary>
     private void refreshView()
     {
         log.Debug("EDEA4711: Refresh of GenusTableView");
@@ -107,6 +157,9 @@ public class GenusTableViewModel : TabViewModel
         OnPropertyChanged("TabVisibility");
     }
 
+    /// <summary>
+    /// Updates the current location for genuses in analysis.
+    /// </summary>
     private void updateCurrentLocation()
     {
         if (base.TabVisibility != "Visible" || _starSystemProvider.LocationOnCurrentPlanet == null || _starSystemProvider.CurrentPlanet == null)
@@ -147,6 +200,15 @@ public class GenusTableViewModel : TabViewModel
         OnPropertyChanged("Genuses");
     }
 
+    /// <summary>
+    /// Calculates the great-circle distance between two coordinates on a sphere.
+    /// </summary>
+    /// <param name="lon1">The longitude of the first coordinate.</param>
+    /// <param name="lat1">The latitude of the first coordinate.</param>
+    /// <param name="lon2">The longitude of the second coordinate.</param>
+    /// <param name="lat2">The latitude of the second coordinate.</param>
+    /// <param name="radius">The radius of the sphere.</param>
+    /// <returns>The distance in meters.</returns>
     private int calculateDistance(double lon1, double lat1, double lon2, double lat2, double radius)
     {
         lon1 = Math.PI * lon1 / 180.0;

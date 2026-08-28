@@ -9,6 +9,9 @@ using EDEA.Properties;
 
 namespace EDEA
 {
+    /// <summary>
+    /// Global constants, dictionaries and localization helpers used throughout the application.
+    /// </summary>
     public static class Globals
     {
         public static readonly Dictionary<string, string> PlotterStarClasses = new Dictionary<string, string>
@@ -465,6 +468,11 @@ namespace EDEA
         { "no volcanism", "Kein Vulkanismus" }
     }.ToImmutableDictionary();
 
+        /// <summary>
+        /// Returns a localized display name for the given planet class.
+        /// </summary>
+        /// <param name="planetClass">The raw planet class.</param>
+        /// <returns>The localized planet class or the original value.</returns>
         public static string GetLocalizedPlanetClass(string planetClass)
         {
             if (string.IsNullOrEmpty(planetClass))
@@ -480,6 +488,11 @@ namespace EDEA
             return GermanPlanetClassNames.TryGetValue(normalized, out var german) ? german : planetClass;
         }
 
+        /// <summary>
+        /// Returns a localized display text for the given atmosphere.
+        /// </summary>
+        /// <param name="atmosphere">The raw atmosphere description.</param>
+        /// <returns>The localized atmosphere text or the original value.</returns>
         public static string GetLocalizedAtmosphere(string atmosphere)
         {
             if (string.IsNullOrEmpty(atmosphere) || atmosphere.Equals("no atmosphere", StringComparison.OrdinalIgnoreCase))
@@ -546,6 +559,11 @@ namespace EDEA
             return string.Join(" ", resultTokens);
         }
 
+        /// <summary>
+        /// Returns a localized display text for the given volcanism.
+        /// </summary>
+        /// <param name="volcanism">The raw volcanism description.</param>
+        /// <returns>The localized volcanism text or the original value.</returns>
         public static string GetLocalizedVolcanism(string volcanism)
         {
             if (string.IsNullOrEmpty(volcanism))

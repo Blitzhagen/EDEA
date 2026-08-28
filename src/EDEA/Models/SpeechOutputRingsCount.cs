@@ -3,8 +3,15 @@ using System.Linq;
 
 namespace EDEA.Models;
 
+/// <summary>
+/// Provides speech output placeholders for the ring count of a body.
+/// </summary>
 public class SpeechOutputRingsCount : SpeechOutput
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SpeechOutputRingsCount"/> class.
+    /// </summary>
+    /// <param name="body">The body to describe.</param>
     public SpeechOutputRingsCount(Body body)
     {
         Placeholders.Add(SpeechOutputPlaceholderKeys.RingsCount, Convert.ToString(body.Rings.Count));

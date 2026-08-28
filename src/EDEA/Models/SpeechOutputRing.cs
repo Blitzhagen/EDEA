@@ -3,8 +3,16 @@ using System.Linq;
 
 namespace EDEA.Models;
 
+/// <summary>
+/// Provides speech output placeholders for a ring.
+/// </summary>
 public class SpeechOutputRing : SpeechOutput
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SpeechOutputRing"/> class.
+    /// </summary>
+    /// <param name="ring">The ring to describe.</param>
+    /// <param name="body">The parent body.</param>
     public SpeechOutputRing(Ring ring, Body body)
     {
         Placeholders.Add(SpeechOutputPlaceholderKeys.RingName, ring.Name);

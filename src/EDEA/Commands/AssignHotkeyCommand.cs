@@ -11,6 +11,9 @@ using log4net;
 
 namespace EDEA.Commands;
 
+/// <summary>
+/// Command that assigns a new keyboard shortcut to an existing hotkey.
+/// </summary>
 public class AssignHotkeyCommand : CommandBase
 {
     private static readonly ILog log = LogManager.GetLogger(typeof(AssignHotkeyCommand));
@@ -27,6 +30,11 @@ public class AssignHotkeyCommand : CommandBase
 
     private bool _isActive;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AssignHotkeyCommand"/> class.
+    /// </summary>
+    /// <param name="hotkeyProvider">The provider that manages hotkey registration and assignment.</param>
+    /// <param name="preferencesWindow">The preferences window containing the global hotkeys tab.</param>
     public AssignHotkeyCommand(HotkeyProvider hotkeyProvider, PreferencesWindow preferencesWindow)
     {
         _hotkeyProvider = hotkeyProvider;
@@ -35,6 +43,11 @@ public class AssignHotkeyCommand : CommandBase
         _isActive = false;
     }
 
+    /// <summary>
+    /// Puts the associated text block into hotkey capture mode and unassigns the current hotkey.
+    /// </summary>
+    /// <param name="parameter">The <see cref="TextBlock"/> representing the hotkey to assign.</param>
+    /// <exception cref="Exception">Thrown when the selected hotkey cannot be found.</exception>
     public override void Execute(object? parameter)
     {
         if (_isActive)
@@ -69,6 +82,11 @@ public class AssignHotkeyCommand : CommandBase
         }
     }
 
+    /// <summary>
+    /// Handles the <see cref="UIElement.KeyUp"/> event to update the current hotkey key and modifier.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">Event data for the key up event.</param>
     private void hotkeyTextBlock_KeyUp(object? sender, KeyEventArgs e)
     {
         if (_currentHotkey == null)
@@ -97,6 +115,11 @@ public class AssignHotkeyCommand : CommandBase
         }
     }
 
+    /// <summary>
+    /// Handles the <see cref="UIElement.LostFocus"/> event to register the new hotkey and reset the capture mode.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">Event data for the lost focus event.</param>
     private void hotkeyTextBlock_LostFocus(object? sender, RoutedEventArgs e)
     {
         if (_currentHotkey == null || _hotkeyTextBlock == null)

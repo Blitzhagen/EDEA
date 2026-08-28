@@ -8,20 +8,40 @@ using log4net;
 
 namespace EDEA.Views;
 
+/// <summary>
+/// HUD view that displays a table of planetary bodies.
+/// </summary>
 public partial class BodyHudTableView : UserControl
 {
+    /// <summary>
+    /// Provides access to the current star system data.
+    /// </summary>
     private StarSystemProvider? starSystemProvider;
 
+    /// <summary>
+    /// View model that backs the body table.
+    /// </summary>
     private BodyTableViewModel? bodyTableViewModel;
 
+    /// <summary>
+    /// Logger for this view.
+    /// </summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(BodyHudTableView));
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BodyHudTableView"/> class.
+    /// </summary>
     public BodyHudTableView()
     {
         InitializeComponent();
         Loaded += bodyHudTableView_Loaded;
     }
 
+    /// <summary>
+    /// Handles the <see cref="Loaded"/> event to attach the view model and scroll to the current planet.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The routed event data.</param>
     private void bodyHudTableView_Loaded(object? sender, RoutedEventArgs e)
     {
         bodyTableViewModel = (BodyTableViewModel)DataContext;
@@ -36,6 +56,9 @@ public partial class BodyHudTableView : UserControl
         scrollToCurrentPlanet();
     }
 
+    /// <summary>
+    /// Scrolls the body data grid to the currently selected planet.
+    /// </summary>
     private void scrollToCurrentPlanet()
     {
         try

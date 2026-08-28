@@ -7,55 +7,100 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Represents a method that handles the StatusUpdated event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="activity">The Activity value of the activity parameter.</param>
+/// <param name="isInTeam">A value indicating whether in team.</param>
+/// <param name="planetNameExploring">The string? value of the planetNameExploring parameter.</param>
+/// <param name="destinationSystemId">The long? value of the destinationSystemId parameter.</param>
 public delegate void StatusUpdatedEventHandler(object? sender, Activity activity, bool isInTeam, string? planetNameExploring, long? destinationSystemId);
+/// <summary>Represents a method that handles the LocationUpdated event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="longitude">The double? value of the longitude parameter.</param>
+/// <param name="latitude">The double? value of the latitude parameter.</param>
+/// <param name="radius">The double? value of the radius parameter.</param>
 public delegate void LocationUpdatedEventHandler(object? sender, double? longitude, double? latitude, double? radius);
+/// <summary>Represents a method that handles the GuiFocusUpdated event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="edGuiFocus">The EdGuiFocus value of the edGuiFocus parameter.</param>
+/// <param name="isOnFoot">A value indicating whether on foot.</param>
 public delegate void GuiFocusUpdatedEventHandler(object? sender, EdGuiFocus edGuiFocus, bool isOnFoot);
+/// <summary>Represents a method that handles the ShipFuelUpdated event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="main">The double value of the main parameter.</param>
+/// <param name="reservoir">The double value of the reservoir parameter.</param>
 public delegate void ShipFuelUpdatedEventHandler(object? sender, double main, double reservoir);
 
+/// <summary>Represents the StatusProvider class.</summary>
 public class StatusProvider
 {
+    /// <summary>The instance field.</summary>
     private static StatusProvider? instance;
 
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(StatusProvider));
 
+    /// <summary>The _fileWatcher field.</summary>
     private readonly EDFileWatcher _fileWatcher;
 
+    /// <summary>The activity field.</summary>
     private Activity activity;
 
+    /// <summary>The isInTeam field.</summary>
     private bool isInTeam;
 
+    /// <summary>The planetNameExploring field.</summary>
     private string? planetNameExploring;
 
+    /// <summary>The destinationSystemId field.</summary>
     private long? destinationSystemId;
 
+    /// <summary>The longitude field.</summary>
     private double? longitude;
 
+    /// <summary>The latitude field.</summary>
     private double? latitude;
 
+    /// <summary>The planetRadius field.</summary>
     private double? planetRadius;
 
+    /// <summary>The readingStatusFile field.</summary>
     private bool readingStatusFile;
 
+    /// <summary>The guiFocus field.</summary>
     private EdGuiFocus guiFocus;
 
+    /// <summary>The isOnFoot field.</summary>
     private bool isOnFoot;
 
+    /// <summary>The shipFuelMain field.</summary>
     private double shipFuelMain;
 
+    /// <summary>The shipFuelReservoir field.</summary>
     private double shipFuelReservoir;
 
+    /// <summary>Gets or sets the Current.</summary>
+    /// <value>A Status? value.</value>
     public Status? Current { get; private set; }
 
+    /// <summary>Occurs when the StatusChanged event is raised.</summary>
     public event Action<Status?>? StatusChanged;
 
+    /// <summary>Occurs when the StatusUpdated event is raised.</summary>
     public event StatusUpdatedEventHandler StatusUpdated = delegate { };
 
+    /// <summary>Occurs when the LocationUpdated event is raised.</summary>
     public event LocationUpdatedEventHandler LocationUpdated = delegate { };
 
+    /// <summary>Occurs when the GuiFocusUpdated event is raised.</summary>
     public event GuiFocusUpdatedEventHandler GuiFocusUpdated = delegate { };
 
+    /// <summary>Occurs when the ShipFuelUpdated event is raised.</summary>
     public event ShipFuelUpdatedEventHandler ShipFuelUpdated = delegate { };
 
+    /// <summary>Initializes a new instance of the StatusProvider class.</summary>
+    /// <param name="eDFileWatcher">The EDFileWatcher value of the eDFileWatcher parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
     private StatusProvider(EDFileWatcher eDFileWatcher, StarSystemProvider starSystemProvider)
     {
         _fileWatcher = eDFileWatcher;
@@ -66,6 +111,10 @@ public class StatusProvider
         _fileWatcher.StatusFileChanged += _fileWatcher_StatusFileChanged;
     }
 
+    /// <summary>Performs the Instance operation.</summary>
+    /// <param name="eDFileWatcher">The EDFileWatcher value of the eDFileWatcher parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
+    /// <returns>A StatusProvider result.</returns>
     public static StatusProvider Instance(EDFileWatcher eDFileWatcher, StarSystemProvider starSystemProvider)
     {
         if (instance == null)
@@ -75,11 +124,16 @@ public class StatusProvider
         return instance;
     }
 
+    /// <summary>Performs the _fileWatcher_StatusFileChanged operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void _fileWatcher_StatusFileChanged(object? sender, EdFileEvent e)
     {
         _ = readStatusFile();
     }
 
+    /// <summary>Performs the readStatusFile operation.</summary>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     private async Task readStatusFile()
     {
         if (readingStatusFile)

@@ -17,39 +17,68 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Represents the WebApiProvider class.</summary>
 public class WebApiProvider
 {
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(WebApiProvider));
 
+    /// <summary>The absoluteRequestsInSession field.</summary>
     internal static int absoluteRequestsInSession;
+    /// <summary>The activeRequests field.</summary>
     internal static int activeRequests;
 
+    /// <summary>The instance field.</summary>
     private static WebApiProvider? instance;
+    /// <summary>The _starSystemProvider field.</summary>
     private readonly StarSystemProvider _starSystemProvider;
+    /// <summary>The _registeredRequests field.</summary>
     private readonly ConcurrentDictionary<Guid, WebApiRequest> _registeredRequests = new();
+    /// <summary>The spanshCancellationOfGalaxyRouteCalculationRequested field.</summary>
     private bool spanshCancellationOfGalaxyRouteCalculationRequested;
+    /// <summary>The _loadingCount field.</summary>
     private long _loadingCount;
 
+    /// <summary>Gets or sets the isLoading.</summary>
+    /// <value>A bool value.</value>
     public bool isLoading { get; private set; }
 
+    /// <summary>Gets the AbsoluteRequestsInSession.</summary>
+    /// <value>A int value.</value>
     public int AbsoluteRequestsInSession => absoluteRequestsInSession;
 
+    /// <summary>Gets the httpClient.</summary>
+    /// <value>A HttpClient value.</value>
     public HttpClient httpClient { get; }
 
+    /// <summary>Gets or sets the xRateRemaining.</summary>
+    /// <value>A int value.</value>
     public int xRateRemaining { get; set; } = 700;
 
+    /// <summary>Gets the maxActiveRequests.</summary>
+    /// <value>A int value.</value>
     public int maxActiveRequests { get; } = 17;
 
+    /// <summary>Gets the requestWaitDelay.</summary>
+    /// <value>A int value.</value>
     public int requestWaitDelay { get; } = 700;
 
+    /// <summary>The edsmSemaphore field.</summary>
     internal readonly SemaphoreSlim edsmSemaphore = new(1, 1);
 
+    /// <summary>The lastEdsmRequest field.</summary>
     internal DateTime lastEdsmRequest = DateTime.MinValue;
 
+    /// <summary>Gets the registeredRequestsCount.</summary>
+    /// <value>A int value.</value>
     public int registeredRequestsCount => _registeredRequests.Count;
 
+    /// <summary>Occurs when the WebApiLoadingStatusChanged event is raised.</summary>
     public event WebApiLoadingStatusChangedEventHandler WebApiLoadingStatusChanged = delegate { };
 
+    /// <summary>Initializes a new instance of the WebApiProvider class.</summary>
+    /// <param name="httpClient">The HttpClient value of the httpClient parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
     private WebApiProvider(HttpClient httpClient, StarSystemProvider starSystemProvider)
     {
         _starSystemProvider = starSystemProvider;
@@ -62,6 +91,10 @@ public class WebApiProvider
         activeRequests = 0;
     }
 
+    /// <summary>Performs the Instance operation.</summary>
+    /// <param name="httpClient">The HttpClient value of the httpClient parameter.</param>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
+    /// <returns>A WebApiProvider result.</returns>
     public static WebApiProvider Instance(HttpClient httpClient, StarSystemProvider starSystemProvider)
     {
         if (instance == null)
@@ -72,6 +105,10 @@ public class WebApiProvider
         return instance!;
     }
 
+    /// <summary>Performs the SpanshRequestBasicSystemData operation.</summary>
+    /// <param name="starSystemNameQuery">The string value of the starSystemNameQuery parameter.</param>
+    /// <param name="starSystems">The ObservableCollection<StarSystem> value of the starSystems parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
     public void SpanshRequestBasicSystemData(string starSystemNameQuery, ObservableCollection<StarSystem> starSystems, Action<WebApiParameter> requestCallBack)
     {
         var webApiObject = new WebApiParameterSpanshBasicSystemData(starSystems);
@@ -80,6 +117,11 @@ public class WebApiProvider
         _ = new WebApiRequest(this, apiUrl, new WepApiQueryData(WepApiQueryType.GetQuery, queryData), onSpanshResponseBasicSystemData, webApiObject, requestCallBack, ignoreSpeechOutput: true);
     }
 
+    /// <summary>Performs the onSpanshResponseBasicSystemData operation.</summary>
+    /// <param name="jToken">The JsonNode? value of the jToken parameter.</param>
+    /// <param name="webApiParameter">The WebApiParameter value of the webApiParameter parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
+    /// <param name="ignoreSpeechOutput">The bool value of the ignoreSpeechOutput parameter.</param>
     private void onSpanshResponseBasicSystemData(JsonNode? jToken, WebApiParameter webApiParameter, Action<WebApiParameter> requestCallBack, bool ignoreSpeechOutput)
     {
         try
@@ -106,6 +148,12 @@ public class WebApiProvider
         }
     }
 
+    /// <summary>Performs the SpanshRequestGalaxyRouteCalculation operation.</summary>
+    /// <param name="sourceSystem">The StarSystem value of the sourceSystem parameter.</param>
+    /// <param name="targetSystem">The StarSystem value of the targetSystem parameter.</param>
+    /// <param name="calculationTime">The int value of the calculationTime parameter.</param>
+    /// <param name="requestDelay">The int value of the requestDelay parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
     public void SpanshRequestGalaxyRouteCalculation(StarSystem sourceSystem, StarSystem targetSystem, int calculationTime, int requestDelay, Action<WebApiParameter> requestCallBack)
     {
         spanshCancellationOfGalaxyRouteCalculationRequested = false;
@@ -139,6 +187,14 @@ public class WebApiProvider
         _ = new WebApiRequest(this, apiUrl, new WepApiQueryData(WepApiQueryType.PostFormUrlEncodedContent, new FormUrlEncodedContent(nameValueCollection)), onSpanshRequestGalaxyRouteCalculation, webApiObject, requestCallBack, ignoreSpeechOutput: true);
     }
 
+    /// <summary>Performs the SpanshRequestNeutronRouteCalculation operation.</summary>
+    /// <param name="sourceSystem">The StarSystem value of the sourceSystem parameter.</param>
+    /// <param name="targetSystem">The StarSystem value of the targetSystem parameter.</param>
+    /// <param name="range">The double value of the range parameter.</param>
+    /// <param name="efficiency">The int value of the efficiency parameter.</param>
+    /// <param name="superchargeMultiplier">The double value of the superchargeMultiplier parameter.</param>
+    /// <param name="requestDelay">The int value of the requestDelay parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
     public void SpanshRequestNeutronRouteCalculation(StarSystem sourceSystem, StarSystem targetSystem, double range, int efficiency, double superchargeMultiplier, int requestDelay, Action<WebApiParameter> requestCallBack)
     {
         spanshCancellationOfGalaxyRouteCalculationRequested = false;
@@ -153,11 +209,17 @@ public class WebApiProvider
         _ = new WebApiRequest(this, apiUrl, new WepApiQueryData(WepApiQueryType.GetQuery, queryData), onSpanshRequestNeutronRouteCalculation, webApiObject, requestCallBack, ignoreSpeechOutput: true);
     }
 
+    /// <summary>Performs the SpanshRequestCancellationOfGalaxyRouteCalculation operation.</summary>
     public void SpanshRequestCancellationOfGalaxyRouteCalculation()
     {
         spanshCancellationOfGalaxyRouteCalculationRequested = true;
     }
 
+    /// <summary>Performs the onSpanshRequestNeutronRouteCalculation operation.</summary>
+    /// <param name="jToken">The JsonNode? value of the jToken parameter.</param>
+    /// <param name="webApiParameter">The WebApiParameter value of the webApiParameter parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
+    /// <param name="ignoreSpeechOutput">The bool value of the ignoreSpeechOutput parameter.</param>
     private void onSpanshRequestNeutronRouteCalculation(JsonNode? jToken, WebApiParameter webApiParameter, Action<WebApiParameter> requestCallBack, bool ignoreSpeechOutput)
     {
         if (jToken is not JsonObject jObject)
@@ -226,6 +288,11 @@ public class WebApiProvider
         }
     }
 
+    /// <summary>Performs the onSpanshRequestGalaxyRouteCalculation operation.</summary>
+    /// <param name="jToken">The JsonNode? value of the jToken parameter.</param>
+    /// <param name="webApiParameter">The WebApiParameter value of the webApiParameter parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
+    /// <param name="ignoreSpeechOutput">The bool value of the ignoreSpeechOutput parameter.</param>
     private void onSpanshRequestGalaxyRouteCalculation(JsonNode? jToken, WebApiParameter webApiParameter, Action<WebApiParameter> requestCallBack, bool ignoreSpeechOutput)
     {
         if (jToken is not JsonObject jObject)
@@ -294,6 +361,8 @@ public class WebApiProvider
         }
     }
 
+    /// <summary>Performs the EnterLoading operation.</summary>
+    /// <param name="webApiParameter">The WebApiParameter? value of the webApiParameter parameter.</param>
     private void EnterLoading(WebApiParameter? webApiParameter = null)
     {
         if (Interlocked.Increment(ref _loadingCount) == 1)
@@ -303,6 +372,8 @@ public class WebApiProvider
         }
     }
 
+    /// <summary>Performs the ExitLoading operation.</summary>
+    /// <param name="webApiParameter">The WebApiParameter? value of the webApiParameter parameter.</param>
     private void ExitLoading(WebApiParameter? webApiParameter = null)
     {
         if (Interlocked.Decrement(ref _loadingCount) == 0)
@@ -312,6 +383,9 @@ public class WebApiProvider
         }
     }
 
+    /// <summary>Performs the registerRequest operation.</summary>
+    /// <param name="webApiRequest">The WebApiRequest value of the webApiRequest parameter.</param>
+    /// <param name="force">The bool value of the force parameter.</param>
     internal void registerRequest(WebApiRequest webApiRequest, bool force = false)
     {
         if (_registeredRequests.Count == 0)
@@ -329,6 +403,8 @@ public class WebApiProvider
         }
     }
 
+    /// <summary>Performs the unregisterRequest operation.</summary>
+    /// <param name="webApiRequest">The WebApiRequest value of the webApiRequest parameter.</param>
     internal void unregisterRequest(WebApiRequest webApiRequest)
     {
         if (_registeredRequests.TryRemove(webApiRequest.Id, out _))
@@ -347,6 +423,10 @@ public class WebApiProvider
         }
     }
 
+    /// <summary>Performs the SendGetAsync operation.</summary>
+    /// <param name="uri">The Uri value of the uri parameter.</param>
+    /// <param name="ct">The CancellationToken value of the ct parameter.</param>
+    /// <returns>A Task<JsonNode?> representing the asynchronous operation.</returns>
     private async Task<JsonNode?> SendGetAsync(Uri uri, CancellationToken ct = default)
     {
         EnterLoading();
@@ -400,6 +480,11 @@ public class WebApiProvider
         }
     }
 
+    /// <summary>Performs the SendPostAsync operation.</summary>
+    /// <param name="uri">The Uri value of the uri parameter.</param>
+    /// <param name="content">The FormUrlEncodedContent value of the content parameter.</param>
+    /// <param name="ct">The CancellationToken value of the ct parameter.</param>
+    /// <returns>A Task<JsonNode?> representing the asynchronous operation.</returns>
     private async Task<JsonNode?> SendPostAsync(Uri uri, FormUrlEncodedContent content, CancellationToken ct = default)
     {
         EnterLoading();
@@ -453,6 +538,10 @@ public class WebApiProvider
         }
     }
 
+    /// <summary>Performs the EdsmRequestSurroundingStarSystemsInformation operation.</summary>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
+    /// <param name="radius">The SurroundingsRadius value of the radius parameter.</param>
     public void EdsmRequestSurroundingStarSystemsInformation(StarSystem starSystem, Action<WebApiParameter> requestCallBack, SurroundingsRadius radius = SurroundingsRadius.Close)
     {
         var webApiObject = new WebApiParameterEdsmSurroundings(starSystem, radius);
@@ -469,6 +558,11 @@ public class WebApiProvider
             ignoreSpeechOutput: true);
     }
 
+    /// <summary>Performs the edsmUpdateSurroundingStarSystemsInformation operation.</summary>
+    /// <param name="jToken">The JsonNode? value of the jToken parameter.</param>
+    /// <param name="webApiParameter">The WebApiParameter value of the webApiParameter parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
+    /// <param name="ignoreSpeechOutput">The bool value of the ignoreSpeechOutput parameter.</param>
     private void edsmUpdateSurroundingStarSystemsInformation(JsonNode? jToken, WebApiParameter webApiParameter, Action<WebApiParameter> requestCallBack, bool ignoreSpeechOutput)
     {
         var webApiParameterEdsmSurroundings = webApiParameter as WebApiParameterEdsmSurroundings;
@@ -535,6 +629,11 @@ public class WebApiProvider
         requestCallBack(webApiParameter);
     }
 
+    /// <summary>Performs the EdsmCheckAndRequestStarSystemInformation operation.</summary>
+    /// <param name="webApiParameterEdsmStarystem">The WebApiParameterEdsmStarystem value of the webApiParameterEdsmStarystem parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
+    /// <param name="forceUpdate">The bool value of the forceUpdate parameter.</param>
+    /// <param name="ignoreSpeechOutput">The bool value of the ignoreSpeechOutput parameter.</param>
     public void EdsmCheckAndRequestStarSystemInformation(WebApiParameterEdsmStarystem webApiParameterEdsmStarystem, Action<WebApiParameter> requestCallBack, bool forceUpdate, bool ignoreSpeechOutput)
     {
         if (webApiParameterEdsmStarystem.StarSystem.Id == 0L)
@@ -568,6 +667,12 @@ public class WebApiProvider
         }
     }
 
+    /// <summary>Performs the edsmUpdateSystemInformation operation.</summary>
+    /// <param name="jToken">The JsonNode? value of the jToken parameter.</param>
+    /// <param name="webApiParameter">The WebApiParameter value of the webApiParameter parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
+    /// <param name="ignoreSpeechOutput">The bool value of the ignoreSpeechOutput parameter.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the operation fails.</exception>
     private void edsmUpdateSystemInformation(JsonNode? jToken, WebApiParameter webApiParameter, Action<WebApiParameter> requestCallBack, bool ignoreSpeechOutput)
     {
         var starSystem = (webApiParameter as WebApiParameterEdsmStarystem)?.StarSystem;
@@ -594,6 +699,10 @@ public class WebApiProvider
         requestCallBack(webApiParameter);
     }
 
+    /// <summary>Performs the edsmRequestCelestialBodiesInformation operation.</summary>
+    /// <param name="webApiParameterEdsmStarystem">The WebApiParameterEdsmStarystem value of the webApiParameterEdsmStarystem parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
+    /// <param name="ignoreSpeechOutput">The bool value of the ignoreSpeechOutput parameter.</param>
     private void edsmRequestCelestialBodiesInformation(WebApiParameterEdsmStarystem webApiParameterEdsmStarystem, Action<WebApiParameter> requestCallBack, bool ignoreSpeechOutput)
     {
         const string apiUrl = "https://www.edsm.net/api-system-v1/bodies";
@@ -610,6 +719,11 @@ public class WebApiProvider
             followUpRequest: true);
     }
 
+    /// <summary>Performs the edsmUpdateCelestialBodiesInformation operation.</summary>
+    /// <param name="jToken">The JsonNode? value of the jToken parameter.</param>
+    /// <param name="webEdsmRequestParameter">The WebApiParameter value of the webEdsmRequestParameter parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
+    /// <param name="ignoreSpeechOutput">The bool value of the ignoreSpeechOutput parameter.</param>
     private void edsmUpdateCelestialBodiesInformation(JsonNode? jToken, WebApiParameter webEdsmRequestParameter, Action<WebApiParameter> requestCallBack, bool ignoreSpeechOutput)
     {
         var webApiParameterEdsmStarystem = webEdsmRequestParameter as WebApiParameterEdsmStarystem;
@@ -717,6 +831,10 @@ public class WebApiProvider
         requestCallBack(webEdsmRequestParameter);
     }
 
+    /// <summary>Performs the edsmCheckSystemId operation.</summary>
+    /// <param name="jStarSystem">The JsonObject? value of the jStarSystem parameter.</param>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
+    /// <returns>A bool result.</returns>
     private bool edsmCheckSystemId(JsonObject? jStarSystem, StarSystem starSystem)
     {
         var id = Helpsters.ConvertJObjectValue(jStarSystem, "id64", 0L);
@@ -730,6 +848,10 @@ public class WebApiProvider
         return true;
     }
 
+    /// <summary>Performs the edsmUpdateBasicSystemData operation.</summary>
+    /// <param name="jStarSystem">The JsonObject? value of the jStarSystem parameter.</param>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
+    /// <returns>A bool result.</returns>
     private bool edsmUpdateBasicSystemData(JsonObject? jStarSystem, StarSystem starSystem)
     {
         try
@@ -785,24 +907,41 @@ public class WebApiProvider
         return false;
     }
 
+    /// <summary>Performs the EdsmRequestSystemAsync operation.</summary>
+    /// <param name="systemName">The string value of the systemName parameter.</param>
+    /// <param name="ct">The CancellationToken value of the ct parameter.</param>
+    /// <returns>A Task<JsonNode?> representing the asynchronous operation.</returns>
     public async Task<JsonNode?> EdsmRequestSystemAsync(string systemName, CancellationToken ct = default)
     {
         var url = $"https://www.edsm.net/api-v1/system?systemName={Uri.EscapeDataString(systemName)}&showPrimaryStar=1&showId=1&showCoordinates=1&showInformation=1";
         return await SendGetAsync(new Uri(url), ct).ConfigureAwait(false);
     }
 
+    /// <summary>Performs the EdsmRequestBodiesAsync operation.</summary>
+    /// <param name="systemName">The string value of the systemName parameter.</param>
+    /// <param name="ct">The CancellationToken value of the ct parameter.</param>
+    /// <returns>A Task<JsonNode?> representing the asynchronous operation.</returns>
     public async Task<JsonNode?> EdsmRequestBodiesAsync(string systemName, CancellationToken ct = default)
     {
         var url = $"https://www.edsm.net/api-system-v1/bodies?systemName={Uri.EscapeDataString(systemName)}";
         return await SendGetAsync(new Uri(url), ct).ConfigureAwait(false);
     }
 
+    /// <summary>Performs the EdsmRequestSurroundingsAsync operation.</summary>
+    /// <param name="systemName">The string value of the systemName parameter.</param>
+    /// <param name="radius">The int value of the radius parameter.</param>
+    /// <param name="ct">The CancellationToken value of the ct parameter.</param>
+    /// <returns>A Task<JsonNode?> representing the asynchronous operation.</returns>
     public async Task<JsonNode?> EdsmRequestSurroundingsAsync(string systemName, int radius = 20, CancellationToken ct = default)
     {
         var url = $"https://www.edsm.net/api-v1/sphere-systems?systemName={Uri.EscapeDataString(systemName)}&showId=1&showPrimaryStar=1&showCoordinates=1&showInformation=1&radius={radius}";
         return await SendGetAsync(new Uri(url), ct).ConfigureAwait(false);
     }
 
+    /// <summary>Performs the SpanshRequestSystemNamesAsync operation.</summary>
+    /// <param name="query">The string value of the query parameter.</param>
+    /// <param name="ct">The CancellationToken value of the ct parameter.</param>
+    /// <returns>A Task<JsonNode?> representing the asynchronous operation.</returns>
     public async Task<JsonNode?> SpanshRequestSystemNamesAsync(string query, CancellationToken ct = default)
     {
         var url = $"https://spansh.co.uk/api/systems/field_values/system_names?q={Uri.EscapeDataString(query)}";
@@ -854,18 +993,29 @@ public class WebApiProvider
         return await SendPostAsync(new Uri("https://spansh.co.uk/api/generic/route"), content, ct).ConfigureAwait(false);
     }
 
+    /// <summary>Performs the SpanshPollJobResultAsync operation.</summary>
+    /// <param name="jobId">The string value of the jobId parameter.</param>
+    /// <param name="ct">The CancellationToken value of the ct parameter.</param>
+    /// <returns>A Task<JsonNode?> representing the asynchronous operation.</returns>
     public async Task<JsonNode?> SpanshPollJobResultAsync(string jobId, CancellationToken ct = default)
     {
         var url = $"https://spansh.co.uk/api/results/{Uri.EscapeDataString(jobId)}";
         return await SendGetAsync(new Uri(url), ct).ConfigureAwait(false);
     }
 
+    /// <summary>Determines whether CanonnRequestBioStatsAsync.</summary>
+    /// <param name="genus">The string value of the genus parameter.</param>
+    /// <param name="ct">The CancellationToken value of the ct parameter.</param>
+    /// <returns>A Task<JsonNode?> representing the asynchronous operation.</returns>
     public async Task<JsonNode?> CanonnRequestBioStatsAsync(string genus, CancellationToken ct = default)
     {
         var url = $"https://api.canonn.tech/biostats?genus={Uri.EscapeDataString(genus)}";
         return await SendGetAsync(new Uri(url), ct).ConfigureAwait(false);
     }
 
+    /// <summary>Creates NeutronJumps.</summary>
+    /// <param name="result">The JsonObject value of the result parameter.</param>
+    /// <returns>A JsonArray? result.</returns>
     private static JsonArray? BuildNeutronJumps(JsonObject result)
     {
         var systemJumps = Helpsters.ConvertJObjectValue<JsonArray?>(result, "system_jumps");

@@ -14,6 +14,7 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Defines the activities the commander can currently perform.</summary>
 public enum Activity
 {
     None,
@@ -24,54 +25,114 @@ public enum Activity
     Other
 }
 
+/// <summary>Delegate for the <see cref="StarSystemProvider.RouteLoadingStatusChanged"/> event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="statusText">The current loading status text.</param>
 public delegate void RouteLoadingStatusChangedEventHandler(object sender, string statusText);
+/// <summary>Delegate for the <see cref="StarSystemProvider.SurroundingsLoadingStatusChanged"/> event.</summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="statusText">The current loading status text.</param>
 public delegate void SurroundingsLoadingStatusChangedEventHandler(object sender, string statusText);
 
+/// <summary>
+/// Central service that provides information about the current and surrounding star systems,
+/// manages the route, and coordinates communication between providers and the GUI.
+/// </summary>
 public class StarSystemProvider
 {
+    /// <summary>The singleton instance of the <see cref="StarSystemProvider"/>.</summary>
     private static StarSystemProvider instance;
 
+    /// <summary>The logger used by this provider.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(StarSystemProvider));
 
+    /// <summary>Provides access to the persisted star system history.</summary>
     private readonly HistoryProvider _historyProvider;
 
+    /// <summary>Provides access to the EDSM Web API.</summary>
     private WebApiProvider _WebApiProvider;
+    /// <summary>Provides the current navigation route.</summary>
     private RouteProvider _routeProvider;
+    /// <summary>Provides parsed journal data.</summary>
     private JournalProvider _journalProvider;
+    /// <summary>Provides planet-of-interest matching data.</summary>
     private PlanetsOfInterestProvider _planetsOfInterestProvider;
 
+    /// <summary>Threshold in milliseconds for throttling GUI data update events.</summary>
     private readonly int _guiDataUpdateTriggerThreshold = 700;
 
+    /// <summary>Indicates whether a GUI data update is currently blocked.</summary>
     private bool guiDataUpdateTriggerBlocked;
+    /// <summary>Indicates whether a GUI data update is pending while throttled.</summary>
     private bool guiDataUpdateTriggerPending;
+    /// <summary>Identifier of the star system for which surroundings have been loaded.</summary>
     private long surroundingsSystemId;
+    /// <summary>Indicates whether the surroundings view is currently visible.</summary>
     private bool surroundingsVisible;
 
+    /// <summary>Gets the star systems that are part of the current route.</summary>
+    /// <value>A <see cref="ConcurrentDictionary{TKey, TValue}"/> keyed by system id.</value>
     public ConcurrentDictionary<long, StarSystem> StarSystemsOnRoute { get; }
+    /// <summary>Gets or sets the star systems surrounding the current system.</summary>
+    /// <value>A <see cref="ConcurrentDictionary{TKey, TValue}"/> keyed by system id.</value>
     public ConcurrentDictionary<long, StarSystem> SurroundingStarSystems { get; private set; }
 
+    /// <summary>Gets or sets the currently selected star system.</summary>
+    /// <value>The current <see cref="StarSystem"/>.</value>
     public StarSystem CurrentSystem { get; private set; }
+    /// <summary>Gets or sets the destination system when a jump is in progress.</summary>
+    /// <value>The destination <see cref="StarSystem"/>.</value>
     public StarSystem DestinationSystem { get; private set; }
+    /// <summary>Gets or sets the current commander activity.</summary>
+    /// <value>The current <see cref="Activity"/>.</value>
     public Activity CurrentActivity { get; private set; }
+    /// <summary>Gets or sets the currently explored planet.</summary>
+    /// <value>The current <see cref="Planet"/>.</value>
     public Planet CurrentPlanet { get; private set; }
+    /// <summary>Gets or sets the surface location on the current planet.</summary>
+    /// <value>The current <see cref="LocationOnPlanet"/>.</value>
     public LocationOnPlanet LocationOnCurrentPlanet { get; private set; }
+    /// <summary>Gets or sets a value indicating whether the commander is in a team.</summary>
+    /// <value><c>true</c> if the commander is in a team; otherwise, <c>false</c>.</value>
     public bool IsInTeam { get; private set; }
+    /// <summary>Gets or sets the commander name.</summary>
+    /// <value>The name of the commander.</value>
     public string CommanderName { get; set; }
+    /// <summary>Gets or sets the names of the commanders teammates.</summary>
+    /// <value>A list of teammate names.</value>
     public List<string> TeammateNames { get; set; }
 
+    /// <summary>Gets a value indicating whether the <see cref="CurrentSystem"/> is part of the route.</summary>
+    /// <value><c>true</c> if the current system is on the route; otherwise, <c>false</c>.</value>
     public bool IsCurrentSystemInRoute => isSystemInRoute(CurrentSystem, StarSystemsOnRoute);
+    /// <summary>Gets or sets a value indicating whether route data is loading.</summary>
+    /// <value><c>true</c> if the route is loading; otherwise, <c>false</c>.</value>
     public bool RouteIsLoading { get; private set; }
+    /// <summary>Gets or sets a value indicating whether surrounding systems are loading.</summary>
+    /// <value><c>true</c> if the surroundings are loading; otherwise, <c>false</c>.</value>
     public bool SurroundingsAreLoading { get; private set; }
+    /// <summary>Gets or sets the currently used ship.</summary>
+    /// <value>The current <see cref="Ship"/>.</value>
     public Ship CurrentShip { get; set; }
 
+    /// <summary>Raised when general GUI data has been updated.</summary>
     public event EventHandler GuiDataUpdated = delegate { };
+    /// <summary>Raised when planetary location data has been updated.</summary>
     public event EventHandler GuiLocationDataUpdated = delegate { };
+    /// <summary>Raised when ship fuel data has been updated.</summary>
     public event EventHandler GuiShipFuelDataUpdated = delegate { };
+    /// <summary>Raised when the current system membership in the route changes.</summary>
     public event EventHandler CurrentSystemInRouteChanged = delegate { };
+    /// <summary>Raised when the current planet changes.</summary>
     public event EventHandler CurrentPlanetChanged = delegate { };
+    /// <summary>Raised when the route loading status text changes.</summary>
     public event RouteLoadingStatusChangedEventHandler RouteLoadingStatusChanged = delegate { };
+    /// <summary>Raised when the surroundings loading status text changes.</summary>
     public event SurroundingsLoadingStatusChangedEventHandler SurroundingsLoadingStatusChanged = delegate { };
 
+    /// <summary>Returns the singleton <see cref="StarSystemProvider"/> instance.</summary>
+    /// <param name="historyProvider">The <see cref="HistoryProvider"/> used for history persistence.</param>
+    /// <returns>The singleton <see cref="StarSystemProvider"/> instance.</returns>
     public static StarSystemProvider Instance(HistoryProvider historyProvider)
     {
         if (instance == null)
@@ -81,6 +142,8 @@ public class StarSystemProvider
         return instance;
     }
 
+    /// <summary>Initializes a new instance of the <see cref="StarSystemProvider"/> class.</summary>
+    /// <param name="historyProvider">The <see cref="HistoryProvider"/> used for history persistence.</param>
     private StarSystemProvider(HistoryProvider historyProvider)
     {
         StarSystemsOnRoute = new ConcurrentDictionary<long, StarSystem>();
@@ -94,6 +157,8 @@ public class StarSystemProvider
         _historyProvider = historyProvider;
     }
 
+    /// <summary>Registers a provider with this <see cref="StarSystemProvider"/>.</summary>
+    /// <param name="provider">The <see cref="object"/> representing the provider to register.</param>
     public void RegisterProvider(object provider)
     {
         if (provider.GetType() == typeof(PlanetsOfInterestProvider))
@@ -122,11 +187,14 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>Requests EDSM data for the current star system.</summary>
+    /// <param name="forceUpdate">A <see cref="Boolean"/> indicating whether to force an update.</param>
     public void HandleLoadEdsmSystemDataCommand(bool forceUpdate)
     {
         _WebApiProvider.EdsmCheckAndRequestStarSystemInformation(new WebApiParameterEdsmStarystem(CurrentSystem), onRequestedStarSystemInformation, forceUpdate, ignoreSpeechOutput: true);
     }
 
+    /// <summary>Handles the application shutdown and persists the current system.</summary>
     public void HandleApplicationShutdown()
     {
         SpeechProvider.ShutUp();
@@ -146,6 +214,9 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>Handles a change of the current star system, updates history and requests additional data.</summary>
+    /// <param name="potentialNewSystem">The <see cref="StarSystem"/> that may become the current system.</param>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
     public async Task HandleCurrentSystemChange(StarSystem potentialNewSystem)
     {
         StarSystem currentSystem = CurrentSystem;
@@ -217,6 +288,9 @@ public class StarSystemProvider
         RequestSurroundingStarSystemsForCurrentSystem();
     }
 
+    /// <summary>Handles the selected tab index change in the main view model.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> containing the event data.</param>
     public void MainViewModel_SelectedTabIndexChanged(object sender, EventArgs e)
     {
         surroundingsVisible = false;
@@ -234,6 +308,7 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>Requests the surrounding star systems for the current system from EDSM.</summary>
     public void RequestSurroundingStarSystemsForCurrentSystem()
     {
         if (surroundingsVisible && CurrentSystem != null && CurrentSystem.Id > 0 && !_journalProvider.JournalFirstParse)
@@ -304,6 +379,8 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>Marks past star systems on the route and requests EDSM data for upcoming systems.</summary>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
     public async Task SetPastStarSystemsOnRouteAndRequestEDSMDataForUpcomingStarSystemsOnRoute()
     {
         if (!IsCurrentSystemInRoute)
@@ -338,6 +415,7 @@ public class StarSystemProvider
         });
     }
 
+    /// <summary>Copies the name of the next route system to the clipboard.</summary>
     public void CopyNextSystemNametoClipboard()
     {
         if (IsCurrentSystemInRoute && _routeProvider.IsCustomRoute)
@@ -352,6 +430,7 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>Predicts the occurrence of valuable species for all planets in the current system.</summary>
     public void PredictOccurrenceOfSpeciesForCurrentSystem()
     {
         GeneraIndexProvider.PredictOccurrenceOfSpecies(CurrentSystem);
@@ -366,6 +445,8 @@ public class StarSystemProvider
         triggerGuiDataUpdateEvent();
     }
 
+    /// <summary>Predicts the occurrence of valuable species for the specified planet.</summary>
+    /// <param name="planet">The <see cref="Planet"/> for which to predict species occurrence.</param>
     public void PredictOccurrenceOfSpeciesForPlanet(Planet planet)
     {
         GeneraIndexProvider.PredictOccurrenceOfSpecies(planet);
@@ -374,6 +455,7 @@ public class StarSystemProvider
         triggerGuiDataUpdateEvent();
     }
 
+    /// <summary>Finds matching planet classifications for the current route and surroundings.</summary>
     public async void FindMatchingClassificationsForCurrentRouteAndSurroundings()
     {
         try
@@ -396,6 +478,9 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>Finds matching planet classifications for the specified star system.</summary>
+    /// <param name="starSystem">The <see cref="StarSystem"/> to check for classifications.</param>
+    /// <param name="ignoreSpeechOutput">A <see cref="Boolean"/> indicating whether to suppress speech output.</param>
     public async void FindMatchingClassificationsForSystem(StarSystem starSystem, bool ignoreSpeechOutput)
     {
         try
@@ -422,6 +507,8 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>Finds matching planet classifications for the specified planet.</summary>
+    /// <param name="planet">The <see cref="Planet"/> to check for classifications.</param>
     public async void FindMatchingClassificationsForPlanet(Planet planet)
     {
         try
@@ -438,6 +525,7 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>Initializes the current system by raising the route membership event if applicable.</summary>
     public void InitializeCurrentSystem()
     {
         if (IsCurrentSystemInRoute)
@@ -446,6 +534,7 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>Resets analysis data for incomplete genera on the current planet.</summary>
     public void ResetIncompleteGenera()
     {
         List<Genus> incompleteGenera = CurrentPlanet?.Genuses?.Where((KeyValuePair<string, Genus> genus) => !genus.Value.AnalysisComplete && genus.Value.ScanCount > 0).Select((KeyValuePair<string, Genus> genus) => genus.Value)?.ToList();
@@ -486,12 +575,22 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>View model that combines a genus classification with its planet for sorting.</summary>
     private class GenusClassificationViewModel
     {
+        /// <summary>Gets the genus classification.</summary>
+        /// <value>The <see cref="GenusClassification"/> value.</value>
         public GenusClassification GenusClassification { get; }
+        /// <summary>Gets the planet associated with the classification.</summary>
+        /// <value>The <see cref="Planet"/> instance.</value>
         public Planet Planet { get; }
+        /// <summary>Gets the maximum Vista Genomics value for sorting purposes.</summary>
+        /// <value>The calculated sort value.</value>
         public int VistaGenomicsMaxValueSort => GenusClassification.VistaGenomicsBaseValue * 5;
 
+        /// <summary>Initializes a new instance of the <see cref="GenusClassificationViewModel"/> class.</summary>
+        /// <param name="genusClassification">The <see cref="GenusClassification"/> to wrap.</param>
+        /// <param name="planet">The <see cref="Planet"/> associated with the classification.</param>
         public GenusClassificationViewModel(GenusClassification genusClassification, Planet planet)
         {
             GenusClassification = genusClassification;
@@ -583,6 +682,8 @@ public class StarSystemProvider
         triggerGuiDataUpdateEvent();
     }
 
+    /// <summary>Triggers a GUI data update event, optionally forcing an immediate update.</summary>
+    /// <param name="force">A <see cref="Boolean"/> indicating whether to force the update immediately.</param>
     public void triggerGuiDataUpdateEvent(bool force = false)
     {
         if (force)
@@ -613,12 +714,18 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>Sets the route loading status and raises the corresponding event.</summary>
+    /// <param name="status">A <see cref="Boolean"/> indicating whether the route is loading.</param>
+    /// <param name="text">The loading status text.</param>
     public void SetRouteIsLoadingStatus(bool status, string text)
     {
         RouteIsLoading = status;
         RouteLoadingStatusChanged?.Invoke(this, text);
     }
 
+    /// <summary>Sets the surroundings loading status and raises the corresponding event.</summary>
+    /// <param name="status">A <see cref="Boolean"/> indicating whether the surroundings are loading.</param>
+    /// <param name="text">The loading status text.</param>
     public void SetSurroundingsAreLoadingStatus(bool status, string text)
     {
         SurroundingsAreLoading = status;

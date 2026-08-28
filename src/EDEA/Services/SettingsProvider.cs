@@ -5,14 +5,21 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Represents the SettingsProvider class.</summary>
 public class SettingsProvider
 {
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(SettingsProvider));
 
+    /// <summary>The _path field.</summary>
     private readonly string _path;
 
+    /// <summary>Gets or sets the Settings.</summary>
+    /// <value>A UserSettings value.</value>
     public UserSettings Settings { get; private set; }
 
+    /// <summary>Initializes a new instance of the SettingsProvider class.</summary>
+    /// <param name="path">The string? value of the path parameter.</param>
     public SettingsProvider(string? path = null)
     {
         _path = path ?? Path.Combine(
@@ -24,6 +31,8 @@ public class SettingsProvider
         Preferences.User = Settings;
     }
 
+    /// <summary>Loads .</summary>
+    /// <returns>A UserSettings result.</returns>
     private UserSettings Load()
     {
         if (!File.Exists(_path))
@@ -41,6 +50,7 @@ public class SettingsProvider
         }
     }
 
+    /// <summary>Saves .</summary>
     public void Save()
     {
         var json = JsonSerializer.Serialize(Settings, new JsonSerializerOptions
@@ -50,6 +60,7 @@ public class SettingsProvider
         File.WriteAllText(_path, json);
     }
 
+    /// <summary>Performs the Reload operation.</summary>
     public void Reload()
     {
         Settings = Load();

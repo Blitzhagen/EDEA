@@ -13,6 +13,7 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Represents the HotkeyProvider class.</summary>
 public class HotkeyProvider : ViewModelBase
 {
     public static readonly ImmutableDictionary<HotkeyId, string> HotkeyDescription = new Dictionary<HotkeyId, string>
@@ -55,20 +56,30 @@ public class HotkeyProvider : ViewModelBase
         }
     }.ToImmutableDictionary();
 
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(HotkeyProvider));
 
+    /// <summary>The instance field.</summary>
     private static HotkeyProvider? instance;
 
+    /// <summary>The mainViewModel field.</summary>
     private MainViewModel? mainViewModel;
 
+    /// <summary>The mainWindow field.</summary>
     private Window? mainWindow;
 
+    /// <summary>The mainWindowHandle field.</summary>
     private nint mainWindowHandle;
 
+    /// <summary>The _starSystemProvider field.</summary>
     private readonly StarSystemProvider _starSystemProvider;
 
+    /// <summary>Gets or sets the Hotkeys.</summary>
+    /// <value>A Dictionary<string, HotkeyViewModel> value.</value>
     public Dictionary<string, HotkeyViewModel> Hotkeys { get; private set; }
 
+    /// <summary>Initializes a new instance of the HotkeyProvider class.</summary>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
     private HotkeyProvider(StarSystemProvider starSystemProvider)
     {
         _starSystemProvider = starSystemProvider;
@@ -76,6 +87,9 @@ public class HotkeyProvider : ViewModelBase
         setHotkeysFromPreferences();
     }
 
+    /// <summary>Performs the Instance operation.</summary>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
+    /// <returns>A HotkeyProvider result.</returns>
     public static HotkeyProvider Instance(StarSystemProvider starSystemProvider)
     {
         if (instance == null)
@@ -85,6 +99,9 @@ public class HotkeyProvider : ViewModelBase
         return instance;
     }
 
+    /// <summary>Performs the AttachHotkeyListener operation.</summary>
+    /// <param name="mainViewModel">The MainViewModel value of the mainViewModel parameter.</param>
+    /// <param name="mainWindow">The Window value of the mainWindow parameter.</param>
     public void AttachHotkeyListener(MainViewModel mainViewModel, Window mainWindow)
     {
         this.mainViewModel = mainViewModel;
@@ -98,6 +115,8 @@ public class HotkeyProvider : ViewModelBase
         }
     }
 
+    /// <summary>Sets HotKey.</summary>
+    /// <param name="hotkeyViewModel">The HotkeyViewModel value of the hotkeyViewModel parameter.</param>
     public void AssignHotKey(HotkeyViewModel hotkeyViewModel)
     {
         if (!hotkeyViewModel.IsValid)
@@ -116,6 +135,8 @@ public class HotkeyProvider : ViewModelBase
         }
     }
 
+    /// <summary>Performs the UnassignHotKey operation.</summary>
+    /// <param name="hotkeyViewModel">The HotkeyViewModel value of the hotkeyViewModel parameter.</param>
     public void UnassignHotKey(HotkeyViewModel hotkeyViewModel)
     {
         try
@@ -128,6 +149,8 @@ public class HotkeyProvider : ViewModelBase
         }
     }
 
+    /// <summary>Sets AllHotkeys.</summary>
+    /// <param name="reloadFromPreferences">The bool value of the reloadFromPreferences parameter.</param>
     public void AssignAllHotkeys(bool reloadFromPreferences = false)
     {
         if (reloadFromPreferences)
@@ -140,6 +163,7 @@ public class HotkeyProvider : ViewModelBase
         }
     }
 
+    /// <summary>Performs the UnassignAllHotkeys operation.</summary>
     public void UnassignAllHotkeys()
     {
         foreach (HotkeyViewModel hotkey in Hotkeys.Values)
@@ -148,12 +172,23 @@ public class HotkeyProvider : ViewModelBase
         }
     }
 
+    /// <summary>Performs the RegisterHotKey operation.</summary>
+    /// <param name="hWnd">The nint value of the hWnd parameter.</param>
+    /// <param name="id">The int value of the id parameter.</param>
+    /// <param name="fsModifiers">The int value of the fsModifiers parameter.</param>
+    /// <param name="vlc">The int value of the vlc parameter.</param>
+    /// <returns>A bool result.</returns>
     [DllImport("user32.dll")]
     private static extern bool RegisterHotKey(nint hWnd, int id, int fsModifiers, int vlc);
 
+    /// <summary>Performs the UnregisterHotKey operation.</summary>
+    /// <param name="hWnd">The nint value of the hWnd parameter.</param>
+    /// <param name="id">The int value of the id parameter.</param>
+    /// <returns>A bool result.</returns>
     [DllImport("user32.dll")]
     private static extern bool UnregisterHotKey(nint hWnd, int id);
 
+    /// <summary>Performs the setHotkeysFromPreferences operation.</summary>
     private void setHotkeysFromPreferences()
     {
         Hotkeys = new Dictionary<string, HotkeyViewModel>();
@@ -186,6 +221,9 @@ public class HotkeyProvider : ViewModelBase
         OnPropertyChanged(nameof(Hotkeys));
     }
 
+    /// <summary>Performs the MainWindow_Loaded operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
     {
         try
@@ -206,6 +244,9 @@ public class HotkeyProvider : ViewModelBase
         }
     }
 
+    /// <summary>Performs the MainWindow_Closed operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void MainWindow_Closed(object? sender, EventArgs e)
     {
         try
@@ -218,6 +259,13 @@ public class HotkeyProvider : ViewModelBase
         }
     }
 
+    /// <summary>Performs the WndProc operation.</summary>
+    /// <param name="hwnd">The nint value of the hwnd parameter.</param>
+    /// <param name="msg">The int value of the msg parameter.</param>
+    /// <param name="wParam">The nint value of the wParam parameter.</param>
+    /// <param name="lParam">The nint value of the lParam parameter.</param>
+    /// <param name="handled">The bool value of the handled parameter.</param>
+    /// <returns>A nint result.</returns>
     private nint WndProc(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
     {
         if (msg == 0x0312)

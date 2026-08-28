@@ -6,16 +6,34 @@ using log4net;
 
 namespace EDEA.Models;
 
+/// <summary>
+/// Represents a planet in a star system.
+/// </summary>
 public class Planet : Body
 {
+    /// <summary>
+    /// The logger for this class.
+    /// </summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(Planet));
 
+    /// <summary>
+    /// The genera detected on this planet, keyed by name.
+    /// </summary>
     private readonly ConcurrentDictionary<string, Genus> _genuses;
 
+    /// <summary>
+    /// The cached parent star.
+    /// </summary>
     private Star? parentStar;
 
+    /// <summary>
+    /// The cached parent planet.
+    /// </summary>
     private Planet? parentPlanet;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Planet"/> class.
+    /// </summary>
     public Planet()
     {
         _genuses = new ConcurrentDictionary<string, Genus>();
@@ -27,50 +45,142 @@ public class Planet : Body
         Atmosphere = string.Empty;
     }
 
+    /// <summary>
+    /// Gets or sets the planet class.
+    /// </summary>
+    /// <value>The planet class.</value>
     public string PlanetClass { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the planet is landable.
+    /// </summary>
+    /// <value><see langword="true"/> if landable; otherwise, <see langword="false"/>.</value>
     public bool IsLandable { get; set; }
 
+    /// <summary>
+    /// Gets or sets the terraforming state.
+    /// </summary>
+    /// <value>The terraforming state.</value>
     public string TerraformingState { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the planet was mapped.
+    /// </summary>
+    /// <value><see langword="true"/> if mapped; otherwise, <see langword="false"/>.</value>
     public bool WasMapped { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the planet was footfalled.
+    /// </summary>
+    /// <value><see langword="true"/> if footfalled; <see langword="false"/> if not; <see langword="null"/> if unspecified.</value>
     public bool? WasFootfalled { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the planet was surface scanned.
+    /// </summary>
+    /// <value><see langword="true"/> if surface scanned; otherwise, <see langword="false"/>.</value>
     public bool SurfaceScanned { get; set; }
 
+    /// <summary>
+    /// Gets or sets the surface gravity.
+    /// </summary>
+    /// <value>The gravity.</value>
     public double Gravity { get; set; }
 
+    /// <summary>
+    /// Gets or sets the surface temperature.
+    /// </summary>
+    /// <value>The surface temperature.</value>
     public double SurfaceTemperature { get; set; }
 
+    /// <summary>
+    /// Gets or sets the number of geological signals.
+    /// </summary>
+    /// <value>The geological signal count.</value>
     public int GeologicalCount { get; set; }
 
+    /// <summary>
+    /// Gets or sets the number of biological signals.
+    /// </summary>
+    /// <value>The biological signal count.</value>
     public int BiologicalCount { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether this is the current planet in the system.
+    /// </summary>
+    /// <value><see langword="true"/> if current; otherwise, <see langword="false"/>.</value>
     public bool IsCurrentPlanetInSystem { get; set; }
 
+    /// <summary>
+    /// Gets the genera detected on this planet.
+    /// </summary>
+    /// <value>A read-only dictionary of genera keyed by name.</value>
     public IReadOnlyDictionary<string, Genus> Genuses => _genuses;
 
+    /// <summary>
+    /// Gets a value indicating whether the planet has any genera.
+    /// </summary>
+    /// <value><see langword="true"/> if genera exist; otherwise, <see langword="false"/>.</value>
     public bool HasGenera => _genuses.Count > 0;
 
+    /// <summary>
+    /// Gets or sets a value indicating whether a touchdown occurred.
+    /// </summary>
+    /// <value><see langword="true"/> if touchdown occurred; otherwise, <see langword="false"/>.</value>
     public bool Touchdown { get; set; }
 
+    /// <summary>
+    /// Gets or sets the volcanism description.
+    /// </summary>
+    /// <value>The volcanism description.</value>
     public string Volcanism { get; set; }
 
+    /// <summary>
+    /// Gets or sets the atmosphere description.
+    /// </summary>
+    /// <value>The atmosphere description.</value>
     public string Atmosphere { get; set; }
 
+    /// <summary>
+    /// Gets or sets the parent star identifier.
+    /// </summary>
+    /// <value>The parent star identifier, or <see langword="null"/> if not specified.</value>
     public int? ParentStarId { get; set; }
 
+    /// <summary>
+    /// Gets or sets the parent planet identifier.
+    /// </summary>
+    /// <value>The parent planet identifier, or <see langword="null"/> if not specified.</value>
     public int? ParentPlanetId { get; set; }
 
+    /// <summary>
+    /// Gets the list of predicted species.
+    /// </summary>
+    /// <value>The predicted species.</value>
     public List<GenusClassification> PredictedSpecies { get; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether an initial species prediction was made.
+    /// </summary>
+    /// <value><see langword="true"/> if initial prediction was made; otherwise, <see langword="false"/>.</value>
     public bool InitialPredictionOfSpecies { get; set; }
 
+    /// <summary>
+    /// Gets the list of matching planet classifications.
+    /// </summary>
+    /// <value>The matching planet classifications.</value>
     public List<PlanetClassification> MatchingPlanetClassifications { get; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether matching classifications were announced.
+    /// </summary>
+    /// <value><see langword="true"/> if announced; otherwise, <see langword="false"/>.</value>
     public bool MatchingPlanetClassificationsAnnounced { get; set; }
 
+    /// <summary>
+    /// Gets a value indicating whether the planet is terraformable.
+    /// </summary>
+    /// <value><see langword="true"/> if terraformable; otherwise, <see langword="false"/>.</value>
     public bool IsTerraformable
     {
         get
@@ -87,6 +197,10 @@ public class Planet : Body
         }
     }
 
+    /// <summary>
+    /// Gets the parent star of this planet.
+    /// </summary>
+    /// <value>The parent star, or <see langword="null"/> if not found.</value>
     public Star? ParentStar
     {
         get
@@ -104,6 +218,10 @@ public class Planet : Body
         }
     }
 
+    /// <summary>
+    /// Gets the parent planet of this planet.
+    /// </summary>
+    /// <value>The parent planet, or <see langword="null"/> if not found.</value>
     public Planet? ParentPlanet
     {
         get
@@ -121,14 +239,49 @@ public class Planet : Body
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the planet was efficiently scanned.
+    /// </summary>
+    /// <value><see langword="true"/> if efficiently scanned; otherwise, <see langword="false"/>.</value>
     public bool EfficientlyScanned { get; set; }
 
+    /// <summary>
+    /// Gets or sets the surface scan cartographic value.
+    /// </summary>
+    /// <value>The surface scan value.</value>
     public int CartographicSurfaceScanValue { get; set; }
 
+    /// <summary>
+    /// Gets or sets the first surface scan bonus value.
+    /// </summary>
+    /// <value>The first surface scan bonus value.</value>
     public int CartographicFirstSurfaceScanBonusValue { get; set; }
 
+    /// <summary>
+    /// Gets or sets the efficiently scanned bonus value.
+    /// </summary>
+    /// <value>The efficiently scanned bonus value.</value>
     public int CartographicEfficientlyScannedBonusValue { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Planet"/> class.
+    /// </summary>
+    /// <param name="id">The body identifier.</param>
+    /// <param name="starSystemId">The star system identifier.</param>
+    /// <param name="name">The planet name.</param>
+    /// <param name="distance">The distance from the arrival point.</param>
+    /// <param name="planetClass">The planet class.</param>
+    /// <param name="isLandable">Whether the planet is landable.</param>
+    /// <param name="terraformingState">The terraforming state.</param>
+    /// <param name="gravity">The surface gravity.</param>
+    /// <param name="surfaceTemperature">The surface temperature.</param>
+    /// <param name="volcanism">The volcanism description.</param>
+    /// <param name="atmosphere">The atmosphere description.</param>
+    /// <param name="radius">The radius.</param>
+    /// <param name="parentStarId">The parent star identifier, or <see langword="null"/> if not specified.</param>
+    /// <param name="parentPlanetId">The parent planet identifier, or <see langword="null"/> if not specified.</param>
+    /// <param name="mass">The mass.</param>
+    /// <param name="orbitalInclination">The orbital inclination, or <see langword="null"/> if not specified.</param>
     public Planet(int id, long starSystemId, string name, double distance, string planetClass, bool isLandable, string terraformingState, double gravity, double surfaceTemperature, string volcanism, string atmosphere, double radius, int? parentStarId, int? parentPlanetId, double mass, double? orbitalInclination)
         : base(id, starSystemId, name, distance, radius, mass, orbitalInclination)
     {
@@ -152,6 +305,48 @@ public class Planet : Body
         MatchingPlanetClassifications = new List<PlanetClassification>();
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Planet"/> class from persisted data.
+    /// </summary>
+    /// <param name="id">The body identifier.</param>
+    /// <param name="starSystemId">The star system identifier.</param>
+    /// <param name="name">The planet name.</param>
+    /// <param name="type">The body type.</param>
+    /// <param name="distance">The distance from the arrival point.</param>
+    /// <param name="wasDiscovered">Whether the planet was already discovered.</param>
+    /// <param name="wasMapped">Whether the planet was mapped.</param>
+    /// <param name="wasFootfalled">Whether the planet was footfalled, or <see langword="null"/> if unspecified.</param>
+    /// <param name="wasReadFromJournal">Whether the planet was read from a journal.</param>
+    /// <param name="wasReadFromEdsm">Whether the planet was read from EDSM.</param>
+    /// <param name="edsmDiscoveryCommander">The EDSM discovery commander.</param>
+    /// <param name="planetClass">The planet class.</param>
+    /// <param name="isLandable">Whether the planet is landable.</param>
+    /// <param name="terraformingState">The terraforming state.</param>
+    /// <param name="surfaceScanned">Whether the planet was surface scanned.</param>
+    /// <param name="gravity">The surface gravity.</param>
+    /// <param name="geologicalCount">The number of geological signals.</param>
+    /// <param name="biologicalCount">The number of biological signals.</param>
+    /// <param name="starType">The star type.</param>
+    /// <param name="surfaceTemperature">The surface temperature.</param>
+    /// <param name="touchdown">Whether touchdown occurred.</param>
+    /// <param name="volcanism">The volcanism description.</param>
+    /// <param name="atmosphere">The atmosphere description.</param>
+    /// <param name="radius">The radius.</param>
+    /// <param name="parentStarId">The parent star identifier, or <see langword="null"/> if not specified.</param>
+    /// <param name="parentPlanetId">The parent planet identifier, or <see langword="null"/> if not specified.</param>
+    /// <param name="mass">The mass.</param>
+    /// <param name="orbitalInclination">The orbital inclination, or <see langword="null"/> if not specified.</param>
+    /// <param name="efficientlyScanned">Whether the planet was efficiently scanned.</param>
+    /// <param name="cartographicValue">The cartographic value.</param>
+    /// <param name="cartographicMaxValue">The maximum cartographic value.</param>
+    /// <param name="cartographicBaseValue">The base cartographic value.</param>
+    /// <param name="cartographicFirstDiscoveryBonusValue">The first discovery bonus value.</param>
+    /// <param name="cartographicSurfaceScanValue">The surface scan value.</param>
+    /// <param name="cartographicFirstSurfaceScanBonusValue">The first surface scan bonus value.</param>
+    /// <param name="cartographicEfficientlyScannedBonusValue">The efficiently scanned bonus value.</param>
+    /// <param name="cartographicFirstDiscoveryBonusWithoutEfficiencyValue">The first discovery bonus without efficiency value.</param>
+    /// <param name="cartographicFirstDiscoveryBonusWithoutSurfaceScanValue">The first discovery bonus without surface scan value.</param>
+    /// <param name="ringsReserveLevel">The rings reserve level.</param>
     public Planet(long id, long starSystemId, string name, long type, double distance, long wasDiscovered, long wasMapped, long? wasFootfalled, long wasReadFromJournal, long wasReadFromEdsm, string edsmDiscoveryCommander, string planetClass, long isLandable, string terraformingState, long surfaceScanned, double gravity, long geologicalCount, long biologicalCount, string starType, double surfaceTemperature, long touchdown, string volcanism, string atmosphere, double radius, long? parentStarId, long? parentPlanetId, double mass, double? orbitalInclination, long efficientlyScanned, long cartographicValue, long cartographicMaxValue, long cartographicBaseValue, long cartographicFirstDiscoveryBonusValue, long cartographicSurfaceScanValue, long cartographicFirstSurfaceScanBonusValue, long cartographicEfficientlyScannedBonusValue, long cartographicFirstDiscoveryBonusWithoutEfficiencyValue, long cartographicFirstDiscoveryBonusWithoutSurfaceScanValue, long ringsReserveLevel)
         : this(Convert.ToInt32(id), starSystemId, name, distance, planetClass, Convert.ToBoolean(isLandable), terraformingState, gravity, surfaceTemperature, volcanism ?? string.Empty, atmosphere ?? string.Empty, radius, (int?)parentStarId, (int?)parentPlanetId, mass, orbitalInclination)
     {
@@ -183,6 +378,11 @@ public class Planet : Body
         MatchingPlanetClassifications = new List<PlanetClassification>();
     }
 
+    /// <summary>
+    /// Updates this planet with data from the specified planet and source.
+    /// </summary>
+    /// <param name="planet">The planet to copy data from.</param>
+    /// <param name="dataSource">The data source that provided the new data.</param>
     public void UpdatePlanet(Planet planet, DataSource dataSource)
     {
         UpdateBody(planet, dataSource);
@@ -232,6 +432,10 @@ public class Planet : Body
         }
     }
 
+    /// <summary>
+    /// Determines the first discovery status for the specified genus.
+    /// </summary>
+    /// <param name="genus">The genus to evaluate.</param>
     public void DetermineFirstDiscoveryStatusForGenus(Genus genus)
     {
         if (genus.BodyId != base.Id || genus.StarSystemId != base.StarSystemId)
@@ -254,6 +458,12 @@ public class Planet : Body
         }
     }
 
+    /// <summary>
+    /// Attempts to add or update the specified genus for this planet.
+    /// </summary>
+    /// <param name="genus">The genus to add or update.</param>
+    /// <param name="locationOnPlanet">The optional location of the scan.</param>
+    /// <param name="scanType">The type of scan, or <see langword="null"/> if unspecified.</param>
     public void TryAddOrUpdateGenus(Genus genus, LocationOnPlanet? locationOnPlanet = null, string? scanType = null)
     {
         if (genus.BodyId != base.Id || genus.StarSystemId != base.StarSystemId)

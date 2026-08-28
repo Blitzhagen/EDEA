@@ -13,23 +13,73 @@ using log4net;
 
 namespace EDEA.Models;
 
+/// <summary>
+/// Represents an asynchronous web API request with callback handling.
+/// </summary>
 public class WebApiRequest : IEquatable<WebApiRequest>
 {
+    /// <summary>
+    /// The logger for this class.
+    /// </summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(WebApiRequest));
 
+    /// <summary>
+    /// The web API provider that manages this request.
+    /// </summary>
     private readonly WebApiProvider _webApiProvider;
+
+    /// <summary>
+    /// The API URL.
+    /// </summary>
     private readonly string _apiUrl;
+
+    /// <summary>
+    /// The query data for the request.
+    /// </summary>
     private readonly WepApiQueryData _queryData;
+
+    /// <summary>
+    /// The callback that processes the web API response.
+    /// </summary>
     private readonly Action<JsonNode?, WebApiParameter, Action<WebApiParameter>, bool> _webApiCallBack;
+
+    /// <summary>
+    /// The parameter object passed to the callback.
+    /// </summary>
     private readonly WebApiParameter _webApiObject;
+
+    /// <summary>
+    /// The callback invoked when the request completes.
+    /// </summary>
     private readonly Action<WebApiParameter> _requestCallBack;
+
+    /// <summary>
+    /// Whether this request is a follow-up request.
+    /// </summary>
     private readonly bool _followUpRequest;
+
+    /// <summary>
+    /// Whether to ignore speech output for this request.
+    /// </summary>
     private readonly bool _ignoreSpeechOutput;
 
+    /// <summary>
+    /// Gets the unique request identifier.
+    /// </summary>
+    /// <value>The request identifier.</value>
     public Guid Id { get; }
 
-    public WebApiParameter Parameter => _webApiObject;
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WebApiRequest"/> class.
+    /// </summary>
+    /// <param name="webApiProvider">The web API provider.</param>
+    /// <param name="apiUrl">The API URL.</param>
+    /// <param name="wepApiQueryData">The query data.</param>
+    /// <param name="webApiCallBack">The callback that processes the response.</param>
+    /// <param name="webApiObject">The parameter object.</param>
+    /// <param name="requestCallBack">The completion callback.</param>
+    /// <param name="ignoreSpeechOutput">Whether to ignore speech output.</param>
+    /// <param name="followUpRequest">Whether this is a follow-up request.</param>
     public WebApiRequest(
         WebApiProvider webApiProvider,
         string apiUrl,
@@ -54,6 +104,16 @@ public class WebApiRequest : IEquatable<WebApiRequest>
         _ = initialize();
     }
 
+    /// <summary>
+    /// Gets the request parameter.
+    /// </summary>
+    /// <value>The request parameter.</value>
+    public WebApiParameter Parameter => _webApiObject;
+
+    /// <summary>
+    /// Initializes and sends the web API request.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task initialize()
     {
         bool edsmLockHeld = false;
@@ -165,12 +225,18 @@ public class WebApiRequest : IEquatable<WebApiRequest>
         }
     }
 
+    /// <summary>
+    /// Marks this request as active.
+    /// </summary>
     private void setActive()
     {
         Interlocked.Increment(ref WebApiProvider.activeRequests);
         log.Debug($"Made request {(Id)} active. Current request count: | {(WebApiProvider.absoluteRequestsInSession)} absolute | {(_webApiProvider.registeredRequestsCount)} registered | {(WebApiProvider.activeRequests)} active |");
     }
 
+    /// <summary>
+    /// Marks this request as inactive and unregisters it.
+    /// </summary>
     private void setInactiveAndUnregister()
     {
         Interlocked.Decrement(ref WebApiProvider.activeRequests);
@@ -178,6 +244,11 @@ public class WebApiRequest : IEquatable<WebApiRequest>
         _webApiProvider.unregisterRequest(this);
     }
 
+    /// <summary>
+    /// Determines whether the specified <see cref="WebApiRequest"/> is equal to this instance.
+    /// </summary>
+    /// <param name="other">The other request.</param>
+    /// <returns><see langword="true"/> if the identifiers match; otherwise, <see langword="false"/>.</returns>
     public bool Equals(WebApiRequest? other)
     {
         if (other is null)

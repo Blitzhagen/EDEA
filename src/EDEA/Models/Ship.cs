@@ -7,32 +7,130 @@ using log4net;
 
 namespace EDEA.Models;
 
+/// <summary>
+/// Represents the player's ship and its jump capabilities.
+/// </summary>
 public class Ship
 {
+    /// <summary>
+    /// The logger for this class.
+    /// </summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(Ship));
 
+    /// <summary>
+    /// Gets or sets the ship identifier.
+    /// </summary>
+    /// <value>The ship identifier.</value>
     public string Id { get; protected set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the ship name.
+    /// </summary>
+    /// <value>The ship name.</value>
     public string Name { get; protected set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the ship identification string.
+    /// </summary>
+    /// <value>The ship identification string.</value>
     public string Identification { get; protected set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the unladen mass.
+    /// </summary>
+    /// <value>The base mass.</value>
     public double BaseMass { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the cargo capacity.
+    /// </summary>
+    /// <value>The cargo capacity.</value>
     public int CargoCapacity { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the maximum jump range.
+    /// </summary>
+    /// <value>The maximum jump range in light years.</value>
     public double MaxJumpRange { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the current jump range.
+    /// </summary>
+    /// <value>The current jump range in light years.</value>
     public double CurrentJumpRange { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the main fuel tank capacity.
+    /// </summary>
+    /// <value>The main fuel capacity.</value>
     public double MainFuelCapacity { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the reserve fuel tank capacity.
+    /// </summary>
+    /// <value>The reserve fuel capacity.</value>
     public double ReserveFuelCapacity { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the frame shift drive classification.
+    /// </summary>
+    /// <value>The frame shift drive, or <see langword="null"/> if not equipped.</value>
     public HyperdriveClassification? FrameShiftDrive { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the Guardian FSD booster classification.
+    /// </summary>
+    /// <value>The Guardian FSD booster, or <see langword="null"/> if not equipped.</value>
     public GuardianFsdBoosterClassification? GuardianFsdBooster { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the SLEF export data.
+    /// </summary>
+    /// <value>The SLEF JSON array, or <see langword="null"/> if not available.</value>
     public JsonArray? SLEF { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the current cargo count.
+    /// </summary>
+    /// <value>The cargo count.</value>
     public int CargoCount { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current main fuel.
+    /// </summary>
+    /// <value>The main fuel.</value>
     public double MainFuel { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current reserve fuel.
+    /// </summary>
+    /// <value>The reserve fuel.</value>
     public double ReserveFuel { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether a jet cone boost is active.
+    /// </summary>
+    /// <value><see langword="true"/> if jet cone boost is active; otherwise, <see langword="false"/>.</value>
     public bool JetConeBoost { get; set; }
+
+    /// <summary>
+    /// Gets or sets the jet cone boost value.
+    /// </summary>
+    /// <value>The jet cone boost value.</value>
     public int JetConeBoostValue { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Ship"/> class.
+    /// </summary>
     public Ship()
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Ship"/> class from a loadout JSON node.
+    /// </summary>
+    /// <param name="loadout">The loadout JSON data.</param>
+    /// <exception cref="Exception">Thrown when the loadout data is invalid or incomplete.</exception>
     public Ship(JsonNode? loadout)
     {
         if (loadout is null)
@@ -138,6 +236,9 @@ public class Ship
         }
     }
 
+    /// <summary>
+    /// Recalculates the current jump range based on fuel and cargo.
+    /// </summary>
     public void UpdateJumpRange()
     {
         if (FrameShiftDrive == null || BaseMass <= 0.0 || MaxJumpRange <= 0.0)

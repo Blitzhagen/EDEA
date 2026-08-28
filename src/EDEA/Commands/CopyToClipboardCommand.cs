@@ -11,10 +11,17 @@ using log4net;
 
 namespace EDEA.Commands;
 
+/// <summary>
+/// Command that copies text or numeric content to the system clipboard and optionally shows a popup.
+/// </summary>
 public class CopyToClipboardCommand : CommandBase
 {
     private static readonly ILog log = LogManager.GetLogger(typeof(CopyToClipboardCommand));
 
+    /// <summary>
+    /// Copies the supplied value or text to the clipboard. If the control key is held, numeric values are extracted.
+    /// </summary>
+    /// <param name="parameter">The value to copy. Can be a <see cref="Body"/>, <see cref="StarSystem"/>, <see cref="CopyToClipboardCommandParameter"/>, or a <see cref="FrameworkElement"/> with named popup and text block.</param>
     public override void Execute(object? parameter)
     {
         if (parameter == null)
@@ -60,6 +67,12 @@ public class CopyToClipboardCommand : CommandBase
         }
     }
 
+    /// <summary>
+    /// Copies the specified text to the clipboard and shows a popup if one is provided.
+    /// </summary>
+    /// <param name="text">The text to copy.</param>
+    /// <param name="ctrlPressed">Whether the control key is pressed, triggering numeric-only extraction.</param>
+    /// <param name="popup">An optional popup shown after copying.</param>
     private void copyTextToClipboard(string text, bool ctrlPressed, Popup? popup = null)
     {
         string clipboardText = text;
@@ -92,6 +105,11 @@ public class CopyToClipboardCommand : CommandBase
         }
     }
 
+    /// <summary>
+    /// Closes the popup one second after it was opened.
+    /// </summary>
+    /// <param name="sender">The popup that was opened.</param>
+    /// <param name="e">Event data for the opened event.</param>
     private void Popup_Opened(object? sender, EventArgs e)
     {
         DispatcherTimer timer = new DispatcherTimer();

@@ -10,18 +10,27 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Represents the HistoryProvider class.</summary>
 public class HistoryProvider
 {
+    /// <summary>The _instance field.</summary>
     private static HistoryProvider? _instance;
 
+    /// <summary>The _store field.</summary>
     private readonly SQLiteStore _store;
+    /// <summary>The _history field.</summary>
     private readonly ConcurrentDictionary<long, StarSystem> _history;
+    /// <summary>The _historyLock field.</summary>
     private readonly object _historyLock = new object();
 
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(HistoryProvider));
 
+    /// <summary>Occurs when the HistoryUpdated event is raised.</summary>
     public event EventHandler? HistoryUpdated;
 
+    /// <summary>Initializes a new instance of the HistoryProvider class.</summary>
+    /// <param name="store">The SQLiteStore value of the store parameter.</param>
     public HistoryProvider(SQLiteStore store)
     {
         _store = store;
@@ -42,17 +51,26 @@ public class HistoryProvider
         }
     }
 
+    /// <summary>Performs the _store_DatabaseStarSystemTableUpdated operation.</summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void _store_DatabaseStarSystemTableUpdated(object? sender, EventArgs e)
     {
         HistoryUpdated?.Invoke(this, e);
     }
 
+    /// <summary>Performs the Instance operation.</summary>
+    /// <param name="store">The SQLiteStore value of the store parameter.</param>
+    /// <returns>A HistoryProvider result.</returns>
     public static HistoryProvider Instance(SQLiteStore store)
     {
         _instance ??= new HistoryProvider(store);
         return _instance;
     }
 
+    /// <summary>Determines whether IsStarSystemExisting.</summary>
+    /// <param name="starSystemId">The long value of the starSystemId parameter.</param>
+    /// <returns>A bool result.</returns>
     public bool IsStarSystemExisting(long starSystemId)
     {
         if (_history.ContainsKey(starSystemId))
@@ -62,6 +80,10 @@ public class HistoryProvider
         return false;
     }
 
+    /// <summary>Performs the TryGetStarSystem operation.</summary>
+    /// <param name="starSystemId">The long value of the starSystemId parameter.</param>
+    /// <param name="starSystem">The StarSystem? value of the starSystem parameter.</param>
+    /// <returns>A bool result.</returns>
     public bool TryGetStarSystem(long starSystemId, out StarSystem? starSystem)
     {
         lock (_historyLock)
@@ -81,11 +103,17 @@ public class HistoryProvider
         return false;
     }
 
+    /// <summary>Retrieves AllStarSystems.</summary>
+    /// <returns>A IEnumerable<StarSystem> result.</returns>
     public IEnumerable<StarSystem> GetAllStarSystems()
     {
         return _history.Values;
     }
 
+    /// <summary>Performs the AddOrUpdateStarSystem operation.</summary>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
+    /// <param name="raiseDatabaseStarSystemTableUpdatedEvent">The bool value of the raiseDatabaseStarSystemTableUpdatedEvent parameter.</param>
+    /// <returns>A int result.</returns>
     public int AddOrUpdateStarSystem(StarSystem starSystem, bool raiseDatabaseStarSystemTableUpdatedEvent = true)
     {
         if (isStarSystemValid(starSystem))
@@ -114,6 +142,9 @@ public class HistoryProvider
         return 0;
     }
 
+    /// <summary>Retrieves Count.</summary>
+    /// <param name="tripOnly">The bool value of the tripOnly parameter.</param>
+    /// <returns>A int result.</returns>
     public int GetCount(bool tripOnly = false)
     {
         if (tripOnly)
@@ -123,12 +154,16 @@ public class HistoryProvider
         return _history.Count;
     }
 
+    /// <summary>Removes All.</summary>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task ClearAll()
     {
         _history.Clear();
         await _store.ClearAllStarSystems();
     }
 
+    /// <summary>Performs the ResetTripData operation.</summary>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task ResetTripData()
     {
         foreach (var tripHistoryEntry in _history.Where(entry => entry.Value.IsTripHistory).ToList())
@@ -138,6 +173,8 @@ public class HistoryProvider
         await _store.ResetTripHistory();
     }
 
+    /// <summary>Retrieves HistoryData.</summary>
+    /// <returns>A Task<HistoryData> representing the asynchronous operation.</returns>
     public async Task<HistoryData> GetHistoryData()
     {
         Stopwatch watch = Stopwatch.StartNew();
@@ -199,6 +236,10 @@ public class HistoryProvider
         return historyData;
     }
 
+    /// <summary>Performs the ResetIncompleteAnalysisForGenera operation.</summary>
+    /// <param name="currentStarSystemId">The long value of the currentStarSystemId parameter.</param>
+    /// <param name="currentBodyId">The int value of the currentBodyId parameter.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task ResetIncompleteAnalysisForGenera(long currentStarSystemId, int currentBodyId)
     {
         List<Genus> incompleteGenera = new List<Genus>();
@@ -243,6 +284,9 @@ public class HistoryProvider
         }
     }
 
+    /// <summary>Performs the isStarSystemValid operation.</summary>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
+    /// <returns>A bool result.</returns>
     private bool isStarSystemValid(StarSystem starSystem)
     {
         if (string.IsNullOrEmpty(starSystem.Name) || starSystem.Id <= 0 || string.IsNullOrEmpty(starSystem.StarClass))

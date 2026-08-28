@@ -7,22 +7,33 @@ using log4net;
 
 namespace EDEA.Services;
 
+/// <summary>Represents the PlanetsOfInterestProvider class.</summary>
 public class PlanetsOfInterestProvider
 {
+    /// <summary>The instance field.</summary>
     private static PlanetsOfInterestProvider? instance;
 
+    /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(PlanetsOfInterestProvider));
 
+    /// <summary>The _starSystemProvider field.</summary>
     private readonly StarSystemProvider _starSystemProvider;
 
+    /// <summary>Gets the planetClassifications.</summary>
+    /// <value>A List<PlanetClassification> value.</value>
     private List<PlanetClassification> planetClassifications => Preferences.PlanetsOfInterest.PlanetClassifications;
 
+    /// <summary>Initializes a new instance of the PlanetsOfInterestProvider class.</summary>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
     private PlanetsOfInterestProvider(StarSystemProvider starSystemProvider)
     {
         _starSystemProvider = starSystemProvider;
         _starSystemProvider.RegisterProvider(this);
     }
 
+    /// <summary>Performs the Instance operation.</summary>
+    /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
+    /// <returns>A PlanetsOfInterestProvider result.</returns>
     public static PlanetsOfInterestProvider Instance(StarSystemProvider starSystemProvider)
     {
         if (instance == null)
@@ -32,6 +43,8 @@ public class PlanetsOfInterestProvider
         return instance;
     }
 
+    /// <summary>Sets PlanetClassifications.</summary>
+    /// <param name="planetClassifications">The List<PlanetClassification> value of the planetClassifications parameter.</param>
     public void SetPlanetClassifications(List<PlanetClassification> planetClassifications)
     {
         if (planetClassifications != null)
@@ -42,6 +55,8 @@ public class PlanetsOfInterestProvider
         _starSystemProvider.FindMatchingClassificationsForCurrentRouteAndSurroundings();
     }
 
+    /// <summary>Retrieves ClonedPlanetClassifications.</summary>
+    /// <returns>A List<PlanetClassification> result.</returns>
     public List<PlanetClassification> GetClonedPlanetClassifications()
     {
         List<PlanetClassification> clones = new List<PlanetClassification>();
@@ -52,6 +67,9 @@ public class PlanetsOfInterestProvider
         return clones;
     }
 
+    /// <summary>Determines whether IsBodyOfInterest.</summary>
+    /// <param name="body">The Body value of the body parameter.</param>
+    /// <returns>A bool result.</returns>
     public bool IsBodyOfInterest(Body body)
     {
         if (body is not Planet planet)
@@ -68,6 +86,9 @@ public class PlanetsOfInterestProvider
         return false;
     }
 
+    /// <summary>Performs the MatchingClassificationNames operation.</summary>
+    /// <param name="body">The Body value of the body parameter.</param>
+    /// <returns>A List<string> result.</returns>
     public List<string> MatchingClassificationNames(Body body)
     {
         List<string> names = new List<string>();
@@ -85,6 +106,9 @@ public class PlanetsOfInterestProvider
         return names;
     }
 
+    /// <summary>Performs the FindAndSetMatchingPlanetClassifications operation.</summary>
+    /// <param name="planet">The Planet value of the planet parameter.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task FindAndSetMatchingPlanetClassifications(Planet planet)
     {
         await Task.Run(delegate
@@ -172,6 +196,9 @@ public class PlanetsOfInterestProvider
         });
     }
 
+    /// <summary>Performs the FindMatchingPlanetClassifications operation.</summary>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task FindMatchingPlanetClassifications(StarSystem starSystem)
     {
         if (starSystem == null || starSystem.Bodies.Count < 2)
@@ -187,6 +214,10 @@ public class PlanetsOfInterestProvider
         }
     }
 
+    /// <summary>Performs the checkForMatchingPlanetClassification operation.</summary>
+    /// <param name="planet">The Planet value of the planet parameter.</param>
+    /// <param name="planetClassification">The PlanetClassification value of the planetClassification parameter.</param>
+    /// <returns>A bool result.</returns>
     private bool checkForMatchingPlanetClassification(Planet planet, PlanetClassification planetClassification)
     {
         if (planetClassification.Landable.HasValue && planetClassification.Landable != planet.IsLandable)
