@@ -370,6 +370,7 @@ public class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(GenerateClearPlotterRouteCommandMenuItemString));
         OnPropertyChanged(nameof(LockUnlockRouteCommandMenuItemString));
         OnPropertyChanged(nameof(IsRouteAvailable));
+        CommandManager.InvalidateRequerySuggested();
     }
 
     /// <summary>Opens the tab that matches the specified view model type.</summary>

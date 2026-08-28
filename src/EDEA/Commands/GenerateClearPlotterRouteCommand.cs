@@ -27,6 +27,16 @@ public class GenerateClearPlotterRouteCommand : CommandBase
     }
 
     /// <summary>
+    /// Determines whether the command can execute.
+    /// </summary>
+    /// <param name="parameter">Data used by the command. Not used.</param>
+    /// <returns><c>true</c> if the route is not a custom route or is not locked; otherwise, <c>false</c>.</returns>
+    public override bool CanExecute(object? parameter)
+    {
+        return !_routeProvider.IsCustomRoute || !_routeProvider.IsLocked;
+    }
+
+    /// <summary>
     /// Deletes the custom plotter route when one exists; otherwise opens the route plotter window.
     /// </summary>
     /// <param name="parameter">Data used by the command. Not used.</param>
