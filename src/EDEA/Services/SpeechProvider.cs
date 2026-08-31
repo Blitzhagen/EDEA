@@ -183,11 +183,11 @@ public static class SpeechProvider
 
         var config = new SayItConfig().WithVoice(voice).WithVolume("100%");
 
-        int rate = Preferences.Speech.SpeechSynthesizerRate;
+        int rate = (int)Math.Round(Preferences.Speech.SpeechSynthesizerRate);
         if (rate != 0)
         {
             string rateString = (rate * 25).ToString("+#;-#;+0") + "%";
-            config.WithRate(rateString);
+            config = config.WithRate(rateString);
         }
 
         return config;

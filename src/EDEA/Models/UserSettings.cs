@@ -140,7 +140,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The speech synthesizer rate.
     /// </summary>
     [ObservableProperty]
-    private int _speechSynthesizerRate = 0;
+    private double _speechSynthesizerRate = 0;
 
     /// <summary>
     /// The speech synthesizer volume.
