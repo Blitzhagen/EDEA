@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using EDEA.Enums;
 using EDEA.Models;
+using EDEA.Properties;
 using EDEA.ViewModels;
 using log4net;
 
@@ -16,45 +17,44 @@ namespace EDEA.Services;
 /// <summary>Represents the HotkeyProvider class.</summary>
 public class HotkeyProvider : ViewModelBase
 {
-    public static readonly ImmutableDictionary<HotkeyId, string> HotkeyDescription = new Dictionary<HotkeyId, string>
+    /// <summary>
+    /// Returns the localized description for the given hotkey.
+    /// </summary>
+    /// <param name="id">The hotkey identifier.</param>
+    /// <returns>The localized description.</returns>
+    public static string GetHotkeyDescription(HotkeyId id)
     {
+        if (Resources.Culture.TwoLetterISOLanguageName.Equals("de", StringComparison.OrdinalIgnoreCase))
         {
-            HotkeyId.ToggleHudWindow,
-            "Open/Close HUD Window"
-        },
-        {
-            HotkeyId.ToggleHudMousePassThrough,
-            "Enable/Disable HUD Window Mouse Pass Through"
-        },
-        {
-            HotkeyId.OpenRouteTab,
-            "Open Route Tab"
-        },
-        {
-            HotkeyId.OpenBodiesTab,
-            "Open Bodies Tab"
-        },
-        {
-            HotkeyId.OpenBiologicalsTab,
-            "Open Biologicals Tab"
-        },
-        {
-            HotkeyId.OpenSurroundingsTab,
-            "Open Surroundings Tab"
-        },
-        {
-            HotkeyId.OpenHistoryTab,
-            "Open History Tab"
-        },
-        {
-            HotkeyId.TryCopyNextSystemToClipboard,
-            "Copy Next System Name In Locked/Plotter Route To Clipboard"
-        },
-        {
-            HotkeyId.QuitSpeechOutput,
-            "Cancel Current Speech Output"
+            return id switch
+            {
+                HotkeyId.ToggleHudWindow => "HUD-Fenster öffnen/schließen",
+                HotkeyId.ToggleHudMousePassThrough => "Maus-Durchgriff im HUD-Fenster ein-/ausschalten",
+                HotkeyId.OpenRouteTab => "Route-Tab öffnen",
+                HotkeyId.OpenBodiesTab => "Himmelskörper-Tab öffnen",
+                HotkeyId.OpenBiologicalsTab => "Biologie-Tab öffnen",
+                HotkeyId.OpenSurroundingsTab => "Umgebung-Tab öffnen",
+                HotkeyId.OpenHistoryTab => "Historie-Tab öffnen",
+                HotkeyId.TryCopyNextSystemToClipboard => "Nächsten Systemnamen der gesperrten/Plotter-Route kopieren",
+                HotkeyId.QuitSpeechOutput => "Aktuelle Sprachausgabe abbrechen",
+                _ => id.ToString()
+            };
         }
-    }.ToImmutableDictionary();
+
+        return id switch
+        {
+            HotkeyId.ToggleHudWindow => "Open/Close HUD Window",
+            HotkeyId.ToggleHudMousePassThrough => "Enable/Disable HUD Window Mouse Pass Through",
+            HotkeyId.OpenRouteTab => "Open Route Tab",
+            HotkeyId.OpenBodiesTab => "Open Bodies Tab",
+            HotkeyId.OpenBiologicalsTab => "Open Biologicals Tab",
+            HotkeyId.OpenSurroundingsTab => "Open Surroundings Tab",
+            HotkeyId.OpenHistoryTab => "Open History Tab",
+            HotkeyId.TryCopyNextSystemToClipboard => "Copy Next System Name In Locked/Plotter Route To Clipboard",
+            HotkeyId.QuitSpeechOutput => "Cancel Current Speech Output",
+            _ => id.ToString()
+        };
+    }
 
     /// <summary>The log field.</summary>
     private static readonly ILog log = LogManager.GetLogger(typeof(HotkeyProvider));
@@ -211,7 +211,7 @@ public class HotkeyProvider : ViewModelBase
                 {
                     continue;
                 }
-                Hotkeys.Add(key, new HotkeyViewModel(hotkey, HotkeyDescription[hotkey.Id]));
+                Hotkeys.Add(key, new HotkeyViewModel(hotkey, GetHotkeyDescription(hotkey.Id)));
             }
         }
         catch (Exception exception)
