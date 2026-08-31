@@ -16,7 +16,7 @@ public class SpeechOutputPlanet : SpeechOutput
     /// <param name="planet">The planet to describe.</param>
     public SpeechOutputPlanet(Planet planet)
     {
-        Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetType, planet.PlanetClass);
+        Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetType, Globals.GetLocalizedPlanetClass(planet.PlanetClass));
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetName, planet.ShortName);
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetDistance, Helpsters.DoubleToHumanRounded(planet.Distance));
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetAtmosphere, string.IsNullOrEmpty(planet.Atmosphere)
