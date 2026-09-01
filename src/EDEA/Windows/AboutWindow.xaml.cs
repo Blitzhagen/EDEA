@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Windows;
 
 namespace EDEA.Windows;
@@ -23,5 +24,23 @@ public partial class AboutWindow : Window
     private void OkButton_Click(object? sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    /// <summary>
+    /// Opens the hyperlink in the default browser.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e"> The routed event data.</param>
+    private void OnRequestNavigate(object? sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Documents.Hyperlink hyperlink && !string.IsNullOrEmpty(hyperlink.NavigateUri?.ToString()))
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = hyperlink.NavigateUri.ToString(),
+                UseShellExecute = true
+            });
+            e.Handled = true;
+        }
     }
 }

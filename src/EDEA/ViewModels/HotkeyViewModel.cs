@@ -1,6 +1,6 @@
 using System.Windows.Input;
 using EDEA.Models;
-
+using EDEA.Properties;
 using EDEA.Enums;
 
 namespace EDEA.ViewModels;
@@ -90,7 +90,7 @@ public class HotkeyViewModel : ViewModelBase
         {
             if (!IsValid)
             {
-                return "<Unassigned>";
+                return Resources.Hotkey_Unassigned;
             }
             return Modifier.ToString().Replace(", ", "+") + "+" + _keyConverter.ConvertToString(Key);
         }

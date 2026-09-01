@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using EDEA.Enums;
+using EDEA.Properties;
 
 namespace EDEA.Models;
 
@@ -54,7 +55,7 @@ public class HotkeyItem : ObservableObject
         {
             var h = Hotkey;
             if (h is null || !h.IsValid)
-                return "<Unassigned>";
+                return Resources.Hotkey_Unassigned;
             return h.Modifier.ToString().Replace(", ", "+") + "+" + _keyConverter.ConvertToString(h.Key);
         }
     }

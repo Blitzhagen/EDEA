@@ -857,6 +857,9 @@
   <data name="Templates_Tooltip_No" xml:space="preserve">
     <value>Nein</value>
   </data>
+  <data name="Hotkey_Unassigned" xml:space="preserve">
+    <value>&lt;Nicht zugewiesen&gt;</value>
+  </data>
   <data name="Templates_Tooltip_PossibleOccurrences" xml:space="preserve">
     <value>Mögliches Vorkommen</value>
   </data>

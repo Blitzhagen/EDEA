@@ -194,7 +194,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The landable planet speech text.
     /// </summary>
     [ObservableProperty]
-    private string _landableSpeech = "{PlanetType} {PlanetName}, is landable at a distance of {PlanetDistance} Lightseconds with {PlanetAtmosphere} atmosphere, a temperature of {PlanetTemperature} Kelvin, a gravity of {PlanetGravity} g, {PlanetVolcanism} volcanism, a radius of {PlanetRadius} kilometer, {PlanetGeoCount} geological and {PlanetBioCount} biological signals.";
+    private string _landableSpeech = string.Empty;
 
     /// <summary>
     /// Whether valuable body speech is enabled.
@@ -206,7 +206,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The valuable body speech text.
     /// </summary>
     [ObservableProperty]
-    private string _valuableBodySpeech = "{BodyType} {BodyName} has a potential exploration value of {BodyAchievableValue} Credits.";
+    private string _valuableBodySpeech = string.Empty;
 
     /// <summary>
     /// Whether valuable genus predicted speech is enabled.
@@ -218,7 +218,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The valuable genus predicted speech text.
     /// </summary>
     [ObservableProperty]
-    private string _valuableGenusPredictedSpeech = "Possible occurrence of valuable species {SpeciesName} predicted on {PlanetType} {PlanetName}.";
+    private string _valuableGenusPredictedSpeech = string.Empty;
 
     /// <summary>
     /// Whether valuable genera predicted speech is enabled.
@@ -230,7 +230,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The valuable genera predicted speech text.
     /// </summary>
     [ObservableProperty]
-    private string _valuableGeneraPredictedSpeech = "Possible occurrences of {ValuableSpeciesCount} potentially valuable species predicted on {PlanetType} {PlanetName}.";
+    private string _valuableGeneraPredictedSpeech = string.Empty;
 
     /// <summary>
     /// Whether leaving clonal colony range speech is enabled.
@@ -242,7 +242,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The leaving clonal colony range speech text.
     /// </summary>
     [ObservableProperty]
-    private string _leaveClonalColonyRangeSpeech = "Leaving {SpeciesClonColRng} meter clonal colony range of {SpeciesName}, scan count is {SpeciesScanCount}.";
+    private string _leaveClonalColonyRangeSpeech = string.Empty;
 
     /// <summary>
     /// Whether entering clonal colony range speech is enabled.
@@ -254,7 +254,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The entering clonal colony range speech text.
     /// </summary>
     [ObservableProperty]
-    private string _enterClonalColonyRangeSpeech = "Entering clonal colony range of {SpeciesName}.";
+    private string _enterClonalColonyRangeSpeech = string.Empty;
 
     /// <summary>
     /// Whether matching classifications found speech is enabled.
@@ -266,7 +266,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The matching classifications found speech text.
     /// </summary>
     [ObservableProperty]
-    private string _matchingClassificationsFoundSpeech = "{PlanetType} {PlanetName}, is a planet of interest with {PoiCriteriaSetsCount} matching criteria sets.";
+    private string _matchingClassificationsFoundSpeech = string.Empty;
 
     /// <summary>
     /// Whether matching classification found speech is enabled.
@@ -278,7 +278,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The matching classification found speech text.
     /// </summary>
     [ObservableProperty]
-    private string _matchingClassificationFoundSpeech = "{PlanetType} {PlanetName}, is a {PoiCriteriaSetName} planet of interest.";
+    private string _matchingClassificationFoundSpeech = string.Empty;
 
     /// <summary>
     /// Whether ring speech is enabled.
@@ -290,7 +290,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The ring speech text.
     /// </summary>
     [ObservableProperty]
-    private string _ringSpeech = "{RingType} ring with a density of {RingDensity} mega tonnes per square kilometer and {RingsReserveLevel} reserve levels at {BodyType} {BodyName}.";
+    private string _ringSpeech = string.Empty;
 
     /// <summary>
     /// Whether ring count speech is enabled.
@@ -302,7 +302,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The ring count speech text.
     /// </summary>
     [ObservableProperty]
-    private string _ringCountSpeech = "{BodyType} {BodyName}, is a ring body with {RingsReserveLevel} ring reserve levels, ring count is {RingsCount}.";
+    private string _ringCountSpeech = string.Empty;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserSettingsSpeech"/> class.
@@ -338,25 +338,25 @@ public partial class UserSettingsSpeech : ObservableObject
             { "Terraformable", true },
             { "TerraformableSpeech", Resources.Speech_Terraformable },
             { "Landable", false },
-            { "LandableSpeech", Resources.Speech_Landable },
+            { "LandableSpeech", Properties.Resources.Speech_Landable },
             { "ValuableBody", true },
-            { "ValuableBodySpeech", Resources.Speech_ValuableBody },
+            { "ValuableBodySpeech", Properties.Resources.Speech_ValuableBody },
             { "ValuableGenusPredicted", false },
-            { "ValuableGenusPredictedSpeech", Resources.Speech_ValuableGenusPredicted },
+            { "ValuableGenusPredictedSpeech", Properties.Resources.Speech_ValuableGenusPredicted },
             { "ValuableGeneraPredicted", true },
-            { "ValuableGeneraPredictedSpeech", Resources.Speech_ValuableGeneraPredicted },
+            { "ValuableGeneraPredictedSpeech", Properties.Resources.Speech_ValuableGeneraPredicted },
             { "LeaveClonalColonyRange", true },
-            { "LeaveClonalColonyRangeSpeech", Resources.Speech_LeaveClonalColonyRange },
+            { "LeaveClonalColonyRangeSpeech", Properties.Resources.Speech_LeaveClonalColonyRange },
             { "EnterClonalColonyRange", true },
-            { "EnterClonalColonyRangeSpeech", Resources.Speech_EnterClonalColonyRange },
+            { "EnterClonalColonyRangeSpeech", Properties.Resources.Speech_EnterClonalColonyRange },
             { "MatchingClassificationsFound", false },
-            { "MatchingClassificationsFoundSpeech", Resources.Speech_MatchingClassificationsFound },
+            { "MatchingClassificationsFoundSpeech", Properties.Resources.Speech_MatchingClassificationsFound },
             { "MatchingClassificationFound", true },
-            { "MatchingClassificationFoundSpeech", Resources.Speech_MatchingClassificationFound },
+            { "MatchingClassificationFoundSpeech", Properties.Resources.Speech_MatchingClassificationFound },
             { "Ring", false },
-            { "RingSpeech", Resources.Speech_Ring },
+            { "RingSpeech", Properties.Resources.Speech_Ring },
             { "RingCount", false },
-            { "RingCountSpeech", Resources.Speech_RingCount }
+            { "RingCountSpeech", Properties.Resources.Speech_RingCount }
         };
     }
 

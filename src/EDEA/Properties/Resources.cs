@@ -901,6 +901,9 @@ public static class Resources
     public static string Templates_Tooltip_No => Get(nameof(Templates_Tooltip_No));
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>
+    public static string Hotkey_Unassigned => Get(nameof(Hotkey_Unassigned));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
     public static string Templates_Tooltip_PossibleOccurrences => Get(nameof(Templates_Tooltip_PossibleOccurrences));
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>
