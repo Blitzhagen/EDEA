@@ -63,11 +63,8 @@ public class WebApiProvider
     /// <value>A int value.</value>
     public int requestWaitDelay { get; } = 700;
 
-    /// <summary>The edsmSemaphore field.</summary>
-    internal readonly SemaphoreSlim edsmSemaphore = new(1, 1);
-
-    /// <summary>The lastEdsmRequest field.</summary>
-    internal DateTime lastEdsmRequest = DateTime.MinValue;
+    /// <summary>The edsmSemaphore field. Allows up to 4 concurrent EDSM requests.</summary>
+    internal readonly SemaphoreSlim edsmSemaphore = new(4, 4);
 
     /// <summary>Gets the registeredRequestsCount.</summary>
     /// <value>A int value.</value>

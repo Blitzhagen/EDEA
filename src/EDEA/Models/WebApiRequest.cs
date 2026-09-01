@@ -123,12 +123,6 @@ public class WebApiRequest : IEquatable<WebApiRequest>
             {
                 await _webApiProvider.edsmSemaphore.WaitAsync().ConfigureAwait(false);
                 edsmLockHeld = true;
-                var sinceLast = DateTime.UtcNow - _webApiProvider.lastEdsmRequest;
-                if (sinceLast < TimeSpan.FromSeconds(1) && _webApiProvider.lastEdsmRequest != DateTime.MinValue)
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(1) - sinceLast).ConfigureAwait(false);
-                }
-                _webApiProvider.lastEdsmRequest = DateTime.UtcNow;
             }
 
             if (!_followUpRequest)
