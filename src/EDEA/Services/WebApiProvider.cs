@@ -684,8 +684,21 @@ public class WebApiProvider
         {
             if (jToken is JsonObject jObject && edsmCheckSystemId(jObject, starSystem) && edsmUpdateBasicSystemData(jObject, starSystem))
             {
-                edsmRequestCelestialBodiesInformation(webApiParameter as WebApiParameterEdsmStarystem ?? throw new InvalidOperationException(), requestCallBack, ignoreSpeechOutput);
-                return;
+                bool shouldLoadBodies = true;
+                if (_starSystemProvider.StarSystemsOnRoute.ContainsKey(starSystem.Id) && _starSystemProvider.CurrentSystem != null)
+                {
+                    int jumpsAhead = starSystem.JumpDistance - _starSystemProvider.CurrentSystem.JumpDistance;
+                    if (jumpsAhead > 3)
+                    {
+                        shouldLoadBodies = false;
+                        log.Debug($"Skipping EDSM body request for '{starSystem.Name}' ({starSystem.Id}), it is {jumpsAhead} jumps ahead");
+                    }
+                }
+                if (shouldLoadBodies)
+                {
+                    edsmRequestCelestialBodiesInformation(webApiParameter as WebApiParameterEdsmStarystem ?? throw new InvalidOperationException(), requestCallBack, ignoreSpeechOutput);
+                    return;
+                }
             }
         }
         catch (Exception exception)

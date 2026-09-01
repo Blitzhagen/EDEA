@@ -399,7 +399,7 @@ public class StarSystemProvider
                 pastSystem.IsPastSystemInRoute = true;
             }
             List<StarSystem> upcomingSystems = (from sysItem in StarSystemsOnRoute
-                                                where sysItem.Value.JumpDistance > jd && sysItem.Value.NeedsEdsmSystemUpdate
+                                                where sysItem.Value.JumpDistance > jd && (sysItem.Value.NeedsEdsmSystemUpdate || sysItem.Value.NeedsEdsmBodiesUpdate)
                                                 select sysItem.Value into sysItem
                                                 orderby sysItem.JumpDistance
                                                 select sysItem).ToList();
