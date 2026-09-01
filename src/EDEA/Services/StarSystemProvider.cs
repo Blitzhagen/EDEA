@@ -59,7 +59,7 @@ public class StarSystemProvider
     private PlanetsOfInterestProvider _planetsOfInterestProvider;
 
     /// <summary>Threshold in milliseconds for throttling GUI data update events.</summary>
-    private readonly int _guiDataUpdateTriggerThreshold = 700;
+    private readonly int _guiDataUpdateTriggerThreshold = 200;
 
     /// <summary>Indicates whether a GUI data update is currently blocked.</summary>
     private bool guiDataUpdateTriggerBlocked;
