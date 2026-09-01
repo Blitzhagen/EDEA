@@ -48,7 +48,7 @@ public class HotkeyItem : ObservableObject
     /// <summary>
     /// Gets the full key combination as a string.
     /// </summary>
-    /// <value>The formatted key combination, or "&lt;Unassigned&gt;" if invalid.</value>
+    /// <value>The formatted key combination, or the unassigned label if invalid.</value>
     public string FullKey
     {
         get
