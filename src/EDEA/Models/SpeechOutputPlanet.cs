@@ -19,14 +19,10 @@ public class SpeechOutputPlanet : SpeechOutput
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetType, Globals.GetLocalizedPlanetClass(planet.PlanetClass));
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetName, planet.ShortName);
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetDistance, Helpsters.DoubleToHumanRounded(planet.Distance));
-        Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetAtmosphere, string.IsNullOrEmpty(planet.Atmosphere)
-            ? Properties.Resources.PreferencesWindow_Combo_No
-            : Globals.GetLocalizedAtmosphere(planet.Atmosphere));
+        Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetAtmosphere, Globals.GetLocalizedAtmosphereForSpeech(planet.Atmosphere ?? string.Empty));
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetTemperature, Helpsters.DoubleToHumanRounded(planet.SurfaceTemperature));
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetGravity, Helpsters.DoubleToHumanRounded(planet.Gravity));
-        Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetVolcanism, string.IsNullOrEmpty(planet.Volcanism)
-            ? Properties.Resources.PreferencesWindow_Combo_No
-            : Globals.GetLocalizedVolcanism(planet.Volcanism));
+        Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetVolcanism, Globals.GetLocalizedVolcanismForSpeech(planet.Volcanism ?? string.Empty));
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetRadius, Helpsters.DoubleToHumanRounded(planet.Radius / 1000.0));
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetGeoCount, Convert.ToString(planet.GeologicalCount));
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetBioCount, Convert.ToString(planet.BiologicalCount));

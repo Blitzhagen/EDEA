@@ -408,6 +408,16 @@ namespace EDEA
         { "rich", "Reiche" }
     }.ToImmutableDictionary();
 
+        public static readonly ImmutableDictionary<string, string> GermanAtmospherePrefixesDative = new Dictionary<string, string>
+    {
+        { "thin", "dünner" },
+        { "thick", "dicker" },
+        { "hot", "heißer" },
+        { "hot thin", "heißer dünner" },
+        { "hot thick", "heißer dicker" },
+        { "rich", "reicher" }
+    }.ToImmutableDictionary();
+
         public static readonly ImmutableDictionary<string, string> GermanAtmosphereTypes = new Dictionary<string, string>
     {
         { "ammonia", "Ammoniak-Atmosphäre" },
@@ -429,6 +439,12 @@ namespace EDEA
     {
         { "minor", "Geringer" },
         { "major", "Starker" }
+    }.ToImmutableDictionary();
+
+        public static readonly ImmutableDictionary<string, string> GermanVolcanismPrefixesDative = new Dictionary<string, string>
+    {
+        { "minor", "geringen" },
+        { "major", "starken" }
     }.ToImmutableDictionary();
 
         public static readonly ImmutableDictionary<string, string> GermanVolcanismElements = new Dictionary<string, string>
@@ -454,12 +470,28 @@ namespace EDEA
         { "iron magma", "Eisenmagma" }
     }.ToImmutableDictionary();
 
+        public static readonly ImmutableDictionary<string, string> GermanVolcanismTypesDative = new Dictionary<string, string>
+    {
+        { "geysers", "Geysiren" },
+        { "magma", "Magma" },
+        { "rocky magma", "Felsmagma" },
+        { "iron magma", "Eisenmagma" }
+    }.ToImmutableDictionary();
+
         public static readonly ImmutableDictionary<string, (string Minor, string Major)> GermanVolcanismIntensities = new Dictionary<string, (string, string)>
     {
         { "geysers", ("Geringe", "Starke") },
         { "magma", ("Geringes", "Starkes") },
         { "rocky magma", ("Geringes", "Starkes") },
         { "iron magma", ("Geringes", "Starkes") }
+    }.ToImmutableDictionary();
+
+        public static readonly ImmutableDictionary<string, (string Minor, string Major)> GermanVolcanismIntensitiesDative = new Dictionary<string, (string, string)>
+    {
+        { "geysers", ("geringen", "starken") },
+        { "magma", ("geringem", "starkem") },
+        { "rocky magma", ("geringem", "starkem") },
+        { "iron magma", ("geringem", "starkem") }
     }.ToImmutableDictionary();
 
         public static readonly ImmutableDictionary<string, string> GermanVolcanismSpecials = new Dictionary<string, string>
@@ -639,6 +671,167 @@ namespace EDEA
                 return baseString;
 
             var (minor, major) = GermanVolcanismIntensities[type];
+            var prefixGerman = prefix == "minor" ? minor : major;
+            return $"{prefixGerman} {baseString}";
+        }
+
+        /// <summary>
+        /// Returns a localized speech text for the given atmosphere, using dative case for use after "mit".
+        /// </summary>
+        /// <param name="atmosphere">The raw atmosphere description.</param>
+        /// <returns>The localized atmosphere speech text or the original value.</returns>
+        public static string GetLocalizedAtmosphereForSpeech(string atmosphere)
+        {
+            bool isGerman = Resources.Culture.TwoLetterISOLanguageName.Equals("de", StringComparison.OrdinalIgnoreCase);
+
+            if (string.IsNullOrEmpty(atmosphere) || atmosphere.Equals("no atmosphere", StringComparison.OrdinalIgnoreCase))
+                return isGerman ? "keiner Atmosphäre" : "no atmosphere";
+
+            if (!isGerman)
+                return atmosphere.ToLowerInvariant();
+
+            var normalized = atmosphere.ToLowerInvariant().Trim();
+            if (normalized.EndsWith(" atmosphere"))
+                normalized = normalized.Substring(0, normalized.Length - " atmosphere".Length).Trim();
+
+            var tokens = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            var resultTokens = new List<string>();
+            bool isRich = false;
+            if (tokens.Count > 0 && tokens[^1] == "rich")
+            {
+                isRich = true;
+                tokens.RemoveAt(tokens.Count - 1);
+            }
+
+            string? gas = null;
+            for (int wordCount = Math.Min(2, tokens.Count); wordCount >= 1; wordCount--)
+            {
+                var candidate = string.Join(" ", tokens.Skip(tokens.Count - wordCount));
+                if (GermanAtmosphereTypes.ContainsKey(candidate))
+                {
+                    gas = candidate;
+                    tokens.RemoveRange(tokens.Count - wordCount, wordCount);
+                    break;
+                }
+            }
+
+            if (gas == null)
+                return atmosphere.ToLowerInvariant();
+
+            while (tokens.Count > 0)
+            {
+                bool matched = false;
+                for (int wordCount = Math.Min(2, tokens.Count); wordCount >= 1; wordCount--)
+                {
+                    var candidate = string.Join(" ", tokens.Take(wordCount));
+                    if (GermanAtmospherePrefixesDative.TryGetValue(candidate, out var prefix))
+                    {
+                        resultTokens.Add(prefix);
+                        tokens.RemoveRange(0, wordCount);
+                        matched = true;
+                        break;
+                    }
+                }
+
+                if (!matched)
+                {
+                    resultTokens.Add(tokens[0]);
+                    tokens.RemoveAt(0);
+                }
+            }
+
+            if (isRich)
+                resultTokens.Add(GermanAtmospherePrefixesDative["rich"]);
+
+            resultTokens.Add(GermanAtmosphereTypes[gas]);
+            return string.Join(" ", resultTokens);
+        }
+
+        /// <summary>
+        /// Returns a localized speech text for the given volcanism, using dative case for use after "mit".
+        /// </summary>
+        /// <param name="volcanism">The raw volcanism description.</param>
+        /// <returns>The localized volcanism speech text or the original value.</returns>
+        public static string GetLocalizedVolcanismForSpeech(string volcanism)
+        {
+            bool isGerman = Resources.Culture.TwoLetterISOLanguageName.Equals("de", StringComparison.OrdinalIgnoreCase);
+
+            if (string.IsNullOrEmpty(volcanism))
+                return isGerman ? "keinem Vulkanismus" : "no volcanism";
+
+            var normalized = volcanism.ToLowerInvariant().Trim();
+            if (GermanVolcanismSpecials.TryGetValue(normalized, out var special))
+            {
+                if (special.Equals("Kein Vulkanismus", StringComparison.OrdinalIgnoreCase))
+                    return isGerman ? "keinem Vulkanismus" : "no volcanism";
+                return special;
+            }
+
+            if (!isGerman)
+                return volcanism.ToLowerInvariant().Replace(" volcanism", string.Empty);
+
+            if (normalized.EndsWith(" volcanism"))
+                normalized = normalized.Substring(0, normalized.Length - " volcanism".Length).Trim();
+
+            string? prefix = null;
+            foreach (var p in GermanVolcanismPrefixesDative.Keys)
+            {
+                if (normalized.StartsWith(p + " ", StringComparison.OrdinalIgnoreCase))
+                {
+                    prefix = p;
+                    normalized = normalized.Substring(p.Length).Trim();
+                    break;
+                }
+            }
+
+            string? type = null;
+            foreach (var t in GermanVolcanismTypesDative.Keys.OrderByDescending(k => k.Length))
+            {
+                if (normalized.EndsWith(" " + t, StringComparison.OrdinalIgnoreCase) || normalized == t)
+                {
+                    type = t;
+                    if (normalized.Length > t.Length)
+                        normalized = normalized.Substring(0, normalized.Length - t.Length).Trim();
+                    else
+                        normalized = string.Empty;
+                    break;
+                }
+            }
+
+            if (type == null)
+                return volcanism.ToLowerInvariant().Replace(" volcanism", string.Empty);
+
+            string baseString;
+            if (type == "rocky magma" || type == "iron magma")
+            {
+                baseString = GermanVolcanismTypesDative[type];
+            }
+            else
+            {
+                string? element = null;
+                for (int wordCount = Math.Min(2, normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length); wordCount >= 1; wordCount--)
+                {
+                    var words = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    if (words.Length < wordCount) continue;
+                    var candidate = string.Join(" ", words.Take(wordCount));
+                    if (GermanVolcanismElements.TryGetValue(candidate, out var elementGerman))
+                    {
+                        element = elementGerman;
+                        break;
+                    }
+                }
+
+                if (element == null)
+                    element = Helpsters.FirstLetterToUpperCase(normalized);
+
+                baseString = $"{element}-{GermanVolcanismTypesDative[type]}";
+            }
+
+            if (string.IsNullOrEmpty(prefix))
+                return baseString;
+
+            var (minor, major) = GermanVolcanismIntensitiesDative[type];
             var prefixGerman = prefix == "minor" ? minor : major;
             return $"{prefixGerman} {baseString}";
         }

@@ -1035,7 +1035,7 @@
     <value>{PlanetType} {PlanetName} ist terraformierbar.</value>
   </data>
   <data name="Speech_Landable" xml:space="preserve">
-    <value>{PlanetType} {PlanetName} ist landbar in einer Entfernung von {PlanetDistance} Lichtsekunden mit {PlanetAtmosphere} Atmosphäre, einer Temperatur von {PlanetTemperature} Kelvin, einer Gravitation von {PlanetGravity} g, {PlanetVolcanism} Vulkanismus, einem Radius von {PlanetRadius} Kilometern, {PlanetGeoCount} geologischen und {PlanetBioCount} biologischen Signalen.</value>
+    <value>{PlanetType} {PlanetName} ist landbar in einer Entfernung von {PlanetDistance} Lichtsekunden mit {PlanetAtmosphere}, einer Temperatur von {PlanetTemperature} Kelvin, einer Gravitation von {PlanetGravity} g, mit {PlanetVolcanism}, einem Radius von {PlanetRadius} Kilometern, {PlanetGeoCount} geologischen und {PlanetBioCount} biologischen Signalen.</value>
   </data>
   <data name="Speech_ValuableBody" xml:space="preserve">
     <value>{BodyType} {BodyName} hat einen potenziellen Erkundungswert von {BodyAchievableValue} Credits.</value>

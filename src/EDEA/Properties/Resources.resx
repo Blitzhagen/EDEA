@@ -1033,7 +1033,7 @@
     <value>{PlanetType} {PlanetName}, is terraformable.</value>
   </data>
   <data name="Speech_Landable" xml:space="preserve">
-    <value>{PlanetType} {PlanetName}, is landable at a distance of {PlanetDistance} Lightseconds with {PlanetAtmosphere} atmosphere, a temperature of {PlanetTemperature} Kelvin, a gravity of {PlanetGravity} g, {PlanetVolcanism} volcanism, a radius of {PlanetRadius} kilometer, {PlanetGeoCount} geological and {PlanetBioCount} biological signals.</value>
+    <value>{PlanetType} {PlanetName}, is landable at a distance of {PlanetDistance} Lightseconds with {PlanetAtmosphere}, a temperature of {PlanetTemperature} Kelvin, a gravity of {PlanetGravity} g, with {PlanetVolcanism}, a radius of {PlanetRadius} kilometer, {PlanetGeoCount} geological and {PlanetBioCount} biological signals.</value>
   </data>
   <data name="Speech_ValuableBody" xml:space="preserve">
     <value>{BodyType} {BodyName} has a potential exploration value of {BodyAchievableValue} Credits.</value>
