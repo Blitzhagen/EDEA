@@ -1056,7 +1056,7 @@
     <value>{PlanetType} {PlanetName} ist ein interessanter Planet mit {PoiCriteriaSetsCount} {PoiCriteriaSetNoun}.</value>
   </data>
   <data name="Speech_MatchingClassificationFound" xml:space="preserve">
-    <value>{PlanetType} {PlanetName} ist ein {PoiCriteriaSetName}-interessanter Planet.</value>
+    <value>{PlanetType} {PlanetName} ist ein interessanter Planet für {PoiCriteriaSetName}.</value>
   </data>
   <data name="Speech_Ring" xml:space="preserve">
     <value>{RingType}-Ring mit einer Dichte von {RingDensity} Megatonnen pro Quadratkilometer und {RingsReserveLevel} Reservegrad bei {BodyType} {BodyName}.</value>
