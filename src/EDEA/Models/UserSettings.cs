@@ -116,7 +116,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The geological signal speech text.
     /// </summary>
     [ObservableProperty]
-    private string _geologicalSignalsSpeech = "{PlanetGeoCount} geological signals found on {PlanetType} {PlanetName}.";
+    private string _geologicalSignalsSpeech = "{PlanetGeoCount} {PlanetGeoSignalNoun} found on {PlanetType} {PlanetName}.";
 
     /// <summary>
     /// Whether biological signal speech is enabled.
@@ -128,7 +128,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The biological signal speech text.
     /// </summary>
     [ObservableProperty]
-    private string _biologicalSignalsSpeech = "{PlanetBioCount} biological signals found on {PlanetType} {PlanetName}.";
+    private string _biologicalSignalsSpeech = "{PlanetBioCount} {PlanetBioSignalNoun} found on {PlanetType} {PlanetName}.";
 
     /// <summary>
     /// The speech synthesizer voice.

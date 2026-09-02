@@ -71,9 +71,19 @@ public enum SpeechOutputPlaceholderKeys
     PlanetGeoCount,
 
     /// <summary>
+    /// The geological signal noun to use for the count.
+    /// </summary>
+    PlanetGeoSignalNoun,
+
+    /// <summary>
     /// The planet biological count.
     /// </summary>
     PlanetBioCount,
+
+    /// <summary>
+    /// The biological signal noun to use for the count.
+    /// </summary>
+    PlanetBioSignalNoun,
 
     /// <summary>
     /// The planet orbital inclination.
@@ -129,6 +139,11 @@ public enum SpeechOutputPlaceholderKeys
     /// The number of matching POI criteria sets.
     /// </summary>
     PoiCriteriaSetsCount,
+
+    /// <summary>
+    /// The POI criteria set noun to use for the count.
+    /// </summary>
+    PoiCriteriaSetNoun,
 
     /// <summary>
     /// The name of a POI criteria set.

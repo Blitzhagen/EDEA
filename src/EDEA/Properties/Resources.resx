@@ -1018,10 +1018,10 @@
     <value>See you in the black!</value>
   </data>
   <data name="Speech_GeologicalSignals" xml:space="preserve">
-    <value>{PlanetGeoCount} geological signals found on {PlanetType} {PlanetName}.</value>
+    <value>{PlanetGeoCount} {PlanetGeoSignalNoun} found on {PlanetType} {PlanetName}.</value>
   </data>
   <data name="Speech_BiologicalSignals" xml:space="preserve">
-    <value>{PlanetBioCount} biological signals found on {PlanetType} {PlanetName}.</value>
+    <value>{PlanetBioCount} {PlanetBioSignalNoun} found on {PlanetType} {PlanetName}.</value>
   </data>
   <data name="Speech_FirstDiscoverySystem" xml:space="preserve">
     <value>First discoverer of star system {SystemName} with primary star of type {SystemStarType}.</value>
@@ -1051,7 +1051,7 @@
     <value>Entering clonal colony range of {SpeciesName}.</value>
   </data>
   <data name="Speech_MatchingClassificationsFound" xml:space="preserve">
-    <value>{PlanetType} {PlanetName}, is a planet of interest with {PoiCriteriaSetsCount} matching criteria sets.</value>
+    <value>{PlanetType} {PlanetName}, is a planet of interest with {PoiCriteriaSetsCount} {PoiCriteriaSetNoun}.</value>
   </data>
   <data name="Speech_MatchingClassificationFound" xml:space="preserve">
     <value>{PlanetType} {PlanetName}, is a {PoiCriteriaSetName} planet of interest.</value>
@@ -1061,6 +1061,24 @@
   </data>
   <data name="Speech_RingCount" xml:space="preserve">
     <value>{BodyType} {BodyName}, is a ring body with {RingsReserveLevel} ring reserve levels, ring count is {RingsCount}.</value>
+  </data>
+  <data name="Speech_GeologicalSignalSingular" xml:space="preserve">
+    <value>geological signal</value>
+  </data>
+  <data name="Speech_GeologicalSignalPlural" xml:space="preserve">
+    <value>geological signals</value>
+  </data>
+  <data name="Speech_BiologicalSignalSingular" xml:space="preserve">
+    <value>biological signal</value>
+  </data>
+  <data name="Speech_BiologicalSignalPlural" xml:space="preserve">
+    <value>biological signals</value>
+  </data>
+  <data name="Speech_PoiCriteriaSetSingular" xml:space="preserve">
+    <value>matching criteria set</value>
+  </data>
+  <data name="Speech_PoiCriteriaSetPlural" xml:space="preserve">
+    <value>matching criteria sets</value>
   </data>
   <data name="RoutePlotterWindow_Efficiency" xml:space="preserve">
     <value>Efficiency</value>

@@ -1014,16 +1014,16 @@
     <value>Bitte warten ...</value>
   </data>
   <data name="Speech_Welcome" xml:space="preserve">
-    <value>o7 Commander {CommanderName}, Erkundungsassistent bereit.</value>
+    <value>o7 Commander {CommanderName}, Erkundungsassistent ist bereit.</value>
   </data>
   <data name="Speech_Goodbye" xml:space="preserve">
     <value>Bis bald im All!</value>
   </data>
   <data name="Speech_GeologicalSignals" xml:space="preserve">
-    <value>{PlanetGeoCount} geologische Signale auf {PlanetType} {PlanetName} gefunden.</value>
+    <value>{PlanetGeoCount} {PlanetGeoSignalNoun} auf {PlanetType} {PlanetName} gefunden.</value>
   </data>
   <data name="Speech_BiologicalSignals" xml:space="preserve">
-    <value>{PlanetBioCount} biologische Signale auf {PlanetType} {PlanetName} gefunden.</value>
+    <value>{PlanetBioCount} {PlanetBioSignalNoun} auf {PlanetType} {PlanetName} gefunden.</value>
   </data>
   <data name="Speech_FirstDiscoverySystem" xml:space="preserve">
     <value>Erstentdecker des Sternensystems {SystemName} mit Hauptstern vom Typ {SystemStarType}.</value>
@@ -1047,13 +1047,13 @@
     <value>Mögliche Vorkommen von {ValuableSpeciesCount} potenziell wertvollen Spezies auf {PlanetType} {PlanetName} vorhergesagt.</value>
   </data>
   <data name="Speech_LeaveClonalColonyRange" xml:space="preserve">
-    <value>Verlassen der {SpeciesClonColRng}-Meter-Klonalkolonie-Reichweite von {SpeciesName}, Scan-Zahl ist {SpeciesScanCount}.</value>
+    <value>Verlassen der {SpeciesClonColRng}-Meter-Klonalkoloniereichweite von {SpeciesName}, Anzahl der Scans ist {SpeciesScanCount}.</value>
   </data>
   <data name="Speech_EnterClonalColonyRange" xml:space="preserve">
-    <value>Eintritt in die Klonalkolonie-Reichweite von {SpeciesName}.</value>
+    <value>Eintritt in die Klonalkoloniereichweite von {SpeciesName}.</value>
   </data>
   <data name="Speech_MatchingClassificationsFound" xml:space="preserve">
-    <value>{PlanetType} {PlanetName} ist ein interessanter Planet mit {PoiCriteriaSetsCount} passenden Kriteriensätzen.</value>
+    <value>{PlanetType} {PlanetName} ist ein interessanter Planet mit {PoiCriteriaSetsCount} {PoiCriteriaSetNoun}.</value>
   </data>
   <data name="Speech_MatchingClassificationFound" xml:space="preserve">
     <value>{PlanetType} {PlanetName} ist ein {PoiCriteriaSetName}-interessanter Planet.</value>
@@ -1063,6 +1063,24 @@
   </data>
   <data name="Speech_RingCount" xml:space="preserve">
     <value>{BodyType} {BodyName} ist ein Ringkörper mit {RingsReserveLevel} Ringreservegraden, Ringzahl ist {RingsCount}.</value>
+  </data>
+  <data name="Speech_GeologicalSignalSingular" xml:space="preserve">
+    <value>geologisches Signal</value>
+  </data>
+  <data name="Speech_GeologicalSignalPlural" xml:space="preserve">
+    <value>geologische Signale</value>
+  </data>
+  <data name="Speech_BiologicalSignalSingular" xml:space="preserve">
+    <value>biologisches Signal</value>
+  </data>
+  <data name="Speech_BiologicalSignalPlural" xml:space="preserve">
+    <value>biologische Signale</value>
+  </data>
+  <data name="Speech_PoiCriteriaSetSingular" xml:space="preserve">
+    <value>passenden Kriteriensatz</value>
+  </data>
+  <data name="Speech_PoiCriteriaSetPlural" xml:space="preserve">
+    <value>passenden Kriteriensätzen</value>
   </data>
   <data name="RingType_Unknown" xml:space="preserve">
     <value>Unbekannt</value>

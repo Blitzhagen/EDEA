@@ -25,7 +25,9 @@ public class SpeechOutputPlanet : SpeechOutput
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetVolcanism, Globals.GetLocalizedVolcanismForSpeech(planet.Volcanism ?? string.Empty));
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetRadius, Helpsters.DoubleToHumanRounded(planet.Radius / 1000.0));
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetGeoCount, Convert.ToString(planet.GeologicalCount));
+        Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetGeoSignalNoun, planet.GeologicalCount == 1 ? Properties.Resources.Speech_GeologicalSignalSingular : Properties.Resources.Speech_GeologicalSignalPlural);
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetBioCount, Convert.ToString(planet.BiologicalCount));
+        Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetBioSignalNoun, planet.BiologicalCount == 1 ? Properties.Resources.Speech_BiologicalSignalSingular : Properties.Resources.Speech_BiologicalSignalPlural);
         Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetOrbitalInclination,
             planet.OrbitalInclination.HasValue
                 ? Helpsters.DoubleToHumanRounded(planet.OrbitalInclination.Value)

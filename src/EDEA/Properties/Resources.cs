@@ -1114,6 +1114,24 @@ public static class Resources
     public static string Speech_RingCount => Get(nameof(Speech_RingCount));
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>
+    public static string Speech_GeologicalSignalSingular => Get(nameof(Speech_GeologicalSignalSingular));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string Speech_GeologicalSignalPlural => Get(nameof(Speech_GeologicalSignalPlural));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string Speech_BiologicalSignalSingular => Get(nameof(Speech_BiologicalSignalSingular));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string Speech_BiologicalSignalPlural => Get(nameof(Speech_BiologicalSignalPlural));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string Speech_PoiCriteriaSetSingular => Get(nameof(Speech_PoiCriteriaSetSingular));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string Speech_PoiCriteriaSetPlural => Get(nameof(Speech_PoiCriteriaSetPlural));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
     public static string RingType_Unknown => Get(nameof(RingType_Unknown));
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>

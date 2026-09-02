@@ -14,5 +14,6 @@ public class SpeechOutputMatchingClassificationsCount : SpeechOutput
     public SpeechOutputMatchingClassificationsCount(int classificationsCount)
     {
         Placeholders.Add(SpeechOutputPlaceholderKeys.PoiCriteriaSetsCount, Convert.ToString(classificationsCount));
+        Placeholders.Add(SpeechOutputPlaceholderKeys.PoiCriteriaSetNoun, classificationsCount == 1 ? Properties.Resources.Speech_PoiCriteriaSetSingular : Properties.Resources.Speech_PoiCriteriaSetPlural);
     }
 }
