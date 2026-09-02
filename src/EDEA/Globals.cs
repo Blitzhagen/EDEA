@@ -408,6 +408,7 @@ namespace EDEA
         { "rich", "Reiche" }
     }.ToImmutableDictionary();
 
+        /// <summary>German dative-case atmosphere prefixes for use in speech output.</summary>
         public static readonly ImmutableDictionary<string, string> GermanAtmospherePrefixesDative = new Dictionary<string, string>
     {
         { "thin", "dünner" },
@@ -441,6 +442,7 @@ namespace EDEA
         { "major", "Starker" }
     }.ToImmutableDictionary();
 
+        /// <summary>German dative-case volcanism intensity prefixes for use in speech output.</summary>
         public static readonly ImmutableDictionary<string, string> GermanVolcanismPrefixesDative = new Dictionary<string, string>
     {
         { "minor", "geringen" },
@@ -470,6 +472,7 @@ namespace EDEA
         { "iron magma", "Eisenmagma" }
     }.ToImmutableDictionary();
 
+        /// <summary>German dative-case volcanism type names for use in speech output.</summary>
         public static readonly ImmutableDictionary<string, string> GermanVolcanismTypesDative = new Dictionary<string, string>
     {
         { "geysers", "Geysiren" },
@@ -486,6 +489,7 @@ namespace EDEA
         { "iron magma", ("Geringes", "Starkes") }
     }.ToImmutableDictionary();
 
+        /// <summary>German dative-case volcanism intensity terms (minor/major) by type for speech output.</summary>
         public static readonly ImmutableDictionary<string, (string Minor, string Major)> GermanVolcanismIntensitiesDative = new Dictionary<string, (string, string)>
     {
         { "geysers", ("geringen", "starken") },
