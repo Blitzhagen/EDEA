@@ -1,17 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using EDEA.Models;
 using EDEA.Services;
 
 namespace EDEA.Avalonia.Services;
 
-#pragma warning disable CS0067
-
 /// <summary>
 /// Avalonia/cross-platform stub implementation of <see cref="ISpeechService"/>.
 /// </summary>
+/// <remarks>
+/// This implementation does not provide text-to-speech output because Avalonia has no built-in
+/// cross-platform speech synthesizer. A platform-specific TTS engine can be plugged in later.
+/// </remarks>
 public sealed class AvaloniaSpeechService : ISpeechService
 {
+#pragma warning disable CS0067
     /// <inheritdoc />
     public bool IsSpeaking => false;
 
@@ -23,6 +27,7 @@ public sealed class AvaloniaSpeechService : ISpeechService
 
     /// <inheritdoc />
     public event EventHandler? VoicesLoaded;
+#pragma warning restore CS0067
 
     /// <inheritdoc />
     public void SpeakWelcome(SpeechOutputCommander commander) { }
@@ -85,7 +90,19 @@ public sealed class AvaloniaSpeechService : ISpeechService
     public void UpdateSpeechSynthesizerParameter() { }
 
     /// <inheritdoc />
-    public string GetLabelForSpeechOutput(string outputName) => outputName;
+    public string GetLabelForSpeechOutput(string outputName)
+    {
+        try
+        {
+            var resourceName = $"SpeechOutput_{outputName}";
+            var property = typeof(EDEA.Properties.Resources).GetProperty(resourceName, BindingFlags.Public | BindingFlags.Static);
+            return property?.GetValue(null)?.ToString() ?? outputName;
+        }
+        catch
+        {
+            return outputName;
+        }
+    }
 
     /// <inheritdoc />
     public Dictionary<string, string> GetPlaceholdersFromSpeechOutputs(SpeechOutput[] outputs) => new();
