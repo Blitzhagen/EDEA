@@ -112,7 +112,9 @@ namespace EDEA
         public static string ColumnHeaderVistaGenomicsValue => Resources.ColumnHeaderVistaGenomicsValue;
 
         public static readonly string ApplicationFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-        public static readonly string AppDataFolder = Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA")!, Assembly.GetExecutingAssembly().GetName().Name!);
+        public static readonly string AppDataFolder = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create),
+            Assembly.GetExecutingAssembly().GetName().Name!);
         public static readonly string AppVersionString = $"{Assembly.GetExecutingAssembly().GetName().Version!.Major}.{Assembly.GetExecutingAssembly().GetName().Version!.Minor}.{Assembly.GetExecutingAssembly().GetName().Version!.Build}{(string.IsNullOrWhiteSpace(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration) ? string.Empty : (" " + Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration))}";
 
         public static readonly ImmutableDictionary<string, string> EdsmToJournalPlanetClasses = new Dictionary<string, string>

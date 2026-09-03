@@ -479,12 +479,13 @@ public partial class UserSettingsOther : ObservableObject
     /// <returns>The default saved game path, or an empty string if the directory does not exist.</returns>
     private static string GetDefaultEdSavedGamePath()
     {
-        var path = Path.Combine(
-            Environment.GetEnvironmentVariable("USERPROFILE") ?? string.Empty,
-            "Saved Games",
-            "Frontier Developments",
-            "Elite Dangerous");
+        var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        if (string.IsNullOrEmpty(userProfile))
+        {
+            return string.Empty;
+        }
 
+        var path = Path.Combine(userProfile, "Saved Games", "Frontier Developments", "Elite Dangerous");
         if (Directory.Exists(path))
         {
             return path;
