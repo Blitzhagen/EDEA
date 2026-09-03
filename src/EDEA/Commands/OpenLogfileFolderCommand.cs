@@ -1,6 +1,6 @@
 using System;
-using System.Diagnostics;
 using System.IO;
+using EDEA.Services;
 using log4net;
 
 namespace EDEA.Commands;
@@ -21,7 +21,7 @@ public class OpenLogfileFolderCommand : CommandBase
         try
         {
             string path = Path.Combine(Globals.AppDataFolder, "log");
-            Process.Start("explorer.exe", path);
+            PlatformServices.Platform?.OpenFolder(path);
         }
         catch (Exception exception)
         {

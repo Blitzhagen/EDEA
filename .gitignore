@@ -48,3 +48,4 @@ artifacts/
 *.db
 *.db-journal
 publish/
+EDEA-win-x64.zip

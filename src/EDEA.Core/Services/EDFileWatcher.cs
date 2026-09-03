@@ -102,7 +102,9 @@ public class EDFileWatcher : FileSystemWatcher
         catch (Exception exception)
         {
             log.Fatal("Path for ED journal files is invalid", exception);
-            throw new InvalidOperationException("Could not determine the Elite Dangerous Saved Games folder where the Journal*.log files are stored. Please set the appropriate folder in the Configuration section in the preferences so that EDEA works correctly.");
+            const string message = "Could not determine the Elite Dangerous Saved Games folder where the Journal*.log files are stored. Please set the appropriate folder in the Configuration section in the preferences so that EDEA works correctly.";
+            PlatformServices.Dialog?.ShowError(message);
+            throw new InvalidOperationException(message);
         }
     }
 

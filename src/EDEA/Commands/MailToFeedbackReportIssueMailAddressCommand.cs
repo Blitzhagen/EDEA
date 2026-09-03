@@ -1,5 +1,5 @@
 using System;
-using System.Diagnostics;
+using EDEA.Services;
 using log4net;
 
 namespace EDEA.Commands;
@@ -19,10 +19,10 @@ public class MailToFeedbackReportIssueMailAddressCommand : CommandBase
     {
         try
         {
-            Process.Start(new ProcessStartInfo($"mailto:{Globals.FeedbackReportIssueMailAddress}?subject={Globals.FeedbackReportIssueMailSubject}&body={Globals.FeedbackReportIssueMailBody}")
-            {
-                UseShellExecute = true
-            });
+            PlatformServices.Platform?.OpenMailTo(
+                Globals.FeedbackReportIssueMailAddress,
+                Globals.FeedbackReportIssueMailSubject,
+                Globals.FeedbackReportIssueMailBody);
         }
         catch (Exception exception)
         {

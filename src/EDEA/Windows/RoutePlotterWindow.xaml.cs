@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
+using EDEA.Services;
 
 namespace EDEA.Windows;
 
@@ -24,7 +24,7 @@ public partial class RoutePlotterWindow : Window
     /// <param name="e">The navigation event data.</param>
     private void OnRequestNavigate(object? sender, RequestNavigateEventArgs e)
     {
-        Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+        PlatformServices.Platform?.OpenUri(e.Uri.AbsoluteUri);
         e.Handled = true;
     }
 }

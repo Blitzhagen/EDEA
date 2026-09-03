@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using System.Windows;
+using EDEA.Services;
 
 namespace EDEA.Windows;
 
@@ -35,11 +35,7 @@ public partial class AboutWindow : Window
     {
         if (sender is System.Windows.Documents.Hyperlink hyperlink && !string.IsNullOrEmpty(hyperlink.NavigateUri?.ToString()))
         {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = hyperlink.NavigateUri.ToString(),
-                UseShellExecute = true
-            });
+            PlatformServices.Platform?.OpenUri(hyperlink.NavigateUri.ToString());
             e.Handled = true;
         }
     }

@@ -171,7 +171,7 @@ public class WebApiRequest : IEquatable<WebApiRequest>
             if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.Accepted)
             {
                 log.Error($"Http status neither OK nor Accepted, code: {(httpResponseMessage.StatusCode)}, too many requests?");
-                _requestCallBack(_webApiObject);
+                InvokeRequestCallback(_webApiObject);
                 setInactiveAndUnregister();
                 return;
             }
@@ -182,17 +182,17 @@ public class WebApiRequest : IEquatable<WebApiRequest>
                 JsonNode? jToken = JsonNode.Parse(json);
                 if (jToken != null)
                 {
-                    _webApiCallBack(jToken, _webApiObject, _requestCallBack, _ignoreSpeechOutput);
+                    _webApiCallBack(jToken, _webApiObject, InvokeRequestCallback, _ignoreSpeechOutput);
                 }
                 else
                 {
-                    _requestCallBack(_webApiObject);
+                    InvokeRequestCallback(_webApiObject);
                 }
             }
             catch (Exception exception)
             {
                 log.Error($"Error while deserializing JSON object. URL: {(uriBuilder.Uri)}, Function {(_requestCallBack)}", exception);
-                _requestCallBack(_webApiObject);
+                InvokeRequestCallback(_webApiObject);
             }
 
             setInactiveAndUnregister();
@@ -202,7 +202,7 @@ public class WebApiRequest : IEquatable<WebApiRequest>
             log.Error($"Unhandled error in WebApiRequest {(Id)}", exception);
             try
             {
-                _requestCallBack(_webApiObject);
+                InvokeRequestCallback(_webApiObject);
             }
             catch
             {
@@ -236,6 +236,23 @@ public class WebApiRequest : IEquatable<WebApiRequest>
         Interlocked.Decrement(ref WebApiProvider.activeRequests);
         log.Debug($"Removed request {(Id)} from active requests. Current request count: | {(WebApiProvider.absoluteRequestsInSession)} absolute | {(_webApiProvider.registeredRequestsCount)} registered | {(WebApiProvider.activeRequests)} active |");
         _webApiProvider.unregisterRequest(this);
+    }
+
+    /// <summary>
+    /// Invokes the request callback on the UI thread if a dispatcher is available.
+    /// </summary>
+    /// <param name="parameter">The parameter to pass to the callback.</param>
+    private void InvokeRequestCallback(WebApiParameter parameter)
+    {
+        var dispatcher = PlatformServices.Dispatcher;
+        if (dispatcher is not null)
+        {
+            dispatcher.Invoke(() => _requestCallBack(parameter));
+        }
+        else
+        {
+            _requestCallBack(parameter);
+        }
     }
 
     /// <summary>

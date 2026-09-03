@@ -628,8 +628,16 @@ public class StarSystemProvider
             return;
         }
 
-        // TODO: Replace with IClipboardService in Phase 2.
-        log.Debug($"Would copy next system name '{systemName}' to clipboard");
+        var clipboard = PlatformServices.Clipboard;
+        if (clipboard is not null)
+        {
+            log.Debug($"Copying next system name '{systemName}' to clipboard");
+            clipboard.SetText(systemName);
+        }
+        else
+        {
+            log.Debug($"Would copy next system name '{systemName}' to clipboard (no clipboard service set)");
+        }
     }
 
     private void addToOrUpdateInHistory(WebApiParameter webEdsmRequestParameter)

@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using System.Windows;
+using EDEA.Services;
 
 namespace EDEA.Windows;
 
@@ -29,9 +29,8 @@ public partial class FeedbackReportIssueWindow : Window
 
         var subject = $"EDEA Feedback from {name}";
         var body = $"Name: {name}%0D%0AEmail: {email}%0D%0A%0D%0A{message}";
-        var url = $"mailto:edea-feedback@example.com?subject={subject}&body={body}";
 
-        Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        PlatformServices.Platform?.OpenMailTo("edea-feedback@example.com", subject, body);
         Close();
     }
 

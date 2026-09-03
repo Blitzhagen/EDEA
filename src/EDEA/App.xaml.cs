@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using EDEA.Services;
+using EDEA.Services.Platform;
 using EDEA.Stores;
 using EDEA.ViewModels;
 using EDEA.Windows;
@@ -179,6 +180,12 @@ public partial class App : Application
     /// </summary>
     private void RunStartup()
     {
+        PlatformServices.Dispatcher = new WindowsDispatcher();
+        PlatformServices.Clipboard = new WindowsClipboardService();
+        PlatformServices.Speech = new WindowsSpeechService();
+        PlatformServices.Dialog = new WindowsDialogService();
+        PlatformServices.Platform = new WindowsPlatformService();
+
         _settingsProvider = new SettingsProvider();
         Preferences.User = _settingsProvider.Settings;
         Preferences.SetSettingsProvider(_settingsProvider);
