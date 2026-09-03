@@ -205,7 +205,7 @@ public class JournalHistoryImporter
             }
             try
             {
-                string[] lines = File.ReadLines(journalFiles[i].FullName).ToArray();
+                string[] lines = await File.ReadAllLinesAsync(journalFiles[i].FullName, cancellationToken);
                 log.Debug($"Processing journal file {journalFiles[i].Name} ({lines.Length} lines):");
                 for (int j = 0; j < lines.Length; j++)
                 {
@@ -268,7 +268,7 @@ public class JournalHistoryImporter
             }
             try
             {
-                string[] lines = File.ReadLines(journalFiles[k].FullName).ToArray();
+                string[] lines = await File.ReadAllLinesAsync(journalFiles[k].FullName, cancellationToken);
                 log.Debug($"Processing journal file {journalFiles[k].Name} ({lines.Length} lines):");
                 for (int j = 0; j < lines.Length; j++)
                 {
@@ -322,7 +322,7 @@ public class JournalHistoryImporter
             }
             try
             {
-                string[] lines = File.ReadLines(journalFiles[phase3FileIndex].FullName).ToArray();
+                string[] lines = await File.ReadAllLinesAsync(journalFiles[phase3FileIndex].FullName, cancellationToken);
                 log.Debug($"Processing journal file {journalFiles[phase3FileIndex].Name} ({lines.Length} lines):");
                 for (int j = 0; j < lines.Length; j++)
                 {

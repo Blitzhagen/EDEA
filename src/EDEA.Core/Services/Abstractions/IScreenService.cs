@@ -8,6 +8,12 @@ namespace EDEA.Services;
 public interface IScreenService
 {
     /// <summary>
+    /// Gets the virtual screen size spanning all displays.
+    /// </summary>
+    /// <returns>The virtual screen size.</returns>
+    ScreenSize GetVirtualScreenSize();
+
+    /// <summary>
     /// Gets the primary screen size.
     /// </summary>
     /// <returns>The primary screen size.</returns>

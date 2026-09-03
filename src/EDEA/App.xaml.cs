@@ -93,7 +93,7 @@ public partial class App : Application
         ToolTipService.InitialShowDelayProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(100));
 
         PlatformServices.Screen = new WindowsScreenService();
-        var screenSize = PlatformServices.Screen.GetPrimaryScreenSize();
+        var screenSize = PlatformServices.Screen.GetVirtualScreenSize();
 
         JotSettingsProvider.Tracker = new Tracker(new JsonFileStore(Path.Combine(Globals.AppDataFolder, "jot")));
         JotSettingsProvider.Tracker.Configure<Window>()

@@ -10,6 +10,15 @@ namespace EDEA.Services.Platform;
 public sealed class WindowsScreenService : IScreenService
 {
     /// <summary>
+    /// Gets the virtual screen size spanning all displays.
+    /// </summary>
+    /// <returns>The virtual screen size.</returns>
+    public ScreenSize GetVirtualScreenSize()
+    {
+        return new ScreenSize(SystemParameters.VirtualScreenWidth, SystemParameters.VirtualScreenHeight);
+    }
+
+    /// <summary>
     /// Gets the primary screen size.
     /// </summary>
     /// <returns>The primary screen size.</returns>
