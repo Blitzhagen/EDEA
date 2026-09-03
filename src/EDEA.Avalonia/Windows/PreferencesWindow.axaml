@@ -1,0 +1,32 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
+        x:Class="EDEA.Avalonia.Windows.PreferencesWindow"
+        Title="{x:Static properties:Resources.PreferencesWindow_Title}" Height="617" MinHeight="617" Width="880" MinWidth="880"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BackgroundBrush}"
+        Foreground="{StaticResource ForegroundBrush}">
+  <Grid Margin="12" RowDefinitions="*,70">
+    <TabControl Grid.Row="0">
+      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Appearance}">
+        <TextBlock Text="Appearance preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+      </TabItem>
+      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_HudWindow}">
+        <TextBlock Text="HUD preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+      </TabItem>
+      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_GlobalHotkeys}">
+        <TextBlock Text="Hotkey preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+      </TabItem>
+      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Speech}">
+        <TextBlock Text="Speech preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+      </TabItem>
+      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_PlanetsOfInterest}">
+        <TextBlock Text="Planets of interest preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+      </TabItem>
+    </TabControl>
+    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+      <Button Content="{x:Static properties:Resources.AboutWindow_OK}" Padding="16,4" Margin="0,0,10,0" Click="OkButton_Click"/>
+      <Button Content="{x:Static properties:Resources.PreferencesWindow_Cancel}" Padding="16,4" Click="CancelButton_Click"/>
+    </StackPanel>
+  </Grid>
+</Window>
