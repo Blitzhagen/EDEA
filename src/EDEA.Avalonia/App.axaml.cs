@@ -45,5 +45,6 @@ public partial class App : Application
         PlatformServices.Speech = new AvaloniaSpeechService();
         PlatformServices.Dialog = new AvaloniaDialogService();
         PlatformServices.Platform = new AvaloniaPlatformService();
+        PlatformServices.HudWindow = new AvaloniaHudWindowService();
     }
 }

@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
+        xmlns:vm="clr-namespace:EDEA.Avalonia.ViewModels"
+        x:Class="EDEA.Avalonia.Windows.HudWindow"
+        x:DataType="vm:HudViewModel"
+        Title="{x:Static properties:Resources.HudWindow_Title}"
+        Height="800" Width="400" MinHeight="170" MinWidth="240"
+        Topmost="True"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        Background="Transparent"
+        CanResize="True">
+  <Grid Background="#00FFFFFF">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="Auto" />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Rectangle Name="HudWindowMoveGrabber" ZIndex="100" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Fill="#00FFFFFF" Height="25" VerticalAlignment="Top" PointerPressed="HudWindowMoveGrabber_PointerPressed"/>
+
+    <StackPanel Grid.Column="0" Grid.Row="0">
+      <TextBlock Text="{Binding SystemName}" Foreground="{StaticResource ForegroundBrush}"/>
+      <TextBlock Text="{Binding BodyExplorationStatus}" Foreground="{StaticResource DimForegroundBrush}"/>
+      <TextBlock Text="{Binding ExplorationStatus}" Foreground="{StaticResource AccentBrush}"/>
+      <TextBlock Text="{Binding NonBodyExplorationStatus}" Foreground="{StaticResource DimForegroundBrush}"/>
+      <TextBlock Text="{Binding TableHeadline}" Padding="0,6,0,2" Foreground="{StaticResource ForegroundBrush}"/>
+    </StackPanel>
+
+    <Button Name="CloseHudWindowButton" Grid.Column="2" Grid.Row="0" Content="X" Foreground="{StaticResource ForegroundBrush}" Background="Transparent" BorderThickness="0" Click="CloseButton_Click" HorizontalAlignment="Right"/>
+
+    <Grid Column="0" Row="1" ColumnSpan="3" RowSpan="2">
+      <TextBlock Text="HUD table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource ForegroundBrush}"/>
+    </Grid>
+
+    <Button Name="ResizeHudWindowButton" Grid.Column="2" Grid.Row="2" Content="Resize" Foreground="{StaticResource ForegroundBrush}" Background="Transparent" BorderThickness="0" HorizontalAlignment="Right"/>
+  </Grid>
+</Window>
