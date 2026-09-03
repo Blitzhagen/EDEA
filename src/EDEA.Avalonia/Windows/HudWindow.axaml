@@ -26,16 +26,15 @@
     <Rectangle Name="HudWindowMoveGrabber" ZIndex="100" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Fill="#00FFFFFF" Height="25" VerticalAlignment="Top" PointerPressed="HudWindowMoveGrabber_PointerPressed"/>
 
     <StackPanel Grid.Column="0" Grid.Row="0">
-      <TextBlock Text="{Binding SystemName}" Foreground="{StaticResource ForegroundBrush}"/>
-      <TextBlock Text="{Binding BodyExplorationStatus}" Foreground="{StaticResource DimForegroundBrush}"/>
-      <TextBlock Text="{Binding ExplorationStatus}" Foreground="{StaticResource AccentBrush}"/>
-      <TextBlock Text="{Binding NonBodyExplorationStatus}" Foreground="{StaticResource DimForegroundBrush}"/>
+      <TextBlock Text="{Binding CurrentSystem.Name}" Foreground="{StaticResource ForegroundBrush}"/>
+      <TextBlock Text="{Binding CurrentSystem.ExplorationStatusBodiesInfo}" Foreground="{StaticResource DimForegroundBrush}"/>
+      <TextBlock Text="{Binding CurrentSystem.ExplorationStatus}" Foreground="{StaticResource AccentBrush}"/>
       <TextBlock Text="{Binding TableHeadline}" Padding="0,6,0,2" Foreground="{StaticResource ForegroundBrush}"/>
     </StackPanel>
 
     <Button Name="CloseHudWindowButton" Grid.Column="2" Grid.Row="0" Content="X" Foreground="{StaticResource ForegroundBrush}" Background="Transparent" BorderThickness="0" Click="CloseButton_Click" HorizontalAlignment="Right"/>
 
-    <Grid Column="0" Row="1" ColumnSpan="3" RowSpan="2">
+    <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2">
       <TextBlock Text="HUD table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource ForegroundBrush}"/>
     </Grid>
 

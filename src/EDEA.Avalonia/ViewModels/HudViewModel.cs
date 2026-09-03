@@ -1,39 +1,45 @@
+using System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using EDEA.Services;
+using EDEA.ViewModels;
 
 namespace EDEA.Avalonia.ViewModels;
 
 /// <summary>
-/// Proof-of-concept view model for the Avalonia HUD window.
+/// Avalonia view model for the HUD window.
 /// </summary>
 public partial class HudViewModel : ObservableObject
 {
     /// <summary>
-    /// Gets the system name.
+    /// The star system provider.
     /// </summary>
-    [ObservableProperty]
-    private string _systemName = "Sol";
+    private readonly StarSystemProvider _starSystemProvider;
 
     /// <summary>
-    /// Gets the body exploration status.
+    /// Gets the current star system view model.
     /// </summary>
     [ObservableProperty]
-    private string _bodyExplorationStatus = "Bodies: 5 / 8";
-
-    /// <summary>
-    /// Gets the exploration status.
-    /// </summary>
-    [ObservableProperty]
-    private string _explorationStatus = "Exploring";
-
-    /// <summary>
-    /// Gets the non-body exploration status.
-    /// </summary>
-    [ObservableProperty]
-    private string _nonBodyExplorationStatus = "Rings: 1 / 1";
+    private StarSystemViewModel _currentSystem = new StarSystemViewModel(null);
 
     /// <summary>
     /// Gets the table headline.
     /// </summary>
     [ObservableProperty]
     private string _tableHeadline = "Bodies";
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HudViewModel"/> class.
+    /// </summary>
+    /// <param name="starSystemProvider">The star system provider.</param>
+    public HudViewModel(StarSystemProvider starSystemProvider)
+    {
+        _starSystemProvider = starSystemProvider;
+        _starSystemProvider.GuiDataUpdated += OnGuiDataUpdated;
+        _currentSystem = new StarSystemViewModel(_starSystemProvider.CurrentSystem);
+    }
+
+    private void OnGuiDataUpdated(object? sender, EventArgs e)
+    {
+        CurrentSystem = new StarSystemViewModel(_starSystemProvider.CurrentSystem);
+    }
 }

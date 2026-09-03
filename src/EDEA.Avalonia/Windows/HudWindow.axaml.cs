@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using EDEA.Avalonia.ViewModels;
+using EDEA.Services;
 
 namespace EDEA.Avalonia.Windows;
 
@@ -16,7 +17,16 @@ public partial class HudWindow : Window
     public HudWindow()
     {
         InitializeComponent();
-        DataContext = new HudViewModel();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HudWindow"/> class with the star system provider.
+    /// </summary>
+    /// <param name="starSystemProvider">The star system provider.</param>
+    public HudWindow(StarSystemProvider starSystemProvider)
+    {
+        InitializeComponent();
+        DataContext = new HudViewModel(starSystemProvider);
     }
 
     /// <summary>

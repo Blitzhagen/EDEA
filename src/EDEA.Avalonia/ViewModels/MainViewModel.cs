@@ -28,6 +28,11 @@ public partial class MainViewModel : ObservableObject
     public ObservableCollection<TabViewModel> TabViewModels { get; }
 
     /// <summary>
+    /// The star system provider.
+    /// </summary>
+    private readonly StarSystemProvider _starSystemProvider;
+
+    /// <summary>
     /// Gets the main window title.
     /// </summary>
     public string Title => Resources.MainWindow_Title;
@@ -62,6 +67,7 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     public MainViewModel(StarSystemProvider starSystemProvider, HistoryProvider historyProvider, RouteProvider routeProvider)
     {
+        _starSystemProvider = starSystemProvider;
 
         var bodyTableViewModel = new BodyTableViewModel(Resources.TabHeader_Bodies, "Visible", starSystemProvider);
         var genusTableViewModel = new GenusTableViewModel(Resources.TabHeader_Biologicals, "Collapsed", starSystemProvider);
@@ -101,7 +107,7 @@ public partial class MainViewModel : ObservableObject
 
     private void OpenCloseHudWindow()
     {
-        new HudWindow().Show();
+        new HudWindow(_starSystemProvider).Show();
     }
 
     private void ImportJournalHistory()
