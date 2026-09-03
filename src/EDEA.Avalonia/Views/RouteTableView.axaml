@@ -1,5 +1,22 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="EDEA.Avalonia.Views.RouteTableView">
-  <TextBlock Text="Route table (not yet implemented)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+             x:Class="EDEA.Avalonia.Views.RouteTableView"
+             x:DataType="vm:NavRouteTableViewModel"
+             xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core">
+  <Grid>
+    <TextBlock Text="{Binding NoRouteInfo}" IsVisible="{Binding IsNoRouteAvailable}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+    <ScrollViewer IsVisible="{Binding IsNoRouteAvailable, Converter={StaticResource InverseBoolConverter}}">
+      <ItemsControl ItemsSource="{Binding RouteStarSystems}" x:CompileBindings="False">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:StarSystemViewModel" x:CompileBindings="False">
+            <Grid ColumnDefinitions="200,160,100" Margin="0,2">
+              <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              <TextBlock Grid.Column="1" Text="{Binding PrimaryStarName}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              <TextBlock Grid.Column="2" Text="{Binding JumpDistanceLy}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </Grid>
 </UserControl>

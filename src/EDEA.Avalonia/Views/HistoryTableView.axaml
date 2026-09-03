@@ -1,5 +1,56 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="EDEA.Avalonia.Views.HistoryTableView">
-  <TextBlock Text="History table (not yet implemented)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+             x:Class="EDEA.Avalonia.Views.HistoryTableView"
+             x:DataType="vm:HistoryViewModel"
+             xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core">
+  <ScrollViewer Margin="12">
+    <StackPanel Spacing="4">
+      <TextBlock Text="Total" FontWeight="Bold" FontSize="16" Margin="0,8" Foreground="{StaticResource AccentBrush}"/>
+      <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" HorizontalAlignment="Left">
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="Visited systems:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding HistoryData.SystemCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="First discoveries:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding HistoryData.SystemFirstDiscoveryCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="Bodies:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding HistoryData.BodyCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="3" Text="Valuable bodies:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding HistoryData.BodyValuableCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="4" Text="Terraformable bodies:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding HistoryData.BodyTerraformableCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="5" Text="Surface scans:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding HistoryData.BodySurfaceScanCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="6" Text="Touchdowns:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding HistoryData.BodyTouchdownCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="7" Text="Total value:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="7" Text="{Binding HistoryData.TotalExplorationDataValueSum}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="8" Text="Cartographic value:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="8" Text="{Binding HistoryData.BodyCartographicValueSum}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="9" Text="Most frequent star class:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="9" Text="{Binding HistoryData.SystemMostFrequentStarClass}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+      </Grid>
+      <TextBlock Text="Current Trip" FontWeight="Bold" FontSize="16" Margin="0,16,0,8" Foreground="{StaticResource AccentBrush}"/>
+      <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" HorizontalAlignment="Left">
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="Visited systems:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding HistoryData.TripSystemCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="First discoveries:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding HistoryData.TripSystemFirstDiscoveryCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="Bodies:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding HistoryData.TripBodyCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="3" Text="Valuable bodies:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding HistoryData.TripBodyValuableCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="4" Text="Terraformable bodies:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding HistoryData.TripBodyTerraformableCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="5" Text="Surface scans:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding HistoryData.TripBodySurfaceScanCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="6" Text="Touchdowns:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding HistoryData.TripBodyTouchdownCount}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="7" Text="Total value:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="7" Text="{Binding HistoryData.TripTotalExplorationDataValueSum}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="8" Text="Cartographic value:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="8" Text="{Binding HistoryData.TripBodyCartographicValueSum}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+        <TextBlock Grid.Column="0" Grid.Row="9" Text="Most frequent star class:" Foreground="{StaticResource ForegroundBrush}" Margin="0,2,16,2"/>
+        <TextBlock Grid.Column="1" Grid.Row="9" Text="{Binding HistoryData.TripSystemMostFrequentStarClass}" Foreground="{StaticResource ForegroundBrush}" Margin="0,2"/>
+      </Grid>
+    </StackPanel>
+  </ScrollViewer>
 </UserControl>

@@ -1,18 +1,23 @@
 using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using EDEA;
 using EDEA.Avalonia.Services;
 using EDEA.Avalonia.ViewModels;
 using EDEA.Avalonia.Views;
 using EDEA.Services;
 using EDEA.Stores;
 using log4net;
+using log4net.Appender;
+using log4net.Config;
 
 namespace EDEA.Avalonia;
 
@@ -52,11 +57,53 @@ public partial class App : Application
     private static readonly HttpClient httpClient = new();
 
     /// <summary>
-    /// Static constructor that configures the shared <see cref="HttpClient"/>.
+    /// Static constructor that configures the shared <see cref="HttpClient"/> and logging.
     /// </summary>
     static App()
     {
         httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd($"EDEA/{Assembly.GetExecutingAssembly().GetName().Version}");
+        ConfigureLog4Net();
+    }
+
+    /// <summary>
+    /// Configures log4net from an embedded configuration string.
+    /// </summary>
+    private static void ConfigureLog4Net()
+    {
+        string logFileFullPath = Path.Combine(Globals.AppDataFolder, "log", "EDEA.Avalonia.log");
+        Directory.CreateDirectory(Path.GetDirectoryName(logFileFullPath)!);
+        GlobalContext.Properties["LogFileFullPath"] = logFileFullPath;
+
+        string log4netConfig = $@"
+<log4net>
+  <appender name=""TraceAppender"" type=""log4net.Appender.TraceAppender"">
+    <layout type=""log4net.Layout.PatternLayout"">
+      <conversionPattern value=""%date{{HH:mm:ss,fff}} %-5level | %message (%logger)%newline%exception"" />
+    </layout>
+  </appender>
+  <appender name=""RollingFileAppender"" type=""log4net.Appender.RollingFileAppender"">
+    <filter type=""log4net.Filter.LevelRangeFilter"">
+      <levelMin value=""DEBUG"" />
+    </filter>
+    <file type=""log4net.Util.PatternString"" value=""%property{{LogFileFullPath}}"" />
+    <appendToFile value=""true"" />
+    <rollingStyle value=""Size"" />
+    <maximumFileSize value=""5MB"" />
+    <maxSizeRollBackups value=""5"" />
+    <staticLogFileName value=""true"" />
+    <layout type=""log4net.Layout.PatternLayout"">
+      <conversionPattern value=""%date{{dd MMM yyyy HH:mm:ss,fff}} %-5level | %message (%logger)%newline%exception"" />
+    </layout>
+  </appender>
+  <root>
+    <level value=""DEBUG"" />
+    <appender-ref ref=""TraceAppender"" />
+    <appender-ref ref=""RollingFileAppender"" />
+  </root>
+</log4net>";
+
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(log4netConfig));
+        XmlConfigurator.Configure(stream);
     }
 
     /// <summary>
@@ -110,6 +157,10 @@ public partial class App : Application
     /// </summary>
     private void RunStartup()
     {
+        log.Info("################# Application started #################");
+        log.Info($"ED saved game path: {Preferences.Other.EdSavedGamePath}");
+        log.Info($"App data folder: {Globals.AppDataFolder}");
+
         var fileWatcher = EDFileWatcher.Instance();
         var journalStore = JournalStore.Instance(fileWatcher);
         var sqliteStore = SQLiteStore.Instance(Path.Combine(Globals.AppDataFolder, "db", "EDEA.db"));

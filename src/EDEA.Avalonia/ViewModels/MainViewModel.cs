@@ -69,6 +69,7 @@ public partial class MainViewModel : ObservableObject
     {
         _starSystemProvider = starSystemProvider;
 
+        var navRouteTableViewModel = new NavRouteTableViewModel(Resources.TabHeader_Route, "Visible", starSystemProvider);
         var bodyTableViewModel = new BodyTableViewModel(Resources.TabHeader_Bodies, "Visible", starSystemProvider);
         var genusTableViewModel = new GenusTableViewModel(Resources.TabHeader_Biologicals, "Collapsed", starSystemProvider);
         var surroundingsTableViewModel = new SurroundingsTableViewModel(Resources.TabHeader_Surroundings, "Visible", starSystemProvider);
@@ -76,7 +77,7 @@ public partial class MainViewModel : ObservableObject
 
         TabViewModels = new ObservableCollection<TabViewModel>
         {
-            new TabViewModel(Resources.TabHeader_Route, "Visible"),
+            navRouteTableViewModel,
             bodyTableViewModel,
             genusTableViewModel,
             surroundingsTableViewModel,

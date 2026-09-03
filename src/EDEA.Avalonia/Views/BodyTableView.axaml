@@ -5,13 +5,19 @@
              x:DataType="vm:BodyTableViewModel">
   <Grid>
     <TextBlock Text="{Binding NoBodiesInfo}" IsVisible="{Binding AreNoBodiesAvailable}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
-    <DataGrid Name="BodyDataGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Bodies}" IsVisible="{Binding !AreNoBodiesAvailable}">
-      <DataGrid.Columns>
-        <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-        <DataGridTextColumn Header="Type" Binding="{Binding TypeHumanReadable}" />
-        <DataGridTextColumn Header="Atmosphere" Binding="{Binding Atmosphere}" />
-        <DataGridTextColumn Header="Temperature" Binding="{Binding SurfaceTemperature}" />
-      </DataGrid.Columns>
-    </DataGrid>
+    <ScrollViewer IsVisible="{Binding AreNoBodiesAvailable, Converter={StaticResource InverseBoolConverter}}">
+      <ItemsControl ItemsSource="{Binding Bodies}" x:CompileBindings="False">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:BodyViewModel" x:CompileBindings="False">
+            <Grid ColumnDefinitions="120,120,120,120" Margin="0,2">
+              <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              <TextBlock Grid.Column="1" Text="{Binding TypeHumanReadable}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              <TextBlock Grid.Column="2" Text="{Binding Atmosphere}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              <TextBlock Grid.Column="3" Text="{Binding SurfaceTemperature}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
   </Grid>
 </UserControl>

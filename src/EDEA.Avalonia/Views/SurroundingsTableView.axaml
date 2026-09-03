@@ -5,12 +5,19 @@
              x:DataType="vm:SurroundingsTableViewModel">
   <Grid>
     <TextBlock Text="{Binding NoSurroundingsInfo}" IsVisible="{Binding ShowNoSurroundingsInfo}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
-    <DataGrid Name="SurroundingsDataGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding SurroundingStarSystems}" IsVisible="{Binding !ShowNoSurroundingsInfo}">
-      <DataGrid.Columns>
-        <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-        <DataGridTextColumn Header="Primary Star" Binding="{Binding PrimaryStarName}" />
-        <DataGridTextColumn Header="Distance" Binding="{Binding JumpDistanceLy}" />
-      </DataGrid.Columns>
-    </DataGrid>
+    <TextBlock Text="{Binding SurroundingsLoadingInfo}" IsVisible="{Binding ShowSurroundingsLoadingInfo}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource AccentBrush}" ZIndex="1"/>
+    <ScrollViewer IsVisible="{Binding ShowNoSurroundingsInfo, Converter={StaticResource InverseBoolConverter}}">
+      <ItemsControl ItemsSource="{Binding SurroundingStarSystems}" x:CompileBindings="False">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:StarSystemViewModel" x:CompileBindings="False">
+            <Grid ColumnDefinitions="200,160,100" Margin="0,2">
+              <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              <TextBlock Grid.Column="1" Text="{Binding PrimaryStarName}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              <TextBlock Grid.Column="2" Text="{Binding JumpDistanceLy}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
   </Grid>
 </UserControl>

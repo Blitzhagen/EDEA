@@ -5,12 +5,18 @@
              x:DataType="vm:GenusTableViewModel">
   <Grid>
     <TextBlock Text="{Binding UnknownBiologicalsInfo}" IsVisible="{Binding AreBiologicalsUnknown}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
-    <DataGrid Name="GenusDataGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Genuses}" IsVisible="{Binding AreBiologicalsKnown}">
-      <DataGrid.Columns>
-        <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-        <DataGridTextColumn Header="Species" Binding="{Binding SpeciesShort}" />
-        <DataGridTextColumn Header="Scans" Binding="{Binding ScanCount}" />
-      </DataGrid.Columns>
-    </DataGrid>
+    <ScrollViewer IsVisible="{Binding AreBiologicalsKnown}">
+      <ItemsControl ItemsSource="{Binding Genuses}" x:CompileBindings="False">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:GenusViewModel" x:CompileBindings="False">
+            <Grid ColumnDefinitions="200,200,80" Margin="0,2">
+              <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              <TextBlock Grid.Column="1" Text="{Binding SpeciesShort}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              <TextBlock Grid.Column="2" Text="{Binding ScanCount}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
   </Grid>
 </UserControl>

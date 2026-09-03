@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:EDEA.Avalonia"
              xmlns:views="clr-namespace:EDEA.Avalonia.Views"
+             xmlns:converters="clr-namespace:EDEA.Avalonia.Converters"
              xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
              x:Class="EDEA.Avalonia.App"
              RequestedThemeVariant="Dark">
@@ -18,28 +19,11 @@
     <SolidColorBrush x:Key="MainBackgroundColor" Color="#1A0F05"/>
     <SolidColorBrush x:Key="TitleBarColor" Color="#2A1A0A"/>
     <SolidColorBrush x:Key="MainCellColor" Color="#331E0C"/>
+    <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
   </Application.Resources>
 
   <Application.Styles>
     <FluentTheme />
   </Application.Styles>
-
-  <Application.DataTemplates>
-    <DataTemplate DataType="{x:Type vm:BodyTableViewModel}">
-      <views:BodyTableView />
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:GenusTableViewModel}">
-      <views:GenusTableView />
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:SurroundingsTableViewModel}">
-      <views:SurroundingsTableView />
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:HistoryViewModel}">
-      <views:HistoryTableView />
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:TabViewModel}">
-      <views:RouteTableView />
-    </DataTemplate>
-  </Application.DataTemplates>
 
 </Application>
