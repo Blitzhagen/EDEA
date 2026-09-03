@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
+        xmlns:vm="clr-namespace:EDEA.Avalonia.ViewModels"
+        x:Class="EDEA.Avalonia.Windows.FeedbackReportIssueWindow"
+        x:DataType="vm:FeedbackReportIssueViewModel"
+        Title="{x:Static properties:Resources.FeedbackReportIssueWindow_Title}" Height="420" Width="520"
+        Background="{StaticResource BackgroundBrush}"
+        Foreground="{StaticResource ForegroundBrush}"
+        WindowStartupLocation="CenterScreen">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*,Auto,Auto">
+    <TextBlock Grid.Row="0" Text="{x:Static properties:Resources.FeedbackReportIssueWindow_Headline}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,12"/>
+    <TextBlock Grid.Row="1" Text="{x:Static properties:Resources.FeedbackReportIssueWindow_Description}" Foreground="{StaticResource DimForegroundBrush}" Margin="0,0,0,12" TextWrapping="Wrap"/>
+
+    <Grid Grid.Row="2" Margin="0,0,0,8" ColumnDefinitions="Auto,*">
+      <TextBlock Grid.Column="0" Text="{x:Static properties:Resources.FeedbackReportIssueWindow_Name}" VerticalAlignment="Center" Width="80" Margin="0,0,6,0"/>
+      <TextBox Grid.Column="1" x:Name="NameTextBox" Text="{Binding FeedbackName, Mode=TwoWay}"/>
+    </Grid>
+
+    <Grid Grid.Row="3" Margin="0,0,0,8" ColumnDefinitions="Auto,*">
+      <TextBlock Grid.Column="0" Text="{x:Static properties:Resources.FeedbackReportIssueWindow_Email}" VerticalAlignment="Center" Width="80" Margin="0,0,6,0"/>
+      <TextBox Grid.Column="1" x:Name="EmailTextBox" Text="{Binding FeedbackEmail, Mode=TwoWay}"/>
+    </Grid>
+
+    <Grid Grid.Row="4" Margin="0,0,0,12" RowDefinitions="Auto,*">
+      <TextBlock Grid.Row="0" Text="{x:Static properties:Resources.FeedbackReportIssueWindow_Message}" Margin="0,0,0,4"/>
+      <TextBox Grid.Row="1" x:Name="MessageTextBox" TextWrapping="Wrap" AcceptsReturn="True"
+               Text="{Binding FeedbackMessage, Mode=TwoWay}"/>
+    </Grid>
+
+    <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
+      <Button Content="{x:Static properties:Resources.FeedbackReportIssueWindow_Send}" Padding="16,4" Margin="0,0,10,0" Click="SendButton_Click"/>
+      <Button Content="{x:Static properties:Resources.FeedbackReportIssueWindow_Cancel}" Padding="16,4" Click="CancelButton_Click"/>
+    </StackPanel>
+  </Grid>
+</Window>
