@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
+        x:Class="EDEA.Avalonia.Windows.InputStringDialogWindow"
+        Title="{x:Static properties:Resources.InputStringDialogWindow_Title}" Height="180" Width="420"
+        Background="{StaticResource BackgroundBrush}"
+        Foreground="{StaticResource ForegroundBrush}"
+        WindowStartupLocation="CenterScreen" CanResize="False">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,Auto">
+    <TextBlock Grid.Row="0" x:Name="PromptTextBlock" FontSize="14" Foreground="{StaticResource DimForegroundBrush}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+    <TextBox Grid.Row="1" x:Name="ValueTextBox" Margin="0,0,0,12" KeyDown="ValueTextBox_KeyDown"/>
+
+    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+      <Button Content="{x:Static properties:Resources.InputStringDialogWindow_OK}" Padding="16,4" Margin="0,0,10,0" Click="OkButton_Click"/>
+      <Button Content="{x:Static properties:Resources.InputStringDialogWindow_Cancel}" Padding="16,4" Click="CancelButton_Click"/>
+    </StackPanel>
+  </Grid>
+</Window>
