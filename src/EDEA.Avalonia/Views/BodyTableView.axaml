@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
+             x:Class="EDEA.Avalonia.Views.BodyTableView"
+             x:DataType="vm:BodyTableViewModel">
+  <Grid>
+    <TextBlock Text="{Binding NoBodiesInfo}" IsVisible="{Binding AreNoBodiesAvailable}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+    <DataGrid Name="BodyDataGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Bodies}" IsVisible="{Binding !AreNoBodiesAvailable}">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+        <DataGridTextColumn Header="Type" Binding="{Binding TypeHumanReadable}" />
+        <DataGridTextColumn Header="Atmosphere" Binding="{Binding Atmosphere}" />
+        <DataGridTextColumn Header="Temperature" Binding="{Binding SurfaceTemperature}" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>
