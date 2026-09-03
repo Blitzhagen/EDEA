@@ -1,6 +1,8 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -8,6 +10,7 @@ using Avalonia.Markup.Xaml;
 using EDEA.Avalonia.Services;
 using EDEA.Avalonia.Views;
 using EDEA.Services;
+using EDEA.Stores;
 using log4net;
 
 namespace EDEA.Avalonia;
@@ -28,6 +31,19 @@ public partial class App : Application
     private SettingsProvider? _settingsProvider;
 
     /// <summary>
+    /// Shared <see cref="HttpClient"/> used for web API calls.
+    /// </summary>
+    private static readonly HttpClient httpClient = new();
+
+    /// <summary>
+    /// Static constructor that configures the shared <see cref="HttpClient"/>.
+    /// </summary>
+    static App()
+    {
+        httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd($"EDEA/{Assembly.GetExecutingAssembly().GetName().Version}");
+    }
+
+    /// <summary>
     /// Initializes the XAML components.
     /// </summary>
     public override void Initialize()
@@ -44,6 +60,7 @@ public partial class App : Application
         {
             RegisterPlatformServices();
             InitializeSettings();
+            RunStartup();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
@@ -70,6 +87,26 @@ public partial class App : Application
         Preferences.SetSettingsProvider(_settingsProvider);
         ApplyLanguage();
         PlatformServices.ColorTheme?.ApplyCurrentColors();
+    }
+
+    /// <summary>
+    /// Creates and wires up all application providers.
+    /// </summary>
+    private static void RunStartup()
+    {
+        var fileWatcher = EDFileWatcher.Instance();
+        var journalStore = JournalStore.Instance(fileWatcher);
+        var sqliteStore = SQLiteStore.Instance(Path.Combine(Globals.AppDataFolder, "db", "EDEA.db"));
+        var historyProvider = HistoryProvider.Instance(sqliteStore);
+        var starSystemProvider = StarSystemProvider.Instance(historyProvider);
+        var webApiProvider = WebApiProvider.Instance(httpClient, starSystemProvider);
+        var journalProvider = JournalProvider.Instance(journalStore, starSystemProvider);
+        var routeProvider = RouteProvider.Instance(fileWatcher, starSystemProvider, journalProvider);
+        var statusProvider = StatusProvider.Instance(fileWatcher, starSystemProvider);
+        var planetsOfInterestProvider = PlanetsOfInterestProvider.Instance(starSystemProvider);
+        var journalHistoryImporter = JournalHistoryImporter.Instance(historyProvider, journalProvider, starSystemProvider);
+
+        journalProvider.Initialize();
     }
 
     /// <summary>
