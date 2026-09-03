@@ -1,0 +1,12 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="EDEA.Avalonia.Windows.MessageBoxWindow"
+        Width="420" SizeToContent="Height"
+        CanResize="False" WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundBrush}"
+        Foreground="{StaticResource ForegroundBrush}">
+  <Grid Margin="20" RowDefinitions="Auto,Auto">
+    <TextBlock Grid.Row="0" x:Name="MessageTextBlock" TextWrapping="Wrap" Margin="0,0,0,16" Foreground="{StaticResource ForegroundBrush}"/>
+    <Button Grid.Row="1" Content="OK" HorizontalAlignment="Right" Padding="16,4" Click="OkButton_Click"/>
+  </Grid>
+</Window>

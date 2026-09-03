@@ -1,4 +1,5 @@
-using System;
+using Avalonia.Threading;
+using EDEA.Avalonia.Windows;
 using EDEA.Services;
 
 namespace EDEA.Avalonia.Services;
@@ -15,8 +16,7 @@ public sealed class AvaloniaDialogService : IDialogService
     /// <param name="title">The dialog title.</param>
     public void ShowError(string message, string? title = null)
     {
-        // TODO: Implement Avalonia message box in Phase 5
-        Console.Error.WriteLine($"[ERROR] {title}: {message}");
+        Show(message, title ?? "Error");
     }
 
     /// <summary>
@@ -26,8 +26,7 @@ public sealed class AvaloniaDialogService : IDialogService
     /// <param name="title">The dialog title.</param>
     public void ShowWarning(string message, string? title = null)
     {
-        // TODO: Implement Avalonia message box in Phase 5
-        Console.WriteLine($"[WARNING] {title}: {message}");
+        Show(message, title ?? "Warning");
     }
 
     /// <summary>
@@ -37,7 +36,20 @@ public sealed class AvaloniaDialogService : IDialogService
     /// <param name="title">The dialog title.</param>
     public void ShowInformation(string message, string? title = null)
     {
-        // TODO: Implement Avalonia message box in Phase 5
-        Console.WriteLine($"[INFO] {title}: {message}");
+        Show(message, title ?? "Information");
+    }
+
+    /// <summary>
+    /// Shows the message box on the UI thread.
+    /// </summary>
+    /// <param name="message">The message to show.</param>
+    /// <param name="title">The dialog title.</param>
+    private static void Show(string message, string title)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            var window = new MessageBoxWindow(title, message);
+            window.Show();
+        });
     }
 }
