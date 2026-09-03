@@ -42,6 +42,11 @@ public partial class PreferencesWindow : Window
     /// </summary>
     private void LanguageComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        if (LanguageComboBox == null)
+        {
+            return;
+        }
+
         var languages = new[] { "Auto", "en", "de", "es", "fr", "ru", "pt-BR" };
         if (LanguageComboBox.SelectedIndex >= 0 && LanguageComboBox.SelectedIndex < languages.Length)
         {
@@ -73,6 +78,11 @@ public partial class PreferencesWindow : Window
     /// </summary>
     private void AutomaticTabSwitching_Changed(object? sender, RoutedEventArgs e)
     {
+        if (AutomaticTabSwitchingCheckBox == null)
+        {
+            return;
+        }
+
         Preferences.Other.AutomaticTabSwitching = AutomaticTabSwitchingCheckBox.IsChecked == true;
     }
 
