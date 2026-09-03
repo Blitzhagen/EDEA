@@ -30,4 +30,34 @@ public static class PlatformServices
     /// Gets or sets the platform service.
     /// </summary>
     public static IPlatformService? Platform { get; set; }
+
+    /// <summary>
+    /// Gets or sets the global hotkey service.
+    /// </summary>
+    public static IGlobalHotkeyService? GlobalHotkey { get; set; }
+
+    /// <summary>
+    /// Gets or sets the HUD window service.
+    /// </summary>
+    public static IHudWindowService? HudWindow { get; set; }
+
+    /// <summary>
+    /// Gets or sets the window state service.
+    /// </summary>
+    public static IWindowStateService? WindowState { get; set; }
+
+    /// <summary>
+    /// Gets or sets the color theme service.
+    /// </summary>
+    public static IColorThemeService? ColorTheme { get; set; }
+
+    /// <summary>
+    /// Gets or sets the UI timer service.
+    /// </summary>
+    public static IUiTimerService? UiTimer { get; set; }
+
+    /// <summary>
+    /// Gets or sets the screen service.
+    /// </summary>
+    public static IScreenService? Screen { get; set; }
 }

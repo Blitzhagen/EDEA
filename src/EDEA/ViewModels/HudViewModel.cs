@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using EDEA;
@@ -13,6 +11,7 @@ using EDEA.Commands;
 using EDEA.Models;
 using EDEA.Properties;
 using EDEA.Services;
+using EDEA.Services.Platform;
 using EDEA.Windows;
 using log4net;
 
@@ -34,16 +33,6 @@ public class HudViewModel : ViewModelBase
     private static HudWindow? hudWindow = null;
 
     /// <summary>
-    /// Win32 extended window style for transparency.
-    /// </summary>
-    private const int WS_EX_TRANSPARENT = 32;
-
-    /// <summary>
-    /// Win32 index for the extended window style.
-    /// </summary>
-    private const int GWL_EXSTYLE = -20;
-
-    /// <summary>
     /// The main view model used to access tab and system data.
     /// </summary>
     private readonly MainViewModel _mainViewModel;
@@ -62,11 +51,6 @@ public class HudViewModel : ViewModelBase
     /// A value indicating whether mouse input passes through the HUD window.
     /// </summary>
     private bool hudWindowMousePassThroughEnabled;
-
-    /// <summary>
-    /// The original extended window style of the HUD window.
-    /// </summary>
-    private int hudWindowOriginalExtendedStyle;
 
     /// <summary>
     /// The close button on the HUD window.
@@ -320,18 +304,10 @@ public class HudViewModel : ViewModelBase
     public void SetMousePassThrough(bool state)
     {
         HudWindowMousePassThroughEnabled = state;
-        if (HudWindowOpen)
+        if (HudWindowOpen && PlatformServices.HudWindow is not null)
         {
-            nint handle = new WindowInteropHelper(hudWindow!).Handle;
-            if (state)
-            {
-                hudWindowOriginalExtendedStyle = GetWindowLong(handle, -20);
-                SetWindowLong(handle, -20, hudWindowOriginalExtendedStyle | 0x20);
-            }
-            else if (hudWindowOriginalExtendedStyle != 0)
-            {
-                SetWindowLong(handle, -20, hudWindowOriginalExtendedStyle);
-            }
+            nint handle = PlatformServices.HudWindow.GetWindowHandle(hudWindow!);
+            PlatformServices.HudWindow.SetClickThrough(handle, state);
         }
     }
 
@@ -344,7 +320,7 @@ public class HudViewModel : ViewModelBase
         {
             hudWindow = new HudWindow();
             OnPropertyChanged("HudWindowOpen");
-            JotSettingsProvider.Tracker.Track(hudWindow);
+            PlatformServices.WindowState?.Track(hudWindow, "HudWindow");
             hudWindow!.DataContext = this;
             hudWindow!.Loaded += HudWindow_Loaded;
             hudWindow!.Closed += HudWindow_Closed;
@@ -415,7 +391,7 @@ public class HudViewModel : ViewModelBase
     /// <param name="e">The event data.</param>
     private void HudWindowMoveGrabber_MouseLeave(object? sender, MouseEventArgs e)
     {
-        Mouse.OverrideCursor = null;
+        PlatformServices.HudWindow?.ResetCursor();
     }
 
     /// <summary>
@@ -425,7 +401,7 @@ public class HudViewModel : ViewModelBase
     /// <param name="e">The event data.</param>
     private void HudWindowMoveGrabber_MouseEnter(object? sender, MouseEventArgs e)
     {
-        Mouse.OverrideCursor = Cursors.SizeAll;
+        PlatformServices.HudWindow?.SetMoveCursor();
     }
 
     /// <summary>
@@ -448,7 +424,7 @@ public class HudViewModel : ViewModelBase
         }
         if (Mouse.LeftButton == MouseButtonState.Pressed)
         {
-            hudWindow!.DragMove();
+            PlatformServices.HudWindow?.BeginDrag(hudWindow!);
         }
     }
 
@@ -491,22 +467,4 @@ public class HudViewModel : ViewModelBase
         OnPropertyChanged("HudWindowOpen");
     }
 
-    /// <summary>
-    /// Retrieves the specified window information.
-    /// </summary>
-    /// <param name="hwnd">The window handle.</param>
-    /// <param name="index">The index of the value to retrieve.</param>
-    /// <returns>The requested window information.</returns>
-    [DllImport("user32.dll")]
-    public static extern int GetWindowLong(nint hwnd, int index);
-
-    /// <summary>
-    /// Sets the specified window information.
-    /// </summary>
-    /// <param name="hwnd">The window handle.</param>
-    /// <param name="index">The index of the value to set.</param>
-    /// <param name="newStyle">The new value.</param>
-    /// <returns>The previous value, or zero if an error occurred.</returns>
-    [DllImport("user32.dll")]
-    public static extern int SetWindowLong(nint hwnd, int index, int newStyle);
 }

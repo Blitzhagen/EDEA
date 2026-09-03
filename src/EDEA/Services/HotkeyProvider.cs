@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Interop;
 using EDEA.Enums;
 using EDEA.Models;
 using EDEA.Properties;
+using EDEA.Services.Platform;
 using EDEA.ViewModels;
 using log4net;
 
@@ -68,8 +66,8 @@ public class HotkeyProvider : ViewModelBase
     /// <summary>The mainWindow field.</summary>
     private Window? mainWindow;
 
-    /// <summary>The mainWindowHandle field.</summary>
-    private nint mainWindowHandle;
+    /// <summary>The global hotkey service.</summary>
+    private readonly IGlobalHotkeyService _globalHotkeyService;
 
     /// <summary>The _starSystemProvider field.</summary>
     private readonly StarSystemProvider _starSystemProvider;
@@ -80,21 +78,25 @@ public class HotkeyProvider : ViewModelBase
 
     /// <summary>Initializes a new instance of the HotkeyProvider class.</summary>
     /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
-    private HotkeyProvider(StarSystemProvider starSystemProvider)
+    /// <param name="globalHotkeyService">The global hotkey service.</param>
+    private HotkeyProvider(StarSystemProvider starSystemProvider, IGlobalHotkeyService globalHotkeyService)
     {
         _starSystemProvider = starSystemProvider;
+        _globalHotkeyService = globalHotkeyService;
+        _globalHotkeyService.HotkeyPressed += OnHotkeyPressed;
         Hotkeys = new Dictionary<string, HotkeyViewModel>();
         setHotkeysFromPreferences();
     }
 
     /// <summary>Performs the Instance operation.</summary>
     /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
+    /// <param name="globalHotkeyService">The global hotkey service.</param>
     /// <returns>A HotkeyProvider result.</returns>
-    public static HotkeyProvider Instance(StarSystemProvider starSystemProvider)
+    public static HotkeyProvider Instance(StarSystemProvider starSystemProvider, IGlobalHotkeyService globalHotkeyService)
     {
         if (instance == null)
         {
-            instance = new HotkeyProvider(starSystemProvider);
+            instance = new HotkeyProvider(starSystemProvider, globalHotkeyService);
         }
         return instance;
     }
@@ -125,8 +127,7 @@ public class HotkeyProvider : ViewModelBase
         }
         try
         {
-            UnregisterHotKey(mainWindowHandle, (int)hotkeyViewModel.Id);
-            RegisterHotKey(mainWindowHandle, (int)hotkeyViewModel.Id, (int)hotkeyViewModel.Modifier, KeyInterop.VirtualKeyFromKey((System.Windows.Input.Key)hotkeyViewModel.Key));
+            _globalHotkeyService.Register(hotkeyViewModel.Id, hotkeyViewModel.Modifier, hotkeyViewModel.Key);
             log.Debug($"Assigned hotkey {hotkeyViewModel.FullKey} for '{hotkeyViewModel.Description}' ({hotkeyViewModel.Id}) ");
         }
         catch (Exception exception)
@@ -141,7 +142,7 @@ public class HotkeyProvider : ViewModelBase
     {
         try
         {
-            UnregisterHotKey(mainWindowHandle, (int)hotkeyViewModel.Id);
+            _globalHotkeyService.Unregister(hotkeyViewModel.Id);
         }
         catch (Exception exception)
         {
@@ -166,27 +167,8 @@ public class HotkeyProvider : ViewModelBase
     /// <summary>Performs the UnassignAllHotkeys operation.</summary>
     public void UnassignAllHotkeys()
     {
-        foreach (HotkeyViewModel hotkey in Hotkeys.Values)
-        {
-            UnassignHotKey(hotkey);
-        }
+        _globalHotkeyService.UnregisterAll();
     }
-
-    /// <summary>Performs the RegisterHotKey operation.</summary>
-    /// <param name="hWnd">The nint value of the hWnd parameter.</param>
-    /// <param name="id">The int value of the id parameter.</param>
-    /// <param name="fsModifiers">The int value of the fsModifiers parameter.</param>
-    /// <param name="vlc">The int value of the vlc parameter.</param>
-    /// <returns>A bool result.</returns>
-    [DllImport("user32.dll")]
-    private static extern bool RegisterHotKey(nint hWnd, int id, int fsModifiers, int vlc);
-
-    /// <summary>Performs the UnregisterHotKey operation.</summary>
-    /// <param name="hWnd">The nint value of the hWnd parameter.</param>
-    /// <param name="id">The int value of the id parameter.</param>
-    /// <returns>A bool result.</returns>
-    [DllImport("user32.dll")]
-    private static extern bool UnregisterHotKey(nint hWnd, int id);
 
     /// <summary>Performs the setHotkeysFromPreferences operation.</summary>
     private void setHotkeysFromPreferences()
@@ -228,14 +210,13 @@ public class HotkeyProvider : ViewModelBase
     {
         try
         {
-            mainWindowHandle = new WindowInteropHelper(mainWindow).Handle;
-            HwndSource? hwndSource = PresentationSource.FromVisual(mainWindow) as HwndSource;
-            if (mainWindowHandle == 0 || hwndSource == null)
+            nint mainWindowHandle = new WindowInteropHelper(mainWindow).Handle;
+            if (mainWindowHandle == 0)
             {
                 log.Error("Error on setting hotkeys from preferences, can not get handle for main window. Hotkeys will not work!");
                 return;
             }
-            hwndSource.AddHook(WndProc);
+            _globalHotkeyService.Attach(mainWindowHandle);
             AssignAllHotkeys();
         }
         catch (Exception exception)
@@ -251,7 +232,7 @@ public class HotkeyProvider : ViewModelBase
     {
         try
         {
-            UnassignAllHotkeys();
+            _globalHotkeyService.Detach();
         }
         catch (Exception exception)
         {
@@ -259,63 +240,53 @@ public class HotkeyProvider : ViewModelBase
         }
     }
 
-    /// <summary>Performs the WndProc operation.</summary>
-    /// <param name="hwnd">The nint value of the hwnd parameter.</param>
-    /// <param name="msg">The int value of the msg parameter.</param>
-    /// <param name="wParam">The nint value of the wParam parameter.</param>
-    /// <param name="lParam">The nint value of the lParam parameter.</param>
-    /// <param name="handled">The bool value of the handled parameter.</param>
-    /// <returns>A nint result.</returns>
-    private nint WndProc(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
+    /// <summary>
+    /// Called when a registered global hotkey is pressed.
+    /// </summary>
+    /// <param name="id">The hotkey identifier.</param>
+    private void OnHotkeyPressed(HotkeyId id)
     {
-        if (msg == 0x0312)
+        if (mainViewModel == null)
         {
-            log.Debug($"Hotkey press event with id: {wParam}");
-            long hotkeyId = wParam;
-            long hotkeyOffset = hotkeyId - 171701;
-            if ((ulong)hotkeyOffset <= 8uL)
+            return;
+        }
+
+        try
+        {
+            switch (id)
             {
-                switch ((int)hotkeyOffset)
-                {
-                    case 0:
-                        mainViewModel!.OpenCloseHudWindowCommand.Execute(null);
-                        handled = true;
-                        break;
-                    case 1:
-                        mainViewModel!.EnableDisableHudWindowMousePassThroughCommand.Execute(null);
-                        handled = true;
-                        break;
-                    case 2:
-                        mainViewModel!.OpenTabOfType(typeof(NavRouteTableViewModel), forceOpen: true);
-                        handled = true;
-                        break;
-                    case 3:
-                        mainViewModel!.OpenTabOfType(typeof(BodyTableViewModel), forceOpen: true);
-                        handled = true;
-                        break;
-                    case 4:
-                        mainViewModel!.OpenTabOfType(typeof(GenusTableViewModel), forceOpen: true);
-                        handled = true;
-                        break;
-                    case 5:
-                        mainViewModel!.OpenTabOfType(typeof(SurroundingsTableViewModel), forceOpen: true);
-                        handled = true;
-                        break;
-                    case 6:
-                        mainViewModel!.OpenTabOfType(typeof(HistoryViewModel), forceOpen: true);
-                        handled = true;
-                        break;
-                    case 7:
-                        _starSystemProvider.CopyNextSystemNametoClipboard();
-                        handled = true;
-                        break;
-                    case 8:
-                        SpeechProvider.ShutUp();
-                        handled = true;
-                        break;
-                }
+                case HotkeyId.ToggleHudWindow:
+                    mainViewModel.OpenCloseHudWindowCommand.Execute(null);
+                    break;
+                case HotkeyId.ToggleHudMousePassThrough:
+                    mainViewModel.EnableDisableHudWindowMousePassThroughCommand.Execute(null);
+                    break;
+                case HotkeyId.OpenRouteTab:
+                    mainViewModel.OpenTabOfType(typeof(NavRouteTableViewModel), forceOpen: true);
+                    break;
+                case HotkeyId.OpenBodiesTab:
+                    mainViewModel.OpenTabOfType(typeof(BodyTableViewModel), forceOpen: true);
+                    break;
+                case HotkeyId.OpenBiologicalsTab:
+                    mainViewModel.OpenTabOfType(typeof(GenusTableViewModel), forceOpen: true);
+                    break;
+                case HotkeyId.OpenSurroundingsTab:
+                    mainViewModel.OpenTabOfType(typeof(SurroundingsTableViewModel), forceOpen: true);
+                    break;
+                case HotkeyId.OpenHistoryTab:
+                    mainViewModel.OpenTabOfType(typeof(HistoryViewModel), forceOpen: true);
+                    break;
+                case HotkeyId.TryCopyNextSystemToClipboard:
+                    _starSystemProvider.CopyNextSystemNametoClipboard();
+                    break;
+                case HotkeyId.QuitSpeechOutput:
+                    SpeechProvider.ShutUp();
+                    break;
             }
         }
-        return IntPtr.Zero;
+        catch (Exception exception)
+        {
+            log.Error($"Error while handling hotkey {id}", exception);
+        }
     }
 }

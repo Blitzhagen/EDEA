@@ -51,7 +51,7 @@ public class FeedbackReportIssueViewModel : ViewModelBase
         if (feedbackReportIssueWindow == null)
         {
             feedbackReportIssueWindow = new FeedbackReportIssueWindow();
-            JotSettingsProvider.Tracker.Track(feedbackReportIssueWindow);
+            PlatformServices.WindowState?.Track(feedbackReportIssueWindow, "FeedbackReportIssueWindow");
             feedbackReportIssueWindow.DataContext = this;
             feedbackReportIssueWindow.Closed += FeedbackReportIssueWindow_Closed;
             feedbackReportIssueWindow.Show();

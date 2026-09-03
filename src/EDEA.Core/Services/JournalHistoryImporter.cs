@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading;
+using System.Threading.Tasks;
 using EDEA;
 using EDEA.Models;
 using log4net;
@@ -56,8 +57,11 @@ public class JournalHistoryImporter
     /// <summary>The importCanceled field.</summary>
     private bool importCanceled;
 
-    /// <summary>The importWorker field.</summary>
-    private BackgroundWorker? importWorker;
+    /// <summary>The current import task.</summary>
+    private Task? _importTask;
+
+    /// <summary>The cancellation token source for the current import.</summary>
+    private CancellationTokenSource? _cancellationTokenSource;
 
     /// <summary>Gets or sets the StatusData.</summary>
     /// <value>A JournalImportReportData value.</value>
@@ -105,17 +109,53 @@ public class JournalHistoryImporter
     /// <summary>Performs the StartJournalImport operation.</summary>
     public void StartJournalImport()
     {
-        if (importWorker == null)
+        if (_importTask is not null && !_importTask.IsCompleted)
         {
-            importWorker = new BackgroundWorker();
-            importWorker.WorkerReportsProgress = true;
-            importWorker.WorkerSupportsCancellation = true;
-            importWorker.DoWork += importWorker_DoWork;
-            importWorker.ProgressChanged += importWorker_ProgressChanged;
-            importWorker.RunWorkerCompleted += importWorker_RunWorkerCompleted;
-            log.Debug("Import worker initialised");
-            importWorker.RunWorkerAsync();
+            return;
         }
+
+        ResetState();
+        _cancellationTokenSource = new CancellationTokenSource();
+        var progress = new Progress<int>(percentage =>
+        {
+            StatusPercentage = percentage;
+            JournalHistoryImportProgressChanged(this, EventArgs.Empty);
+        });
+        _importTask = Task.Run(() => ImportAsync(progress, _cancellationTokenSource.Token), _cancellationTokenSource.Token);
+    }
+
+    /// <summary>
+    /// Resets the importer state before starting a new import.
+    /// </summary>
+    private void ResetState()
+    {
+        _journalPlanetMemory.Clear();
+        _journalSystemMemory.Clear();
+        _memorizedStarSystems.Clear();
+        StatusData.ResetData();
+        StatusPercentage = 0;
+        newStarSystemCount = 0;
+        updatedStarSystemCount = 0;
+        ignoredStarSystemCount = 0;
+        importCanceled = false;
+    }
+
+    /// <summary>
+    /// Releases resources and resets state after the import completes or is cancelled.
+    /// </summary>
+    private void OnImportFinished()
+    {
+        log.Debug("Import worker disposed");
+        _journalPlanetMemory.Clear();
+        _journalSystemMemory.Clear();
+        _memorizedStarSystems.Clear();
+        journalFiles = null;
+        StatusData.ResetData();
+        StatusPercentage = 0;
+        newStarSystemCount = 0;
+        updatedStarSystemCount = 0;
+        ignoredStarSystemCount = 0;
+        importCanceled = false;
     }
 
     /// <summary>Retrieves JournalFiles.</summary>
@@ -133,47 +173,19 @@ public class JournalHistoryImporter
         return 0;
     }
 
-    /// <summary>Performs the importWorker_RunWorkerCompleted operation.</summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The event data.</param>
-    private void importWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
-    {
-        importWorker?.Dispose();
-        importWorker = null;
-        log.Debug("Import worker disposed");
-        _journalPlanetMemory.Clear();
-        _journalSystemMemory.Clear();
-        _memorizedStarSystems.Clear();
-        journalFiles = null;
-        StatusData.ResetData();
-        StatusPercentage = 0;
-        newStarSystemCount = 0;
-        updatedStarSystemCount = 0;
-        ignoredStarSystemCount = 0;
-        importCanceled = false;
-    }
-
     /// <summary>Determines whether CancelJournalImport.</summary>
     public void CancelJournalImport()
     {
-        importWorker?.CancelAsync();
+        _cancellationTokenSource?.Cancel();
     }
 
-    /// <summary>Performs the importWorker_ProgressChanged operation.</summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The event data.</param>
-    private void importWorker_ProgressChanged(object? sender, ProgressChangedEventArgs e)
+    /// <summary>Performs the ImportAsync operation.</summary>
+    /// <param name="progress">The progress reporter.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    private async Task ImportAsync(IProgress<int> progress, CancellationToken cancellationToken)
     {
-        StatusPercentage = e.ProgressPercentage;
-        JournalHistoryImportProgressChanged(this, EventArgs.Empty);
-    }
-
-    /// <summary>Performs the importWorker_DoWork operation.</summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The event data.</param>
-    private void importWorker_DoWork(object? sender, DoWorkEventArgs e)
-    {
-        BackgroundWorker? backgroundWorker = sender as BackgroundWorker;
+        try
+        {
         if (journalFiles == null || journalFiles.Count < 1)
         {
             return;
@@ -185,7 +197,7 @@ public class JournalHistoryImporter
         log.Info("Import historical journal files phase 1, scanning for systems ...");
         for (int i = 0; i < journalFiles.Count; i++)
         {
-            if (backgroundWorker?.CancellationPending == true)
+            if (cancellationToken.IsCancellationRequested == true)
             {
                 log.Warn($"Canceled importing journal files in phase 1 after {stopwatch.ElapsedMilliseconds}ms, processed {i} journal files so far");
                 importCanceled = true;
@@ -242,13 +254,13 @@ public class JournalHistoryImporter
             currentPhaseProgress = (i + 1) * 100 / journalFiles.Count;
             StatusData.SystemsScanProgress = currentPhaseProgress;
             StatusData.JournalFilesProcessed = i + 1;
-            backgroundWorker?.ReportProgress(currentPhaseProgress / phaseCount);
+            progress.Report(currentPhaseProgress / phaseCount);
         }
         log.Info($"Import historical journal files phase 1 completed, memorized {_memorizedStarSystems.Count} star systems");
         log.Info("Import historical journal files phase 2, scanning for bodies ...");
         for (int k = 0; k < journalFiles.Count; k++)
         {
-            if (backgroundWorker?.CancellationPending == true)
+            if (cancellationToken.IsCancellationRequested == true)
             {
                 log.Warn($"Canceled importing journal files in phase 2 after {stopwatch.ElapsedMilliseconds}ms, processed {k} journal files so far");
                 importCanceled = true;
@@ -289,7 +301,7 @@ public class JournalHistoryImporter
             }
             currentPhaseProgress = (k + 1) * 100 / journalFiles.Count;
             StatusData.BodiesScanProgress = currentPhaseProgress;
-            backgroundWorker?.ReportProgress(100 / phaseCount + currentPhaseProgress / phaseCount);
+            progress.Report(100 / phaseCount + currentPhaseProgress / phaseCount);
         }
         int totalBodyCount = 0;
         foreach (StarSystem memorizedStarSystem in _memorizedStarSystems.Values)
@@ -302,7 +314,7 @@ public class JournalHistoryImporter
         log.Info("Import historical journal files phase 3, scanning for additional data ...");
         for (int phase3FileIndex = 0; phase3FileIndex < journalFiles.Count; phase3FileIndex++)
         {
-            if (backgroundWorker?.CancellationPending == true)
+            if (cancellationToken.IsCancellationRequested == true)
             {
                 log.Warn($"Canceled importing journal files in phase 3 after {stopwatch.ElapsedMilliseconds}ms, processed {phase3FileIndex} journal files so far");
                 importCanceled = true;
@@ -364,14 +376,14 @@ public class JournalHistoryImporter
             }
             currentPhaseProgress = (phase3FileIndex + 1) * 100 / journalFiles.Count;
             StatusData.AdditionalDataScanProgress = currentPhaseProgress;
-            backgroundWorker?.ReportProgress(200 / phaseCount + currentPhaseProgress / phaseCount);
+            progress.Report(200 / phaseCount + currentPhaseProgress / phaseCount);
         }
         log.Info("Import historical journal files phase 3 completed");
         log.Info("Import historical journal files phase 4, updating history ...");
         bool shouldReport = false;
         for (int historySystemIndex = 0; historySystemIndex < _memorizedStarSystems.Count; historySystemIndex++)
         {
-            if (backgroundWorker?.CancellationPending == true)
+            if (cancellationToken.IsCancellationRequested == true)
             {
                 log.Warn($"Canceled importing journal files in phase 4 after {stopwatch.ElapsedMilliseconds}ms");
                 importCanceled = true;
@@ -410,7 +422,7 @@ public class JournalHistoryImporter
             StatusData.AddedToHistoryCount = newStarSystemCount;
             StatusData.UpdatedInHistoryCount = updatedStarSystemCount;
             StatusData.IgnoredSystemsCount = ignoredStarSystemCount;
-            backgroundWorker?.ReportProgress(300 / phaseCount + currentPhaseProgress / phaseCount);
+            progress.Report(300 / phaseCount + currentPhaseProgress / phaseCount);
         }
         if (!importCanceled)
         {
@@ -418,8 +430,13 @@ public class JournalHistoryImporter
         }
         if (!importCanceled && _starSystemProvider.CurrentSystem.Id != 0L)
         {
-            _starSystemProvider.HandleCurrentSystemChange(_starSystemProvider.CurrentSystem).GetAwaiter().GetResult();
+            await _starSystemProvider.HandleCurrentSystemChange(_starSystemProvider.CurrentSystem);
         }
         stopwatch.Stop();
+        }
+        finally
+        {
+            OnImportFinished();
+        }
     }
 }

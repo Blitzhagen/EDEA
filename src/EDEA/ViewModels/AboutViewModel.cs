@@ -50,7 +50,7 @@ public class AboutViewModel : ViewModelBase
         if (aboutWindow == null)
         {
             aboutWindow = new AboutWindow();
-            JotSettingsProvider.Tracker.Track(aboutWindow);
+            PlatformServices.WindowState?.Track(aboutWindow, "AboutWindow");
             aboutWindow.DataContext = this;
             aboutWindow.Closed += AboutWindow_Closed;
             aboutWindow.Show();

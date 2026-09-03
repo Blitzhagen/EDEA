@@ -288,7 +288,7 @@ public class RoutePlotterViewModel : ViewModelBase
         if (routePlotterWindow == null)
         {
             routePlotterWindow = new RoutePlotterWindow();
-            JotSettingsProvider.Tracker.Track(routePlotterWindow);
+            PlatformServices.WindowState?.Track(routePlotterWindow, "RoutePlotterWindow");
             routePlotterWindow.DataContext = this;
             routePlotterWindow.Closed += routePlotterWindow_Closed;
             routePlotterWindow.MouseDown += routePlotterWindow_MouseDown;

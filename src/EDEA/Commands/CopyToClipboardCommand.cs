@@ -5,8 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Windows.Threading;
 using EDEA.Models;
+using EDEA.Services;
 using log4net;
 
 namespace EDEA.Commands;
@@ -112,17 +112,20 @@ public class CopyToClipboardCommand : CommandBase
     /// <param name="e">Event data for the opened event.</param>
     private void Popup_Opened(object? sender, EventArgs e)
     {
-        DispatcherTimer timer = new DispatcherTimer();
-        timer.Interval = TimeSpan.FromSeconds(1.0);
-        timer.Start();
-        timer.Tick += delegate
+        var timer = PlatformServices.UiTimer?.CreateTimer(TimeSpan.FromSeconds(1.0));
+        if (timer is null)
+        {
+            return;
+        }
+        timer.Tick += () =>
         {
             if (sender is Popup popup)
             {
                 popup.Opened -= Popup_Opened;
                 popup.IsOpen = false;
             }
-            timer.Stop();
+            timer.Dispose();
         };
+        timer.Start();
     }
 }

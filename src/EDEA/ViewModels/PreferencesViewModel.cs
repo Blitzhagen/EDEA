@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using ColorPicker;
 using EDEA.Commands;
+using EDEA.Core.Drawing;
 using EDEA.Models;
 using EDEA.Properties;
 using EDEA.Services;
@@ -67,7 +68,7 @@ public class PreferencesViewModel : ViewModelBase
     /// <summary>
     /// The timer used to delay color application.
     /// </summary>
-    private DispatcherTimer? _colorApplyTimer;
+    private IUiTimer? _colorApplyTimer;
 
     /// <summary>
     /// The name of the pending color property.
@@ -77,7 +78,7 @@ public class PreferencesViewModel : ViewModelBase
     /// <summary>
     /// The pending color value.
     /// </summary>
-    private Color _pendingColor;
+    private EDEA.Core.Drawing.Color _pendingColor;
 
     /// <summary>
     /// The speech output list box.
@@ -373,7 +374,7 @@ public class PreferencesViewModel : ViewModelBase
         if (preferencesWindow == null)
         {
             preferencesWindow = new PreferencesWindow();
-            JotSettingsProvider.Tracker.Track(preferencesWindow);
+            PlatformServices.WindowState?.Track(preferencesWindow, "PreferencesWindow");
             CloseWindowCommand = new CancelPreferencesCommand(this, preferencesWindow);
             SaveAndClosePreferencesCommand = new SaveAndClosePreferencesCommand(this, preferencesWindow);
             RestoreDefaultPreferencesCommand = new RestoreDefaultPreferencesCommand(this, preferencesWindow);
@@ -603,7 +604,7 @@ public class PreferencesViewModel : ViewModelBase
     public void Cancel()
     {
         Preferences.ReloadUserSettings();
-        Helpers.ColorThemeHelper.ApplyCurrentColors();
+        PlatformServices.ColorTheme?.ApplyCurrentColors();
         generateColorElementListBoxItems();
     }
 
@@ -683,39 +684,40 @@ public class PreferencesViewModel : ViewModelBase
     /// <param name="e">The event data.</param>
     private void colorPickerControl_ColorChanged(object? sender, RoutedEventArgs e)
     {
-        Color color = ((dynamic)sender!).SelectedColor;
-        squarePicker.SelectedColor = color;
-        colorSliders.SelectedColor = color;
-        hexColorTextBox.SelectedColor = color;
+        System.Windows.Media.Color wpfColor = ((dynamic)sender!).SelectedColor;
+        squarePicker.SelectedColor = wpfColor;
+        colorSliders.SelectedColor = wpfColor;
+        hexColorTextBox.SelectedColor = wpfColor;
+        var coreColor = EDEA.Core.Drawing.Color.FromArgb(wpfColor.A, wpfColor.R, wpfColor.G, wpfColor.B);
         StackPanel? stackPanel = (StackPanel?)colorElementListBox.SelectedItem;
         if (stackPanel != null)
         {
-            ((Rectangle)stackPanel.Children[0]).Fill = new SolidColorBrush(color);
+            ((Rectangle)stackPanel.Children[0]).Fill = new SolidColorBrush(wpfColor);
             TextBlock textBlock = (TextBlock)stackPanel.Children[1];
             (from x in Preferences.Colors.GetType().GetProperties()
              where x.Name == textBlock.Text
-             select x).FirstOrDefault()!.SetValue(Preferences.Colors, color);
+             select x).FirstOrDefault()!.SetValue(Preferences.Colors, coreColor);
 
             _pendingColorPropertyName = textBlock.Text;
-            _pendingColor = color;
+            _pendingColor = coreColor;
             if (_colorApplyTimer == null)
             {
-                _colorApplyTimer = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher)
+                _colorApplyTimer = PlatformServices.UiTimer?.CreateTimer(TimeSpan.FromMilliseconds(150));
+                if (_colorApplyTimer is not null)
                 {
-                    Interval = TimeSpan.FromMilliseconds(150)
-                };
-                _colorApplyTimer.Tick += (s, args) =>
-                {
-                    _colorApplyTimer?.Stop();
-                    if (!string.IsNullOrEmpty(_pendingColorPropertyName))
+                    _colorApplyTimer.Tick += () =>
                     {
-                        Helpers.ColorThemeHelper.ApplyColor(_pendingColorPropertyName, _pendingColor);
-                        _pendingColorPropertyName = null;
-                    }
-                };
+                        _colorApplyTimer?.Stop();
+                        if (!string.IsNullOrEmpty(_pendingColorPropertyName))
+                        {
+                            PlatformServices.ColorTheme?.ApplyColor(_pendingColorPropertyName, _pendingColor);
+                            _pendingColorPropertyName = null;
+                        }
+                    };
+                }
             }
-            _colorApplyTimer.Stop();
-            _colorApplyTimer.Start();
+            _colorApplyTimer?.Stop();
+            _colorApplyTimer?.Start();
         }
     }
 
@@ -729,7 +731,7 @@ public class PreferencesViewModel : ViewModelBase
         StackPanel stackPanel = (StackPanel)colorElementListBox.SelectedItem;
         if (stackPanel != null)
         {
-            Color color = ((SolidColorBrush)((Rectangle)stackPanel.Children[0]).Fill).Color;
+            System.Windows.Media.Color color = ((SolidColorBrush)((Rectangle)stackPanel.Children[0]).Fill).Color;
             squarePicker.SelectedColor = color;
             colorSliders.SelectedColor = color;
             hexColorTextBox.SelectedColor = color;
@@ -743,11 +745,13 @@ public class PreferencesViewModel : ViewModelBase
     {
         colorElementListBox.Items.Clear();
         foreach (PropertyInfo colorProperty in from colorPropertyCandidate in Preferences.Colors.GetType().GetProperties()
-                                               where colorPropertyCandidate.PropertyType == typeof(Color)
+                                               where colorPropertyCandidate.PropertyType == typeof(EDEA.Core.Drawing.Color)
                                                select colorPropertyCandidate)
         {
             Rectangle rectangle = new Rectangle();
-            rectangle.Fill = new SolidColorBrush((Color)colorProperty.GetValue(Preferences.Colors)!);
+            EDEA.Core.Drawing.Color coreColor = (EDEA.Core.Drawing.Color)colorProperty.GetValue(Preferences.Colors)!;
+            System.Windows.Media.Color wpfColor = System.Windows.Media.Color.FromArgb(coreColor.A, coreColor.R, coreColor.G, coreColor.B);
+            rectangle.Fill = new SolidColorBrush(wpfColor);
             rectangle.Width = Application.Current.MainWindow.FontSize;
             rectangle.Height = Application.Current.MainWindow.FontSize;
             rectangle.Margin = new Thickness(0.0, 0.0, 3.0, 0.0);
@@ -879,7 +883,7 @@ public class PreferencesViewModel : ViewModelBase
     private void preferencesWindow_Closed(object? sender, EventArgs e)
     {
         Preferences.ReloadUserSettings();
-        Helpers.ColorThemeHelper.ApplyCurrentColors();
+        PlatformServices.ColorTheme?.ApplyCurrentColors();
         _hotkeyProvider.AssignAllHotkeys(reloadFromPreferences: true);
         setDisplaySize();
         _starSystemProvider.triggerGuiDataUpdateEvent();

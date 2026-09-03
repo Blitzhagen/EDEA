@@ -122,7 +122,7 @@ public class JournalHistoryImportViewModel : ViewModelBase
         if (journalHistoryImportWindow == null)
         {
             journalHistoryImportWindow = new JournalHistoryImportWindow();
-            JotSettingsProvider.Tracker.Track(journalHistoryImportWindow);
+            PlatformServices.WindowState?.Track(journalHistoryImportWindow, "JournalHistoryImportWindow");
             journalHistoryImportWindow.DataContext = this;
             journalHistoryImportWindow.Closed += journalHistoryImportWindow_Closed;
             journalHistoryImportWindow.ContentRendered += journalHistoryImportWindow_ContentRendered;

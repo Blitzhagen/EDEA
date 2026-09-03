@@ -92,12 +92,19 @@ public partial class App : Application
         ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(60000));
         ToolTipService.InitialShowDelayProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(100));
 
+        PlatformServices.Screen = new WindowsScreenService();
+        var screenSize = PlatformServices.Screen.GetPrimaryScreenSize();
+
         JotSettingsProvider.Tracker = new Tracker(new JsonFileStore(Path.Combine(Globals.AppDataFolder, "jot")));
         JotSettingsProvider.Tracker.Configure<Window>()
-            .Id((Window w) => w.Name, new { W = SystemParameters.VirtualScreenWidth, H = SystemParameters.VirtualScreenHeight })
+            .Id((Window w) => w.Name, new { W = screenSize.Width, H = screenSize.Height })
             .Properties((Window w) => new { w.Top, w.Width, w.Height, w.Left, w.WindowState })
             .PersistOn("Closing")
             .StopTrackingOn("Closing");
+
+        PlatformServices.WindowState = new WindowsWindowStateService(JotSettingsProvider.Tracker);
+        PlatformServices.ColorTheme = new WindowsColorThemeService();
+        PlatformServices.UiTimer = new WindowsUiTimerService();
 
         if (Process.GetProcessesByName("EDMarketConnector").FirstOrDefault() == null)
         {
@@ -185,11 +192,13 @@ public partial class App : Application
         PlatformServices.Speech = new WindowsSpeechService();
         PlatformServices.Dialog = new WindowsDialogService();
         PlatformServices.Platform = new WindowsPlatformService();
+        PlatformServices.GlobalHotkey = new WindowsGlobalHotkeyService();
+        PlatformServices.HudWindow = new WindowsHudWindowService();
 
         _settingsProvider = new SettingsProvider();
         Preferences.User = _settingsProvider.Settings;
         Preferences.SetSettingsProvider(_settingsProvider);
-        Helpers.ColorThemeHelper.ApplyCurrentColors();
+        PlatformServices.ColorTheme?.ApplyCurrentColors();
 
         ApplyLanguage();
 
@@ -204,7 +213,7 @@ public partial class App : Application
         var statusProvider = StatusProvider.Instance(fileWatcher, _starSystemProvider);
         var planetsOfInterestProvider = PlanetsOfInterestProvider.Instance(_starSystemProvider);
         var journalHistoryImporter = JournalHistoryImporter.Instance(historyProvider, journalProvider, _starSystemProvider);
-        var hotkeyProvider = HotkeyProvider.Instance(_starSystemProvider);
+        var hotkeyProvider = HotkeyProvider.Instance(_starSystemProvider, PlatformServices.GlobalHotkey!);
 
         var viewModel = new MainViewModel(
             hotkeyProvider,
@@ -220,7 +229,7 @@ public partial class App : Application
         mainWindow.Closed += viewModel.OnMainWindowClosed;
         mainWindow.Show();
         mainWindow.Activate();
-        JotSettingsProvider.Tracker.Track(mainWindow);
+        PlatformServices.WindowState?.Track(mainWindow, "MainWindow");
 
         viewModel.RestoreWindows();
         journalProvider.Initialize();
