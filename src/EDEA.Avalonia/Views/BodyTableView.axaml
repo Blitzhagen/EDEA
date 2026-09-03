@@ -6,18 +6,38 @@
   <Grid>
     <TextBlock Text="{Binding NoBodiesInfo}" IsVisible="{Binding AreNoBodiesAvailable}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
     <ScrollViewer IsVisible="{Binding AreNoBodiesAvailable, Converter={StaticResource InverseBoolConverter}}">
-      <ItemsControl ItemsSource="{Binding Bodies}" x:CompileBindings="False">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate x:DataType="vm:BodyViewModel" x:CompileBindings="False">
-            <Grid ColumnDefinitions="120,120,120,120" Margin="0,2">
-              <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-              <TextBlock Grid.Column="1" Text="{Binding TypeHumanReadable}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-              <TextBlock Grid.Column="2" Text="{Binding Atmosphere}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-              <TextBlock Grid.Column="3" Text="{Binding SurfaceTemperature}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-            </Grid>
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
+      <Grid RowDefinitions="Auto,*" Margin="4" x:CompileBindings="False" IsSharedSizeScope="True">
+        <Grid Grid.Row="0" Margin="0,0,0,4">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="BodyName" />
+            <ColumnDefinition Width="Auto" SharedSizeGroup="BodyType" />
+            <ColumnDefinition Width="Auto" SharedSizeGroup="BodyAtmosphere" />
+            <ColumnDefinition Width="Auto" SharedSizeGroup="BodyTemp" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Text="Name" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+          <TextBlock Grid.Column="1" Text="Type" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+          <TextBlock Grid.Column="2" Text="Atmosphere" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+          <TextBlock Grid.Column="3" Text="Temp." FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
+        </Grid>
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Bodies}" x:CompileBindings="False">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:BodyViewModel" x:CompileBindings="False">
+              <Grid Margin="0,1">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="BodyName" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="BodyType" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="BodyAtmosphere" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="BodyTemp" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+                <TextBlock Grid.Column="1" Text="{Binding TypeHumanReadable}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+                <TextBlock Grid.Column="2" Text="{Binding Atmosphere}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+                <TextBlock Grid.Column="3" Text="{Binding SurfaceTemperature}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Grid>
     </ScrollViewer>
   </Grid>
 </UserControl>

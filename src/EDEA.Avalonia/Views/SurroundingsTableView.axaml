@@ -7,17 +7,34 @@
     <TextBlock Text="{Binding NoSurroundingsInfo}" IsVisible="{Binding ShowNoSurroundingsInfo}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
     <TextBlock Text="{Binding SurroundingsLoadingInfo}" IsVisible="{Binding ShowSurroundingsLoadingInfo}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource AccentBrush}" ZIndex="1"/>
     <ScrollViewer IsVisible="{Binding ShowNoSurroundingsInfo, Converter={StaticResource InverseBoolConverter}}">
-      <ItemsControl ItemsSource="{Binding SurroundingStarSystems}" x:CompileBindings="False">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate x:DataType="vm:StarSystemViewModel" x:CompileBindings="False">
-            <Grid ColumnDefinitions="200,160,100" Margin="0,2">
-              <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-              <TextBlock Grid.Column="1" Text="{Binding PrimaryStarName}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-              <TextBlock Grid.Column="2" Text="{Binding JumpDistanceLy}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-            </Grid>
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
+      <Grid RowDefinitions="Auto,*" Margin="4" x:CompileBindings="False" IsSharedSizeScope="True">
+        <Grid Grid.Row="0" Margin="0,0,0,4">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="SurName" />
+            <ColumnDefinition Width="Auto" SharedSizeGroup="SurPrimary" />
+            <ColumnDefinition Width="Auto" SharedSizeGroup="SurJump" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Text="Name" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+          <TextBlock Grid.Column="1" Text="Primary Star" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+          <TextBlock Grid.Column="2" Text="Distance" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
+        </Grid>
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding SurroundingStarSystems}" x:CompileBindings="False">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:StarSystemViewModel" x:CompileBindings="False">
+              <Grid Margin="0,1">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="SurName" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="SurPrimary" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="SurJump" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+                <TextBlock Grid.Column="1" Text="{Binding PrimaryStarName}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+                <TextBlock Grid.Column="2" Text="{Binding JumpDistanceLy}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Grid>
     </ScrollViewer>
   </Grid>
 </UserControl>

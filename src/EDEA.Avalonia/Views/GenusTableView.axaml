@@ -6,17 +6,34 @@
   <Grid>
     <TextBlock Text="{Binding UnknownBiologicalsInfo}" IsVisible="{Binding AreBiologicalsUnknown}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
     <ScrollViewer IsVisible="{Binding AreBiologicalsKnown}">
-      <ItemsControl ItemsSource="{Binding Genuses}" x:CompileBindings="False">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate x:DataType="vm:GenusViewModel" x:CompileBindings="False">
-            <Grid ColumnDefinitions="200,200,80" Margin="0,2">
-              <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-              <TextBlock Grid.Column="1" Text="{Binding SpeciesShort}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-              <TextBlock Grid.Column="2" Text="{Binding ScanCount}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-            </Grid>
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
+      <Grid RowDefinitions="Auto,*" Margin="4" x:CompileBindings="False" IsSharedSizeScope="True">
+        <Grid Grid.Row="0" Margin="0,0,0,4">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="GenusName" />
+            <ColumnDefinition Width="Auto" SharedSizeGroup="GenusSpecies" />
+            <ColumnDefinition Width="Auto" SharedSizeGroup="GenusScan" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Text="Genus" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+          <TextBlock Grid.Column="1" Text="Species" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+          <TextBlock Grid.Column="2" Text="Scans" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
+        </Grid>
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Genuses}" x:CompileBindings="False">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:GenusViewModel" x:CompileBindings="False">
+              <Grid Margin="0,1">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="GenusName" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="GenusSpecies" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="GenusScan" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+                <TextBlock Grid.Column="1" Text="{Binding SpeciesShort}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,8,0" x:CompileBindings="False"/>
+                <TextBlock Grid.Column="2" Text="{Binding ScanCount}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Grid>
     </ScrollViewer>
   </Grid>
 </UserControl>
