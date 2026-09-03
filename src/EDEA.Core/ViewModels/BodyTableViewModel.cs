@@ -4,9 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
-using EDEA.Commands;
 using EDEA.Models;
 using EDEA.Properties;
 using EDEA.Services;
@@ -36,10 +34,10 @@ public class BodyTableViewModel : TabViewModel
     public StarSystemProvider StarSystemProvider { get; }
 
     /// <summary>
-    /// Gets the command that copies the selected body name to the clipboard.
+    /// Gets or sets the command that copies the selected body name to the clipboard.
     /// </summary>
     /// <value>The copy command.</value>
-    public ICommand CopyBodyNameToClipboardCommand { get; }
+    public ICommand? CopyBodyNameToClipboardCommand { get; set; }
 
     /// <summary>
     /// Gets the collection of view models representing the current system's bodies.
@@ -98,10 +96,9 @@ public class BodyTableViewModel : TabViewModel
         : base(tabHeader, tabVisibility)
     {
         StarSystemProvider = starSystemProvider;
-        CopyBodyNameToClipboardCommand = new CopyToClipboardCommand();
         StarSystemProvider.GuiDataUpdated += delegate
         {
-            Application.Current?.Dispatcher.Invoke(delegate
+            PlatformServices.Dispatcher?.Invoke(delegate
             {
                 RefreshBodiesDataView();
             });

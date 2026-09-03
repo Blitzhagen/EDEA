@@ -237,13 +237,23 @@ public class MainViewModel : ObservableObject
 
         CurrentSystemViewModel = new StarSystemViewModel(_starSystemProvider.CurrentSystem);
 
+        var navRouteTableViewModel = new NavRouteTableViewModel(Resources.TabHeader_Route, "Visible", _starSystemProvider, _routeProvider);
+        var bodyTableViewModel = new BodyTableViewModel(Resources.TabHeader_Bodies, "Visible", _starSystemProvider);
+        var genusTableViewModel = new GenusTableViewModel(Resources.TabHeader_Biologicals, "Collapsed", _starSystemProvider);
+        var surroundingsTableViewModel = new SurroundingsTableViewModel(Resources.TabHeader_Surroundings, "Visible", _starSystemProvider);
+        var historyViewModel = new HistoryViewModel(Resources.TabHeader_History, "Visible", historyProvider);
+
+        bodyTableViewModel.CopyBodyNameToClipboardCommand = new CopyToClipboardCommand();
+        surroundingsTableViewModel.CopySystemNameToClipboardCommand = new CopyToClipboardCommand();
+        historyViewModel.CopyHistoryDataToClipboardCommand = new CopyToClipboardCommand();
+
         TabViewModels = new ObservableCollection<TabViewModel>
         {
-            new NavRouteTableViewModel(Resources.TabHeader_Route, "Visible", _starSystemProvider, _routeProvider),
-            new BodyTableViewModel(Resources.TabHeader_Bodies, "Visible", _starSystemProvider),
-            new GenusTableViewModel(Resources.TabHeader_Biologicals, "Collapsed", _starSystemProvider),
-            new SurroundingsTableViewModel(Resources.TabHeader_Surroundings, "Visible", _starSystemProvider),
-            new HistoryViewModel(Resources.TabHeader_History, "Visible", historyProvider)
+            navRouteTableViewModel,
+            bodyTableViewModel,
+            genusTableViewModel,
+            surroundingsTableViewModel,
+            historyViewModel
         };
 
         hudViewModel = new HudViewModel(this, _statusProvider);
@@ -271,17 +281,17 @@ public class MainViewModel : ObservableObject
 
         _starSystemProvider.GuiDataUpdated += delegate
         {
-            Application.Current?.Dispatcher.Invoke(UpdateDataView);
+            PlatformServices.Dispatcher?.Invoke(UpdateDataView);
         };
 
         _starSystemProvider.RouteLoadingStatusChanged += delegate
         {
-            Application.Current?.Dispatcher.Invoke(() => OnPropertyChanged(nameof(DataIsLoading)));
+            PlatformServices.Dispatcher?.Invoke(() => OnPropertyChanged(nameof(DataIsLoading)));
         };
 
         _webApiProvider.WebApiLoadingStatusChanged += (s, p) =>
         {
-            Application.Current?.Dispatcher.Invoke(() => OnPropertyChanged(nameof(DataIsLoading)));
+            PlatformServices.Dispatcher?.Invoke(() => OnPropertyChanged(nameof(DataIsLoading)));
         };
 
         if (!Preferences.Other.AutomaticTabSwitching)

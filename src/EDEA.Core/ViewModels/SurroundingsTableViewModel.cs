@@ -4,9 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
-using EDEA.Commands;
 using EDEA.Models;
 using EDEA.Properties;
 using EDEA.Services;
@@ -36,10 +34,10 @@ public class SurroundingsTableViewModel : TabViewModel
     private StarSystemProvider _starSystemProvider;
 
     /// <summary>
-    /// Gets the command that copies the selected system name to the clipboard.
+    /// Gets or sets the command that copies the selected system name to the clipboard.
     /// </summary>
     /// <value>The copy command.</value>
-    public ICommand CopySystemNameToClipboardCommand { get; }
+    public ICommand? CopySystemNameToClipboardCommand { get; set; }
 
     /// <summary>
     /// Gets the collection of surrounding star system view models.
@@ -93,12 +91,11 @@ public class SurroundingsTableViewModel : TabViewModel
         : base(tabHeader, tabVisibility)
     {
         _starSystemProvider = starSystemProvider;
-        CopySystemNameToClipboardCommand = new CopyToClipboardCommand();
         SurroundingsLoadingInfo = string.Empty;
         ShowNoSurroundingsInfo = false;
         _starSystemProvider.GuiDataUpdated += delegate
         {
-            Application.Current?.Dispatcher.Invoke(delegate
+            PlatformServices.Dispatcher?.Invoke(delegate
             {
                 refreshView();
             });

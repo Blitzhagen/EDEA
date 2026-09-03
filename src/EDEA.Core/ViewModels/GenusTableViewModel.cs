@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
 using EDEA.Models;
 using EDEA.Properties;
 using EDEA.Services;
@@ -114,14 +113,14 @@ public class GenusTableViewModel : TabViewModel
         _starSystemProvider = starSystemProvider;
         _starSystemProvider.GuiDataUpdated += delegate
         {
-            Application.Current?.Dispatcher.Invoke(delegate
+            PlatformServices.Dispatcher?.Invoke(delegate
             {
                 refreshView();
             });
         };
         _starSystemProvider.GuiLocationDataUpdated += delegate
         {
-            Application.Current?.Dispatcher.Invoke(delegate
+            PlatformServices.Dispatcher?.Invoke(delegate
             {
                 updateCurrentLocation();
             });
@@ -189,11 +188,11 @@ public class GenusTableViewModel : TabViewModel
                 SpeechOutputSpecies speechOutputSpecies = new SpeechOutputSpecies(genus);
                 if (genus.IsOutOfClonalColonyRange.Value)
                 {
-                    SpeechProvider.SpeakLeaveClonalColonyRange(speechOutputSpecies);
+                    PlatformServices.Speech?.SpeakLeaveClonalColonyRange(speechOutputSpecies);
                 }
                 else if (genus.IsInAnalysis && ((!genus.CurrentDistanceToLocationAt2ndScanAvailable && genus.CurrentDistanceToLocationAt1stScan > 30) || (genus.CurrentDistanceToLocationAt2ndScanAvailable && genus.CurrentDistanceToLocationAt2ndScan > 30)))
                 {
-                    SpeechProvider.SpeakEnterClonalColonyRange(speechOutputSpecies);
+                    PlatformServices.Speech?.SpeakEnterClonalColonyRange(speechOutputSpecies);
                 }
             }
         }

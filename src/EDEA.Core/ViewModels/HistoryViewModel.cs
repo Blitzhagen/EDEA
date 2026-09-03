@@ -2,7 +2,6 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using EDEA.Commands;
 using EDEA.Models;
 using EDEA.Services;
 using log4net;
@@ -31,10 +30,10 @@ public class HistoryViewModel : TabViewModel
     private readonly HistoryProvider _historyProvider;
 
     /// <summary>
-    /// Gets the command that copies the history data to the clipboard.
+    /// Gets or sets the command that copies the history data to the clipboard.
     /// </summary>
     /// <value>The copy command.</value>
-    public ICommand CopyHistoryDataToClipboardCommand { get; }
+    public ICommand? CopyHistoryDataToClipboardCommand { get; set; }
 
     /// <summary>
     /// Gets or sets the formatted history data.
@@ -53,7 +52,6 @@ public class HistoryViewModel : TabViewModel
     {
         _historyProvider = historyProvider;
         HistoryData = new HistoryDataViewModel(new HistoryData());
-        CopyHistoryDataToClipboardCommand = new CopyToClipboardCommand();
         getHistoryData().ContinueWith(delegate
         {
             _historyProvider.HistoryUpdated += _historyProvider_HistoryUpdated;
