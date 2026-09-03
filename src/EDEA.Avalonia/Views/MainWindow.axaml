@@ -45,6 +45,11 @@
     <!-- Main content -->
     <Grid Grid.Row="2">
       <TabControl TabStripPlacement="Left" ItemsSource="{Binding TabViewModels}" SelectedIndex="{Binding SelectedTabIndex}">
+        <TabControl.Styles>
+          <Style Selector="TabItem" x:DataType="vmcore:TabViewModel" x:CompileBindings="False">
+            <Setter Property="IsVisible" Value="{Binding TabVisibility, Converter={StaticResource TabVisibilityConverter}}"/>
+          </Style>
+        </TabControl.Styles>
         <TabControl.ItemTemplate>
           <DataTemplate x:DataType="vmcore:TabViewModel">
             <TextBlock Text="{Binding TabHeader}" Foreground="{StaticResource ForegroundBrush}"/>

@@ -40,10 +40,52 @@
         <TextBlock Text="Hotkey preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
       </TabItem>
       <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Speech}">
-        <TextBlock Text="Speech preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+        <ScrollViewer>
+          <StackPanel Margin="12" Spacing="12">
+            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Voice}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+            <ComboBox x:Name="SpeechVoiceComboBox" Width="300" HorizontalAlignment="Left" SelectionChanged="SpeechVoiceComboBox_SelectionChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}"/>
+            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Rate}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+            <Slider x:Name="SpeechRateSlider" Minimum="-4" Maximum="4" TickFrequency="1" Width="300" HorizontalAlignment="Left" ValueChanged="SpeechRateSlider_ValueChanged"/>
+            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Volume}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+            <Slider x:Name="SpeechVolumeSlider" Minimum="0" Maximum="100" TickFrequency="25" Width="300" HorizontalAlignment="Left" ValueChanged="SpeechVolumeSlider_ValueChanged"/>
+            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Outputs}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+            <CheckBox x:Name="SpeechWelcomeCheckBox" Content="Welcome" IsCheckedChanged="SpeechWelcomeCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
+            <CheckBox x:Name="SpeechGoodbyeCheckBox" Content="Goodbye" IsCheckedChanged="SpeechGoodbyeCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
+            <CheckBox x:Name="SpeechGeoCheckBox" Content="Geological signals" IsCheckedChanged="SpeechGeoCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
+            <CheckBox x:Name="SpeechBioCheckBox" Content="Biological signals" IsCheckedChanged="SpeechBioCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
+            <CheckBox x:Name="SpeechFirstDiscoverySystemCheckBox" Content="First discovery system" IsCheckedChanged="SpeechFirstDiscoverySystemCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
+            <CheckBox x:Name="SpeechFirstDiscoveryBodyCheckBox" Content="First discovery body" IsCheckedChanged="SpeechFirstDiscoveryBodyCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
+            <CheckBox x:Name="SpeechTerraformableCheckBox" Content="Terraformable" IsCheckedChanged="SpeechTerraformableCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
+            <CheckBox x:Name="SpeechLandableCheckBox" Content="Landable" IsCheckedChanged="SpeechLandableCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
+            <CheckBox x:Name="SpeechValuableBodyCheckBox" Content="Valuable body" IsCheckedChanged="SpeechValuableBodyCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
+            <Button x:Name="SpeechTestButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_TestSpeechOutput}" Click="SpeechTestButton_Click" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" HorizontalAlignment="Left" Padding="12,4" Margin="0,8,0,0"/>
+          </StackPanel>
+        </ScrollViewer>
       </TabItem>
       <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_PlanetsOfInterest}">
         <TextBlock Text="Planets of interest preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+      </TabItem>
+      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Configuration}">
+        <ScrollViewer>
+          <StackPanel Margin="12" Spacing="16">
+            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_JournalFilesPath}" FontWeight="Bold" Margin="0,0,0,4"/>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBox x:Name="EdSavedGamePathTextBox" IsReadOnly="True" Width="600" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}"/>
+              <Button x:Name="SetJournalFolderButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Click="SetJournalFolderButton_Click" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}"/>
+            </StackPanel>
+            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Thresholds}" FontWeight="Bold" Margin="0,16,0,4"/>
+            <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto">
+              <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableBodies}" VerticalAlignment="Center" Margin="0,0,16,8" Foreground="{StaticResource ForegroundBrush}"/>
+              <TextBox x:Name="ValuableBodyThresholdTextBox" Grid.Row="0" Grid.Column="1" Width="120" TextChanged="ValuableBodyThresholdTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,8"/>
+              <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableSpecies}" VerticalAlignment="Center" Margin="0,0,16,8" Foreground="{StaticResource ForegroundBrush}"/>
+              <TextBox x:Name="ValuableGenusThresholdTextBox" Grid.Row="1" Grid.Column="1" Width="120" TextChanged="ValuableGenusThresholdTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,8"/>
+              <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_BiologicalsViewAltitude}" VerticalAlignment="Center" Margin="0,0,16,8" Foreground="{StaticResource ForegroundBrush}"/>
+              <TextBox x:Name="BiologicalsViewAltitudeThresholdTextBox" Grid.Row="2" Grid.Column="1" Width="120" TextChanged="BiologicalsViewAltitudeThresholdTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,8"/>
+            </Grid>
+            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_ResetPreferences}" FontWeight="Bold" Margin="0,16,0,4"/>
+            <Button x:Name="RestoreDefaultButton" Content="{x:Static properties:Resources.PreferencesWindow_ResetPreferences}" Click="RestoreDefaultButton_Click" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" HorizontalAlignment="Left" Padding="12,4"/>
+          </StackPanel>
+        </ScrollViewer>
       </TabItem>
     </TabControl>
     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
