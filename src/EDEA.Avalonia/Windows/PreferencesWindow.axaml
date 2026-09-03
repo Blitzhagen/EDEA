@@ -9,7 +9,29 @@
   <Grid Margin="12" RowDefinitions="*,70">
     <TabControl Grid.Row="0">
       <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Appearance}">
-        <TextBlock Text="Appearance preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+        <ScrollViewer>
+          <StackPanel Margin="12">
+            <TextBlock Text="Language" FontWeight="Bold" Margin="0,0,0,4"/>
+            <ComboBox x:Name="LanguageComboBox" SelectedIndex="0" SelectionChanged="LanguageComboBox_SelectionChanged">
+              <ComboBoxItem Content="Auto"/>
+              <ComboBoxItem Content="English"/>
+              <ComboBoxItem Content="Deutsch"/>
+              <ComboBoxItem Content="Español"/>
+              <ComboBoxItem Content="Français"/>
+              <ComboBoxItem Content="Русский"/>
+              <ComboBoxItem Content="Português (Brasil)"/>
+            </ComboBox>
+            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_DisplaySize}" FontWeight="Bold" Margin="0,16,0,4"/>
+            <StackPanel>
+              <RadioButton x:Name="DisplaySizeSmall" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Small}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed"/>
+              <RadioButton x:Name="DisplaySizeStandard" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Standard}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed"/>
+              <RadioButton x:Name="DisplaySizeLarge" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Large}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed"/>
+              <RadioButton x:Name="DisplaySizeHuge" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Huge}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed"/>
+            </StackPanel>
+            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Behavior}" FontWeight="Bold" Margin="0,16,0,4"/>
+            <CheckBox x:Name="AutomaticTabSwitchingCheckBox" Content="{x:Static properties:Resources.PreferencesWindow_Checkbox_AutomaticTabSwitching}" IsCheckedChanged="AutomaticTabSwitching_Changed"/>
+          </StackPanel>
+        </ScrollViewer>
       </TabItem>
       <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_HudWindow}">
         <TextBlock Text="HUD preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>

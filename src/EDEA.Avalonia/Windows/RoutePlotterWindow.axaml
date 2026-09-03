@@ -3,14 +3,16 @@
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         x:Class="EDEA.Avalonia.Windows.RoutePlotterWindow"
         Title="{x:Static properties:Resources.RoutePlotterWindow_Title}"
-        Height="400" Width="600"
+        Height="300" Width="500"
         Background="{StaticResource MainBackgroundColor}"
         Foreground="{StaticResource ForegroundBrush}"
         WindowStartupLocation="CenterOwner"
         CanResize="False">
-  <Grid Margin="20" RowDefinitions="*,Auto">
-    <TextBlock Grid.Row="0" Text="Route plotter placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
-    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+  <Grid Margin="20" RowDefinitions="Auto,*,Auto">
+    <TextBlock Grid.Row="0" Text="Enter Spansh route URL" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,8"/>
+    <TextBox Grid.Row="1" x:Name="RouteUrlTextBox" Watermark="https://spansh.co.uk/plotter/..." AcceptsReturn="False" TextWrapping="NoWrap" VerticalAlignment="Top" Height="30"/>
+    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+      <Button Content="Generate" Padding="16,4" Margin="0,0,10,0" Click="GenerateButton_Click"/>
       <Button Content="{x:Static properties:Resources.RoutePlotterWindow_Cancel}" Padding="16,4" Click="CancelButton_Click"/>
     </StackPanel>
   </Grid>
