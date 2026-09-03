@@ -4,5 +4,5 @@
         Title="EDEA"
         Width="800"
         Height="600">
-  <TextBlock Text="EDEA Avalonia placeholder" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+  <Button Content="Open About" HorizontalAlignment="Center" VerticalAlignment="Center" Click="OpenAbout_Click"/>
 </Window>

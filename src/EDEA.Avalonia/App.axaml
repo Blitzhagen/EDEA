@@ -3,6 +3,18 @@
              x:Class="EDEA.Avalonia.App"
              RequestedThemeVariant="Dark">
 
+  <Application.Resources>
+    <SolidColorBrush x:Key="BackgroundBrush" Color="#1A0F05"/>
+    <SolidColorBrush x:Key="PanelBrush" Color="#2A1A0A"/>
+    <SolidColorBrush x:Key="CardBrush" Color="#331E0C"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="ForegroundBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="DimForegroundBrush" Color="#AAAAAA"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="MainColor" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="MainBackgroundColor" Color="#1A0F05"/>
+  </Application.Resources>
+
   <Application.Styles>
     <FluentTheme />
   </Application.Styles>

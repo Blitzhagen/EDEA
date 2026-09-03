@@ -1,0 +1,68 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
+        xmlns:vm="clr-namespace:EDEA.Avalonia.ViewModels"
+        x:Class="EDEA.Avalonia.Windows.AboutWindow"
+        x:DataType="vm:AboutViewModel"
+        Title="{x:Static properties:Resources.AboutWindow_Title}"
+        Width="580" MinWidth="500" MaxHeight="780"
+        Background="{StaticResource BackgroundBrush}"
+        Foreground="{StaticResource ForegroundBrush}"
+        WindowStartupLocation="CenterScreen"
+        SizeToContent="Height">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="20" HorizontalAlignment="Center">
+
+      <Image x:Name="AboutImage" Width="96" Height="96" HorizontalAlignment="Center" Source="/Assets/app.ico" Margin="0,0,0,16"/>
+
+      <TextBlock Text="Elite Dangerous Exploration Assistent" FontSize="20" FontWeight="Bold" Foreground="#00BFFF" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,20"/>
+
+      <Grid HorizontalAlignment="Center" Width="520">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="0.42*"/>
+          <ColumnDefinition Width="0.58*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Developed by" Foreground="{StaticResource AccentBrush}" TextAlignment="Right" TextWrapping="Wrap" Margin="0,0,6,6" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="CMDR Blitzhagen" Foreground="{StaticResource ForegroundBrush}" TextAlignment="Left" TextWrapping="Wrap" Margin="0,0,0,6" VerticalAlignment="Top"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Version" Foreground="{StaticResource AccentBrush}" TextAlignment="Right" TextWrapping="Wrap" Margin="0,0,6,14" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Version}" Foreground="{StaticResource ForegroundBrush}" TextAlignment="Left" TextWrapping="Wrap" Margin="0,0,0,14" VerticalAlignment="Top"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Libraries" Foreground="{StaticResource AccentBrush}" TextAlignment="Right" TextWrapping="Wrap" Margin="0,0,6,6" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" Foreground="#00BFFF" TextAlignment="Left" TextWrapping="Wrap" Margin="0,0,0,6" VerticalAlignment="Top">
+          <TextBlock.Text>
+CommunityToolkit.Mvvm, Dapper, Jot, log4net, Material.Icons.Avalonia, Microsoft.Data.Sqlite, Avalonia, NAudio, SayIt
+          </TextBlock.Text>
+        </TextBlock>
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Foreground="{StaticResource AccentBrush}" TextAlignment="Right" TextWrapping="Wrap" Margin="0,0,6,6" VerticalAlignment="Top">
+          <TextBlock.Text>
+Vista Genomics values&#x0a;and statistical data&#x0a;for species prediction by
+          </TextBlock.Text>
+        </TextBlock>
+        <TextBlock Grid.Row="3" Grid.Column="1" Foreground="#00BFFF" TextAlignment="Left" TextWrapping="Wrap" Margin="0,0,0,6" VerticalAlignment="Top">
+          <TextBlock.Text>
+&#x0a;&#x0a;Canonn Research
+          </TextBlock.Text>
+        </TextBlock>
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="System and route data by" Foreground="{StaticResource AccentBrush}" TextAlignment="Right" TextWrapping="Wrap" Margin="0,0,6,6" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" Foreground="#00BFFF" TextAlignment="Left" TextWrapping="Wrap" Margin="0,0,0,6" VerticalAlignment="Top" Text="EDSM, Spansh"/>
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Thanks to" Foreground="{StaticResource AccentBrush}" TextAlignment="Right" TextWrapping="Wrap" Margin="0,0,6,20" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="CMDR Panostrede" Foreground="#00BFFF" TextAlignment="Left" TextWrapping="Wrap" Margin="0,0,0,20" VerticalAlignment="Top"/>
+      </Grid>
+
+      <Button Content="{x:Static properties:Resources.AboutWindow_OK}" HorizontalAlignment="Right" Padding="16,4" Click="OkButton_Click" Margin="0,0,0,8"/>
+    </StackPanel>
+  </ScrollViewer>
+</Window>
