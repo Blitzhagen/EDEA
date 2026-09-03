@@ -8,6 +8,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using EDEA.Avalonia.Services;
+using EDEA.Avalonia.ViewModels;
 using EDEA.Avalonia.Views;
 using EDEA.Services;
 using EDEA.Stores;
@@ -64,7 +65,7 @@ public partial class App : Application
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var mainWindow = new MainWindow();
+                var mainWindow = new MainWindow { DataContext = new MainViewModel() };
                 PlatformServices.WindowState?.Track(mainWindow, "MainWindow");
                 desktop.MainWindow = mainWindow;
                 mainWindow.Show();

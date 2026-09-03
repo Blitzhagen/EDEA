@@ -1,8 +1,11 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
+        xmlns:vm="clr-namespace:EDEA.Avalonia.ViewModels"
+        xmlns:vmcore="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
         x:Class="EDEA.Avalonia.Views.MainWindow"
-        Title="EDEA"
+        x:DataType="vm:MainViewModel"
+        Title="{Binding Title}"
         Height="900" Width="1080"
         MinHeight="479" MinWidth="1070"
         SystemDecorations="None"
@@ -14,7 +17,7 @@
     <Border Grid.Row="0" Background="{StaticResource TitleBarColor}" Height="30" PointerPressed="TitleBar_PointerPressed">
       <DockPanel LastChildFill="True">
         <Image Height="20" Margin="7,0,0,0" Source="/Assets/app.ico" VerticalAlignment="Center" DockPanel.Dock="Left"/>
-        <TextBlock Foreground="{StaticResource MainColor}" VerticalAlignment="Center" Margin="10,0" FontWeight="Bold" Text="EDEA" DockPanel.Dock="Left"/>
+        <TextBlock Foreground="{StaticResource MainColor}" VerticalAlignment="Center" Margin="10,0" FontWeight="Bold" Text="{Binding Title}" DockPanel.Dock="Left"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
           <Button Content="_" Width="30" Background="Transparent" Foreground="{StaticResource MainColor}" BorderThickness="0" Click="MinimizeButton_Click"/>
           <Button Content="□" Width="30" Background="Transparent" Foreground="{StaticResource MainColor}" BorderThickness="0" Click="MaximizeRestoreButton_Click"/>
@@ -26,34 +29,31 @@
     <!-- Menu bar -->
     <Menu Grid.Row="1" Background="{StaticResource PanelBrush}">
       <MenuItem Header="☰">
-        <MenuItem Header="Toggle HUD" Click="OpenCloseHudWindow_Click"/>
-        <MenuItem Header="Mouse Pass-Through" Click="ToggleMousePassThrough_Click"/>
+        <MenuItem Header="Toggle HUD" Command="{Binding OpenCloseHudWindowCommand}"/>
+        <MenuItem Header="Mouse Pass-Through" IsEnabled="False"/>
         <Separator/>
-        <MenuItem Header="Preferences" Click="ShowPreferences_Click"/>
+        <MenuItem Header="{x:Static properties:Resources.MenuItem_ImportJournalHistory}" Command="{Binding ImportJournalHistoryCommand}"/>
         <Separator/>
-        <MenuItem Header="Feedback / Report Issue" Click="ShowFeedback_Click"/>
-        <MenuItem Header="About" Click="ShowAbout_Click"/>
+        <MenuItem Header="{x:Static properties:Resources.MenuItem_Preferences}" Command="{Binding ShowPreferencesWindowCommand}"/>
+        <Separator/>
+        <MenuItem Header="{x:Static properties:Resources.MenuItem_FeedbackReportIssue}" Command="{Binding ShowFeedbackReportIssueWindowCommand}"/>
+        <MenuItem Header="{x:Static properties:Resources.MenuItem_About}" Command="{Binding ShowAboutWindowCommand}"/>
       </MenuItem>
     </Menu>
 
-    <!-- Main content placeholder -->
+    <!-- Main content -->
     <Grid Grid.Row="2">
-      <TabControl TabStripPlacement="Left">
-        <TabItem Header="Route">
-          <TextBlock Text="Route table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
-        </TabItem>
-        <TabItem Header="Bodies">
-          <TextBlock Text="Bodies table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
-        </TabItem>
-        <TabItem Header="Biologicals">
-          <TextBlock Text="Biologicals table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
-        </TabItem>
-        <TabItem Header="Surroundings">
-          <TextBlock Text="Surroundings table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
-        </TabItem>
-        <TabItem Header="History">
-          <TextBlock Text="History table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
-        </TabItem>
+      <TabControl TabStripPlacement="Left" ItemsSource="{Binding TabViewModels}" SelectedIndex="{Binding SelectedTabIndex}">
+        <TabControl.ItemTemplate>
+          <DataTemplate x:DataType="vmcore:TabViewModel">
+            <TextBlock Text="{Binding TabHeader}" Foreground="{StaticResource ForegroundBrush}"/>
+          </DataTemplate>
+        </TabControl.ItemTemplate>
+        <TabControl.ContentTemplate>
+          <DataTemplate>
+            <TextBlock Text="Table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+          </DataTemplate>
+        </TabControl.ContentTemplate>
       </TabControl>
     </Grid>
   </Grid>
