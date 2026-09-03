@@ -195,10 +195,9 @@ public class StarSystemProvider
     /// <summary>Handles the application shutdown and persists the current system.</summary>
     public void HandleApplicationShutdown()
     {
-        // TODO: Replace with ISpeechService in Phase 2.
         if (!string.IsNullOrEmpty(CommanderName))
         {
-            _ = new SpeechOutputCommander(CommanderName.Remove(0, "CMDR ".Length));
+            PlatformServices.Speech?.SpeakGoodbye(new SpeechOutputCommander(CommanderName.Remove(0, "CMDR ".Length)));
         }
         int addOrUpdateResult = _historyProvider.AddOrUpdateStarSystem(CurrentSystem);
         if (addOrUpdateResult > 0)
@@ -601,9 +600,20 @@ public class StarSystemProvider
         {
             return;
         }
-        // TODO: Replace with ISpeechService in Phase 2.
-        _ = new SpeechOutputPlanet(planet);
-        _ = planet.PredictedSpecies.Select((GenusClassification genusClassification) => new GenusClassificationViewModel(genusClassification, planet)).ToList();
+
+        var predictedSpecies = planet.PredictedSpecies;
+        if (predictedSpecies.Count == 1)
+        {
+            PlatformServices.Speech?.SpeakValuableGenusPredicted(
+                new SpeechOutputPlanet(planet),
+                new SpeechOutputSpecies(predictedSpecies[0]));
+        }
+        else if (predictedSpecies.Count > 1)
+        {
+            PlatformServices.Speech?.SpeakValuableGeneraPredicted(
+                new SpeechOutputPlanet(planet),
+                new SpeechOutputValuableSpeciesCount(predictedSpecies.Count));
+        }
     }
 
     private void announceFoundMatchingClassifications(Planet planet)
@@ -612,12 +622,21 @@ public class StarSystemProvider
         {
             return;
         }
-        // TODO: Replace with ISpeechService in Phase 2.
-        _ = new SpeechOutputPlanet(planet);
-        foreach (PlanetClassification matchingPlanetClassification in planet.MatchingPlanetClassifications)
+
+        var matchingClassifications = planet.MatchingPlanetClassifications;
+        if (matchingClassifications.Count == 1)
         {
-            _ = new SpeechOutputPlanetClassification(matchingPlanetClassification);
+            PlatformServices.Speech?.SpeakMatchingClassificationFound(
+                new SpeechOutputPlanet(planet),
+                new SpeechOutputPlanetClassification(matchingClassifications[0]));
         }
+        else if (matchingClassifications.Count > 1)
+        {
+            PlatformServices.Speech?.SpeakMatchingClassificationsFound(
+                new SpeechOutputPlanet(planet),
+                new SpeechOutputMatchingClassificationsCount(matchingClassifications.Count));
+        }
+
         planet.MatchingPlanetClassificationsAnnounced = true;
     }
 

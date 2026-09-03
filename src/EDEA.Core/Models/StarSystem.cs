@@ -441,36 +441,35 @@ public class StarSystem
     /// <param name="existingBody">The existing body, or <see langword="null"/> if the body is new.</param>
     private void checkBodyAndSpeak(Body body, Body? existingBody = null)
     {
-        // TODO: Replace speech calls with ISpeechService in Phase 2.
         if (existingBody == null && !body.WasDiscovered && body.Type != BodyType.Unknown)
         {
             if (body.Name == PrimaryStarName && body.Type == BodyType.Star)
             {
-                _ = new SpeechOutputSystem(this);
+                PlatformServices.Speech?.SpeakFirstDiscoverySystem(new SpeechOutputSystem(this));
             }
             else
             {
-                _ = new SpeechOutputBody(body);
+                PlatformServices.Speech?.SpeakFirstDiscoveryBody(new SpeechOutputBody(body));
                 if (body.Type == BodyType.Planet)
                 {
                     Planet obj = (Planet)body;
-                    _ = new SpeechOutputPlanet(obj);
+                    PlatformServices.Speech?.SpeakFirstDiscoveryBody(new SpeechOutputBody(body));
                     if (obj.IsTerraformable)
                     {
-                        // speech: terraformable
+                        PlatformServices.Speech?.SpeakTerraformable(new SpeechOutputPlanet(obj));
                     }
                     if (obj.IsLandable)
                     {
-                        // speech: landable
+                        PlatformServices.Speech?.SpeakLandable(new SpeechOutputPlanet(obj));
                     }
                 }
             }
             if (body.HasRings)
             {
-                _ = new SpeechOutputRingsCount(body);
+                PlatformServices.Speech?.SpeakRingCount(new SpeechOutputBody(body), new SpeechOutputRingsCount(body));
                 foreach (Ring ring in body.Rings.Values)
                 {
-                    _ = new SpeechOutputRing(ring, body);
+                    PlatformServices.Speech?.SpeakRing(new SpeechOutputRing(ring, body), new SpeechOutputBody(body));
                 }
             }
         }
@@ -484,11 +483,11 @@ public class StarSystem
             }
             if (newPlanet.GeologicalCount > 0 && (planet == null || planet.GeologicalCount == 0))
             {
-                _ = new SpeechOutputPlanet(newPlanet);
+                PlatformServices.Speech?.SpeakGeologicalSignals(new SpeechOutputPlanet(newPlanet));
             }
             if (newPlanet.BiologicalCount > 0 && (planet == null || planet.BiologicalCount == 0))
             {
-                _ = new SpeechOutputPlanet(newPlanet);
+                PlatformServices.Speech?.SpeakBiologicalSignals(new SpeechOutputPlanet(newPlanet));
             }
         }
     }
