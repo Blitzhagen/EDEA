@@ -3,6 +3,7 @@
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         xmlns:vm="clr-namespace:EDEA.Avalonia.ViewModels"
         xmlns:vmcore="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
+        xmlns:views="clr-namespace:EDEA.Avalonia.Views"
         x:Class="EDEA.Avalonia.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Title="{Binding Title}"
@@ -12,6 +13,23 @@
         Background="{StaticResource MainBackgroundColor}"
         Foreground="{StaticResource ForegroundBrush}"
         Icon="/Assets/app.ico">
+  <Window.DataTemplates>
+    <DataTemplate x:DataType="vmcore:BodyTableViewModel">
+      <views:BodyTableView />
+    </DataTemplate>
+    <DataTemplate x:DataType="vmcore:GenusTableViewModel">
+      <views:GenusTableView />
+    </DataTemplate>
+    <DataTemplate x:DataType="vmcore:SurroundingsTableViewModel">
+      <views:SurroundingsTableView />
+    </DataTemplate>
+    <DataTemplate x:DataType="vmcore:HistoryViewModel">
+      <views:HistoryTableView />
+    </DataTemplate>
+    <DataTemplate x:DataType="vmcore:TabViewModel">
+      <TextBlock Text="{Binding TabHeader}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+    </DataTemplate>
+  </Window.DataTemplates>
   <Grid RowDefinitions="30,Auto,*">
     <!-- Custom title bar -->
     <Border Grid.Row="0" Background="{StaticResource TitleBarColor}" Height="30" PointerPressed="TitleBar_PointerPressed">
