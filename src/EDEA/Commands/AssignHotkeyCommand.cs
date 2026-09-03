@@ -99,13 +99,13 @@ public class AssignHotkeyCommand : CommandBase
             log.Debug($"Pressed hotkey modifiers {modifiers} and key {key}");
             if (modifiers != ModifierKeys.None && key != Key.None && key != Key.LeftAlt && key != Key.LeftCtrl && key != Key.LeftShift && key != Key.RightAlt && key != Key.RightCtrl && key != Key.RightShift)
             {
-                _currentHotkey.Key = key;
-                _currentHotkey.Modifier = modifiers;
+                _currentHotkey.Key = (EDEA.Core.Input.Key)key;
+                _currentHotkey.Modifier = (EDEA.Core.Input.ModifierKeys)modifiers;
             }
             else
             {
-                _currentHotkey.Key = Key.None;
-                _currentHotkey.Modifier = ModifierKeys.None;
+                _currentHotkey.Key = EDEA.Core.Input.Key.None;
+                _currentHotkey.Modifier = EDEA.Core.Input.ModifierKeys.None;
             }
             _globalHotkeysTabItem?.Focus();
         }

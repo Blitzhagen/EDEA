@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection;
-using System.Windows.Input;
+using EDEA.Core.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using EDEA.Enums;
 

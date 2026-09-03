@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/EDEA.Core/EDEA.Core.csproj" />
     <Project Path="src/EDEA/EDEA.csproj" />
   </Folder>
   <Folder Name="/test/">

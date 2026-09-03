@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using System.Windows.Input;
+using EDEA.Core.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using EDEA.Enums;
 using EDEA.Properties;
@@ -22,10 +22,7 @@ public class HotkeyItem : ObservableObject
     /// </summary>
     private readonly string _propertyName;
 
-    /// <summary>
-    /// The converter used to format the primary key.
-    /// </summary>
-    private readonly KeyConverter _keyConverter = new();
+
 
     /// <summary>
     /// Gets the underlying hotkey from the settings.
@@ -56,7 +53,7 @@ public class HotkeyItem : ObservableObject
             var h = Hotkey;
             if (h is null || !h.IsValid)
                 return Resources.Hotkey_Unassigned;
-            return h.Modifier.ToString().Replace(", ", "+") + "+" + _keyConverter.ConvertToString(h.Key);
+            return h.Modifier.ToString().Replace(", ", "+") + "+" + h.Key;
         }
     }
 

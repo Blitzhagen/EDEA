@@ -1,4 +1,4 @@
-using System.Windows.Input;
+using EDEA.Core.Input;
 using EDEA.Models;
 using EDEA.Properties;
 using EDEA.Enums;
@@ -15,10 +15,6 @@ public class HotkeyViewModel : ViewModelBase
     /// </summary>
     private readonly Hotkey _hotkey;
 
-    /// <summary>
-    /// The converter used to format key names.
-    /// </summary>
-    private readonly KeyConverter _keyConverter;
 
     /// <summary>
     /// Gets the hotkey identifier.
@@ -92,7 +88,7 @@ public class HotkeyViewModel : ViewModelBase
             {
                 return Resources.Hotkey_Unassigned;
             }
-            return Modifier.ToString().Replace(", ", "+") + "+" + _keyConverter.ConvertToString(Key);
+            return Modifier.ToString().Replace(", ", "+") + "+" + Key;
         }
     }
 
@@ -110,7 +106,6 @@ public class HotkeyViewModel : ViewModelBase
     public HotkeyViewModel(Hotkey hotkey, string description)
     {
         _hotkey = hotkey;
-        _keyConverter = new KeyConverter();
         Description = description;
     }
 }

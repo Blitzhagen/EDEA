@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<UserControl x:Class="EDEA.Views.BodyTableView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:converter="clr-namespace:EDEA.Converters" xmlns:mns="clr-namespace:EDEA" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:viewmodels="clr-namespace:EDEA.ViewModels" xmlns:views="clr-namespace:EDEA.Views">
+<UserControl x:Class="EDEA.Views.BodyTableView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:converter="clr-namespace:EDEA.Converters" xmlns:mns="clr-namespace:EDEA;assembly=EDEA.Core" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:viewmodels="clr-namespace:EDEA.ViewModels" xmlns:views="clr-namespace:EDEA.Views">
   <Grid>
     <Border Style="{StaticResource TabViewBorder}" />
     <TextBlock Style="{StaticResource TableViewInfoBanner}" Text="{Binding NoBodiesInfo}" Visibility="{Binding Path=AreNoBodiesAvailable, Converter={StaticResource BoolToVis}}" />

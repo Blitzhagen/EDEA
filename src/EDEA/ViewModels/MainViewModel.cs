@@ -267,7 +267,7 @@ public class MainViewModel : ObservableObject
 
         hudViewModel.PropertyChanged += hudViewModel_PropertyChanged;
         _hotkeyProvider.PropertyChanged += _hotkeyProvider_PropertyChanged;
-        SelectedTabIndexChanged += _starSystemProvider.MainViewModel_SelectedTabIndexChanged;
+        SelectedTabIndexChanged += (sender, e) => _starSystemProvider.OnSurroundingsTabSelected(IsSurroundingsTabSelected);
 
         _starSystemProvider.GuiDataUpdated += delegate
         {

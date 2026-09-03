@@ -1,7 +1,7 @@
 <Window x:Class="EDEA.Windows.FeedbackReportIssueWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:properties="clr-namespace:EDEA.Properties"
+        xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         Title="{x:Static properties:Resources.FeedbackReportIssueWindow_Title}" Height="420" Width="520"
         Background="{StaticResource BackgroundBrush}"
         Foreground="{StaticResource ForegroundBrush}"

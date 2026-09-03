@@ -524,7 +524,8 @@ public class JournalProvider
                     string? commanderName = Helpsters.ConvertJObjectValue<string>(jObject, "Name");
                     _starSystemProvider.CommanderName = "CMDR " + commanderName;
                     commanderNameUnread = false;
-                    SpeechProvider.SpeakWelcome(new SpeechOutputCommander(commanderName ?? string.Empty));
+                    // TODO: Replace with ISpeechService in Phase 2.
+                    _ = new SpeechOutputCommander(commanderName ?? string.Empty);
                     continue;
                 }
                 if (eventName == "WingAdd" && jObject.ContainsKey("Name"))

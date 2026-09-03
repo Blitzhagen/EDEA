@@ -1,4 +1,4 @@
-using System.Windows.Input;
+using EDEA.Core.Input;
 using EDEA.Enums;
 
 namespace EDEA.Models;

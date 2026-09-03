@@ -1,5 +1,5 @@
 using System.Reflection;
-using System.Windows.Media;
+using EDEA.Core.Drawing;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace EDEA.Models;

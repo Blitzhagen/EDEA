@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection;
-using System.Windows.Media;
+using EDEA.Core.Drawing;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace EDEA.Models;
@@ -221,7 +221,7 @@ public partial class UserSettingsColors : ObservableObject
     /// </summary>
     /// <param name="hex">The hexadecimal color string.</param>
     /// <returns>The converted color.</returns>
-    private static Color C(string hex) => (Color)ColorConverter.ConvertFromString(hex)!;
+    private static Color C(string hex) => Color.Parse(hex);
 
     /// <summary>
     /// Returns the default values for the color settings.

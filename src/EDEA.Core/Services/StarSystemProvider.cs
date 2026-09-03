@@ -5,11 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using EDEA;
 using EDEA.Models;
 using EDEA.Stores;
-using EDEA.ViewModels;
 using log4net;
 
 namespace EDEA.Services;
@@ -197,10 +195,10 @@ public class StarSystemProvider
     /// <summary>Handles the application shutdown and persists the current system.</summary>
     public void HandleApplicationShutdown()
     {
-        SpeechProvider.ShutUp();
+        // TODO: Replace with ISpeechService in Phase 2.
         if (!string.IsNullOrEmpty(CommanderName))
         {
-            SpeechProvider.SpeakGoodbye(new SpeechOutputCommander(CommanderName.Remove(0, "CMDR ".Length)));
+            _ = new SpeechOutputCommander(CommanderName.Remove(0, "CMDR ".Length));
         }
         int addOrUpdateResult = _historyProvider.AddOrUpdateStarSystem(CurrentSystem);
         if (addOrUpdateResult > 0)
@@ -289,14 +287,13 @@ public class StarSystemProvider
     }
 
     /// <summary>Handles the selected tab index change in the main view model.</summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> containing the event data.</param>
-    public void MainViewModel_SelectedTabIndexChanged(object sender, EventArgs e)
+    /// <param name="isSurroundingsTabSelected">Whether the Surroundings tab is now selected.</param>
+    public void OnSurroundingsTabSelected(bool isSurroundingsTabSelected)
     {
         surroundingsVisible = false;
         try
         {
-            if (((MainViewModel)sender).IsSurroundingsTabSelected)
+            if (isSurroundingsTabSelected)
             {
                 surroundingsVisible = true;
                 RequestSurroundingStarSystemsForCurrentSystem();
@@ -604,22 +601,9 @@ public class StarSystemProvider
         {
             return;
         }
-        SpeechOutputPlanet speechOutputPlanet = new SpeechOutputPlanet(planet);
-        foreach (GenusClassificationViewModel viewModel in planet.PredictedSpecies.Select((GenusClassification genusClassification) => new GenusClassificationViewModel(genusClassification, planet)).ToList())
-        {
-            if (viewModel.VistaGenomicsMaxValueSort > Preferences.Other.ValuableGenusThreshold)
-            {
-                SpeechProvider.SpeakValuableGenusPredicted(speechOutputPlanet, new SpeechOutputSpecies(viewModel.GenusClassification));
-            }
-        }
-        int valuablePredictedCount = (from g in planet.PredictedSpecies
-                                      select new GenusClassificationViewModel(g, planet) into x
-                                      where x.VistaGenomicsMaxValueSort > Preferences.Other.ValuableGenusThreshold
-                                      select x).Count();
-        if (valuablePredictedCount > 0)
-        {
-            SpeechProvider.SpeakValuableGeneraPredicted(speechOutputPlanet, new SpeechOutputValuableSpeciesCount(valuablePredictedCount));
-        }
+        // TODO: Replace with ISpeechService in Phase 2.
+        _ = new SpeechOutputPlanet(planet);
+        _ = planet.PredictedSpecies.Select((GenusClassification genusClassification) => new GenusClassificationViewModel(genusClassification, planet)).ToList();
     }
 
     private void announceFoundMatchingClassifications(Planet planet)
@@ -628,14 +612,11 @@ public class StarSystemProvider
         {
             return;
         }
-        SpeechOutputPlanet speechOutputPlanet = new SpeechOutputPlanet(planet);
+        // TODO: Replace with ISpeechService in Phase 2.
+        _ = new SpeechOutputPlanet(planet);
         foreach (PlanetClassification matchingPlanetClassification in planet.MatchingPlanetClassifications)
         {
-            SpeechProvider.SpeakMatchingClassificationFound(speechOutputPlanet, new SpeechOutputPlanetClassification(matchingPlanetClassification));
-        }
-        if (planet.MatchingPlanetClassifications.Count > 0)
-        {
-            SpeechProvider.SpeakMatchingClassificationsFound(speechOutputPlanet, new SpeechOutputMatchingClassificationsCount(planet.MatchingPlanetClassifications.Count));
+            _ = new SpeechOutputPlanetClassification(matchingPlanetClassification);
         }
         planet.MatchingPlanetClassificationsAnnounced = true;
     }
@@ -646,21 +627,9 @@ public class StarSystemProvider
         {
             return;
         }
-        Thread thread = new Thread((ThreadStart)delegate
-        {
-            try
-            {
-                Clipboard.SetText(systemName, TextDataFormat.UnicodeText);
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to copy next system name '" + systemName + "' to clipboard", exception);
-            }
-        });
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-        thread.Join();
-        log.Debug($"Copied next system name '{systemName}' to clipboard, mode: {_journalProvider.JournalFirstParse}");
+
+        // TODO: Replace with IClipboardService in Phase 2.
+        log.Debug($"Would copy next system name '{systemName}' to clipboard");
     }
 
     private void addToOrUpdateInHistory(WebApiParameter webEdsmRequestParameter)

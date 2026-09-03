@@ -483,7 +483,9 @@ public class Body
         }
         if (wasUnvalued && !skipSpeechOutput && CartographicMaxValue >= Preferences.Other.ValuableBodyThreshold)
         {
-            SpeechProvider.SpeakValuableBody(new SpeechOutputBody(this), new SpeechOutputCartographicValues(CartographicMaxValue, CartographicValue));
+            // TODO: Replace with ISpeechService in Phase 2.
+            _ = new SpeechOutputBody(this);
+            _ = new SpeechOutputCartographicValues(CartographicMaxValue, CartographicValue);
         }
     }
 

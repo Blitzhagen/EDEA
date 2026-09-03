@@ -10,7 +10,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using EDEA.Enums;
 using EDEA.Models;
 using log4net;
@@ -130,13 +129,10 @@ public class WebApiProvider
             }
 
             var jSystems = Helpsters.ConvertJObjectValue<JsonArray?>(jToken as JsonObject ?? new JsonObject(), "min_max", new JsonArray());
-            Application.Current?.Dispatcher.Invoke(() =>
+            foreach (var jSystem in jSystems!.OfType<JsonObject>())
             {
-                foreach (var jSystem in jSystems!.OfType<JsonObject>())
-                {
-                    parameterSpanshSystemNames.StarSystems.Add(new StarSystem(Helpsters.ConvertJObjectValue(jSystem, "id64", 0L), Helpsters.ConvertJObjectValue<string>(jSystem, "name")));
-                }
-            });
+                parameterSpanshSystemNames.StarSystems.Add(new StarSystem(Helpsters.ConvertJObjectValue(jSystem, "id64", 0L), Helpsters.ConvertJObjectValue<string>(jSystem, "name")));
+            }
             requestCallBack(parameterSpanshSystemNames);
         }
         catch (Exception exception)
@@ -221,7 +217,7 @@ public class WebApiProvider
     {
         if (jToken is not JsonObject jObject)
         {
-            Application.Current.Dispatcher.Invoke(() => requestCallBack(webApiParameter));
+            requestCallBack(webApiParameter);
             return;
         }
 
@@ -230,14 +226,14 @@ public class WebApiProvider
         if (string.IsNullOrEmpty(jobId) || string.IsNullOrEmpty(jobStatus))
         {
             log.Error($"Spansh neutron job has unknown parameter: jobId {(jobId)}, status {(jobStatus)}");
-            Application.Current.Dispatcher.Invoke(() => requestCallBack(webApiParameter));
+            requestCallBack(webApiParameter);
             return;
         }
 
         if (webApiParameter is not WebApiParameterSpanshGalaxyRoute webApiParameterSpanshGalaxyRoute)
         {
             log.Error($"Spansh neutron job has invalid web API parameter: type is {(webApiParameter.GetType())} instead of {(typeof(WebApiParameterSpanshGalaxyRoute))}");
-            Application.Current.Dispatcher.Invoke(() => requestCallBack(webApiParameter));
+            requestCallBack(webApiParameter);
             return;
         }
 
@@ -276,11 +272,11 @@ public class WebApiProvider
                             webApiParameterSpanshGalaxyRoute.Jumps = jumps;
                         }
                     }
-                    Application.Current.Dispatcher.Invoke(() => requestCallBack(webApiParameterSpanshGalaxyRoute));
+                    requestCallBack(webApiParameterSpanshGalaxyRoute);
                     break;
                 }
             default:
-                Application.Current.Dispatcher.Invoke(() => requestCallBack(webApiParameter));
+                requestCallBack(webApiParameter);
                 break;
         }
     }
@@ -349,7 +345,7 @@ public class WebApiProvider
                             webApiParameterSpanshGalaxyRoute.Jumps = jumps;
                         }
                     }
-                    Application.Current.Dispatcher.Invoke(() => requestCallBack(webApiParameterSpanshGalaxyRoute));
+                    requestCallBack(webApiParameterSpanshGalaxyRoute);
                     break;
                 }
             default:

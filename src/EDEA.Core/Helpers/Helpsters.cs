@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Windows.Documents;
 using EDEA.Models;
 using EDEA.Properties;
 using log4net;
@@ -408,31 +407,6 @@ public static class Helpsters
             log.Debug("Could not get RingReserveLevel for " + dataSourceDescription + ", returning 'Unknown'", exception);
         }
         return RingReserveLevel.Unknown;
-    }
-
-    /// <summary>
-    /// Opens the URI associated with a hyperlink using the default browser.
-    /// </summary>
-    /// <param name="hyperlink">The hyperlink to open.</param>
-    /// <returns><c>true</c> when the hyperlink was opened; otherwise, <c>false</c>.</returns>
-    public static bool OpenHyperlink(Hyperlink? hyperlink)
-    {
-        try
-        {
-            if (hyperlink?.NavigateUri != null)
-            {
-                Process.Start(new ProcessStartInfo(hyperlink.NavigateUri.ToString())
-                {
-                    UseShellExecute = true
-                });
-                return true;
-            }
-        }
-        catch (Exception exception)
-        {
-            log.Error("Error on opening hyperlink.", exception);
-        }
-        return false;
     }
 
     /// <summary>

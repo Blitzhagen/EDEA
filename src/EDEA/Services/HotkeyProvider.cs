@@ -126,7 +126,7 @@ public class HotkeyProvider : ViewModelBase
         try
         {
             UnregisterHotKey(mainWindowHandle, (int)hotkeyViewModel.Id);
-            RegisterHotKey(mainWindowHandle, (int)hotkeyViewModel.Id, (int)hotkeyViewModel.Modifier, KeyInterop.VirtualKeyFromKey(hotkeyViewModel.Key));
+            RegisterHotKey(mainWindowHandle, (int)hotkeyViewModel.Id, (int)hotkeyViewModel.Modifier, KeyInterop.VirtualKeyFromKey((System.Windows.Input.Key)hotkeyViewModel.Key));
             log.Debug($"Assigned hotkey {hotkeyViewModel.FullKey} for '{hotkeyViewModel.Description}' ({hotkeyViewModel.Id}) ");
         }
         catch (Exception exception)

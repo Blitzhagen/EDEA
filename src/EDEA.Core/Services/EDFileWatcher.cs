@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows;
 using EDEA.Models;
 using log4net;
 
@@ -103,11 +102,7 @@ public class EDFileWatcher : FileSystemWatcher
         catch (Exception exception)
         {
             log.Fatal("Path for ED journal files is invalid", exception);
-            string caption = "Missing Journal Files!";
-            MessageBoxButton button = MessageBoxButton.OK;
-            MessageBoxImage icon = MessageBoxImage.Hand;
-            MessageBox.Show("Could not determine the Elite Dangerous Saved Games folder where the Journal*.log files are stored.\n\nPlease set the appropriate folder in the Configuration section in the preferences so that EDEA works correctly.", caption, button, icon, MessageBoxResult.OK);
-            _ = 1;
+            throw new InvalidOperationException("Could not determine the Elite Dangerous Saved Games folder where the Journal*.log files are stored. Please set the appropriate folder in the Configuration section in the preferences so that EDEA works correctly.");
         }
     }
 

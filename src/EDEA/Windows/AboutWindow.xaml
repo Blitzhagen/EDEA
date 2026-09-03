@@ -1,7 +1,7 @@
 <Window x:Class="EDEA.Windows.AboutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:properties="clr-namespace:EDEA.Properties"
+        xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         Title="{x:Static properties:Resources.AboutWindow_Title}"
         Width="580" MinWidth="500" MaxHeight="780"
         Background="{StaticResource BackgroundBrush}"
