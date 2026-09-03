@@ -2,7 +2,6 @@
   <Folder Name="/src/">
     <Project Path="src/EDEA.Avalonia/EDEA.Avalonia.csproj" />
     <Project Path="src/EDEA.Core/EDEA.Core.csproj" />
-    <Project Path="src/EDEA/EDEA.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/EDEA.Tests/EDEA.Tests.csproj" />
