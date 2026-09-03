@@ -1,8 +1,60 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         x:Class="EDEA.Avalonia.Views.MainWindow"
         Title="EDEA"
-        Width="800"
-        Height="600">
-  <Button Content="Open About" HorizontalAlignment="Center" VerticalAlignment="Center" Click="OpenAbout_Click"/>
+        Height="900" Width="1080"
+        MinHeight="479" MinWidth="1070"
+        SystemDecorations="None"
+        Background="{StaticResource MainBackgroundColor}"
+        Foreground="{StaticResource ForegroundBrush}"
+        Icon="/Assets/app.ico">
+  <Grid RowDefinitions="30,Auto,*">
+    <!-- Custom title bar -->
+    <Border Grid.Row="0" Background="{StaticResource TitleBarColor}" Height="30" PointerPressed="TitleBar_PointerPressed">
+      <DockPanel LastChildFill="True">
+        <Image Height="20" Margin="7,0,0,0" Source="/Assets/app.ico" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+        <TextBlock Foreground="{StaticResource MainColor}" VerticalAlignment="Center" Margin="10,0" FontWeight="Bold" Text="EDEA" DockPanel.Dock="Left"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+          <Button Content="_" Width="30" Background="Transparent" Foreground="{StaticResource MainColor}" BorderThickness="0" Click="MinimizeButton_Click"/>
+          <Button Content="□" Width="30" Background="Transparent" Foreground="{StaticResource MainColor}" BorderThickness="0" Click="MaximizeRestoreButton_Click"/>
+          <Button Content="X" Width="30" Background="Transparent" Foreground="{StaticResource MainColor}" BorderThickness="0" Click="CloseButton_Click"/>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <!-- Menu bar -->
+    <Menu Grid.Row="1" Background="{StaticResource PanelBrush}">
+      <MenuItem Header="☰">
+        <MenuItem Header="Toggle HUD" Click="OpenCloseHudWindow_Click"/>
+        <MenuItem Header="Mouse Pass-Through" Click="ToggleMousePassThrough_Click"/>
+        <Separator/>
+        <MenuItem Header="Preferences" Click="ShowPreferences_Click"/>
+        <Separator/>
+        <MenuItem Header="Feedback / Report Issue" Click="ShowFeedback_Click"/>
+        <MenuItem Header="About" Click="ShowAbout_Click"/>
+      </MenuItem>
+    </Menu>
+
+    <!-- Main content placeholder -->
+    <Grid Grid.Row="2">
+      <TabControl TabStripPlacement="Left">
+        <TabItem Header="Route">
+          <TextBlock Text="Route table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+        </TabItem>
+        <TabItem Header="Bodies">
+          <TextBlock Text="Bodies table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+        </TabItem>
+        <TabItem Header="Biologicals">
+          <TextBlock Text="Biologicals table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+        </TabItem>
+        <TabItem Header="Surroundings">
+          <TextBlock Text="Surroundings table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+        </TabItem>
+        <TabItem Header="History">
+          <TextBlock Text="History table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+        </TabItem>
+      </TabControl>
+    </Grid>
+  </Grid>
 </Window>

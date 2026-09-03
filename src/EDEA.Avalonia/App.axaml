@@ -13,6 +13,8 @@
     <SolidColorBrush x:Key="BorderBrush" Color="#FF6A00"/>
     <SolidColorBrush x:Key="MainColor" Color="#FF6A00"/>
     <SolidColorBrush x:Key="MainBackgroundColor" Color="#1A0F05"/>
+    <SolidColorBrush x:Key="TitleBarColor" Color="#2A1A0A"/>
+    <SolidColorBrush x:Key="MainCellColor" Color="#331E0C"/>
   </Application.Resources>
 
   <Application.Styles>
