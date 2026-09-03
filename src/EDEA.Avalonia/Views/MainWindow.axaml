@@ -49,11 +49,6 @@
             <TextBlock Text="{Binding TabHeader}" Foreground="{StaticResource ForegroundBrush}"/>
           </DataTemplate>
         </TabControl.ItemTemplate>
-        <TabControl.ContentTemplate>
-          <DataTemplate>
-            <TextBlock Text="Table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
-          </DataTemplate>
-        </TabControl.ContentTemplate>
       </TabControl>
     </Grid>
   </Grid>

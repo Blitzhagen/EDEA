@@ -1,5 +1,8 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:EDEA.Avalonia"
+             xmlns:views="clr-namespace:EDEA.Avalonia.Views"
+             xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
              x:Class="EDEA.Avalonia.App"
              RequestedThemeVariant="Dark">
 
@@ -20,5 +23,23 @@
   <Application.Styles>
     <FluentTheme />
   </Application.Styles>
+
+  <Application.DataTemplates>
+    <DataTemplate DataType="{x:Type vm:BodyTableViewModel}">
+      <views:BodyTableView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:GenusTableViewModel}">
+      <views:GenusTableView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SurroundingsTableViewModel}">
+      <views:SurroundingsTableView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:HistoryViewModel}">
+      <views:HistoryTableView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TabViewModel}">
+      <views:RouteTableView />
+    </DataTemplate>
+  </Application.DataTemplates>
 
 </Application>

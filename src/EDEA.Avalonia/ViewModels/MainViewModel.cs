@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using EDEA.Avalonia.Windows;
 using EDEA.Models;
 using EDEA.Properties;
+using EDEA.Services;
 using EDEA.ViewModels;
 
 namespace EDEA.Avalonia.ViewModels;
@@ -57,17 +58,23 @@ public partial class MainViewModel : ObservableObject
     public ICommand ImportJournalHistoryCommand { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MainViewModel"/> class.
+    /// Initializes a new instance of the <see cref="MainViewModel"/> class with the specified providers.
     /// </summary>
-    public MainViewModel()
+    public MainViewModel(StarSystemProvider starSystemProvider, HistoryProvider historyProvider, RouteProvider routeProvider)
     {
+
+        var bodyTableViewModel = new BodyTableViewModel(Resources.TabHeader_Bodies, "Visible", starSystemProvider);
+        var genusTableViewModel = new GenusTableViewModel(Resources.TabHeader_Biologicals, "Collapsed", starSystemProvider);
+        var surroundingsTableViewModel = new SurroundingsTableViewModel(Resources.TabHeader_Surroundings, "Visible", starSystemProvider);
+        var historyViewModel = new HistoryViewModel(Resources.TabHeader_History, "Visible", historyProvider);
+
         TabViewModels = new ObservableCollection<TabViewModel>
         {
             new TabViewModel(Resources.TabHeader_Route, "Visible"),
-            new TabViewModel(Resources.TabHeader_Bodies, "Visible"),
-            new TabViewModel(Resources.TabHeader_Biologicals, "Visible"),
-            new TabViewModel(Resources.TabHeader_Surroundings, "Visible"),
-            new TabViewModel(Resources.TabHeader_History, "Visible"),
+            bodyTableViewModel,
+            genusTableViewModel,
+            surroundingsTableViewModel,
+            historyViewModel,
         };
 
         ShowAboutWindowCommand = new RelayCommand(ShowAboutWindow);
@@ -77,47 +84,28 @@ public partial class MainViewModel : ObservableObject
         ImportJournalHistoryCommand = new RelayCommand(ImportJournalHistory);
     }
 
-    /// <summary>
-    /// Gets the owner window for dialogs.
-    /// </summary>
-    /// <returns>The current main window, or <see langword="null"/>.</returns>
-    private static global::Avalonia.Controls.Window? GetOwnerWindow()
-    {
-        if (global::Avalonia.Application.Current?.ApplicationLifetime is global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return desktop.MainWindow;
-        }
-
-        return null;
-    }
-
     private void ShowAboutWindow()
     {
-        var window = new AboutWindow();
-        window.Show();
+        new AboutWindow().Show();
     }
 
     private void ShowPreferencesWindow()
     {
-        var window = new PreferencesWindow();
-        window.Show();
+        new PreferencesWindow().Show();
     }
 
     private void ShowFeedbackReportIssueWindow()
     {
-        var window = new FeedbackReportIssueWindow();
-        window.Show();
+        new FeedbackReportIssueWindow().Show();
     }
 
     private void OpenCloseHudWindow()
     {
-        var window = new HudWindow();
-        window.Show();
+        new HudWindow().Show();
     }
 
     private void ImportJournalHistory()
     {
-        var window = new JournalHistoryImportWindow();
-        window.Show();
+        new JournalHistoryImportWindow().Show();
     }
 }

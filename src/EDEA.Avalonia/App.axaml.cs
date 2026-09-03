@@ -32,6 +32,21 @@ public partial class App : Application
     private SettingsProvider? _settingsProvider;
 
     /// <summary>
+    /// The star system provider.
+    /// </summary>
+    private StarSystemProvider? _starSystemProvider;
+
+    /// <summary>
+    /// The history provider.
+    /// </summary>
+    private HistoryProvider? _historyProvider;
+
+    /// <summary>
+    /// The route provider.
+    /// </summary>
+    private RouteProvider? _routeProvider;
+
+    /// <summary>
     /// Shared <see cref="HttpClient"/> used for web API calls.
     /// </summary>
     private static readonly HttpClient httpClient = new();
@@ -65,7 +80,7 @@ public partial class App : Application
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var mainWindow = new MainWindow { DataContext = new MainViewModel() };
+                var mainWindow = new MainWindow { DataContext = new MainViewModel(_starSystemProvider!, _historyProvider!, _routeProvider!) };
                 PlatformServices.WindowState?.Track(mainWindow, "MainWindow");
                 desktop.MainWindow = mainWindow;
                 mainWindow.Show();
@@ -93,19 +108,19 @@ public partial class App : Application
     /// <summary>
     /// Creates and wires up all application providers.
     /// </summary>
-    private static void RunStartup()
+    private void RunStartup()
     {
         var fileWatcher = EDFileWatcher.Instance();
         var journalStore = JournalStore.Instance(fileWatcher);
         var sqliteStore = SQLiteStore.Instance(Path.Combine(Globals.AppDataFolder, "db", "EDEA.db"));
-        var historyProvider = HistoryProvider.Instance(sqliteStore);
-        var starSystemProvider = StarSystemProvider.Instance(historyProvider);
-        var webApiProvider = WebApiProvider.Instance(httpClient, starSystemProvider);
-        var journalProvider = JournalProvider.Instance(journalStore, starSystemProvider);
-        var routeProvider = RouteProvider.Instance(fileWatcher, starSystemProvider, journalProvider);
-        var statusProvider = StatusProvider.Instance(fileWatcher, starSystemProvider);
-        var planetsOfInterestProvider = PlanetsOfInterestProvider.Instance(starSystemProvider);
-        var journalHistoryImporter = JournalHistoryImporter.Instance(historyProvider, journalProvider, starSystemProvider);
+        _historyProvider = HistoryProvider.Instance(sqliteStore);
+        _starSystemProvider = StarSystemProvider.Instance(_historyProvider);
+        var webApiProvider = WebApiProvider.Instance(httpClient, _starSystemProvider);
+        var journalProvider = JournalProvider.Instance(journalStore, _starSystemProvider);
+        _routeProvider = RouteProvider.Instance(fileWatcher, _starSystemProvider, journalProvider);
+        var statusProvider = StatusProvider.Instance(fileWatcher, _starSystemProvider);
+        var planetsOfInterestProvider = PlanetsOfInterestProvider.Instance(_starSystemProvider);
+        var journalHistoryImporter = JournalHistoryImporter.Instance(_historyProvider, journalProvider, _starSystemProvider);
 
         journalProvider.Initialize();
     }

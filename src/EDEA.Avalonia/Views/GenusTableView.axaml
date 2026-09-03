@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
+             x:Class="EDEA.Avalonia.Views.GenusTableView"
+             x:DataType="vm:GenusTableViewModel">
+  <Grid>
+    <TextBlock Text="{Binding UnknownBiologicalsInfo}" IsVisible="{Binding AreBiologicalsUnknown}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+    <DataGrid Name="GenusDataGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Genuses}" IsVisible="{Binding AreBiologicalsKnown}">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+        <DataGridTextColumn Header="Species" Binding="{Binding SpeciesShort}" />
+        <DataGridTextColumn Header="Scans" Binding="{Binding ScanCount}" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

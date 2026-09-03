@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
+             x:Class="EDEA.Avalonia.Views.SurroundingsTableView"
+             x:DataType="vm:SurroundingsTableViewModel">
+  <Grid>
+    <TextBlock Text="{Binding NoSurroundingsInfo}" IsVisible="{Binding ShowNoSurroundingsInfo}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+    <DataGrid Name="SurroundingsDataGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding SurroundingStarSystems}" IsVisible="{Binding !ShowNoSurroundingsInfo}">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+        <DataGridTextColumn Header="Primary Star" Binding="{Binding PrimaryStarName}" />
+        <DataGridTextColumn Header="Distance" Binding="{Binding JumpDistanceLy}" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>
