@@ -19,7 +19,7 @@ public partial class HudViewModel : ObservableObject
     /// Gets the current star system view model.
     /// </summary>
     [ObservableProperty]
-    private StarSystemViewModel _currentSystem = new StarSystemViewModel(null);
+    private StarSystemViewModel _currentSystem = new StarSystemViewModel(new EDEA.Models.StarSystem(0L, string.Empty));
 
     /// <summary>
     /// Gets the table headline.
