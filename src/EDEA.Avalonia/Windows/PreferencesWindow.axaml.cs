@@ -7,6 +7,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using AvaloniaInput = global::Avalonia.Input;
 using EDEA.Enums;
 using EDEA.Models;
@@ -138,6 +139,39 @@ public partial class PreferencesWindow : Window
         {
             HexColorTextBox.PropertyChanged += OnHexColorTextBoxPropertyChanged;
         }
+
+        if (PlatformServices.Speech is not null)
+        {
+            PlatformServices.Speech.VoicesLoaded += OnVoicesLoaded;
+            Closed += (_, _) => PlatformServices.Speech.VoicesLoaded -= OnVoicesLoaded;
+        }
+    }
+
+    /// <summary>
+    /// Updates the voice combo box when the available TTS voices have been loaded.
+    /// </summary>
+    private void OnVoicesLoaded(object? sender, EventArgs e)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            var service = PlatformServices.Speech;
+            if (service == null || SpeechVoiceComboBox == null)
+            {
+                return;
+            }
+
+            SpeechVoiceComboBox.ItemsSource = service.InstalledVoices;
+
+            var voice = Preferences.Speech.SpeechSynthesizerVoice;
+            if (!string.IsNullOrWhiteSpace(voice) && service.InstalledVoices.Contains(voice))
+            {
+                SpeechVoiceComboBox.SelectedItem = voice;
+            }
+            else if (service.InstalledVoices.Count > 0)
+            {
+                SpeechVoiceComboBox.SelectedIndex = 0;
+            }
+        });
     }
 
     /// <summary>
@@ -223,12 +257,11 @@ public partial class PreferencesWindow : Window
         BiologicalsViewAltitudeThresholdTextBox.Text = Preferences.Other.BiologicalsViewAltitudeThreshold.ToString(CultureInfo.CurrentCulture);
 
         var speech = Preferences.Speech;
-        var installedVoices = PlatformServices.Speech?.InstalledVoices;
-        var voiceList = installedVoices != null && installedVoices.Count > 0
-            ? new List<string>(installedVoices)
-            : new List<string> { speech.SpeechSynthesizerVoice };
-        SpeechVoiceComboBox.ItemsSource = voiceList;
-        SpeechVoiceComboBox.SelectedIndex = Math.Max(0, voiceList.IndexOf(speech.SpeechSynthesizerVoice));
+        if (PlatformServices.Speech != null)
+        {
+            SpeechVoiceComboBox.ItemsSource = PlatformServices.Speech.InstalledVoices;
+            SpeechVoiceComboBox.SelectedItem = speech.SpeechSynthesizerVoice;
+        }
 
         SpeechRateSlider.Value = speech.SpeechSynthesizerRate;
         SpeechVolumeSlider.Value = speech.SpeechSynthesizerVolume;
