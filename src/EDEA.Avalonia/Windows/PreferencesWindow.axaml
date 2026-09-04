@@ -208,7 +208,16 @@
               <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Assignment}" Classes="PreferencesSectionHeadline" />
               <Border Classes="PreferencesSectionBody">
                 <ScrollViewer Height="300">
-                  <StackPanel x:Name="HotkeysPanel" Spacing="4" />
+                  <ListBox x:Name="HotkeysListBox" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single">
+                    <ListBox.ItemTemplate>
+                      <DataTemplate x:CompileBindings="False">
+                        <Grid ColumnDefinitions="*,Auto">
+                          <TextBlock Grid.Column="0" Text="{Binding Value.Description}" VerticalAlignment="Center" />
+                          <TextBlock Grid.Column="1" Text="{Binding Value.FullKey}" Tag="{Binding Key}" PointerPressed="HotkeyTextBlock_Click" Cursor="Hand" Padding="6,3" HorizontalAlignment="Right" />
+                        </Grid>
+                      </DataTemplate>
+                    </ListBox.ItemTemplate>
+                  </ListBox>
                 </ScrollViewer>
               </Border>
             </StackPanel>

@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using AvaloniaInput = global::Avalonia.Input;
+using EDEA.Enums;
 using EDEA.Models;
 using EDEA.Services;
 
@@ -208,7 +209,7 @@ public partial class PreferencesWindow : Window
             PlanetClassificationListBox.SelectedIndex = 0;
         }
 
-        HotkeysPanel.Children.Clear();
+        var hotkeyItems = new Dictionary<string, HotkeyItem>();
         var hotkeySettings = Preferences.Hotkeys;
         var hotkeyType = hotkeySettings.GetType();
         foreach (var property in hotkeyType.GetProperties())
@@ -224,14 +225,11 @@ public partial class PreferencesWindow : Window
                 continue;
             }
 
-            var row = new StackPanel { Orientation = global::Avalonia.Layout.Orientation.Horizontal, Spacing = 8, Margin = new global::Avalonia.Thickness(0, 0, 0, 8) };
-            var label = new TextBlock { Text = property.Name, Width = 250, VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Center, Foreground = new SolidColorBrush(Color.Parse("#FFFFFF")) };
-            var textBox = new TextBox { Text = FormatHotkey(hotkey), Width = 200, IsReadOnly = true, Background = new SolidColorBrush(Color.Parse("#222222")), Foreground = new SolidColorBrush(Color.Parse("#FFFFFF")), VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Center };
-            textBox.KeyDown += (s, e) => HotkeyTextBox_KeyDown(s, e, property, textBox);
-            row.Children.Add(label);
-            row.Children.Add(textBox);
-            HotkeysPanel.Children.Add(row);
+            var description = GetHotkeyDescription(hotkey.Id);
+            hotkeyItems.Add(property.Name, new HotkeyItem(hotkeySettings, description, property.Name));
         }
+
+        HotkeysListBox.ItemsSource = hotkeyItems;
     }
 
     /// <summary>
@@ -420,6 +418,53 @@ public partial class PreferencesWindow : Window
         if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Shift)) result |= EDEA.Core.Input.ModifierKeys.Shift;
         if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Meta)) result |= EDEA.Core.Input.ModifierKeys.Windows;
         return result;
+    }
+
+    /// <summary>
+    /// Opens a placeholder dialog to assign a new hotkey.
+    /// </summary>
+    private void HotkeyTextBlock_Click(object? sender, AvaloniaInput.PointerPressedEventArgs e)
+    {
+        // TODO: Show an input dialog for assigning a new hotkey combination.
+    }
+
+    /// <summary>
+    /// Returns the localized description for the given hotkey.
+    /// </summary>
+    /// <param name="id">The hotkey identifier.</param>
+    /// <returns>The localized description.</returns>
+    private static string GetHotkeyDescription(HotkeyId id)
+    {
+        if (EDEA.Properties.Resources.Culture.TwoLetterISOLanguageName.Equals("de", StringComparison.OrdinalIgnoreCase))
+        {
+            return id switch
+            {
+                HotkeyId.ToggleHudWindow => "HUD-Fenster öffnen/schließen",
+                HotkeyId.ToggleHudMousePassThrough => "Maus-Durchgriff im HUD-Fenster ein-/ausschalten",
+                HotkeyId.OpenRouteTab => "Route-Tab öffnen",
+                HotkeyId.OpenBodiesTab => "Himmelskörper-Tab öffnen",
+                HotkeyId.OpenBiologicalsTab => "Biologie-Tab öffnen",
+                HotkeyId.OpenSurroundingsTab => "Umgebung-Tab öffnen",
+                HotkeyId.OpenHistoryTab => "Historie-Tab öffnen",
+                HotkeyId.TryCopyNextSystemToClipboard => "Nächsten Systemnamen der gesperrten/Plotter-Route kopieren",
+                HotkeyId.QuitSpeechOutput => "Aktuelle Sprachausgabe abbrechen",
+                _ => id.ToString(),
+            };
+        }
+
+        return id switch
+        {
+            HotkeyId.ToggleHudWindow => "Open/Close HUD Window",
+            HotkeyId.ToggleHudMousePassThrough => "Enable/Disable HUD Window Mouse Pass Through",
+            HotkeyId.OpenRouteTab => "Open Route Tab",
+            HotkeyId.OpenBodiesTab => "Open Bodies Tab",
+            HotkeyId.OpenBiologicalsTab => "Open Biologicals Tab",
+            HotkeyId.OpenSurroundingsTab => "Open Surroundings Tab",
+            HotkeyId.OpenHistoryTab => "Open History Tab",
+            HotkeyId.TryCopyNextSystemToClipboard => "Copy Next System Name In Locked/Plotter Route To Clipboard",
+            HotkeyId.QuitSpeechOutput => "Cancel Current Speech Output",
+            _ => id.ToString(),
+        };
     }
 
     /// <summary>
