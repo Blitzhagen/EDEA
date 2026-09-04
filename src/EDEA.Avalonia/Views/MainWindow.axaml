@@ -5,8 +5,6 @@
         xmlns:vmcore="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
         xmlns:views="clr-namespace:EDEA.Avalonia.Views"
         xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        xmlns:converters="clr-namespace:EDEA.Avalonia.Converters;assembly=EDEA.Avalonia"
-        xmlns:media="using:Avalonia.Media"
         x:Class="EDEA.Avalonia.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Title="{Binding Title}"
@@ -17,10 +15,6 @@
         Background="{DynamicResource MainBackgroundColor}"
         Foreground="{DynamicResource ForegroundBrush}"
         Icon="/Assets/app.ico">
-
-  <Window.Resources>
-    <converters:TabHeaderToHeightConverter x:Key="TabHeaderToHeightConverter" />
-  </Window.Resources>
 
   <Window.Styles>
     <Style Selector="TextBlock.StatusBarHeadline">
@@ -145,32 +139,13 @@
       <Thumb Name="ResizeThumb" Classes="ResizeGrip" HorizontalAlignment="Right" VerticalAlignment="Bottom" DragDelta="ResizeThumb_DragDelta" ZIndex="100" />
       <TabControl TabStripPlacement="Left" ItemsSource="{Binding TabViewModels}" SelectedIndex="{Binding SelectedTabIndex}">
         <TabControl.Styles>
-          <Style Selector="TabItem" x:DataType="vmcore:TabViewModel">
+          <Style Selector="TabItem" x:DataType="vmcore:TabViewModel" x:CompileBindings="False">
             <Setter Property="IsVisible" Value="{Binding TabVisibility, Converter={StaticResource InverseBoolConverter}}"/>
-            <Setter Property="Width" Value="45" />
-            <Setter Property="Height" Value="{Binding TabHeader, Converter={StaticResource TabHeaderToHeightConverter}}" />
-            <Setter Property="ClipToBounds" Value="False" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="0,4,0,0" />
-            <Setter Property="HorizontalAlignment" Value="Right" />
-            <Setter Property="VerticalAlignment" Value="Top" />
           </Style>
         </TabControl.Styles>
         <TabControl.ItemTemplate>
           <DataTemplate x:DataType="vmcore:TabViewModel">
-            <TextBlock Text="{Binding TabHeader}"
-                       Foreground="{DynamicResource MainColor}"
-                       FontSize="14"
-                       Width="{Binding TabHeader, Converter={StaticResource TabHeaderToHeightConverter}}"
-                       Height="45"
-                       TextAlignment="Center"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       RenderTransformOrigin="0.5,0.5">
-              <TextBlock.RenderTransform>
-                <media:RotateTransform Angle="-90" />
-              </TextBlock.RenderTransform>
-            </TextBlock>
+            <TextBlock Text="{Binding TabHeader}" Foreground="{DynamicResource MainColor}"/>
           </DataTemplate>
         </TabControl.ItemTemplate>
         <TabControl.DataTemplates>
