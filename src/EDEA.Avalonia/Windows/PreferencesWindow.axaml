@@ -49,10 +49,10 @@
                 <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Colors}" Classes="PreferencesSectionHeadline" />
                 <Border Classes="PreferencesSectionBody">
                   <StackPanel Orientation="Horizontal">
-                    <ListBox x:Name="ColorListBox" Classes="PreferencesListbox" SelectionChanged="ColorListBox_SelectionChanged" Background="{StaticResource BackgroundBrush}" Foreground="{StaticResource ForegroundBrush}" />
+                    <ListBox x:Name="ColorListBox" Classes="PreferencesListbox" Width="260" SelectionChanged="ColorListBox_SelectionChanged" />
                     <StackPanel Spacing="4" Width="170">
-                      <colorpicker:SquarePicker x:Name="SquarePicker" SelectedColor="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
-                      <colorpicker:ColorSliders x:Name="ColorSliders" ShowAlpha="False" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
+                      <colorpicker:SquarePicker x:Name="SquarePicker" PickerType="HSV" Width="150" Height="150" SelectedColor="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
+                      <colorpicker:ColorSliders x:Name="ColorSliders" ShowAlpha="False" ShowFractionalPart="False" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
                       <colorpicker:HexColorTextBox x:Name="HexColorTextBox" ShowAlpha="False" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
                     </StackPanel>
                   </StackPanel>
