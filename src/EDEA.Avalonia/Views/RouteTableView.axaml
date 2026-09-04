@@ -38,7 +38,7 @@
       </Grid>
     </DataTemplate>
     <DataTemplate x:Key="TextStarSystemDiscoveryStatusTemplate" x:DataType="vm:StarSystemViewModel">
-      <TextBlock Text="{Binding ExplorationStatus}" Foreground="{DynamicResource MainColor}" ToolTip.Tip="{Binding ExplorationStatusBodiesInfo}" />
+      <TextBlock Text="{Binding ExplorationStatusBodiesInfo}" Foreground="{DynamicResource MainColor}" ToolTip.Tip="{Binding ExplorationStatusBodiesInfo}" IsVisible="{Binding IsExplorationStatusKnown}" />
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemPlanetOfInterestTemplate" x:DataType="vm:StarSystemViewModel">
       <Grid HorizontalAlignment="Center" IsVisible="{Binding HasMatchingPlanetClassifications}">
