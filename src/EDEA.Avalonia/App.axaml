@@ -3,9 +3,9 @@
              xmlns:local="clr-namespace:EDEA.Avalonia"
              xmlns:views="clr-namespace:EDEA.Avalonia.Views"
              xmlns:converters="clr-namespace:EDEA.Avalonia.Converters"
-             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
              xmlns:colorPicker="clr-namespace:ColorPicker.AvaloniaUI.Templates;assembly=ColorPicker.AvaloniaUI"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="EDEA.Avalonia.App"
              RequestedThemeVariant="Dark">
 
@@ -18,13 +18,53 @@
     <SolidColorBrush x:Key="DimForegroundBrush" Color="#AAAAAA"/>
     <SolidColorBrush x:Key="BorderBrush" Color="#FF6A00"/>
     <SolidColorBrush x:Key="MainColor" Color="#FF6A00"/>
-    <SolidColorBrush x:Key="MainBackgroundColor" Color="#1A0F05"/>
-    <SolidColorBrush x:Key="TitleBarColor" Color="#2A1A0A"/>
-    <SolidColorBrush x:Key="MainCellColor" Color="#331E0C"/>
+    <SolidColorBrush x:Key="MainBackgroundColor" Color="#090000"/>
+    <SolidColorBrush x:Key="MainCellColor" Color="#271406"/>
+    <SolidColorBrush x:Key="CellHighlightColor" Color="#411601"/>
+    <SolidColorBrush x:Key="MainLineColor" Color="#090000"/>
+    <SolidColorBrush x:Key="TitleBarColor" Color="#271406"/>
     <SolidColorBrush x:Key="WindowBrush" Color="#1A0F05"/>
     <SolidColorBrush x:Key="WindowTextBrush" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="ActiveBorderBrush" Color="#FF6A00"/>
-    <SolidColorBrush x:Key="GrayTextBrush" Color="#AAAAAA"/>
+    <SolidColorBrush x:Key="GrayTextBrush" Color="#8C8B8B"/>
+    <SolidColorBrush x:Key="HighlightColor" Color="#A1DFE0"/>
+    <SolidColorBrush x:Key="HighlightColor2" Color="#88CF7F"/>
+    <SolidColorBrush x:Key="HighlightColor3" Color="#FF7C7C"/>
+    <SolidColorBrush x:Key="HighlightColor4" Color="#2491DF"/>
+    <SolidColorBrush x:Key="HighlightColor5" Color="#DABE54"/>
+    <SolidColorBrush x:Key="HighlightGreen" Color="#88CF7F"/>
+    <SolidColorBrush x:Key="HighlightRed" Color="#FF7C7C"/>
+    <SolidColorBrush x:Key="HighlightBlue" Color="#2491DF"/>
+    <SolidColorBrush x:Key="HighlightYellow" Color="#DABE54"/>
+    <SolidColorBrush x:Key="HighlightGrey" Color="#8C8B8B"/>
+    <SolidColorBrush x:Key="InactiveMainColor" Color="#7A3500"/>
+    <SolidColorBrush x:Key="InactiveHighlightGrey" Color="#363230"/>
+    <SolidColorBrush x:Key="InverseCellColor" Color="#161413"/>
+    <SolidColorBrush x:Key="InverseCellHighlightColor" Color="#2B2826"/>
+    <SolidColorBrush x:Key="EdsmIconColor" Color="#8C8B8B"/>
+    <SolidColorBrush x:Key="ValuableIconColor" Color="#DABE54"/>
+    <SolidColorBrush x:Key="GeologicalsIconColor" Color="#FF7C7C"/>
+    <SolidColorBrush x:Key="BiologicalsIconColor" Color="#88CF7F"/>
+    <SolidColorBrush x:Key="TerraformableIconColor" Color="#2491DF"/>
+    <SolidColorBrush x:Key="LandableIconColor" Color="#A1DFE0"/>
+    <SolidColorBrush x:Key="ScoopableIconColor" Color="#88CF7F"/>
+    <SolidColorBrush x:Key="InactiveScoopableIconColor" Color="#274023"/>
+    <SolidColorBrush x:Key="PlanetOfInterestIconColor" Color="#C6478C"/>
+    <SolidColorBrush x:Key="PopulatedIconColor" Color="#BCA79D"/>
+    <SolidColorBrush x:Key="RingsIconColor" Color="#FFD3B2"/>
+    <SolidColorBrush x:Key="UnexploredIconColor" Color="#FF7C7C"/>
+    <SolidColorBrush x:Key="UnknownIconColor" Color="#8C8B8B"/>
+    <SolidColorBrush x:Key="InactiveUnknownIconColor" Color="#363230"/>
+    <SolidColorBrush x:Key="UnscannedIconColor" Color="#2491DF"/>
+    <SolidColorBrush x:Key="IncompleteIconColor" Color="#DABE54"/>
+    <SolidColorBrush x:Key="CurrentEntityIconColor" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="CompleteIconColor" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="SurfaceScannedIconColor" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="JournalIconColor" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="TouchdownIconColor" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="NewIconColor" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="BiologicalsCompleteIconColor" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="HeaderIconColor" Color="#090000"/>
     <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
     <converters:TabVisibilityConverter x:Key="TabVisibilityConverter" />
   </Application.Resources>
@@ -34,6 +74,71 @@
     <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
     <materialIcons:MaterialIconStyles />
     <colorPicker:PixiPerfectColorPickerTheme />
+
+    <Style Selector="DataGrid">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="{DynamicResource MainColor}" />
+      <Setter Property="BorderThickness" Value="6,0,0,0" />
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="GridLinesVisibility" Value="Horizontal" />
+      <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource MainLineColor}" />
+      <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource MainLineColor}" />
+      <Setter Property="CanUserReorderColumns" Value="False" />
+      <Setter Property="CanUserResizeColumns" Value="True" />
+      <Setter Property="CanUserSortColumns" Value="True" />
+      <Setter Property="IsReadOnly" Value="True" />
+      <Setter Property="AutoGenerateColumns" Value="False" />
+    </Style>
+
+    <Style Selector="DataGridRow">
+      <Setter Property="Background" Value="{DynamicResource MainCellColor}" />
+      <Setter Property="Foreground" Value="{DynamicResource MainColor}" />
+    </Style>
+
+    <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+      <Setter Property="Fill" Value="{DynamicResource CellHighlightColor}" />
+    </Style>
+
+    <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+      <Setter Property="Fill" Value="{DynamicResource CellHighlightColor}" />
+    </Style>
+
+    <Style Selector="DataGridCell">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource MainColor}" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+    </Style>
+
+    <Style Selector="DataGridCell:selected">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource MainColor}" />
+    </Style>
+
+    <Style Selector="DataGridColumnHeader">
+      <Setter Property="Background" Value="{DynamicResource MainColor}" />
+      <Setter Property="Foreground" Value="{DynamicResource MainBackgroundColor}" />
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Padding" Value="4" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="DataGridColumnHeader:pointerover /template/ Grid#HeaderButton">
+      <Setter Property="Background" Value="{DynamicResource HighlightColor}" />
+    </Style>
+
+    <Style Selector="ToolTip">
+      <Setter Property="Background" Value="{DynamicResource MainBackgroundColor}" />
+      <Setter Property="Foreground" Value="{DynamicResource HighlightGrey}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource HighlightGrey}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Padding" Value="7,6,7,7" />
+    </Style>
+
     <Style Selector="Border.PreferencesTabContent">
       <Setter Property="Padding" Value="0,0,25,30" />
     </Style>
