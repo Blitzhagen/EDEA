@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text.Json;
+using EDEA.Core.Drawing;
 using EDEA.Models;
 using log4net;
 
@@ -31,6 +32,12 @@ public class SettingsProvider
         Preferences.User = Settings;
     }
 
+    private static readonly JsonSerializerOptions Options = new()
+    {
+        WriteIndented = true,
+        Converters = { new ColorJsonConverter() },
+    };
+
     /// <summary>Loads .</summary>
     /// <returns>A UserSettings result.</returns>
     private UserSettings Load()
@@ -41,7 +48,7 @@ public class SettingsProvider
         var json = File.ReadAllText(_path);
         try
         {
-            return JsonSerializer.Deserialize<UserSettings>(json) ?? new UserSettings();
+            return JsonSerializer.Deserialize<UserSettings>(json, Options) ?? new UserSettings();
         }
         catch (Exception exception)
         {
@@ -53,10 +60,7 @@ public class SettingsProvider
     /// <summary>Saves .</summary>
     public void Save()
     {
-        var json = JsonSerializer.Serialize(Settings, new JsonSerializerOptions
-        {
-            WriteIndented = true
-        });
+        var json = JsonSerializer.Serialize(Settings, Options);
         File.WriteAllText(_path, json);
     }
 

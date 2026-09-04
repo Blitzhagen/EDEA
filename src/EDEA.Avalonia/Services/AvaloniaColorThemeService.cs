@@ -86,13 +86,16 @@ public sealed class AvaloniaColorThemeService : IColorThemeService
         }
 
         var mediaColor = global::Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
-        var brush = new SolidColorBrush(mediaColor);
 
         foreach (var key in keys)
         {
-            if (application.Resources.ContainsKey(key))
+            if (application.Resources.TryGetResource(key, null, out var resource) && resource is SolidColorBrush brush)
             {
-                application.Resources[key] = brush;
+                brush.Color = mediaColor;
+            }
+            else if (application.Resources.ContainsKey(key))
+            {
+                application.Resources[key] = new SolidColorBrush(mediaColor);
             }
         }
     }

@@ -9,7 +9,7 @@
         Title="{Binding Title}"
         Height="900" Width="1080"
         MinHeight="479" MinWidth="1070"
-        Background="{StaticResource MainBackgroundColor}"
+        Background="#1A0F05"
         Foreground="{StaticResource ForegroundBrush}"
         Icon="/Assets/app.ico">
   <Grid RowDefinitions="30,Auto,*" Background="{StaticResource MainBackgroundColor}">

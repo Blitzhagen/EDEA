@@ -14,6 +14,36 @@ using EDEA.Services;
 namespace EDEA.Avalonia.Windows;
 
 /// <summary>
+/// Represents a color setting item in the preferences window.
+/// </summary>
+public class ColorItem
+{
+    /// <summary>
+    /// Gets or sets the color property name.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the current color as a brush for display.
+    /// </summary>
+    public global::Avalonia.Media.IBrush Color { get; set; } = new global::Avalonia.Media.SolidColorBrush(global::Avalonia.Media.Colors.Transparent);
+
+    /// <summary>
+    /// Gets or sets the raw color value.
+    /// </summary>
+    public global::Avalonia.Media.Color RawColor { get; set; }
+
+    /// <summary>
+    /// Gets or sets the reflection property info.
+    /// </summary>
+    public PropertyInfo? PropertyInfo { get; set; }
+}
+
+/// <summary>
+/// Avalonia window for editing application preferences.
+/// </summary>
+
+/// <summary>
 /// Represents a configurable speech output item in the preferences window.
 /// </summary>
 public class SpeechOutputItem
@@ -55,6 +85,11 @@ public partial class PreferencesWindow : Window
     private bool _updatingSpeechOutput;
 
     /// <summary>
+    /// A flag that prevents re-entrant updates when changing planet classification detail controls.
+    /// </summary>
+    private bool _updatingPlanet;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="PreferencesWindow"/> class.
     /// </summary>
     public PreferencesWindow()
@@ -80,6 +115,12 @@ public partial class PreferencesWindow : Window
         DisplaySizeHuge.IsChecked = displaySize == 3;
 
         AutomaticTabSwitchingCheckBox.IsChecked = Preferences.Other.AutomaticTabSwitching;
+
+        RebuildColorList();
+        if (ColorListBox.Items.Count > 0)
+        {
+            ColorListBox.SelectedIndex = 0;
+        }
 
         EdSavedGamePathTextBox.Text = Preferences.Other.EdSavedGamePath;
         ValuableBodyThresholdTextBox.Text = Preferences.Other.ValuableBodyThreshold.ToString(CultureInfo.CurrentCulture);
@@ -130,6 +171,33 @@ public partial class PreferencesWindow : Window
         if (items.Count > 0)
         {
             SpeechOutputListBox.SelectedIndex = 0;
+        }
+
+        var hud = Preferences.HudWindow;
+        HudOpacitySlider.Value = hud.Opacity;
+        HudPanel.Children.Clear();
+        var hudType = hud.GetType();
+        foreach (var property in hudType.GetProperties())
+        {
+            if (property.PropertyType != typeof(bool) || property.Name == "Opacity")
+            {
+                continue;
+            }
+
+            var checkBox = new CheckBox
+            {
+                Content = property.Name,
+                IsChecked = (bool?)property.GetValue(hud) ?? false,
+                Foreground = new SolidColorBrush(Color.Parse("#FFFFFF")),
+            };
+            checkBox.IsCheckedChanged += (s, e) => HudCheckBox_IsCheckedChanged(s, e, property);
+            HudPanel.Children.Add(checkBox);
+        }
+
+        PlanetClassificationListBox.ItemsSource = Preferences.PlanetsOfInterest.PlanetClassifications;
+        if (Preferences.PlanetsOfInterest.PlanetClassifications.Count > 0)
+        {
+            PlanetClassificationListBox.SelectedIndex = 0;
         }
 
         HotkeysPanel.Children.Clear();
@@ -361,6 +429,291 @@ public partial class PreferencesWindow : Window
         if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Shift)) result |= EDEA.Core.Input.ModifierKeys.Shift;
         if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Meta)) result |= EDEA.Core.Input.ModifierKeys.Windows;
         return result;
+    }
+
+    /// <summary>
+    /// Rebuilds the color list items from the current preferences.
+    /// </summary>
+    private void RebuildColorList()
+    {
+        ColorListBox.Items.Clear();
+        var colors = Preferences.Colors;
+        foreach (var property in colors.GetType().GetProperties())
+        {
+            if (property.PropertyType != typeof(EDEA.Core.Drawing.Color))
+            {
+                continue;
+            }
+
+            var coreColor = (EDEA.Core.Drawing.Color?)property.GetValue(colors) ?? default;
+            var avaloniaColor = global::Avalonia.Media.Color.FromArgb(coreColor.A, coreColor.R, coreColor.G, coreColor.B);
+
+            var panel = new StackPanel
+            {
+                Orientation = global::Avalonia.Layout.Orientation.Horizontal,
+                Tag = new ColorItem
+                {
+                    Name = property.Name,
+                    RawColor = avaloniaColor,
+                    Color = new SolidColorBrush(avaloniaColor),
+                    PropertyInfo = property,
+                },
+            };
+            panel.Children.Add(new global::Avalonia.Controls.Shapes.Rectangle
+            {
+                Width = 16,
+                Height = 16,
+                Fill = new SolidColorBrush(avaloniaColor),
+                Margin = new global::Avalonia.Thickness(0, 0, 6, 0),
+            });
+            panel.Children.Add(new TextBlock
+            {
+                Text = property.Name,
+                Foreground = new SolidColorBrush(global::Avalonia.Media.Color.Parse("#FFFFFF")),
+            });
+            ColorListBox.Items.Add(panel);
+        }
+    }
+
+    /// <summary>
+    /// Updates the color picker when a color is selected.
+    /// </summary>
+    private void ColorListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (ColorListBox?.SelectedItem is StackPanel { Tag: ColorItem item })
+        {
+            ColorPickerView.Color = item.RawColor;
+        }
+    }
+
+    /// <summary>
+    /// Applies the selected color to the color setting.
+    /// </summary>
+    private void ColorPickerView_ColorChanged(object? sender, global::Avalonia.Controls.ColorChangedEventArgs e)
+    {
+        if (ColorListBox?.SelectedItem is not StackPanel { Tag: ColorItem item } selectedItem || item.PropertyInfo is null)
+        {
+            return;
+        }
+
+        item.RawColor = e.NewColor;
+        item.Color = new SolidColorBrush(e.NewColor);
+        item.PropertyInfo.SetValue(Preferences.Colors, new EDEA.Core.Drawing.Color(e.NewColor.A, e.NewColor.R, e.NewColor.G, e.NewColor.B));
+
+        // Apply the new color to the running application resources.
+        EDEA.Services.PlatformServices.ColorTheme?.ApplyCurrentColors();
+
+        // Update the color swatch in the list item.
+        if (selectedItem.Children.Count > 0 && selectedItem.Children[0] is global::Avalonia.Controls.Shapes.Rectangle swatch)
+        {
+            swatch.Fill = new SolidColorBrush(e.NewColor);
+        }
+    }
+
+    /// <summary>
+    /// Updates the planet classification detail controls.
+    /// </summary>
+    private void PlanetClassificationListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        _updatingPlanet = true;
+        if (PlanetClassificationListBox?.SelectedItem is PlanetClassification item)
+        {
+            PlanetDetailPanel.IsEnabled = true;
+            PlanetDetailName.Text = item.Name;
+            PlanetDetailActiveCheckBox.IsChecked = item.IsActive;
+            PlanetDetailNameTextBox.Text = item.Name;
+            PlanetDetailPlanetClassesTextBox.Text = item.PlanetClassesAsString;
+            PlanetDetailStarClassesTextBox.Text = item.StarClassesAsString;
+            PlanetDetailDistanceMinTextBox.Text = item.DistanceMin?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
+            PlanetDetailDistanceMaxTextBox.Text = item.DistanceMax?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
+            PlanetDetailRadiusMinTextBox.Text = item.RadiusMin?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
+            PlanetDetailRadiusMaxTextBox.Text = item.RadiusMax?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
+            PlanetDetailLandableComboBox.SelectedIndex = item.Landable == null ? 0 : item.Landable == false ? 1 : 2;
+        }
+        else
+        {
+            PlanetDetailPanel.IsEnabled = false;
+        }
+        _updatingPlanet = false;
+    }
+
+    /// <summary>
+    /// Adds a new planet classification.
+    /// </summary>
+    private void AddPlanetFilterButton_Click(object? sender, RoutedEventArgs e)
+    {
+        var item = new PlanetClassification("New filter");
+        Preferences.PlanetsOfInterest.PlanetClassifications.Add(item);
+        PlanetClassificationListBox.ItemsSource = null;
+        PlanetClassificationListBox.ItemsSource = Preferences.PlanetsOfInterest.PlanetClassifications;
+        PlanetClassificationListBox.SelectedItem = item;
+    }
+
+    /// <summary>
+    /// Renames the selected planet classification.
+    /// </summary>
+    private void RenamePlanetFilterButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (PlanetClassificationListBox?.SelectedItem is PlanetClassification item)
+        {
+            PlanetDetailNameTextBox.Focus();
+            PlanetDetailNameTextBox.SelectAll();
+        }
+    }
+
+    /// <summary>
+    /// Deletes the selected planet classification.
+    /// </summary>
+    private void DeletePlanetFilterButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (PlanetClassificationListBox?.SelectedItem is PlanetClassification item)
+        {
+            Preferences.PlanetsOfInterest.PlanetClassifications.Remove(item);
+            PlanetClassificationListBox.ItemsSource = null;
+            PlanetClassificationListBox.ItemsSource = Preferences.PlanetsOfInterest.PlanetClassifications;
+            PlanetClassificationListBox.SelectedIndex = Preferences.PlanetsOfInterest.PlanetClassifications.Count > 0 ? 0 : -1;
+        }
+    }
+
+    /// <summary>
+    /// Applies the active state of the selected planet classification.
+    /// </summary>
+    private void PlanetDetailActiveCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+        item.IsActive = PlanetDetailActiveCheckBox.IsChecked == true;
+        PlanetClassificationListBox.ItemsSource = null;
+        PlanetClassificationListBox.ItemsSource = Preferences.PlanetsOfInterest.PlanetClassifications;
+    }
+
+    /// <summary>
+    /// Applies the name of the selected planet classification.
+    /// </summary>
+    private void PlanetDetailNameTextBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+        item.Name = PlanetDetailNameTextBox.Text ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Applies the planet classes of the selected planet classification.
+    /// </summary>
+    private void PlanetDetailPlanetClassesTextBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+        item.PlanetClasses = (PlanetDetailPlanetClassesTextBox.Text ?? string.Empty)
+            .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Applies the star classes of the selected planet classification.
+    /// </summary>
+    private void PlanetDetailStarClassesTextBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+        item.StarClasses = (PlanetDetailStarClassesTextBox.Text ?? string.Empty)
+            .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Applies the distance min of the selected planet classification.
+    /// </summary>
+    private void PlanetDetailDistanceMinTextBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+        item.DistanceMin = double.TryParse(PlanetDetailDistanceMinTextBox.Text, out var v) ? v : null;
+    }
+
+    /// <summary>
+    /// Applies the distance max of the selected planet classification.
+    /// </summary>
+    private void PlanetDetailDistanceMaxTextBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+        item.DistanceMax = double.TryParse(PlanetDetailDistanceMaxTextBox.Text, out var v) ? v : null;
+    }
+
+    /// <summary>
+    /// Applies the radius min of the selected planet classification.
+    /// </summary>
+    private void PlanetDetailRadiusMinTextBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+        item.RadiusMin = double.TryParse(PlanetDetailRadiusMinTextBox.Text, out var v) ? v : null;
+    }
+
+    /// <summary>
+    /// Applies the radius max of the selected planet classification.
+    /// </summary>
+    private void PlanetDetailRadiusMaxTextBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+        item.RadiusMax = double.TryParse(PlanetDetailRadiusMaxTextBox.Text, out var v) ? v : null;
+    }
+
+    /// <summary>
+    /// Applies the landable setting of the selected planet classification.
+    /// </summary>
+    private void PlanetDetailLandableComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+        item.Landable = PlanetDetailLandableComboBox.SelectedIndex switch
+        {
+            1 => false,
+            2 => true,
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Applies the HUD opacity.
+    /// </summary>
+    private void HudOpacitySlider_ValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        if (HudOpacitySlider != null)
+        {
+            Preferences.HudWindow.Opacity = HudOpacitySlider.Value;
+        }
+    }
+
+    /// <summary>
+    /// Applies a HUD boolean setting.
+    /// </summary>
+    private void HudCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e, PropertyInfo property)
+    {
+        if (sender is CheckBox checkBox && property.PropertyType == typeof(bool))
+        {
+            property.SetValue(Preferences.HudWindow, checkBox.IsChecked == true);
+        }
     }
 
     /// <summary>

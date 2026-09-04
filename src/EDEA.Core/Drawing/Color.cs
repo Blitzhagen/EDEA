@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace EDEA.Core.Drawing;
 
@@ -7,6 +8,7 @@ namespace EDEA.Core.Drawing;
 /// Represents a color with alpha, red, green and blue components.
 /// This is a platform-independent replacement for <see cref="System.Windows.Media.Color"/>.
 /// </summary>
+[JsonConverter(typeof(ColorJsonConverter))]
 public readonly struct Color : IEquatable<Color>
 {
     /// <summary>
