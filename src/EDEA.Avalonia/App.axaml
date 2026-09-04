@@ -26,6 +26,34 @@
   <Application.Styles>
     <FluentTheme />
     <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml"/>
+    <Style Selector="Border.PreferencesTabContent">
+      <Setter Property="Padding" Value="0,0,25,30" />
+    </Style>
+    <Style Selector="StackPanel.PreferencesSection">
+      <Setter Property="Margin" Value="25,20,0,0" />
+    </Style>
+    <Style Selector="TextBlock.PreferencesSectionHeadline">
+      <Setter Property="Margin" Value="3,0,10,-4" />
+      <Setter Property="Padding" Value="4,0,5,0" />
+      <Setter Property="HorizontalAlignment" Value="Left" />
+      <Setter Property="Background" Value="{DynamicResource PanelBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style Selector="Border.PreferencesSectionBody">
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Padding" Value="17,16,17,12" />
+      <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+    </Style>
+    <Style Selector="RadioButton.PreferencesRadioButton">
+      <Setter Property="Margin" Value="0,0,0,3" />
+    </Style>
+    <Style Selector="ListBox.PreferencesListbox">
+      <Setter Property="Width" Value="240" />
+      <Setter Property="Height" Value="330" />
+      <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+      <Setter Property="Margin" Value="1,1,5,10" />
+    </Style>
   </Application.Styles>
-
 </Application>

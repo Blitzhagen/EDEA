@@ -1,175 +1,291 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
-        xmlns:colorpicker="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.ColorPicker"
+        xmlns:colorpicker="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls.ColorPicker"
         x:Class="EDEA.Avalonia.Windows.PreferencesWindow"
-        Title="{x:Static properties:Resources.PreferencesWindow_Title}" Height="617" MinHeight="617" Width="880" MinWidth="880"
+        x:Name="ThisWindow"
+        Title="{x:Static properties:Resources.PreferencesWindow_Title}"
+        Height="617" MinHeight="617" Width="880" MinWidth="880"
         WindowStartupLocation="CenterOwner"
-        Background="{StaticResource BackgroundBrush}"
-        Foreground="{StaticResource ForegroundBrush}">
-  <Grid Margin="12" RowDefinitions="*,70">
-    <TabControl Grid.Row="0">
+        CanResize="False"
+        RequestedThemeVariant="Light"
+        Background="#FFFFFF"
+        Foreground="#000000">
+  <Window.Resources>
+    <SolidColorBrush x:Key="BackgroundBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="PanelBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="CardBrush" Color="#F5F5F5"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="#000000"/>
+    <SolidColorBrush x:Key="ForegroundBrush" Color="#000000"/>
+    <SolidColorBrush x:Key="DimForegroundBrush" Color="#555555"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#AAAAAA"/>
+  </Window.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="12" />
+      <ColumnDefinition />
+      <ColumnDefinition Width="12" />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="13" />
+      <RowDefinition />
+      <RowDefinition Height="70" />
+    </Grid.RowDefinitions>
+
+    <TabControl Grid.Column="1" Grid.Row="1" Focusable="False">
       <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Appearance}">
-        <ScrollViewer>
-          <StackPanel Margin="12" Spacing="12" x:CompileBindings="False">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <StackPanel>
-                <TextBlock Text="Colors" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-                <ListBox x:Name="ColorListBox" Width="220" Height="400" SelectionChanged="ColorListBox_SelectionChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+        <Grid>
+          <Border Classes="PreferencesTabContent">
+            <StackPanel Orientation="Horizontal">
+              <StackPanel Classes="PreferencesSection">
+                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Colors}" Classes="PreferencesSectionHeadline" />
+                <Border Classes="PreferencesSectionBody">
+                  <StackPanel Orientation="Horizontal">
+                    <ListBox x:Name="ColorListBox" Classes="PreferencesListbox" SelectionChanged="ColorListBox_SelectionChanged" Background="{StaticResource BackgroundBrush}" Foreground="{StaticResource ForegroundBrush}" />
+                    <StackPanel Spacing="4" Width="170">
+                      <colorpicker:ColorSpectrum x:Name="ColorSpectrum" Width="150" Height="150" Shape="Ring" Components="HueSaturation" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
+                      <TabControl x:Name="ColorModelTabControl" Padding="0" Margin="0">
+                        <TabItem Header="HSV">
+                          <StackPanel Spacing="2">
+                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Hsva" ColorComponent="Component1" />
+                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Hsva" ColorComponent="Component2" />
+                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Hsva" ColorComponent="Component3" />
+                          </StackPanel>
+                        </TabItem>
+                        <TabItem Header="RGB">
+                          <StackPanel Spacing="2">
+                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Rgba" ColorComponent="Component1" />
+                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Rgba" ColorComponent="Component2" />
+                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Rgba" ColorComponent="Component3" />
+                          </StackPanel>
+                        </TabItem>
+                      </TabControl>
+                      <TextBox x:Name="HexColorTextBox" Watermark="#RRGGBB" Width="120" HorizontalAlignment="Left" LostFocus="HexColorTextBox_LostFocus" />
+                    </StackPanel>
+                  </StackPanel>
+                </Border>
               </StackPanel>
               <StackPanel>
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Colors}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-                <colorpicker:ColorView x:Name="ColorPickerView" Width="300" ColorChanged="ColorPickerView_ColorChanged" x:CompileBindings="False"/>
-              </StackPanel>
-            </StackPanel>
-            <TextBlock Text="Language" FontWeight="Bold" Margin="0,0,0,4" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-            <ComboBox x:Name="LanguageComboBox" SelectedIndex="0" SelectionChanged="LanguageComboBox_SelectionChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False">
-              <ComboBoxItem Content="Auto"/>
-              <ComboBoxItem Content="English"/>
-              <ComboBoxItem Content="Deutsch"/>
-              <ComboBoxItem Content="Español"/>
-              <ComboBoxItem Content="Français"/>
-              <ComboBoxItem Content="Русский"/>
-              <ComboBoxItem Content="Português (Brasil)"/>
-            </ComboBox>
-            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_DisplaySize}" FontWeight="Bold" Margin="0,16,0,4" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-            <StackPanel>
-              <RadioButton x:Name="DisplaySizeSmall" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Small}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-              <RadioButton x:Name="DisplaySizeStandard" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Standard}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-              <RadioButton x:Name="DisplaySizeLarge" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Large}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-              <RadioButton x:Name="DisplaySizeHuge" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Huge}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-            </StackPanel>
-            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Behavior}" FontWeight="Bold" Margin="0,16,0,4" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-            <CheckBox x:Name="AutomaticTabSwitchingCheckBox" Content="{x:Static properties:Resources.PreferencesWindow_Checkbox_AutomaticTabSwitching}" IsCheckedChanged="AutomaticTabSwitching_Changed" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-          </StackPanel>
-        </ScrollViewer>
-      </TabItem>
-      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_HudWindow}">
-        <ScrollViewer>
-          <StackPanel Margin="12" Spacing="12" x:CompileBindings="False">
-            <TextBlock Text="Opacity" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-            <Slider x:Name="HudOpacitySlider" Minimum="0" Maximum="1" TickFrequency="0.1" Width="300" HorizontalAlignment="Left" ValueChanged="HudOpacitySlider_ValueChanged" x:CompileBindings="False"/>
-            <StackPanel x:Name="HudPanel" Spacing="8" x:CompileBindings="False"/>
-          </StackPanel>
-        </ScrollViewer>
-      </TabItem>
-      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_GlobalHotkeys}">
-        <ScrollViewer>
-          <StackPanel x:Name="HotkeysPanel" Margin="12" Spacing="8" x:CompileBindings="False"/>
-        </ScrollViewer>
-      </TabItem>
-      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Speech}">
-        <ScrollViewer>
-          <StackPanel Margin="12" Spacing="12" x:CompileBindings="False">
-            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Voice}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-            <ComboBox x:Name="SpeechVoiceComboBox" Width="300" HorizontalAlignment="Left" SelectionChanged="SpeechVoiceComboBox_SelectionChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-            <StackPanel Orientation="Horizontal" Spacing="16">
-              <StackPanel>
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Rate}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-                <Slider x:Name="SpeechRateSlider" Minimum="-4" Maximum="4" TickFrequency="1" Width="200" HorizontalAlignment="Left" ValueChanged="SpeechRateSlider_ValueChanged" x:CompileBindings="False"/>
-              </StackPanel>
-              <StackPanel>
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Volume}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-                <Slider x:Name="SpeechVolumeSlider" Minimum="0" Maximum="100" TickFrequency="25" Width="200" HorizontalAlignment="Left" ValueChanged="SpeechVolumeSlider_ValueChanged" x:CompileBindings="False"/>
-              </StackPanel>
-            </StackPanel>
-            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Outputs}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-            <Grid ColumnDefinitions="200,20,*">
-              <ListBox x:Name="SpeechOutputListBox" Grid.Column="0" SelectionChanged="SpeechOutputListBox_SelectionChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" Height="300" x:CompileBindings="False">
-                <ListBox.ItemTemplate>
-                  <DataTemplate x:CompileBindings="False">
-                    <TextBlock Text="{Binding Label}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                  </DataTemplate>
-                </ListBox.ItemTemplate>
-              </ListBox>
-              <StackPanel Grid.Column="2" Spacing="8" IsEnabled="{Binding #SpeechOutputListBox.SelectedItem}" x:CompileBindings="False">
-                <TextBlock x:Name="SpeechOutputLabel" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-                <CheckBox x:Name="SpeechOutputEnabledCheckBox" Content="Enabled" IsCheckedChanged="SpeechOutputEnabledCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBlock Text="Phrase" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBox x:Name="SpeechOutputPhraseTextBox" AcceptsReturn="True" TextWrapping="Wrap" Height="80" Width="400" HorizontalAlignment="Left" TextChanged="SpeechOutputPhraseTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBlock x:Name="SpeechOutputPlaceholdersTextBlock" Foreground="{StaticResource DimForegroundBrush}" TextWrapping="Wrap" Width="400" HorizontalAlignment="Left" x:CompileBindings="False"/>
-                <Button x:Name="SpeechTestButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_TestSpeechOutput}" Click="SpeechTestButton_Click" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" HorizontalAlignment="Left" Padding="12,4" x:CompileBindings="False"/>
-              </StackPanel>
-            </Grid>
-          </StackPanel>
-        </ScrollViewer>
-      </TabItem>
-      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_PlanetsOfInterest}">
-        <ScrollViewer>
-          <StackPanel Margin="12" Spacing="12" x:CompileBindings="False">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <StackPanel>
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_CriteriaSets}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-                <ListBox x:Name="PlanetClassificationListBox" Width="200" Height="300" SelectionChanged="PlanetClassificationListBox_SelectionChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False">
-                  <ListBox.ItemTemplate>
-                    <DataTemplate x:CompileBindings="False">
-                      <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding IsActive}" Margin="0,0,6,0" x:CompileBindings="False"/>
-                        <TextBlock Text="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                      </StackPanel>
-                    </DataTemplate>
-                  </ListBox.ItemTemplate>
-                </ListBox>
-                <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,8,0,0">
-                  <Button x:Name="AddPlanetFilterButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Add}" Click="AddPlanetFilterButton_Click" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                  <Button x:Name="RenamePlanetFilterButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Rename}" Click="RenamePlanetFilterButton_Click" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                  <Button x:Name="DeletePlanetFilterButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Delete}" Click="DeletePlanetFilterButton_Click" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+                <StackPanel Classes="PreferencesSection">
+                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_DisplaySize}" Classes="PreferencesSectionHeadline" />
+                  <Border Classes="PreferencesSectionBody">
+                    <StackPanel>
+                      <RadioButton x:Name="DisplaySizeSmall" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Small}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
+                      <RadioButton x:Name="DisplaySizeStandard" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Standard}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
+                      <RadioButton x:Name="DisplaySizeLarge" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Large}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
+                      <RadioButton x:Name="DisplaySizeHuge" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Huge}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+                <StackPanel Classes="PreferencesSection">
+                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Behavior}" Classes="PreferencesSectionHeadline" />
+                  <Border Classes="PreferencesSectionBody">
+                    <StackPanel>
+                      <CheckBox x:Name="AutomaticTabSwitchingCheckBox" Content="{x:Static properties:Resources.PreferencesWindow_Checkbox_AutomaticTabSwitching}" IsCheckedChanged="AutomaticTabSwitching_Changed" />
+                    </StackPanel>
+                  </Border>
                 </StackPanel>
               </StackPanel>
-              <StackPanel x:Name="PlanetDetailPanel" Spacing="8" x:CompileBindings="False" IsEnabled="False">
-                <TextBlock x:Name="PlanetDetailName" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
-                <CheckBox x:Name="PlanetDetailActiveCheckBox" Content="Active" IsCheckedChanged="PlanetDetailActiveCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBlock Text="Name" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBox x:Name="PlanetDetailNameTextBox" Width="300" TextChanged="PlanetDetailNameTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBlock Text="Planet classes" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBox x:Name="PlanetDetailPlanetClassesTextBox" Width="300" TextChanged="PlanetDetailPlanetClassesTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBlock Text="Star classes" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBox x:Name="PlanetDetailStarClassesTextBox" Width="300" TextChanged="PlanetDetailStarClassesTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBlock Text="Distance min" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBox x:Name="PlanetDetailDistanceMinTextBox" Width="120" TextChanged="PlanetDetailDistanceMinTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBlock Text="Distance max" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBox x:Name="PlanetDetailDistanceMaxTextBox" Width="120" TextChanged="PlanetDetailDistanceMaxTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBlock Text="Radius min" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBox x:Name="PlanetDetailRadiusMinTextBox" Width="120" TextChanged="PlanetDetailRadiusMinTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBlock Text="Radius max" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBox x:Name="PlanetDetailRadiusMaxTextBox" Width="120" TextChanged="PlanetDetailRadiusMaxTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <TextBlock Text="Landable" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
-                <ComboBox x:Name="PlanetDetailLandableComboBox" Width="120" SelectionChanged="PlanetDetailLandableComboBox_SelectionChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False">
-                  <ComboBoxItem Content="Does not matter"/>
-                  <ComboBoxItem Content="No"/>
-                  <ComboBoxItem Content="Yes"/>
-                </ComboBox>
+            </StackPanel>
+          </Border>
+        </Grid>
+      </TabItem>
+
+      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_HudWindow}">
+        <Grid>
+          <Border Classes="PreferencesTabContent">
+            <StackPanel Orientation="Horizontal">
+              <StackPanel Classes="PreferencesSection">
+                <TextBlock Text="Columns" Classes="PreferencesSectionHeadline" />
+                <Border Classes="PreferencesSectionBody">
+                  <StackPanel x:Name="HudPanel" Width="185" Spacing="4" />
+                </Border>
+              </StackPanel>
+              <StackPanel>
+                <StackPanel Classes="PreferencesSection">
+                  <TextBlock Text="Opacity" Classes="PreferencesSectionHeadline" />
+                  <Border Classes="PreferencesSectionBody">
+                    <Slider x:Name="HudOpacitySlider" Minimum="0" Maximum="1" TickFrequency="0.1" Width="200" HorizontalAlignment="Left" ValueChanged="HudOpacitySlider_ValueChanged" />
+                  </Border>
+                </StackPanel>
               </StackPanel>
             </StackPanel>
-          </StackPanel>
+          </Border>
+        </Grid>
+      </TabItem>
+
+      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_GlobalHotkeys}">
+        <Grid>
+          <Border Classes="PreferencesTabContent">
+            <StackPanel Classes="PreferencesSection">
+              <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Assignment}" Classes="PreferencesSectionHeadline" />
+              <Border Classes="PreferencesSectionBody">
+                <ScrollViewer Height="300">
+                  <StackPanel x:Name="HotkeysPanel" Spacing="4" />
+                </ScrollViewer>
+              </Border>
+            </StackPanel>
+          </Border>
+        </Grid>
+      </TabItem>
+
+      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Speech}">
+        <ScrollViewer>
+          <Border Classes="PreferencesTabContent">
+            <StackPanel>
+              <StackPanel Classes="PreferencesSection">
+                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Voice}" Classes="PreferencesSectionHeadline" />
+                <Border Classes="PreferencesSectionBody">
+                  <ComboBox x:Name="SpeechVoiceComboBox" Width="300" HorizontalAlignment="Left" SelectionChanged="SpeechVoiceComboBox_SelectionChanged" />
+                </Border>
+              </StackPanel>
+              <StackPanel Classes="PreferencesSection">
+                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Rate}" Classes="PreferencesSectionHeadline" />
+                <Border Classes="PreferencesSectionBody">
+                  <Slider x:Name="SpeechRateSlider" Minimum="-4" Maximum="4" TickFrequency="1" Width="200" HorizontalAlignment="Left" ValueChanged="SpeechRateSlider_ValueChanged" />
+                </Border>
+              </StackPanel>
+              <StackPanel Classes="PreferencesSection">
+                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Volume}" Classes="PreferencesSectionHeadline" />
+                <Border Classes="PreferencesSectionBody">
+                  <Slider x:Name="SpeechVolumeSlider" Minimum="0" Maximum="100" TickFrequency="25" Width="200" HorizontalAlignment="Left" ValueChanged="SpeechVolumeSlider_ValueChanged" />
+                </Border>
+              </StackPanel>
+              <StackPanel Classes="PreferencesSection">
+                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Outputs}" Classes="PreferencesSectionHeadline" />
+                <Border Classes="PreferencesSectionBody">
+                  <Grid ColumnDefinitions="200,20,*">
+                    <ListBox x:Name="SpeechOutputListBox" Grid.Column="0" SelectionChanged="SpeechOutputListBox_SelectionChanged" Height="250">
+                      <ListBox.ItemTemplate>
+                        <DataTemplate x:CompileBindings="False">
+                          <TextBlock Text="{Binding Label}" />
+                        </DataTemplate>
+                      </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Grid.Column="2" Spacing="8" IsEnabled="{Binding #SpeechOutputListBox.SelectedItem}">
+                      <TextBlock x:Name="SpeechOutputLabel" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" />
+                      <CheckBox x:Name="SpeechOutputEnabledCheckBox" Content="Enabled" IsCheckedChanged="SpeechOutputEnabledCheckBox_IsCheckedChanged" />
+                      <TextBlock Text="Phrase" />
+                      <TextBox x:Name="SpeechOutputPhraseTextBox" AcceptsReturn="True" TextWrapping="Wrap" Height="80" Width="400" HorizontalAlignment="Left" TextChanged="SpeechOutputPhraseTextBox_TextChanged" />
+                      <TextBlock x:Name="SpeechOutputPlaceholdersTextBlock" Foreground="{StaticResource DimForegroundBrush}" TextWrapping="Wrap" Width="400" HorizontalAlignment="Left" />
+                      <Button x:Name="SpeechTestButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_TestSpeechOutput}" Click="SpeechTestButton_Click" HorizontalAlignment="Left" Padding="12,4" />
+                    </StackPanel>
+                  </Grid>
+                </Border>
+              </StackPanel>
+            </StackPanel>
+          </Border>
         </ScrollViewer>
       </TabItem>
+
+      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_PlanetsOfInterest}">
+        <ScrollViewer>
+          <Border Classes="PreferencesTabContent">
+            <StackPanel Classes="PreferencesSection">
+              <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_CriteriaSets}" Classes="PreferencesSectionHeadline" />
+              <Border Classes="PreferencesSectionBody" MinHeight="385">
+                <StackPanel Orientation="Horizontal">
+                  <StackPanel>
+                    <ListBox x:Name="PlanetClassificationListBox" SelectionMode="Single" Width="170" Height="270" SelectionChanged="PlanetClassificationListBox_SelectionChanged">
+                      <ListBox.ItemTemplate>
+                        <DataTemplate x:CompileBindings="False">
+                          <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding IsActive}" Margin="0,0,6,0" />
+                            <TextBlock Text="{Binding Name}" />
+                          </StackPanel>
+                        </DataTemplate>
+                      </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="1,1,5,10">
+                      <Button x:Name="AddPlanetFilterButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Add}" Click="AddPlanetFilterButton_Click" />
+                      <Button x:Name="RenamePlanetFilterButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Rename}" Click="RenamePlanetFilterButton_Click" />
+                      <Button x:Name="DeletePlanetFilterButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Delete}" Click="DeletePlanetFilterButton_Click" />
+                    </StackPanel>
+                  </StackPanel>
+                  <StackPanel x:Name="PlanetDetailPanel" Spacing="8" IsEnabled="False">
+                    <TextBlock x:Name="PlanetDetailName" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" />
+                    <CheckBox x:Name="PlanetDetailActiveCheckBox" Content="Active" IsCheckedChanged="PlanetDetailActiveCheckBox_IsCheckedChanged" />
+                    <TextBlock Text="Name" />
+                    <TextBox x:Name="PlanetDetailNameTextBox" Width="300" TextChanged="PlanetDetailNameTextBox_TextChanged" />
+                    <TextBlock Text="Planet classes" />
+                    <TextBox x:Name="PlanetDetailPlanetClassesTextBox" Width="300" TextChanged="PlanetDetailPlanetClassesTextBox_TextChanged" />
+                    <TextBlock Text="Star classes" />
+                    <TextBox x:Name="PlanetDetailStarClassesTextBox" Width="300" TextChanged="PlanetDetailStarClassesTextBox_TextChanged" />
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                      <StackPanel>
+                        <TextBlock Text="Distance min" />
+                        <TextBox x:Name="PlanetDetailDistanceMinTextBox" Width="120" TextChanged="PlanetDetailDistanceMinTextBox_TextChanged" />
+                      </StackPanel>
+                      <StackPanel>
+                        <TextBlock Text="Distance max" />
+                        <TextBox x:Name="PlanetDetailDistanceMaxTextBox" Width="120" TextChanged="PlanetDetailDistanceMaxTextBox_TextChanged" />
+                      </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                      <StackPanel>
+                        <TextBlock Text="Radius min" />
+                        <TextBox x:Name="PlanetDetailRadiusMinTextBox" Width="120" TextChanged="PlanetDetailRadiusMinTextBox_TextChanged" />
+                      </StackPanel>
+                      <StackPanel>
+                        <TextBlock Text="Radius max" />
+                        <TextBox x:Name="PlanetDetailRadiusMaxTextBox" Width="120" TextChanged="PlanetDetailRadiusMaxTextBox_TextChanged" />
+                      </StackPanel>
+                    </StackPanel>
+                    <TextBlock Text="Landable" />
+                    <ComboBox x:Name="PlanetDetailLandableComboBox" Width="120" SelectionChanged="PlanetDetailLandableComboBox_SelectionChanged">
+                      <ComboBoxItem Content="Does not matter"/>
+                      <ComboBoxItem Content="No"/>
+                      <ComboBoxItem Content="Yes"/>
+                    </ComboBox>
+                  </StackPanel>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Border>
+        </ScrollViewer>
+      </TabItem>
+
       <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Configuration}">
         <ScrollViewer>
-          <StackPanel Margin="12" Spacing="16">
-            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_JournalFilesPath}" FontWeight="Bold" Margin="0,0,0,4"/>
-            <StackPanel Orientation="Horizontal" Spacing="8">
-              <TextBox x:Name="EdSavedGamePathTextBox" IsReadOnly="True" Width="600" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}"/>
-              <Button x:Name="SetJournalFolderButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Click="SetJournalFolderButton_Click" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}"/>
+          <Border Classes="PreferencesTabContent">
+            <StackPanel>
+              <StackPanel Classes="PreferencesSection">
+                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_JournalFilesPath}" Classes="PreferencesSectionHeadline" />
+                <Border Classes="PreferencesSectionBody">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBox x:Name="EdSavedGamePathTextBox" IsReadOnly="True" Width="600" />
+                    <Button x:Name="SetJournalFolderButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Click="SetJournalFolderButton_Click" />
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+              <StackPanel Classes="PreferencesSection">
+                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Thresholds}" Classes="PreferencesSectionHeadline" />
+                <Border Classes="PreferencesSectionBody">
+                  <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableBodies}" VerticalAlignment="Center" Margin="0,0,16,8" />
+                    <TextBox x:Name="ValuableBodyThresholdTextBox" Grid.Row="0" Grid.Column="1" Width="120" TextChanged="ValuableBodyThresholdTextBox_TextChanged" Margin="0,0,0,8" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableSpecies}" VerticalAlignment="Center" Margin="0,0,16,8" />
+                    <TextBox x:Name="ValuableGenusThresholdTextBox" Grid.Row="1" Grid.Column="1" Width="120" TextChanged="ValuableGenusThresholdTextBox_TextChanged" Margin="0,0,0,8" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_BiologicalsViewAltitude}" VerticalAlignment="Center" Margin="0,0,16,8" />
+                    <TextBox x:Name="BiologicalsViewAltitudeThresholdTextBox" Grid.Row="2" Grid.Column="1" Width="120" TextChanged="BiologicalsViewAltitudeThresholdTextBox_TextChanged" Margin="0,0,0,8" />
+                  </Grid>
+                </Border>
+              </StackPanel>
+              <StackPanel Classes="PreferencesSection">
+                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_ResetPreferences}" Classes="PreferencesSectionHeadline" />
+                <Border Classes="PreferencesSectionBody">
+                  <Button x:Name="RestoreDefaultButton" Content="{x:Static properties:Resources.PreferencesWindow_ResetPreferences}" Click="RestoreDefaultButton_Click" HorizontalAlignment="Left" Padding="12,4" />
+                </Border>
+              </StackPanel>
             </StackPanel>
-            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Thresholds}" FontWeight="Bold" Margin="0,16,0,4"/>
-            <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto">
-              <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableBodies}" VerticalAlignment="Center" Margin="0,0,16,8" Foreground="{StaticResource ForegroundBrush}"/>
-              <TextBox x:Name="ValuableBodyThresholdTextBox" Grid.Row="0" Grid.Column="1" Width="120" TextChanged="ValuableBodyThresholdTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,8"/>
-              <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableSpecies}" VerticalAlignment="Center" Margin="0,0,16,8" Foreground="{StaticResource ForegroundBrush}"/>
-              <TextBox x:Name="ValuableGenusThresholdTextBox" Grid.Row="1" Grid.Column="1" Width="120" TextChanged="ValuableGenusThresholdTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,8"/>
-              <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_BiologicalsViewAltitude}" VerticalAlignment="Center" Margin="0,0,16,8" Foreground="{StaticResource ForegroundBrush}"/>
-              <TextBox x:Name="BiologicalsViewAltitudeThresholdTextBox" Grid.Row="2" Grid.Column="1" Width="120" TextChanged="BiologicalsViewAltitudeThresholdTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,8"/>
-            </Grid>
-            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_ResetPreferences}" FontWeight="Bold" Margin="0,16,0,4"/>
-            <Button x:Name="RestoreDefaultButton" Content="{x:Static properties:Resources.PreferencesWindow_ResetPreferences}" Click="RestoreDefaultButton_Click" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" HorizontalAlignment="Left" Padding="12,4"/>
-          </StackPanel>
+          </Border>
         </ScrollViewer>
       </TabItem>
     </TabControl>
-    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-      <Button Content="{x:Static properties:Resources.AboutWindow_OK}" Padding="16,4" Margin="0,0,10,0" Click="OkButton_Click"/>
-      <Button Content="{x:Static properties:Resources.PreferencesWindow_Cancel}" Padding="16,4" Click="CancelButton_Click"/>
+
+    <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Spacing="8">
+      <Button x:Name="OkButton" Content="{x:Static properties:Resources.PreferencesWindow_Save}" Padding="16,4" Click="OkButton_Click" />
+      <Button x:Name="CancelButton" Content="{x:Static properties:Resources.PreferencesWindow_Cancel}" Padding="16,4" Click="CancelButton_Click" />
     </StackPanel>
   </Grid>
 </Window>

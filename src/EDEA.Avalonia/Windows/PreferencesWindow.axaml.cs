@@ -80,6 +80,14 @@ public class SpeechOutputItem
 public partial class PreferencesWindow : Window
 {
     /// <summary>
+    /// Defines the <see cref="SelectedColor"/> property.
+    /// </summary>
+    public static readonly global::Avalonia.StyledProperty<global::Avalonia.Media.Color> SelectedColorProperty =
+        global::Avalonia.AvaloniaProperty.Register<PreferencesWindow, global::Avalonia.Media.Color>(
+            nameof(SelectedColor),
+            global::Avalonia.Media.Colors.White);
+
+    /// <summary>
     /// A flag that prevents re-entrant updates when changing speech output detail controls.
     /// </summary>
     private bool _updatingSpeechOutput;
@@ -88,6 +96,15 @@ public partial class PreferencesWindow : Window
     /// A flag that prevents re-entrant updates when changing planet classification detail controls.
     /// </summary>
     private bool _updatingPlanet;
+
+    /// <summary>
+    /// Gets or sets the currently selected color in the color picker.
+    /// </summary>
+    public global::Avalonia.Media.Color SelectedColor
+    {
+        get => GetValue(SelectedColorProperty);
+        set => SetValue(SelectedColorProperty, value);
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PreferencesWindow"/> class.
@@ -103,11 +120,6 @@ public partial class PreferencesWindow : Window
     /// </summary>
     private void LoadPreferences()
     {
-        var languages = new[] { "Auto", "en", "de", "es", "fr", "ru", "pt-BR" };
-        var language = Preferences.Application.Language;
-        var index = Array.IndexOf(languages, language);
-        LanguageComboBox.SelectedIndex = index >= 0 ? index : 0;
-
         var displaySize = Preferences.Other.DisplaySize;
         DisplaySizeSmall.IsChecked = displaySize == 0;
         DisplaySizeStandard.IsChecked = displaySize == 1;
@@ -223,23 +235,6 @@ public partial class PreferencesWindow : Window
             row.Children.Add(label);
             row.Children.Add(textBox);
             HotkeysPanel.Children.Add(row);
-        }
-    }
-
-    /// <summary>
-    /// Applies the selected language.
-    /// </summary>
-    private void LanguageComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (LanguageComboBox == null)
-        {
-            return;
-        }
-
-        var languages = new[] { "Auto", "en", "de", "es", "fr", "ru", "pt-BR" };
-        if (LanguageComboBox.SelectedIndex >= 0 && LanguageComboBox.SelectedIndex < languages.Length)
-        {
-            Preferences.Application.Language = languages[LanguageComboBox.SelectedIndex];
         }
     }
 
@@ -469,7 +464,6 @@ public partial class PreferencesWindow : Window
             panel.Children.Add(new TextBlock
             {
                 Text = property.Name,
-                Foreground = new SolidColorBrush(global::Avalonia.Media.Color.Parse("#FFFFFF")),
             });
             ColorListBox.Items.Add(panel);
         }
@@ -482,23 +476,68 @@ public partial class PreferencesWindow : Window
     {
         if (ColorListBox?.SelectedItem is StackPanel { Tag: ColorItem item })
         {
-            ColorPickerView.Color = item.RawColor;
+            SelectedColor = item.RawColor;
+        }
+    }
+
+    /// <summary>
+    /// Updates the selected color from a manually entered hex value.
+    /// </summary>
+    private void HexColorTextBox_LostFocus(object? sender, global::Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (HexColorTextBox is null)
+        {
+            return;
+        }
+
+        var text = HexColorTextBox.Text?.Trim() ?? string.Empty;
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        if (!text.StartsWith('#'))
+        {
+            text = "#" + text;
+        }
+
+        if (global::Avalonia.Media.Color.TryParse(text, out var color))
+        {
+            SelectedColor = color;
+        }
+        else
+        {
+            HexColorTextBox.Text = string.Format(CultureInfo.InvariantCulture, "#{0:X2}{1:X2}{2:X2}", SelectedColor.R, SelectedColor.G, SelectedColor.B);
         }
     }
 
     /// <summary>
     /// Applies the selected color to the color setting.
     /// </summary>
-    private void ColorPickerView_ColorChanged(object? sender, global::Avalonia.Controls.ColorChangedEventArgs e)
+    protected override void OnPropertyChanged(global::Avalonia.AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property == SelectedColorProperty)
+        {
+            ApplySelectedColor();
+        }
+    }
+
+    /// <summary>
+    /// Applies the currently selected color to the active color setting.
+    /// </summary>
+    private void ApplySelectedColor()
     {
         if (ColorListBox?.SelectedItem is not StackPanel { Tag: ColorItem item } selectedItem || item.PropertyInfo is null)
         {
             return;
         }
 
-        item.RawColor = e.NewColor;
-        item.Color = new SolidColorBrush(e.NewColor);
-        item.PropertyInfo.SetValue(Preferences.Colors, new EDEA.Core.Drawing.Color(e.NewColor.A, e.NewColor.R, e.NewColor.G, e.NewColor.B));
+        var color = SelectedColor;
+        item.RawColor = color;
+        item.Color = new SolidColorBrush(color);
+        item.PropertyInfo.SetValue(Preferences.Colors, new EDEA.Core.Drawing.Color(color.A, color.R, color.G, color.B));
 
         // Apply the new color to the running application resources.
         EDEA.Services.PlatformServices.ColorTheme?.ApplyCurrentColors();
@@ -506,7 +545,12 @@ public partial class PreferencesWindow : Window
         // Update the color swatch in the list item.
         if (selectedItem.Children.Count > 0 && selectedItem.Children[0] is global::Avalonia.Controls.Shapes.Rectangle swatch)
         {
-            swatch.Fill = new SolidColorBrush(e.NewColor);
+            swatch.Fill = new SolidColorBrush(color);
+        }
+
+        if (HexColorTextBox is not null)
+        {
+            HexColorTextBox.Text = string.Format(CultureInfo.InvariantCulture, "#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
         }
     }
 
