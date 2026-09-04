@@ -99,4 +99,50 @@ public sealed class AvaloniaColorThemeService : IColorThemeService
             }
         }
     }
+
+    /// <summary>
+    /// Applies the current display size to the application resources.
+    /// </summary>
+    public void ApplyCurrentDisplaySize()
+    {
+        var application = Application.Current;
+        if (application == null)
+        {
+            return;
+        }
+
+        int displaySize = EDEA.Preferences.Other.DisplaySize;
+        int displaySizeOffset = displaySize - 2;
+
+        application.Resources["MainFontSize"] = 12.0 + displaySizeOffset;
+        application.Resources["HeaderFontSize"] = 14.0 + displaySizeOffset;
+        application.Resources["SmallFontSize"] = 10.0 + displaySizeOffset;
+        application.Resources["HistoryFontSize"] = 20.0 + displaySizeOffset;
+        application.Resources["HistoryTotalValueFontSize"] = 30.0 + displaySizeOffset;
+        application.Resources["MainIconSize"] = 15.0 + displaySizeOffset;
+        application.Resources["MediumIconSize"] = 12.0 + displaySizeOffset;
+        application.Resources["SmallIconSize"] = 7.0 + displaySizeOffset;
+
+        var headerFontSize = 14.0 + displaySizeOffset;
+        application.Resources["TabStripWidth"] = headerFontSize + 16.0;
+
+        var borderTop = 21.0 + displaySizeOffset;
+        if (application.Resources.TryGetResource("TabViewBorderSizes", null, out var border1) && border1 is Thickness borderSizes)
+        {
+            application.Resources["TabViewBorderSizes"] = new Thickness(borderSizes.Left, borderTop, borderSizes.Right, borderSizes.Bottom);
+        }
+        else
+        {
+            application.Resources["TabViewBorderSizes"] = new Thickness(6, borderTop, 0, 0);
+        }
+
+        if (application.Resources.TryGetResource("TabViewInverseBorderSizes", null, out var border2) && border2 is Thickness inverseBorderSizes)
+        {
+            application.Resources["TabViewInverseBorderSizes"] = new Thickness(inverseBorderSizes.Left, borderTop, inverseBorderSizes.Right, inverseBorderSizes.Bottom);
+        }
+        else
+        {
+            application.Resources["TabViewInverseBorderSizes"] = new Thickness(0, borderTop, 0, 0);
+        }
+    }
 }

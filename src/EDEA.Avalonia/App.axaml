@@ -1,5 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sys="using:System"
              xmlns:local="clr-namespace:EDEA.Avalonia"
              xmlns:views="clr-namespace:EDEA.Avalonia.Views"
              xmlns:converters="clr-namespace:EDEA.Avalonia.Converters"
@@ -65,6 +66,17 @@
     <SolidColorBrush x:Key="NewIconColor" Color="#FF6A00"/>
     <SolidColorBrush x:Key="BiologicalsCompleteIconColor" Color="#FF6A00"/>
     <SolidColorBrush x:Key="HeaderIconColor" Color="#090000"/>
+    <sys:Double x:Key="MainFontSize">12</sys:Double>
+    <sys:Double x:Key="HeaderFontSize">14</sys:Double>
+    <sys:Double x:Key="SmallFontSize">10</sys:Double>
+    <sys:Double x:Key="HistoryFontSize">20</sys:Double>
+    <sys:Double x:Key="HistoryTotalValueFontSize">30</sys:Double>
+    <sys:Double x:Key="MainIconSize">15</sys:Double>
+    <sys:Double x:Key="MediumIconSize">12</sys:Double>
+    <sys:Double x:Key="SmallIconSize">7</sys:Double>
+    <sys:Double x:Key="TabStripWidth">30</sys:Double>
+    <Thickness x:Key="TabViewBorderSizes">6,21,0,0</Thickness>
+    <Thickness x:Key="TabViewInverseBorderSizes">0,21,0,0</Thickness>
     <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
     <converters:TabVisibilityConverter x:Key="TabVisibilityConverter" />
   </Application.Resources>
@@ -107,6 +119,7 @@
     <Style Selector="DataGridCell">
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="Foreground" Value="{DynamicResource MainColor}" />
+      <Setter Property="FontSize" Value="{DynamicResource MainFontSize}" />
       <Setter Property="VerticalContentAlignment" Value="Center" />
       <Setter Property="HorizontalContentAlignment" Value="Left" />
     </Style>
@@ -119,7 +132,7 @@
     <Style Selector="DataGridColumnHeader">
       <Setter Property="Background" Value="{DynamicResource MainColor}" />
       <Setter Property="Foreground" Value="{DynamicResource MainBackgroundColor}" />
-      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontSize" Value="{DynamicResource MainFontSize}" />
       <Setter Property="Padding" Value="4" />
       <Setter Property="HorizontalContentAlignment" Value="Center" />
       <Setter Property="VerticalContentAlignment" Value="Center" />

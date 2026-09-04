@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="using:System"
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         xmlns:vm="clr-namespace:EDEA.Avalonia.ViewModels"
         xmlns:vmcore="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
@@ -20,25 +21,31 @@
 
   <Window.Resources>
     <converters:TabHeaderToHeightConverter x:Key="TabHeaderToHeightConverter" />
+    <DataTemplate x:Key="HeaderTextTemplate" x:DataType="sys:String">
+      <TextBlock Text="{Binding}"
+                 Foreground="{DynamicResource MainColor}"
+                 FontSize="{DynamicResource HeaderFontSize}"
+                 TextWrapping="NoWrap" />
+    </DataTemplate>
   </Window.Resources>
 
   <Window.Styles>
     <Style Selector="TextBlock.StatusBarHeadline">
       <Setter Property="Padding" Value="5,11,25,2" />
       <Setter Property="Foreground" Value="{DynamicResource MainColor}" />
-      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontSize" Value="{DynamicResource MainFontSize}" />
     </Style>
     <Style Selector="TextBlock.StatusBarContent">
       <Setter Property="FontWeight" Value="Bold" />
       <Setter Property="Padding" Value="5,0,25,0" />
       <Setter Property="Foreground" Value="{DynamicResource HighlightColor}" />
-      <Setter Property="FontSize" Value="16" />
+      <Setter Property="FontSize" Value="{DynamicResource HeaderFontSize}" />
     </Style>
     <Style Selector="TextBlock.StatusBarExplorationStatus">
       <Setter Property="Padding" Value="3,0,3,0" />
       <Setter Property="Margin" Value="2,0" />
       <Setter Property="Foreground" Value="{DynamicResource MainBackgroundColor}" />
-      <Setter Property="FontSize" Value="10" />
+      <Setter Property="FontSize" Value="{DynamicResource SmallFontSize}" />
     </Style>
     <Style Selector="Thumb.ResizeGrip">
       <Setter Property="Width" Value="25" />
@@ -83,9 +90,9 @@
 
       <Menu Grid.Column="0" Background="Transparent" VerticalAlignment="Center">
         <MenuItem>
-          <MenuItem.Icon>
+          <MenuItem.Header>
             <materialIcons:MaterialIcon Kind="Menu" Foreground="{DynamicResource MainColor}" Width="20" Height="20" />
-          </MenuItem.Icon>
+          </MenuItem.Header>
           <MenuItem Header="Toggle HUD" Command="{Binding OpenCloseHudWindowCommand}"/>
           <MenuItem Header="Mouse Pass-Through" IsEnabled="False"/>
           <Separator/>
@@ -142,21 +149,20 @@
 
     <!-- Main content -->
     <Grid Grid.Row="2" ColumnDefinitions="Auto,*">
-      <ListBox Grid.Column="0" ItemsSource="{Binding TabViewModels}" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}" Background="Transparent" BorderThickness="0" Width="50" VerticalAlignment="Stretch" ClipToBounds="False">
+      <ListBox Grid.Column="0" ItemsSource="{Binding TabViewModels}" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}" Background="Transparent" BorderBrush="{DynamicResource MainColor}" BorderThickness="0,0,6,0" VerticalAlignment="Stretch" ClipToBounds="False">
         <ListBox.Template>
           <ControlTemplate>
-            <ItemsPresenter ClipToBounds="False" />
+            <ItemsPresenter x:Name="PART_ItemsPresenter" ClipToBounds="False" />
           </ControlTemplate>
         </ListBox.Template>
         <ListBox.ItemsPanel>
           <ItemsPanelTemplate>
-            <StackPanel Orientation="Vertical" />
+            <StackPanel Orientation="Vertical" ClipToBounds="False" />
           </ItemsPanelTemplate>
         </ListBox.ItemsPanel>
         <ListBox.Styles>
           <Style Selector="ListBoxItem" x:DataType="vmcore:TabViewModel">
-            <Setter Property="Width" Value="50" />
-            <Setter Property="Height" Value="{Binding TabHeader, Converter={StaticResource TabHeaderToHeightConverter}}" />
+            <Setter Property="MinHeight" Value="40" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0,4,0,0" />
             <Setter Property="Background" Value="{DynamicResource MainCellColor}" />
@@ -164,10 +170,10 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Template">
               <ControlTemplate>
-                <Border Background="{TemplateBinding Background}" ClipToBounds="False">
+                <Border Background="{TemplateBinding Background}" CornerRadius="5" ClipToBounds="False">
                   <ContentPresenter Content="{TemplateBinding Content}"
                                     ContentTemplate="{TemplateBinding ContentTemplate}"
-                                    ClipToBounds="False"
+                                    Padding="10,5"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Center" />
                 </Border>
@@ -186,17 +192,9 @@
           <DataTemplate x:DataType="vmcore:TabViewModel">
             <TextBlock Text="{Binding TabHeader}"
                        Foreground="{DynamicResource MainColor}"
-                       FontSize="14"
-                       Width="{Binding TabHeader, Converter={StaticResource TabHeaderToHeightConverter}}"
-                       Height="50"
-                       TextAlignment="Center"
+                       FontSize="{DynamicResource HeaderFontSize}"
                        VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       RenderTransformOrigin="0.5,0.5">
-              <TextBlock.RenderTransform>
-                <media:RotateTransform Angle="-90" />
-              </TextBlock.RenderTransform>
-            </TextBlock>
+                       HorizontalAlignment="Center" />
           </DataTemplate>
         </ListBox.ItemTemplate>
       </ListBox>

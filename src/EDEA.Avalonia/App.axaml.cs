@@ -155,6 +155,7 @@ public partial class App : Application
         Preferences.SetSettingsProvider(_settingsProvider);
         ApplyLanguage();
         PlatformServices.ColorTheme?.ApplyCurrentColors();
+        PlatformServices.ColorTheme?.ApplyCurrentDisplaySize();
     }
 
     /// <summary>

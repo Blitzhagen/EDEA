@@ -13,6 +13,11 @@ public interface IColorThemeService
     void ApplyCurrentColors();
 
     /// <summary>
+    /// Applies the current display size to the application resources.
+    /// </summary>
+    void ApplyCurrentDisplaySize();
+
+    /// <summary>
     /// Applies the specified color to all matching application resource keys.
     /// </summary>
     /// <param name="propertyName">The name of the color property to apply.</param>
