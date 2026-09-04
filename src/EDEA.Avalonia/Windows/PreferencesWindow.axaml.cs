@@ -481,70 +481,68 @@ public partial class PreferencesWindow : Window
         }
     }
 
-    /// <summary>
-    /// Formats a hotkey for display.
-    /// </summary>
-    private static string FormatHotkey(EDEA.Models.Hotkey hotkey)
-    {
-        if (!hotkey.IsValid)
-        {
-            return "-";
-        }
 
-        var parts = new List<string>();
-        if (hotkey.Modifier.HasFlag(EDEA.Core.Input.ModifierKeys.Alt)) parts.Add("Alt");
-        if (hotkey.Modifier.HasFlag(EDEA.Core.Input.ModifierKeys.Control)) parts.Add("Ctrl");
-        if (hotkey.Modifier.HasFlag(EDEA.Core.Input.ModifierKeys.Shift)) parts.Add("Shift");
-        if (hotkey.Modifier.HasFlag(EDEA.Core.Input.ModifierKeys.Windows)) parts.Add("Win");
-        parts.Add(hotkey.Key.ToString());
-        return string.Join(" + ", parts);
-    }
 
     /// <summary>
-    /// Captures a new hotkey when a key is pressed in a hotkey text box.
+    /// Opens a dialog to assign a new hotkey combination.
     /// </summary>
-    private void HotkeyTextBox_KeyDown(object? sender, AvaloniaInput.KeyEventArgs e, PropertyInfo property, TextBox textBox)
+    private async void HotkeyTextBlock_Click(object? sender, AvaloniaInput.PointerPressedEventArgs e)
     {
-        var coreKey = MapKey(e.Key);
-        var coreModifier = MapModifiers(e.KeyModifiers);
-        if (coreKey == EDEA.Core.Input.Key.None)
+        if (sender is not TextBlock { Tag: string propertyName })
         {
             return;
         }
 
-        var hotkey = new EDEA.Models.Hotkey { Modifier = coreModifier, Key = coreKey };
-        property.SetValue(Preferences.Hotkeys, hotkey);
-        textBox.Text = FormatHotkey(hotkey);
-        e.Handled = true;
+        var property = Preferences.Hotkeys.GetType().GetProperty(propertyName);
+        if (property == null || property.PropertyType != typeof(Hotkey))
+        {
+            return;
+        }
+
+        var currentHotkey = (Hotkey?)property.GetValue(Preferences.Hotkeys);
+        var dialog = new HotkeyInputDialog(currentHotkey);
+        var result = await dialog.ShowDialog<Hotkey?>(this);
+        if (result == null)
+        {
+            return;
+        }
+
+        result.Id = currentHotkey?.Id ?? (HotkeyId)Enum.Parse(typeof(HotkeyId), propertyName);
+        property.SetValue(Preferences.Hotkeys, result);
+
+        if (HotkeysListBox.ItemsSource is Dictionary<string, HotkeyItem> items && items.TryGetValue(propertyName, out var item))
+        {
+            item.Refresh();
+        }
+
+        RegisterHotkeys();
     }
 
     /// <summary>
-    /// Maps an Avalonia key to the platform-independent key enum.
+    /// Registers all valid hotkeys with the global hotkey service.
     /// </summary>
-    private static EDEA.Core.Input.Key MapKey(AvaloniaInput.Key key)
+    private static void RegisterHotkeys()
     {
-        return Enum.TryParse<EDEA.Core.Input.Key>(key.ToString(), out var result) ? result : EDEA.Core.Input.Key.None;
-    }
+        var service = PlatformServices.GlobalHotkey;
+        if (service == null)
+        {
+            return;
+        }
 
-    /// <summary>
-    /// Maps Avalonia key modifiers to the platform-independent modifier enum.
-    /// </summary>
-    private static EDEA.Core.Input.ModifierKeys MapModifiers(AvaloniaInput.KeyModifiers modifiers)
-    {
-        var result = EDEA.Core.Input.ModifierKeys.None;
-        if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Alt)) result |= EDEA.Core.Input.ModifierKeys.Alt;
-        if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Control)) result |= EDEA.Core.Input.ModifierKeys.Control;
-        if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Shift)) result |= EDEA.Core.Input.ModifierKeys.Shift;
-        if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Meta)) result |= EDEA.Core.Input.ModifierKeys.Windows;
-        return result;
-    }
+        service.UnregisterAll();
+        foreach (var property in Preferences.Hotkeys.GetType().GetProperties())
+        {
+            if (property.PropertyType != typeof(Hotkey))
+            {
+                continue;
+            }
 
-    /// <summary>
-    /// Opens a placeholder dialog to assign a new hotkey.
-    /// </summary>
-    private void HotkeyTextBlock_Click(object? sender, AvaloniaInput.PointerPressedEventArgs e)
-    {
-        // TODO: Show an input dialog for assigning a new hotkey combination.
+            var hotkey = (Hotkey?)property.GetValue(Preferences.Hotkeys);
+            if (hotkey is { IsValid: true })
+            {
+                service.Register(hotkey.Id, hotkey.Modifier, hotkey.Key);
+            }
+        }
     }
 
     /// <summary>

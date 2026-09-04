@@ -33,6 +33,16 @@ public partial class MainViewModel : ObservableObject
     private readonly StarSystemProvider _starSystemProvider;
 
     /// <summary>
+    /// The currently open HUD window, if any.
+    /// </summary>
+    private HudWindow? _hudWindow;
+
+    /// <summary>
+    /// Whether the HUD window is currently in click-through mode.
+    /// </summary>
+    private bool _hudClickThrough;
+
+    /// <summary>
     /// Gets the main window title.
     /// </summary>
     public string Title => Resources.MainWindow_Title;
@@ -108,7 +118,42 @@ public partial class MainViewModel : ObservableObject
 
     private void OpenCloseHudWindow()
     {
-        new HudWindow(_starSystemProvider).Show();
+        if (_hudWindow != null)
+        {
+            _hudWindow.Close();
+            _hudWindow = null;
+            _hudClickThrough = false;
+        }
+        else
+        {
+            _hudWindow = new HudWindow(_starSystemProvider);
+            _hudWindow.Closed += (_, _) =>
+            {
+                _hudWindow = null;
+                _hudClickThrough = false;
+            };
+            _hudWindow.Show();
+        }
+    }
+
+    /// <summary>
+    /// Toggles mouse pass-through for the currently open HUD window.
+    /// </summary>
+    public void ToggleHudMousePassThrough()
+    {
+        if (_hudWindow == null)
+        {
+            return;
+        }
+
+        var handle = PlatformServices.HudWindow?.GetWindowHandle(_hudWindow) ?? 0;
+        if (handle == 0)
+        {
+            return;
+        }
+
+        _hudClickThrough = !_hudClickThrough;
+        PlatformServices.HudWindow?.SetClickThrough(handle, _hudClickThrough);
     }
 
     private void ImportJournalHistory()
