@@ -37,7 +37,7 @@
     <Style Selector="Thumb.ResizeGrip">
       <Setter Property="Width" Value="25" />
       <Setter Property="Height" Value="25" />
-      <Setter Property="Cursor" Value="SizeNorthwestSoutheast" />
+      <Setter Property="Cursor" Value="BottomRightCorner" />
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="Template">
         <ControlTemplate>
