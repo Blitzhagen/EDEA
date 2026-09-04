@@ -234,10 +234,132 @@ public sealed class AvaloniaSpeechService : ISpeechService
     }
 
     /// <inheritdoc />
-    public Dictionary<string, string> GetPlaceholdersFromSpeechOutputs(SpeechOutput[] outputs) => new();
+    public Dictionary<string, string> GetPlaceholdersFromSpeechOutputs(SpeechOutput[] outputs)
+    {
+        var result = new Dictionary<string, string>();
+        foreach (var output in outputs)
+        {
+            foreach (var placeholder in output.Placeholders)
+            {
+                result[placeholder.Key.ToString()] = placeholder.Value;
+            }
+        }
+
+        return result;
+    }
 
     /// <inheritdoc />
-    public SpeechOutput[] GetExampleSpeechOutputs(string outputName) => Array.Empty<SpeechOutput>();
+    public SpeechOutput[] GetExampleSpeechOutputs(string outputName)
+    {
+        return new[] { CreateExampleSpeechOutput(outputName) };
+    }
+
+    /// <summary>
+    /// Creates a single example <see cref="SpeechOutput"/> for the specified output name.
+    /// </summary>
+    private static SpeechOutput CreateExampleSpeechOutput(string outputName)
+    {
+        var output = new SpeechOutput();
+        switch (outputName)
+        {
+            case "Welcome":
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.CommanderName, "Cmdr Shepard");
+                break;
+            case "FirstDiscoverySystem":
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.SystemName, "Sol");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.SystemStarType, "G");
+                break;
+            case "FirstDiscoveryBody":
+            case "ValuableBody":
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.BodyType, "Planet");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.BodyName, "Sol 3");
+                if (outputName == "ValuableBody")
+                {
+                    output.Placeholders.Add(SpeechOutputPlaceholderKeys.BodyAchievableValue, "1,234,567 CR");
+                    output.Placeholders.Add(SpeechOutputPlaceholderKeys.BodyAchievedValue, "500,000 CR");
+                }
+
+                break;
+            case "GeologicalSignals":
+                AddExamplePlanetPlaceholders(output);
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetGeoCount, "3");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetGeoSignalNoun, "geological signals");
+                break;
+            case "BiologicalSignals":
+                AddExamplePlanetPlaceholders(output);
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetBioCount, "2");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetBioSignalNoun, "biological signals");
+                break;
+            case "Terraformable":
+            case "Landable":
+                AddExamplePlanetPlaceholders(output);
+                break;
+            case "ValuableGenusPredicted":
+                AddExamplePlanetPlaceholders(output);
+                AddExampleSpeciesPlaceholders(output);
+                break;
+            case "ValuableGeneraPredicted":
+                AddExamplePlanetPlaceholders(output);
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.ValuableSpeciesCount, "4");
+                break;
+            case "LeaveClonalColonyRange":
+            case "EnterClonalColonyRange":
+                AddExampleSpeciesPlaceholders(output);
+                break;
+            case "MatchingClassificationsFound":
+                AddExamplePlanetPlaceholders(output);
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.PoiCriteriaSetsCount, "2");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.PoiCriteriaSetNoun, "criteria sets");
+                break;
+            case "MatchingClassificationFound":
+                AddExamplePlanetPlaceholders(output);
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.PoiCriteriaSetName, "Terraformables");
+                break;
+            case "Ring":
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.RingName, "Sol A 1 A Ring");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.RingType, "Metallic");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.RingMass, "1.5");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.RingWidth, "500,000 km");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.RingDensity, "2.3");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.RingsReserveLevel, "Pristine");
+                break;
+            case "RingCount":
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.RingsCount, "3");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.RingsReserveLevel, "Major");
+                output.Placeholders.Add(SpeechOutputPlaceholderKeys.RingsTotalWidth, "1,200,000 km");
+                break;
+        }
+
+        return output;
+    }
+
+    /// <summary>
+    /// Adds example planet placeholders to the specified speech output.
+    /// </summary>
+    private static void AddExamplePlanetPlaceholders(SpeechOutput output)
+    {
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetType, "High metal content world");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetName, "Sol 3");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetDistance, "1,200.50");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetAtmosphere, "Carbon dioxide");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetTemperature, "350.00");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetGravity, "2.10");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetVolcanism, "Iron magma");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetRadius, "6,371.00");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.PlanetOrbitalInclination, "12.50");
+    }
+
+    /// <summary>
+    /// Adds example species placeholders to the specified speech output.
+    /// </summary>
+    private static void AddExampleSpeciesPlaceholders(SpeechOutput output)
+    {
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.SpeciesName, "Bacterium Cerbrus");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.SpeciesVariant, "Green");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.SpeciesValue, "19,000,000");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.SpeciesClonColRng, "300");
+        output.Placeholders.Add(SpeechOutputPlaceholderKeys.SpeciesScanCount, "1");
+    }
 
     /// <summary>
     /// Synthesizes the specified text on the current platform.
