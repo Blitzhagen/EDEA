@@ -300,15 +300,10 @@
                       <Button x:Name="DeletePlanetFilterButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Delete}" IsEnabled="False" Click="DeletePlanetFilterButton_Click" />
                     </StackPanel>
                   </StackPanel>
-                  <TabControl x:Name="PlanetsOfInterestTabControl" Margin="0,0,0,22" SelectionChanged="PlanetsOfInterestTabControl_SelectionChanged">
+                                    <TabControl x:Name="PlanetsOfInterestTabControl" Margin="0,0,0,22" SelectionChanged="PlanetsOfInterestTabControl_SelectionChanged">
                     <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_BasicAttributes}">
-                      <Grid x:Name="PlanetBasicAttributesPanel" Width="590" IsEnabled="False" ColumnDefinitions="Auto,20,*">
-                        <StackPanel Grid.Column="0" MaxWidth="260" Margin="0,15,0,0">
-                          <StackPanel.Styles>
-                            <Style Selector="TextBlock">
-                              <Setter Property="MaxWidth" Value="260" />
-                            </Style>
-                          </StackPanel.Styles>
+                      <StackPanel x:Name="PlanetBasicAttributesPanel" IsEnabled="False" Spacing="12" MaxWidth="590">
+                        <StackPanel>
                           <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_DistanceToMainStar}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
@@ -316,60 +311,52 @@
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetDistanceMaxTextBox" Tag="DistanceMax" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_BodyRadius}" Classes="PreferencesBodyHeadlineWithTopSpace" />
+                        </StackPanel>
+                        <StackPanel>
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_BodyRadius}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRadiusMinTextBox" Tag="RadiusMin" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRadiusMaxTextBox" Tag="RadiusMax" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_OrbitalInclination}" Classes="PreferencesBodyHeadlineWithTopSpace" />
+                        </StackPanel>
+                        <StackPanel>
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_OrbitalInclination}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetOrbitalInclinationMinTextBox" Tag="OrbitalInclinationMin" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetOrbitalInclinationMaxTextBox" Tag="OrbitalInclinationMax" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
-                          <Grid Margin="0,15,0,0" ColumnDefinitions="Auto,7,Auto,*">
-                            <TextBlock Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_IsLandable}" Classes="PreferencesBodyHeadline" VerticalAlignment="Center" Margin="0" />
-                            <ComboBox x:Name="PlanetLandableComboBox" Grid.Column="2" MinWidth="120" HorizontalAlignment="Left" SelectionChanged="PlanetLandableComboBox_SelectionChanged">
-                              <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Combo_DoesNotMatter}" />
-                              <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Combo_No}" />
-                              <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Combo_Yes}" />
-                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_IsLandable}" Classes="PreferencesBodyHeadline" VerticalAlignment="Center" />
+                          <ComboBox x:Name="PlanetLandableComboBox" MinWidth="120" SelectionChanged="PlanetLandableComboBox_SelectionChanged">
+                            <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Combo_DoesNotMatter}" />
+                            <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Combo_No}" />
+                            <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Combo_Yes}" />
+                          </ComboBox>
+                        </StackPanel>
+                        <StackPanel>
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_PlanetClassOneOf}" Classes="PreferencesBodyHeadline" />
+                          <Grid ColumnDefinitions="*,Auto">
+                            <TextBox x:Name="PlanetPlanetClassesTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
+                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="PlanetClasses" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
                           </Grid>
                         </StackPanel>
-                        <StackPanel Grid.Column="2" MaxWidth="300" Margin="0,15,0,0">
-                          <StackPanel.Styles>
-                            <Style Selector="TextBlock">
-                              <Setter Property="MaxWidth" Value="300" />
-                            </Style>
-                          </StackPanel.Styles>
-                          <StackPanel>
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_PlanetClassOneOf}" Classes="PreferencesBodyHeadline" />
-                            <StackPanel Orientation="Horizontal" Spacing="4">
-                              <TextBox x:Name="PlanetPlanetClassesTextBox" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" Width="220" IsReadOnly="True" />
-                              <Button Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="PlanetClasses" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
-                            </StackPanel>
-                          </StackPanel>
-                          <StackPanel Margin="0,15,0,22">
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_StarClassOneOf}" Classes="PreferencesBodyHeadline" />
-                            <StackPanel Orientation="Horizontal" Spacing="4">
-                              <TextBox x:Name="PlanetStarClassesTextBox" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" Width="220" IsReadOnly="True" />
-                              <Button Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="StarClasses" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
-                            </StackPanel>
-                          </StackPanel>
+                        <StackPanel>
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_StarClassOneOf}" Classes="PreferencesBodyHeadline" />
+                          <Grid ColumnDefinitions="*,Auto">
+                            <TextBox x:Name="PlanetStarClassesTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
+                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="StarClasses" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
+                          </Grid>
                         </StackPanel>
-                      </Grid>
+                      </StackPanel>
                     </TabItem>
                     <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_SurfaceConditions}">
-                      <Grid x:Name="PlanetSurfaceConditionsPanel" Width="590" IsEnabled="False" ColumnDefinitions="Auto,20,*">
-                        <StackPanel Grid.Column="0" MaxWidth="260" Margin="0,15,0,0">
-                          <StackPanel.Styles>
-                            <Style Selector="TextBlock">
-                              <Setter Property="MaxWidth" Value="260" />
-                            </Style>
-                          </StackPanel.Styles>
+                      <StackPanel x:Name="PlanetSurfaceConditionsPanel" IsEnabled="False" Spacing="12" MaxWidth="590">
+                        <StackPanel>
                           <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Gravity}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
@@ -377,7 +364,9 @@
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetGravityMaxTextBox" Tag="GravityMax" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Temperature}" Classes="PreferencesBodyHeadlineWithTopSpace" />
+                        </StackPanel>
+                        <StackPanel>
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Temperature}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetTemperatureMinTextBox" Tag="TemperatureMin" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
@@ -385,37 +374,25 @@
                             <TextBox x:Name="PlanetTemperatureMaxTextBox" Tag="TemperatureMax" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
                         </StackPanel>
-                        <StackPanel Grid.Column="2" MaxWidth="300" Margin="0,15,0,0">
-                          <StackPanel.Styles>
-                            <Style Selector="TextBlock">
-                              <Setter Property="MaxWidth" Value="300" />
-                            </Style>
-                          </StackPanel.Styles>
-                          <StackPanel>
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AtmosphereOneOf}" Classes="PreferencesBodyHeadline" />
-                            <StackPanel Orientation="Horizontal" Spacing="4">
-                              <TextBox x:Name="PlanetAtmospheresTextBox" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" Width="220" IsReadOnly="True" />
-                              <Button Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="Atmospheres" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
-                            </StackPanel>
-                          </StackPanel>
-                          <StackPanel Margin="0,15,0,0">
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_VolcanismOneOf}" Classes="PreferencesBodyHeadline" />
-                            <StackPanel Orientation="Horizontal" Spacing="4">
-                              <TextBox x:Name="PlanetVolcanismsTextBox" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" Width="220" IsReadOnly="True" />
-                              <Button Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="Volcanisms" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
-                            </StackPanel>
-                          </StackPanel>
+                        <StackPanel>
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AtmosphereOneOf}" Classes="PreferencesBodyHeadline" />
+                          <Grid ColumnDefinitions="*,Auto">
+                            <TextBox x:Name="PlanetAtmospheresTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
+                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="Atmospheres" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
+                          </Grid>
                         </StackPanel>
-                      </Grid>
+                        <StackPanel>
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_VolcanismOneOf}" Classes="PreferencesBodyHeadline" />
+                          <Grid ColumnDefinitions="*,Auto">
+                            <TextBox x:Name="PlanetVolcanismsTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
+                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="Volcanisms" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
+                          </Grid>
+                        </StackPanel>
+                      </StackPanel>
                     </TabItem>
                     <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_RingRelated}">
-                      <Grid x:Name="PlanetRingRelatedPanel" Width="590" IsEnabled="False" ColumnDefinitions="Auto,20,*">
-                        <StackPanel Grid.Column="0" MaxWidth="260" Margin="0,15,0,0">
-                          <StackPanel.Styles>
-                            <Style Selector="TextBlock">
-                              <Setter Property="MaxWidth" Value="260" />
-                            </Style>
-                          </StackPanel.Styles>
+                      <StackPanel x:Name="PlanetRingRelatedPanel" IsEnabled="False" Spacing="12" MaxWidth="590">
+                        <StackPanel>
                           <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingsTotalWidth}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
@@ -423,14 +400,18 @@
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRingsTotalWidthMaxTextBox" Tag="RingsTotalWidthMax" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingWidth}" Classes="PreferencesBodyHeadlineWithTopSpace" />
+                        </StackPanel>
+                        <StackPanel>
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingWidth}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRingWidthMinTextBox" Tag="RingWidthMin" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRingWidthMaxTextBox" Tag="RingWidthMax" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingDensity}" Classes="PreferencesBodyHeadlineWithTopSpace" />
+                        </StackPanel>
+                        <StackPanel>
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingDensity}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRingDensityMinTextBox" Tag="RingDensityMin" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
@@ -438,44 +419,30 @@
                             <TextBox x:Name="PlanetRingDensityMaxTextBox" Tag="RingDensityMax" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
                         </StackPanel>
-                        <StackPanel Grid.Column="2" MaxWidth="300" Margin="0,15,0,0">
-                          <StackPanel.Styles>
-                            <Style Selector="TextBlock">
-                              <Setter Property="MaxWidth" Value="300" />
-                            </Style>
-                          </StackPanel.Styles>
-                          <StackPanel>
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingTypeOneOf}" Classes="PreferencesBodyHeadline" />
-                            <StackPanel Orientation="Horizontal" Spacing="4">
-                              <TextBox x:Name="PlanetRingTypesTextBox" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" Width="220" IsReadOnly="True" />
-                              <Button Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="RingTypes" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
-                            </StackPanel>
-                          </StackPanel>
-                          <StackPanel Margin="0,15,0,22">
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingReserveLevelOneOf}" Classes="PreferencesBodyHeadline" />
-                            <StackPanel Orientation="Horizontal" Spacing="4">
-                              <TextBox x:Name="PlanetRingReserveLevelsTextBox" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" Width="220" IsReadOnly="True" />
-                              <Button Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="RingReserveLevels" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
-                            </StackPanel>
-                          </StackPanel>
-                        </StackPanel>
-                      </Grid>
-                    </TabItem>
-                    <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_ParentPlanet}">
-                      <Grid x:Name="PlanetParentPlanetPanel" Width="590" IsEnabled="False" ColumnDefinitions="*">
-                        <StackPanel Grid.Column="0" MaxWidth="570" Margin="17,15,0,0">
-                          <StackPanel.Styles>
-                            <Style Selector="TextBlock">
-                              <Setter Property="MaxWidth" Value="570" />
-                            </Style>
-                          </StackPanel.Styles>
-                          <TextBlock Classes="PreferencesInfoText" Text="{x:Static properties:Resources.PreferencesWindow_Tooltip_ParentPlanetCriteria}" />
-                          <Grid Margin="0,15,0,0" ColumnDefinitions="Auto,7,Auto,*">
-                            <TextBlock Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_CriteriaSetForParentPlanet}" Classes="PreferencesBodyHeadline" VerticalAlignment="Center" Margin="0" />
-                            <ComboBox x:Name="ParentPlanetClassificationsComboBox" Grid.Column="2" MinWidth="150" SelectionChanged="ParentPlanetClassificationsComboBox_SelectionChanged" />
+                        <StackPanel>
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingTypeOneOf}" Classes="PreferencesBodyHeadline" />
+                          <Grid ColumnDefinitions="*,Auto">
+                            <TextBox x:Name="PlanetRingTypesTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
+                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="RingTypes" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
                           </Grid>
                         </StackPanel>
-                      </Grid>
+                        <StackPanel>
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingReserveLevelOneOf}" Classes="PreferencesBodyHeadline" />
+                          <Grid ColumnDefinitions="*,Auto">
+                            <TextBox x:Name="PlanetRingReserveLevelsTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
+                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="RingReserveLevels" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
+                          </Grid>
+                        </StackPanel>
+                      </StackPanel>
+                    </TabItem>
+                    <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_ParentPlanet}">
+                      <StackPanel x:Name="PlanetParentPlanetPanel" IsEnabled="False" Spacing="12" MaxWidth="590">
+                        <TextBlock Classes="PreferencesInfoText" Text="{x:Static properties:Resources.PreferencesWindow_Tooltip_ParentPlanetCriteria}" />
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_CriteriaSetForParentPlanet}" Classes="PreferencesBodyHeadline" VerticalAlignment="Center" />
+                          <ComboBox x:Name="ParentPlanetClassificationsComboBox" MinWidth="150" SelectionChanged="ParentPlanetClassificationsComboBox_SelectionChanged" />
+                        </StackPanel>
+                      </StackPanel>
                     </TabItem>
                   </TabControl>
                 </StackPanel>
