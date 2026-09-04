@@ -555,37 +555,6 @@ public partial class PreferencesWindow : Window
     }
 
     /// <summary>
-    /// Updates the selected color from a manually entered hex value.
-    /// </summary>
-    private void HexColorTextBox_LostFocus(object? sender, global::Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        if (HexColorTextBox is null)
-        {
-            return;
-        }
-
-        var text = HexColorTextBox.Text?.Trim() ?? string.Empty;
-        if (string.IsNullOrEmpty(text))
-        {
-            return;
-        }
-
-        if (!text.StartsWith('#'))
-        {
-            text = "#" + text;
-        }
-
-        if (global::Avalonia.Media.Color.TryParse(text, out var color))
-        {
-            SelectedColor = color;
-        }
-        else
-        {
-            HexColorTextBox.Text = string.Format(CultureInfo.InvariantCulture, "#{0:X2}{1:X2}{2:X2}", SelectedColor.R, SelectedColor.G, SelectedColor.B);
-        }
-    }
-
-    /// <summary>
     /// Applies the selected color to the color setting.
     /// </summary>
     protected override void OnPropertyChanged(global::Avalonia.AvaloniaPropertyChangedEventArgs change)
@@ -622,10 +591,6 @@ public partial class PreferencesWindow : Window
             swatch.Fill = new SolidColorBrush(color);
         }
 
-        if (HexColorTextBox is not null)
-        {
-            HexColorTextBox.Text = string.Format(CultureInfo.InvariantCulture, "#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
-        }
     }
 
     /// <summary>

@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         xmlns:local="clr-namespace:EDEA;assembly=EDEA.Core"
-        xmlns:colorpicker="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls.ColorPicker"
+        xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker.AvaloniaUI"
         x:Class="EDEA.Avalonia.Windows.PreferencesWindow"
         x:Name="ThisWindow"
         Title="{x:Static properties:Resources.PreferencesWindow_Title}"
@@ -44,24 +44,9 @@
                   <StackPanel Orientation="Horizontal">
                     <ListBox x:Name="ColorListBox" Classes="PreferencesListbox" SelectionChanged="ColorListBox_SelectionChanged" Background="{StaticResource BackgroundBrush}" Foreground="{StaticResource ForegroundBrush}" />
                     <StackPanel Spacing="4" Width="170">
-                      <colorpicker:ColorSpectrum x:Name="ColorSpectrum" Width="150" Height="150" Shape="Ring" Components="HueSaturation" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
-                      <TabControl x:Name="ColorModelTabControl" Padding="0" Margin="0">
-                        <TabItem Header="HSV">
-                          <StackPanel Spacing="2">
-                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Hsva" ColorComponent="Component1" />
-                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Hsva" ColorComponent="Component2" />
-                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Hsva" ColorComponent="Component3" />
-                          </StackPanel>
-                        </TabItem>
-                        <TabItem Header="RGB">
-                          <StackPanel Spacing="2">
-                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Rgba" ColorComponent="Component1" />
-                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Rgba" ColorComponent="Component2" />
-                            <colorpicker:ColorSlider Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" ColorModel="Rgba" ColorComponent="Component3" />
-                          </StackPanel>
-                        </TabItem>
-                      </TabControl>
-                      <TextBox x:Name="HexColorTextBox" Watermark="#RRGGBB" Width="120" HorizontalAlignment="Left" LostFocus="HexColorTextBox_LostFocus" />
+                      <colorpicker:SquarePicker x:Name="SquarePicker" SelectedColor="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
+                      <colorpicker:ColorSliders x:Name="ColorSliders" ShowAlpha="False" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
+                      <colorpicker:HexColorTextBox x:Name="HexColorTextBox" ShowAlpha="False" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
                     </StackPanel>
                   </StackPanel>
                 </Border>
