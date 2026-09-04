@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -29,12 +30,6 @@ public partial class MainWindow : Window
     /// </summary>
     private void OnOpened(object? sender, EventArgs e)
     {
-        var button = this.FindControl<Button>("MaximizeRestoreButton");
-        if (button is not null)
-        {
-            button.Content = WindowState == WindowState.Maximized ? "□" : "▢";
-        }
-
         var handle = TryGetPlatformHandle()?.Handle ?? 0;
         if (handle == 0 || PlatformServices.GlobalHotkey is null)
         {
@@ -121,6 +116,19 @@ public partial class MainWindow : Window
         }
     }
 
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == WindowStateProperty)
+        {
+            var button = this.FindControl<Button>("MaximizeRestoreButton");
+            if (button is not null)
+            {
+                button.Content = WindowState == WindowState.Maximized ? "▣" : "▢";
+            }
+        }
+    }
+
     /// <summary>
     /// Starts dragging the main window from the custom title bar.
     /// </summary>
@@ -143,10 +151,6 @@ public partial class MainWindow : Window
     private void MaximizeRestoreButton_Click(object? sender, RoutedEventArgs e)
     {
         WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-        if (sender is Button button)
-        {
-            button.Content = WindowState == WindowState.Maximized ? "□" : "▢";
-        }
     }
 
     /// <summary>
