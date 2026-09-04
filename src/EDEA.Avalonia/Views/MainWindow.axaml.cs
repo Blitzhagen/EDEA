@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using EDEA;
@@ -30,6 +31,8 @@ public partial class MainWindow : Window
     /// </summary>
     private void OnOpened(object? sender, EventArgs e)
     {
+        UpdateWindowChrome();
+
         var handle = TryGetPlatformHandle()?.Handle ?? 0;
         if (handle == 0 || PlatformServices.GlobalHotkey is null)
         {
@@ -40,6 +43,24 @@ public partial class MainWindow : Window
         PlatformServices.GlobalHotkey.HotkeyPressed += OnGlobalHotkeyPressed;
         PlatformServices.GlobalHotkey.Attach(handle);
         RegisterHotkeys();
+    }
+
+    /// <summary>
+    /// Updates the maximize/restore and resize grip visuals based on the current window state.
+    /// </summary>
+    private void UpdateWindowChrome()
+    {
+        var button = this.FindControl<Button>("MaximizeRestoreButton");
+        if (button is not null)
+        {
+            button.Content = WindowState == WindowState.Maximized ? "▣" : "▢";
+        }
+
+        var resizeThumb = this.FindControl<Thumb>("ResizeThumb");
+        if (resizeThumb is not null)
+        {
+            resizeThumb.IsVisible = WindowState != WindowState.Maximized && WindowState != WindowState.FullScreen;
+        }
     }
 
     /// <summary>
@@ -121,11 +142,7 @@ public partial class MainWindow : Window
         base.OnPropertyChanged(change);
         if (change.Property == WindowStateProperty)
         {
-            var button = this.FindControl<Button>("MaximizeRestoreButton");
-            if (button is not null)
-            {
-                button.Content = WindowState == WindowState.Maximized ? "▣" : "▢";
-            }
+            UpdateWindowChrome();
         }
     }
 
