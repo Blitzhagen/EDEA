@@ -24,6 +24,23 @@ public partial class MainViewModel : ObservableObject
     private int _selectedTabIndex;
 
     /// <summary>
+    /// The currently selected tab view model.
+    /// </summary>
+    [ObservableProperty]
+    private TabViewModel? _selectedTab;
+
+    /// <summary>
+    /// Called when the selected tab index changes.
+    /// </summary>
+    partial void OnSelectedTabIndexChanged(int value)
+    {
+        if (value >= 0 && value < TabViewModels.Count)
+        {
+            SelectedTab = TabViewModels[value];
+        }
+    }
+
+    /// <summary>
     /// The collection of tab view models.
     /// </summary>
     public ObservableCollection<TabViewModel> TabViewModels { get; }
@@ -134,6 +151,8 @@ public partial class MainViewModel : ObservableObject
             surroundingsTableViewModel,
             historyViewModel,
         };
+
+        SelectedTab = TabViewModels[0];
 
         ShowAboutWindowCommand = new RelayCommand(ShowAboutWindow);
         ShowPreferencesWindowCommand = new RelayCommand(ShowPreferencesWindow);

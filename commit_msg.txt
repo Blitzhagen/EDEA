@@ -1,0 +1,5 @@
+Custom vertikaler TabStrip mit gedrehten Labels.
+
+- TabControl ersetzt durch ListBox + ContentControl.
+- Labels werden um -90° gedreht und passen sich in der Höhe an den Text an.
+- MainViewModel bekommt SelectedTab, synchronisiert mit SelectedTabIndex.
