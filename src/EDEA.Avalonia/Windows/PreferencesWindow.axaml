@@ -20,7 +20,14 @@
     <SolidColorBrush x:Key="ForegroundBrush" Color="#000000"/>
     <SolidColorBrush x:Key="DimForegroundBrush" Color="#555555"/>
     <SolidColorBrush x:Key="BorderBrush" Color="#AAAAAA"/>
+    <SolidColorBrush x:Key="WindowBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="WindowTextBrush" Color="#000000"/>
+    <SolidColorBrush x:Key="ActiveBorderBrush" Color="#B0B0B0"/>
+    <SolidColorBrush x:Key="GrayTextBrush" Color="#6D6D6D"/>
   </Window.Resources>
+  <Window.Styles>
+    <SimpleTheme />
+  </Window.Styles>
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="12" />
