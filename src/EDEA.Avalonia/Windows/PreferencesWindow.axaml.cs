@@ -187,24 +187,20 @@ public partial class PreferencesWindow : Window
 
         var hud = Preferences.HudWindow;
         HudOpacitySlider.Value = hud.Opacity;
-        HudPanel.Children.Clear();
-        var hudType = hud.GetType();
-        foreach (var property in hudType.GetProperties())
-        {
-            if (property.PropertyType != typeof(bool) || property.Name == "Opacity")
-            {
-                continue;
-            }
 
-            var checkBox = new CheckBox
-            {
-                Content = property.Name,
-                IsChecked = (bool?)property.GetValue(hud) ?? false,
-                Foreground = new SolidColorBrush(Color.Parse("#FFFFFF")),
-            };
-            checkBox.IsCheckedChanged += (s, e) => HudCheckBox_IsCheckedChanged(s, e, property);
-            HudPanel.Children.Add(checkBox);
-        }
+        HudColumnComboBox.SelectedIndex = 0;
+        HudBodiesPanel.IsVisible = true;
+        HudRoutePanel.IsVisible = false;
+        HudGenusPanel.IsVisible = false;
+
+        HudViewAutoRadioButton.IsChecked = hud.HudWindowTabViewModel == 0;
+        HudViewBodiesRadioButton.IsChecked = hud.HudWindowTabViewModel == 1;
+        HudViewRouteRadioButton.IsChecked = hud.HudWindowTabViewModel == 2;
+
+        InitializeHudCheckBoxes(HudBodiesPanel);
+        InitializeHudCheckBoxes(HudRoutePanel);
+        InitializeHudCheckBoxes(HudGenusPanel);
+        InitializeHudCheckBoxes(HideOnStackPanel);
 
         PlanetClassificationListBox.ItemsSource = Preferences.PlanetsOfInterest.PlanetClassifications;
         if (Preferences.PlanetsOfInterest.PlanetClassifications.Count > 0)
@@ -750,14 +746,80 @@ public partial class PreferencesWindow : Window
     }
 
     /// <summary>
+    /// Initializes all HUD check boxes in the specified panel from the current preferences.
+    /// </summary>
+    private void InitializeHudCheckBoxes(StackPanel? panel)
+    {
+        if (panel is null)
+        {
+            return;
+        }
+
+        var hud = Preferences.HudWindow;
+        foreach (var child in panel.Children)
+        {
+            if (child is not CheckBox checkBox || checkBox.Tag is not string propertyName)
+            {
+                continue;
+            }
+
+            var property = hud.GetType().GetProperty(propertyName);
+            if (property is not null && property.PropertyType == typeof(bool))
+            {
+                checkBox.IsChecked = (bool?)property.GetValue(hud) ?? false;
+            }
+        }
+    }
+
+    /// <summary>
     /// Applies a HUD boolean setting.
     /// </summary>
-    private void HudCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e, PropertyInfo property)
+    private void HudWindowCheckBox_Changed(object? sender, RoutedEventArgs e)
     {
-        if (sender is CheckBox checkBox && property.PropertyType == typeof(bool))
+        if (sender is not CheckBox { Tag: string propertyName } checkBox)
+        {
+            return;
+        }
+
+        var property = Preferences.HudWindow.GetType().GetProperty(propertyName);
+        if (property is not null && property.PropertyType == typeof(bool))
         {
             property.SetValue(Preferences.HudWindow, checkBox.IsChecked == true);
         }
+    }
+
+    /// <summary>
+    /// Shows the column check box panel that matches the selected combo box item.
+    /// </summary>
+    private void HudColumnComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (HudBodiesPanel is null || HudRoutePanel is null || HudGenusPanel is null)
+        {
+            return;
+        }
+
+        HudBodiesPanel.IsVisible = HudColumnComboBox.SelectedIndex == 0;
+        HudRoutePanel.IsVisible = HudColumnComboBox.SelectedIndex == 1;
+        HudGenusPanel.IsVisible = HudColumnComboBox.SelectedIndex == 2;
+    }
+
+    /// <summary>
+    /// Applies the selected HUD tab view model.
+    /// </summary>
+    private void HudViewRadioButton_Changed(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton { IsChecked: true, Tag: string view } radio)
+        {
+            return;
+        }
+
+        Preferences.HudWindow.HudWindowTabViewModel = view switch
+        {
+            "Auto" => 0,
+            "BodyTableViewModel" => 1,
+            "NavRouteTableViewModel" => 2,
+            _ => Preferences.HudWindow.HudWindowTabViewModel,
+        };
     }
 
     /// <summary>

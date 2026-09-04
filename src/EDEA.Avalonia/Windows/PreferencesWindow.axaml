@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
+        xmlns:local="clr-namespace:EDEA;assembly=EDEA.Core"
         xmlns:colorpicker="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls.ColorPicker"
         x:Class="EDEA.Avalonia.Windows.PreferencesWindow"
         x:Name="ThisWindow"
@@ -96,16 +97,102 @@
           <Border Classes="PreferencesTabContent">
             <StackPanel Orientation="Horizontal">
               <StackPanel Classes="PreferencesSection">
-                <TextBlock Text="Columns" Classes="PreferencesSectionHeadline" />
+                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Columns}" Classes="PreferencesSectionHeadline" />
                 <Border Classes="PreferencesSectionBody">
-                  <StackPanel x:Name="HudPanel" Width="185" Spacing="4" />
+                  <StackPanel Width="185">
+                    <ComboBox x:Name="HudColumnComboBox" SelectedIndex="0" Classes="PreferencesComboBox" SelectionChanged="HudColumnComboBox_SelectionChanged">
+                      <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Bodies}" />
+                      <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Route}" />
+                      <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Biologicals}" />
+                    </ComboBox>
+                    <StackPanel x:Name="HudBodiesPanel" IsVisible="True">
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderName}" IsChecked="True" IsEnabled="False" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderType}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnTypeVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderAtmosphere}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnAtmosphereVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderTemperature}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnTemperatureVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_SurfaceScanIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnSurfaceScannedIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_PlanetOfInterestIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnPlanetOfInterestIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderCartographicValue}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnCartographicValueVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_ValuableBodyIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnValuableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_RingsIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnRingsIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_GeologicalsIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnGeologicalsIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_BiologicalsIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnBiologicalsIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_TerraformableIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnTerraformableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_LandableIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnLandableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_FirstDiscoveryIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnNewIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderEdsmDiscoverer}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnEdsmDiscovererVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderDistance}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnDistanceVisible" />
+                    </StackPanel>
+                    <StackPanel x:Name="HudRoutePanel" IsVisible="False">
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderJump}" IsChecked="True" IsEnabled="False" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderSystemName}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnSystemNameVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_ScoopableStarIconStarClass}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnStarClassVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_ExplorationStatusIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnExplorationStatusIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderCartographicValue}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnCartographicValueVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderOverallProgress}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnProgressVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_PlanetOfInterestIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnPlanetOfInterestIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_ValuableBodiesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnValuableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_TerraformablesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnTerraformableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_LandablesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnLandableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_PopulatedIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnPopulatedIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderEdsmDiscoverer}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnEdsmDiscovererVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderDistance}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnDistanceVisible" />
+                    </StackPanel>
+                    <StackPanel x:Name="HudGenusPanel" IsVisible="False">
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderName}" IsChecked="True" IsEnabled="False" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderSpecies}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnSpeciesVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderVariant}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnVariantVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_GenusColumn_AnalysisCompleteIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnAnalysisCompleteIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderScans}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnScansVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderClonalColonyRange}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnClonalColonyRangeVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeader1stScanDistance}" IsChecked="True" IsEnabled="False" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeader2ndScanDistance}" IsChecked="True" IsEnabled="False" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderVistaGenomicsValue}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnVistaGenomicsValueVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_GenusColumn_ValuableSpeciesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnValuableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_GenusColumn_FirstDiscoveryIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnNewIconVisible" />
+                    </StackPanel>
+                  </StackPanel>
                 </Border>
               </StackPanel>
               <StackPanel>
                 <StackPanel Classes="PreferencesSection">
-                  <TextBlock Text="Opacity" Classes="PreferencesSectionHeadline" />
+                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Opacity}" Classes="PreferencesSectionHeadline" />
                   <Border Classes="PreferencesSectionBody">
                     <Slider x:Name="HudOpacitySlider" Minimum="0" Maximum="1" TickFrequency="0.1" Width="200" HorizontalAlignment="Left" ValueChanged="HudOpacitySlider_ValueChanged" />
+                  </Border>
+                </StackPanel>
+                <StackPanel Classes="PreferencesSection">
+                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_View}" Classes="PreferencesSectionHeadline" />
+                  <Border Classes="PreferencesSectionBody">
+                    <StackPanel>
+                      <RadioButton x:Name="HudViewAutoRadioButton" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Radio_SyncedWithMainWindow}" Tag="Auto" IsCheckedChanged="HudViewRadioButton_Changed" />
+                      <RadioButton x:Name="HudViewRouteRadioButton" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Route}" Tag="NavRouteTableViewModel" IsCheckedChanged="HudViewRadioButton_Changed" />
+                      <RadioButton x:Name="HudViewBodiesRadioButton" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Bodies}" Tag="BodyTableViewModel" IsCheckedChanged="HudViewRadioButton_Changed" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+              <StackPanel>
+                <StackPanel Classes="PreferencesSection">
+                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AutomaticHideOn}" Classes="PreferencesSectionHeadline" />
+                  <Border Classes="PreferencesSectionBody">
+                    <StackPanel x:Name="HideOnStackPanel">
+                      <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_InShipSrvFighter}" Classes="PreferencesCheckBoxesHeadline" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_NoActivePanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnNoFocus" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_InternalPanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnInternalPanel" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_ExternalPanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnExternalPanel" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_CommsPanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnCommsPanel" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_RolePanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnRolePanel" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_StationServices}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnStationServices" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_GalaxyMap}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnGalaxyMap" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_SystemMap}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnSystemMap" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_Orrery}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnOrrery" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_FssMode}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnFSSmode" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_SaaMode}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnSAAmode" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_Codex}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnCodex" />
+                      <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_OnFoot}" Classes="PreferencesCheckBoxesHeadline" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_Always}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnOnFoot" />
+                    </StackPanel>
                   </Border>
                 </StackPanel>
               </StackPanel>
