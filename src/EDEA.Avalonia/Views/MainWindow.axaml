@@ -10,6 +10,7 @@
         Title="{Binding Title}"
         Height="900" Width="1080"
         MinHeight="479" MinWidth="1070"
+        CanResize="True"
         SystemDecorations="None"
         Background="{DynamicResource MainBackgroundColor}"
         Foreground="{DynamicResource ForegroundBrush}"
