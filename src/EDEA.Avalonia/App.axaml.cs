@@ -52,6 +52,11 @@ public partial class App : Application
     private RouteProvider? _routeProvider;
 
     /// <summary>
+    /// The status provider.
+    /// </summary>
+    private StatusProvider? _statusProvider;
+
+    /// <summary>
     /// Shared <see cref="HttpClient"/> used for web API calls.
     /// </summary>
     private static readonly HttpClient httpClient = new();
@@ -127,7 +132,7 @@ public partial class App : Application
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var mainWindow = new MainWindow { DataContext = new MainViewModel(_starSystemProvider!, _historyProvider!, _routeProvider!) };
+                var mainWindow = new MainWindow { DataContext = new MainViewModel(_starSystemProvider!, _historyProvider!, _routeProvider!, _statusProvider!) };
                 PlatformServices.WindowState?.Track(mainWindow, "MainWindow");
                 desktop.MainWindow = mainWindow;
                 mainWindow.Show();
@@ -169,7 +174,7 @@ public partial class App : Application
         var webApiProvider = WebApiProvider.Instance(httpClient, _starSystemProvider);
         var journalProvider = JournalProvider.Instance(journalStore, _starSystemProvider);
         _routeProvider = RouteProvider.Instance(fileWatcher, _starSystemProvider, journalProvider);
-        var statusProvider = StatusProvider.Instance(fileWatcher, _starSystemProvider);
+        _statusProvider = StatusProvider.Instance(fileWatcher, _starSystemProvider);
         var planetsOfInterestProvider = PlanetsOfInterestProvider.Instance(_starSystemProvider);
         var journalHistoryImporter = JournalHistoryImporter.Instance(_historyProvider, journalProvider, _starSystemProvider);
 

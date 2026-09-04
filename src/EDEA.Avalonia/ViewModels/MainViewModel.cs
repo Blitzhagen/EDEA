@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EDEA.Avalonia.Windows;
@@ -33,6 +34,11 @@ public partial class MainViewModel : ObservableObject
     private readonly StarSystemProvider _starSystemProvider;
 
     /// <summary>
+    /// The status provider.
+    /// </summary>
+    private readonly StatusProvider _statusProvider;
+
+    /// <summary>
     /// The currently open HUD window, if any.
     /// </summary>
     private HudWindow? _hudWindow;
@@ -41,6 +47,36 @@ public partial class MainViewModel : ObservableObject
     /// Whether the HUD window is currently in click-through mode.
     /// </summary>
     private bool _hudClickThrough;
+
+    /// <summary>
+    /// The current star system view model.
+    /// </summary>
+    [ObservableProperty]
+    private StarSystemViewModel _currentSystemViewModel = new StarSystemViewModel(new StarSystem(0L, string.Empty));
+
+    /// <summary>
+    /// The formatted body exploration status.
+    /// </summary>
+    [ObservableProperty]
+    private string _bodyExplorationStatus = string.Empty;
+
+    /// <summary>
+    /// The formatted non-body exploration status.
+    /// </summary>
+    [ObservableProperty]
+    private string _nonBodyExplorationStatus = string.Empty;
+
+    /// <summary>
+    /// The current application status text.
+    /// </summary>
+    [ObservableProperty]
+    private string _currentStatus = Resources.CurrentStatus_WaitingForGame;
+
+    /// <summary>
+    /// A value indicating whether data is currently loading.
+    /// </summary>
+    [ObservableProperty]
+    private bool _dataIsLoading;
 
     /// <summary>
     /// Gets the main window title.
@@ -75,9 +111,14 @@ public partial class MainViewModel : ObservableObject
     /// <summary>
     /// Initializes a new instance of the <see cref="MainViewModel"/> class with the specified providers.
     /// </summary>
-    public MainViewModel(StarSystemProvider starSystemProvider, HistoryProvider historyProvider, RouteProvider routeProvider)
+    public MainViewModel(StarSystemProvider starSystemProvider, HistoryProvider historyProvider, RouteProvider routeProvider, StatusProvider statusProvider)
     {
         _starSystemProvider = starSystemProvider;
+        _statusProvider = statusProvider;
+
+        _starSystemProvider.GuiDataUpdated += (_, _) => Dispatcher.UIThread.Post(UpdateDataView);
+        _starSystemProvider.RouteLoadingStatusChanged += (_, _) => Dispatcher.UIThread.Post(() => DataIsLoading = _starSystemProvider.RouteIsLoading);
+        _statusProvider.StatusUpdated += (_, activity, _, _, _) => Dispatcher.UIThread.Post(() => CurrentStatus = MapActivityToString(activity));
 
         var navRouteTableViewModel = new NavRouteTableViewModel(Resources.TabHeader_Route, "Visible", starSystemProvider, routeProvider);
         var bodyTableViewModel = new BodyTableViewModel(Resources.TabHeader_Bodies, "Visible", starSystemProvider);
@@ -167,5 +208,25 @@ public partial class MainViewModel : ObservableObject
     private void ImportJournalHistory()
     {
         new JournalHistoryImportWindow().Show();
+    }
+
+    private void UpdateDataView()
+    {
+        CurrentSystemViewModel = new StarSystemViewModel(_starSystemProvider.CurrentSystem);
+        BodyExplorationStatus = string.Format(Resources.StatusBodiesExploredOfTotal, CurrentSystemViewModel.ExploredBodies, CurrentSystemViewModel.TotalBodies);
+        NonBodyExplorationStatus = string.Format(Resources.StatusNonBodyBelts, CurrentSystemViewModel.TotalNonBodyCount, CurrentSystemViewModel.ExploredNonBodies);
+    }
+
+    private static string MapActivityToString(Activity activity)
+    {
+        return activity switch
+        {
+            Activity.None => Resources.CurrentStatus_WaitingForGame,
+            Activity.ExploreSystem => Resources.CurrentStatus_ExploringSystem,
+            Activity.GalaxyMap => Resources.CurrentStatus_PlanningRoute,
+            Activity.Jump => Resources.CurrentStatus_Jumping,
+            Activity.ExplorePlanet => Resources.CurrentStatus_ExploringPlanet,
+            _ => Resources.CurrentStatus_Loitering
+        };
     }
 }
