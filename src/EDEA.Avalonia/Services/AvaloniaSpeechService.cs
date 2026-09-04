@@ -71,6 +71,11 @@ public sealed class AvaloniaSpeechService : ISpeechService
     private bool _isSpeaking;
 
     /// <summary>
+    /// Whether the voice list has already been loaded successfully.
+    /// </summary>
+    private bool _voicesLoaded;
+
+    /// <summary>
     /// Occurs when the speech synthesizer state changes.
     /// </summary>
     public event EventHandler? StateChanged;
@@ -100,7 +105,7 @@ public sealed class AvaloniaSpeechService : ISpeechService
     {
         get
         {
-            if (Interlocked.CompareExchange(ref _voicesLoading, 1, 0) == 0)
+            if (!_voicesLoaded && Interlocked.CompareExchange(ref _voicesLoading, 1, 0) == 0)
             {
                 _ = LoadVoicesAsync();
             }
@@ -278,6 +283,7 @@ public sealed class AvaloniaSpeechService : ISpeechService
                 _installedVoices.Add(voice);
             }
 
+            _voicesLoaded = true;
             Log.Info($"Loaded {_installedVoices.Count} SayIt voices for {currentLang}");
             VoicesLoaded?.Invoke(this, EventArgs.Empty);
         }
