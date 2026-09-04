@@ -29,7 +29,11 @@ public partial class MainWindow : Window
     /// </summary>
     private void OnOpened(object? sender, EventArgs e)
     {
-        UpdateMaximizeRestoreButtonContent();
+        var button = this.FindControl<Button>("MaximizeRestoreButton");
+        if (button is not null)
+        {
+            button.Content = WindowState == WindowState.Maximized ? "□" : "▢";
+        }
 
         var handle = TryGetPlatformHandle()?.Handle ?? 0;
         if (handle == 0 || PlatformServices.GlobalHotkey is null)
@@ -139,16 +143,10 @@ public partial class MainWindow : Window
     private void MaximizeRestoreButton_Click(object? sender, RoutedEventArgs e)
     {
         WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-        UpdateMaximizeRestoreButtonContent();
-    }
-
-    private void UpdateMaximizeRestoreButtonContent()
-    {
-        if (MaximizeRestoreButton is null)
+        if (sender is Button button)
         {
-            return;
+            button.Content = WindowState == WindowState.Maximized ? "□" : "▢";
         }
-        MaximizeRestoreButton.Content = WindowState == WindowState.Maximized ? "□" : "▢";
     }
 
     /// <summary>
