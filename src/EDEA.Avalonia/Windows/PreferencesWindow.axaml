@@ -37,28 +37,43 @@
         <TextBlock Text="HUD preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
       </TabItem>
       <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_GlobalHotkeys}">
-        <TextBlock Text="Hotkey preferences (port placeholder)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DimForegroundBrush}"/>
+        <ScrollViewer>
+          <StackPanel x:Name="HotkeysPanel" Margin="12" Spacing="8" x:CompileBindings="False"/>
+        </ScrollViewer>
       </TabItem>
       <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Speech}">
         <ScrollViewer>
-          <StackPanel Margin="12" Spacing="12">
-            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Voice}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
-            <ComboBox x:Name="SpeechVoiceComboBox" Width="300" HorizontalAlignment="Left" SelectionChanged="SpeechVoiceComboBox_SelectionChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}"/>
-            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Rate}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
-            <Slider x:Name="SpeechRateSlider" Minimum="-4" Maximum="4" TickFrequency="1" Width="300" HorizontalAlignment="Left" ValueChanged="SpeechRateSlider_ValueChanged"/>
-            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Volume}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
-            <Slider x:Name="SpeechVolumeSlider" Minimum="0" Maximum="100" TickFrequency="25" Width="300" HorizontalAlignment="Left" ValueChanged="SpeechVolumeSlider_ValueChanged"/>
-            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Outputs}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
-            <CheckBox x:Name="SpeechWelcomeCheckBox" Content="Welcome" IsCheckedChanged="SpeechWelcomeCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
-            <CheckBox x:Name="SpeechGoodbyeCheckBox" Content="Goodbye" IsCheckedChanged="SpeechGoodbyeCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
-            <CheckBox x:Name="SpeechGeoCheckBox" Content="Geological signals" IsCheckedChanged="SpeechGeoCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
-            <CheckBox x:Name="SpeechBioCheckBox" Content="Biological signals" IsCheckedChanged="SpeechBioCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
-            <CheckBox x:Name="SpeechFirstDiscoverySystemCheckBox" Content="First discovery system" IsCheckedChanged="SpeechFirstDiscoverySystemCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
-            <CheckBox x:Name="SpeechFirstDiscoveryBodyCheckBox" Content="First discovery body" IsCheckedChanged="SpeechFirstDiscoveryBodyCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
-            <CheckBox x:Name="SpeechTerraformableCheckBox" Content="Terraformable" IsCheckedChanged="SpeechTerraformableCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
-            <CheckBox x:Name="SpeechLandableCheckBox" Content="Landable" IsCheckedChanged="SpeechLandableCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
-            <CheckBox x:Name="SpeechValuableBodyCheckBox" Content="Valuable body" IsCheckedChanged="SpeechValuableBodyCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}"/>
-            <Button x:Name="SpeechTestButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_TestSpeechOutput}" Click="SpeechTestButton_Click" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" HorizontalAlignment="Left" Padding="12,4" Margin="0,8,0,0"/>
+          <StackPanel Margin="12" Spacing="12" x:CompileBindings="False">
+            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Voice}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
+            <ComboBox x:Name="SpeechVoiceComboBox" Width="300" HorizontalAlignment="Left" SelectionChanged="SpeechVoiceComboBox_SelectionChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+            <StackPanel Orientation="Horizontal" Spacing="16">
+              <StackPanel>
+                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Rate}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
+                <Slider x:Name="SpeechRateSlider" Minimum="-4" Maximum="4" TickFrequency="1" Width="200" HorizontalAlignment="Left" ValueChanged="SpeechRateSlider_ValueChanged" x:CompileBindings="False"/>
+              </StackPanel>
+              <StackPanel>
+                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Volume}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
+                <Slider x:Name="SpeechVolumeSlider" Minimum="0" Maximum="100" TickFrequency="25" Width="200" HorizontalAlignment="Left" ValueChanged="SpeechVolumeSlider_ValueChanged" x:CompileBindings="False"/>
+              </StackPanel>
+            </StackPanel>
+            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Outputs}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
+            <Grid ColumnDefinitions="200,20,*">
+              <ListBox x:Name="SpeechOutputListBox" Grid.Column="0" SelectionChanged="SpeechOutputListBox_SelectionChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" Height="300" x:CompileBindings="False">
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:CompileBindings="False">
+                    <TextBlock Text="{Binding Label}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+              <StackPanel Grid.Column="2" Spacing="8" IsEnabled="{Binding #SpeechOutputListBox.SelectedItem}" x:CompileBindings="False">
+                <TextBlock x:Name="SpeechOutputLabel" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" x:CompileBindings="False"/>
+                <CheckBox x:Name="SpeechOutputEnabledCheckBox" Content="Enabled" IsCheckedChanged="SpeechOutputEnabledCheckBox_IsCheckedChanged" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+                <TextBlock Text="Phrase" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+                <TextBox x:Name="SpeechOutputPhraseTextBox" AcceptsReturn="True" TextWrapping="Wrap" Height="80" Width="400" HorizontalAlignment="Left" TextChanged="SpeechOutputPhraseTextBox_TextChanged" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" x:CompileBindings="False"/>
+                <TextBlock x:Name="SpeechOutputPlaceholdersTextBlock" Foreground="{StaticResource DimForegroundBrush}" TextWrapping="Wrap" Width="400" HorizontalAlignment="Left" x:CompileBindings="False"/>
+                <Button x:Name="SpeechTestButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_TestSpeechOutput}" Click="SpeechTestButton_Click" Background="{StaticResource PanelBrush}" Foreground="{StaticResource ForegroundBrush}" HorizontalAlignment="Left" Padding="12,4" x:CompileBindings="False"/>
+              </StackPanel>
+            </Grid>
           </StackPanel>
         </ScrollViewer>
       </TabItem>

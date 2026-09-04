@@ -1,18 +1,59 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using AvaloniaInput = global::Avalonia.Input;
+using EDEA.Models;
 using EDEA.Services;
 
 namespace EDEA.Avalonia.Windows;
+
+/// <summary>
+/// Represents a configurable speech output item in the preferences window.
+/// </summary>
+public class SpeechOutputItem
+{
+    /// <summary>
+    /// Gets or sets the output identifier.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the display label.
+    /// </summary>
+    public string Label { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the output is enabled.
+    /// </summary>
+    public bool IsEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets the speech phrase.
+    /// </summary>
+    public string Phrase { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the available placeholder text.
+    /// </summary>
+    public string Placeholders { get; set; } = string.Empty;
+}
 
 /// <summary>
 /// Avalonia window for editing application preferences.
 /// </summary>
 public partial class PreferencesWindow : Window
 {
+    /// <summary>
+    /// A flag that prevents re-entrant updates when changing speech output detail controls.
+    /// </summary>
+    private bool _updatingSpeechOutput;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PreferencesWindow"/> class.
     /// </summary>
@@ -50,15 +91,71 @@ public partial class PreferencesWindow : Window
         SpeechVoiceComboBox.SelectedIndex = 0;
         SpeechRateSlider.Value = speech.SpeechSynthesizerRate;
         SpeechVolumeSlider.Value = speech.SpeechSynthesizerVolume;
-        SpeechWelcomeCheckBox.IsChecked = speech.Welcome;
-        SpeechGoodbyeCheckBox.IsChecked = speech.Goodbye;
-        SpeechGeoCheckBox.IsChecked = speech.GeologicalSignals;
-        SpeechBioCheckBox.IsChecked = speech.BiologicalSignals;
-        SpeechFirstDiscoverySystemCheckBox.IsChecked = speech.FirstDiscoverySystem;
-        SpeechFirstDiscoveryBodyCheckBox.IsChecked = speech.FirstDiscoveryBody;
-        SpeechTerraformableCheckBox.IsChecked = speech.Terraformable;
-        SpeechLandableCheckBox.IsChecked = speech.Landable;
-        SpeechValuableBodyCheckBox.IsChecked = speech.ValuableBody;
+
+        var speechType = speech.GetType();
+        var items = new List<SpeechOutputItem>();
+        foreach (var property in speechType.GetProperties())
+        {
+            if (property.PropertyType != typeof(bool))
+            {
+                continue;
+            }
+
+            var speechTextProperty = speechType.GetProperty(property.Name + "Speech");
+            if (speechTextProperty is null || speechTextProperty.PropertyType != typeof(string))
+            {
+                continue;
+            }
+
+            var value = (bool?)property.GetValue(speech) ?? false;
+            var text = (string?)speechTextProperty.GetValue(speech) ?? string.Empty;
+            var label = PlatformServices.Speech?.GetLabelForSpeechOutput(property.Name) ?? property.Name;
+            var placeholders = System.Text.RegularExpressions.Regex.Matches(text, @"\{(.*?)\}")
+                .Select(m => m.Groups[1].Value)
+                .Distinct()
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToList();
+
+            items.Add(new SpeechOutputItem
+            {
+                Name = property.Name,
+                Label = label,
+                IsEnabled = value,
+                Phrase = text,
+                Placeholders = placeholders.Count > 0 ? $"Placeholders: {string.Join(", ", placeholders)}" : string.Empty,
+            });
+        }
+
+        SpeechOutputListBox.ItemsSource = items;
+        if (items.Count > 0)
+        {
+            SpeechOutputListBox.SelectedIndex = 0;
+        }
+
+        HotkeysPanel.Children.Clear();
+        var hotkeySettings = Preferences.Hotkeys;
+        var hotkeyType = hotkeySettings.GetType();
+        foreach (var property in hotkeyType.GetProperties())
+        {
+            if (property.PropertyType != typeof(EDEA.Models.Hotkey))
+            {
+                continue;
+            }
+
+            var hotkey = (EDEA.Models.Hotkey?)property.GetValue(hotkeySettings);
+            if (hotkey == null)
+            {
+                continue;
+            }
+
+            var row = new StackPanel { Orientation = global::Avalonia.Layout.Orientation.Horizontal, Spacing = 8, Margin = new global::Avalonia.Thickness(0, 0, 0, 8) };
+            var label = new TextBlock { Text = property.Name, Width = 250, VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Center, Foreground = new SolidColorBrush(Color.Parse("#FFFFFF")) };
+            var textBox = new TextBox { Text = FormatHotkey(hotkey), Width = 200, IsReadOnly = true, Background = new SolidColorBrush(Color.Parse("#222222")), Foreground = new SolidColorBrush(Color.Parse("#FFFFFF")), VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Center };
+            textBox.KeyDown += (s, e) => HotkeyTextBox_KeyDown(s, e, property, textBox);
+            row.Children.Add(label);
+            row.Children.Add(textBox);
+            HotkeysPanel.Children.Add(row);
+        }
     }
 
     /// <summary>
@@ -143,57 +240,127 @@ public partial class PreferencesWindow : Window
         }
     }
 
-    private void SpeechWelcomeCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    /// <summary>
+    /// Updates the selected speech output detail controls.
+    /// </summary>
+    private void SpeechOutputListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (SpeechWelcomeCheckBox != null) Preferences.Speech.Welcome = SpeechWelcomeCheckBox.IsChecked == true;
-    }
-
-    private void SpeechGoodbyeCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (SpeechGoodbyeCheckBox != null) Preferences.Speech.Goodbye = SpeechGoodbyeCheckBox.IsChecked == true;
-    }
-
-    private void SpeechGeoCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (SpeechGeoCheckBox != null) Preferences.Speech.GeologicalSignals = SpeechGeoCheckBox.IsChecked == true;
-    }
-
-    private void SpeechBioCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (SpeechBioCheckBox != null) Preferences.Speech.BiologicalSignals = SpeechBioCheckBox.IsChecked == true;
-    }
-
-    private void SpeechFirstDiscoverySystemCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (SpeechFirstDiscoverySystemCheckBox != null) Preferences.Speech.FirstDiscoverySystem = SpeechFirstDiscoverySystemCheckBox.IsChecked == true;
-    }
-
-    private void SpeechFirstDiscoveryBodyCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (SpeechFirstDiscoveryBodyCheckBox != null) Preferences.Speech.FirstDiscoveryBody = SpeechFirstDiscoveryBodyCheckBox.IsChecked == true;
-    }
-
-    private void SpeechTerraformableCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (SpeechTerraformableCheckBox != null) Preferences.Speech.Terraformable = SpeechTerraformableCheckBox.IsChecked == true;
-    }
-
-    private void SpeechLandableCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (SpeechLandableCheckBox != null) Preferences.Speech.Landable = SpeechLandableCheckBox.IsChecked == true;
-    }
-
-    private void SpeechValuableBodyCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (SpeechValuableBodyCheckBox != null) Preferences.Speech.ValuableBody = SpeechValuableBodyCheckBox.IsChecked == true;
+        _updatingSpeechOutput = true;
+        if (SpeechOutputListBox?.SelectedItem is SpeechOutputItem item)
+        {
+            SpeechOutputLabel.Text = item.Label;
+            SpeechOutputEnabledCheckBox.IsChecked = item.IsEnabled;
+            SpeechOutputPhraseTextBox.Text = item.Phrase;
+            SpeechOutputPlaceholdersTextBlock.Text = item.Placeholders;
+        }
+        _updatingSpeechOutput = false;
     }
 
     /// <summary>
-    /// Tests the speech output.
+    /// Applies the enabled state of the selected speech output.
+    /// </summary>
+    private void SpeechOutputEnabledCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (_updatingSpeechOutput || SpeechOutputListBox?.SelectedItem is not SpeechOutputItem item)
+        {
+            return;
+        }
+
+        item.IsEnabled = SpeechOutputEnabledCheckBox.IsChecked == true;
+        var speechType = Preferences.Speech.GetType();
+        var property = speechType.GetProperty(item.Name);
+        if (property is not null && property.PropertyType == typeof(bool))
+        {
+            property.SetValue(Preferences.Speech, item.IsEnabled);
+        }
+    }
+
+    /// <summary>
+    /// Applies the phrase of the selected speech output.
+    /// </summary>
+    private void SpeechOutputPhraseTextBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_updatingSpeechOutput || SpeechOutputListBox?.SelectedItem is not SpeechOutputItem item)
+        {
+            return;
+        }
+
+        item.Phrase = SpeechOutputPhraseTextBox.Text ?? string.Empty;
+        var speechType = Preferences.Speech.GetType();
+        var property = speechType.GetProperty(item.Name + "Speech");
+        if (property is not null && property.PropertyType == typeof(string))
+        {
+            property.SetValue(Preferences.Speech, item.Phrase);
+        }
+    }
+
+    /// <summary>
+    /// Tests the selected speech output.
     /// </summary>
     private void SpeechTestButton_Click(object? sender, RoutedEventArgs e)
     {
-        PlatformServices.Speech?.SpeakPreferencesSelection("Test", System.Array.Empty<EDEA.Models.SpeechOutput>());
+        if (SpeechOutputListBox?.SelectedItem is SpeechOutputItem item)
+        {
+            PlatformServices.Speech?.SpeakPreferencesSelection(item.Phrase, System.Array.Empty<EDEA.Models.SpeechOutput>());
+        }
+    }
+
+    /// <summary>
+    /// Formats a hotkey for display.
+    /// </summary>
+    private static string FormatHotkey(EDEA.Models.Hotkey hotkey)
+    {
+        if (!hotkey.IsValid)
+        {
+            return "-";
+        }
+
+        var parts = new List<string>();
+        if (hotkey.Modifier.HasFlag(EDEA.Core.Input.ModifierKeys.Alt)) parts.Add("Alt");
+        if (hotkey.Modifier.HasFlag(EDEA.Core.Input.ModifierKeys.Control)) parts.Add("Ctrl");
+        if (hotkey.Modifier.HasFlag(EDEA.Core.Input.ModifierKeys.Shift)) parts.Add("Shift");
+        if (hotkey.Modifier.HasFlag(EDEA.Core.Input.ModifierKeys.Windows)) parts.Add("Win");
+        parts.Add(hotkey.Key.ToString());
+        return string.Join(" + ", parts);
+    }
+
+    /// <summary>
+    /// Captures a new hotkey when a key is pressed in a hotkey text box.
+    /// </summary>
+    private void HotkeyTextBox_KeyDown(object? sender, AvaloniaInput.KeyEventArgs e, PropertyInfo property, TextBox textBox)
+    {
+        var coreKey = MapKey(e.Key);
+        var coreModifier = MapModifiers(e.KeyModifiers);
+        if (coreKey == EDEA.Core.Input.Key.None)
+        {
+            return;
+        }
+
+        var hotkey = new EDEA.Models.Hotkey { Modifier = coreModifier, Key = coreKey };
+        property.SetValue(Preferences.Hotkeys, hotkey);
+        textBox.Text = FormatHotkey(hotkey);
+        e.Handled = true;
+    }
+
+    /// <summary>
+    /// Maps an Avalonia key to the platform-independent key enum.
+    /// </summary>
+    private static EDEA.Core.Input.Key MapKey(AvaloniaInput.Key key)
+    {
+        return Enum.TryParse<EDEA.Core.Input.Key>(key.ToString(), out var result) ? result : EDEA.Core.Input.Key.None;
+    }
+
+    /// <summary>
+    /// Maps Avalonia key modifiers to the platform-independent modifier enum.
+    /// </summary>
+    private static EDEA.Core.Input.ModifierKeys MapModifiers(AvaloniaInput.KeyModifiers modifiers)
+    {
+        var result = EDEA.Core.Input.ModifierKeys.None;
+        if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Alt)) result |= EDEA.Core.Input.ModifierKeys.Alt;
+        if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Control)) result |= EDEA.Core.Input.ModifierKeys.Control;
+        if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Shift)) result |= EDEA.Core.Input.ModifierKeys.Shift;
+        if (modifiers.HasFlag(AvaloniaInput.KeyModifiers.Meta)) result |= EDEA.Core.Input.ModifierKeys.Windows;
+        return result;
     }
 
     /// <summary>

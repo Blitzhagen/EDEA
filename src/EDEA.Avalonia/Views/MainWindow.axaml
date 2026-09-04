@@ -9,11 +9,10 @@
         Title="{Binding Title}"
         Height="900" Width="1080"
         MinHeight="479" MinWidth="1070"
-        SystemDecorations="None"
         Background="{StaticResource MainBackgroundColor}"
         Foreground="{StaticResource ForegroundBrush}"
         Icon="/Assets/app.ico">
-  <Grid RowDefinitions="30,Auto,*">
+  <Grid RowDefinitions="30,Auto,*" Background="{StaticResource MainBackgroundColor}">
     <!-- Custom title bar -->
     <Border Grid.Row="0" Background="{StaticResource TitleBarColor}" Height="30" PointerPressed="TitleBar_PointerPressed">
       <DockPanel LastChildFill="True">
