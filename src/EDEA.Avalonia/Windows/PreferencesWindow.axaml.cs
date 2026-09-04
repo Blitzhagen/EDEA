@@ -197,10 +197,16 @@ public partial class PreferencesWindow : Window
         InitializeHudCheckBoxes(HudGenusPanel);
         InitializeHudCheckBoxes(HideOnStackPanel);
 
+        PlanetsOfInterestTabControl.SelectedIndex = 0;
+        PlanetClassificationListBox.ItemsSource = null;
         PlanetClassificationListBox.ItemsSource = Preferences.PlanetsOfInterest.PlanetClassifications;
         if (Preferences.PlanetsOfInterest.PlanetClassifications.Count > 0)
         {
             PlanetClassificationListBox.SelectedIndex = 0;
+        }
+        else
+        {
+            PlanetClassificationListBox.SelectedItem = null;
         }
 
         var hotkeyItems = new Dictionary<string, HotkeyItem>();
@@ -628,48 +634,254 @@ public partial class PreferencesWindow : Window
     private void PlanetClassificationListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         _updatingPlanet = true;
-        if (PlanetClassificationListBox?.SelectedItem is PlanetClassification item)
+        var item = PlanetClassificationListBox?.SelectedItem as PlanetClassification;
+        var hasSelection = item is not null;
+        PlanetBasicAttributesPanel.IsEnabled = hasSelection;
+        PlanetSurfaceConditionsPanel.IsEnabled = hasSelection;
+        PlanetRingRelatedPanel.IsEnabled = hasSelection;
+        PlanetParentPlanetPanel.IsEnabled = hasSelection;
+        RenamePlanetFilterButton.IsEnabled = hasSelection;
+        DeletePlanetFilterButton.IsEnabled = hasSelection;
+
+        UpdatePlanetDetailControls(item);
+        PlanetLandableComboBox.SelectedIndex = item?.Landable switch
         {
-            PlanetDetailPanel.IsEnabled = true;
-            PlanetDetailName.Text = item.Name;
-            PlanetDetailActiveCheckBox.IsChecked = item.IsActive;
-            PlanetDetailNameTextBox.Text = item.Name;
-            PlanetDetailPlanetClassesTextBox.Text = item.PlanetClassesAsString;
-            PlanetDetailStarClassesTextBox.Text = item.StarClassesAsString;
-            PlanetDetailDistanceMinTextBox.Text = item.DistanceMin?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
-            PlanetDetailDistanceMaxTextBox.Text = item.DistanceMax?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
-            PlanetDetailRadiusMinTextBox.Text = item.RadiusMin?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
-            PlanetDetailRadiusMaxTextBox.Text = item.RadiusMax?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
-            PlanetDetailLandableComboBox.SelectedIndex = item.Landable == null ? 0 : item.Landable == false ? 1 : 2;
-        }
-        else
-        {
-            PlanetDetailPanel.IsEnabled = false;
-        }
+            false => 1,
+            true => 2,
+            _ => 0,
+        };
+        UpdateParentPlanetClassifications(item);
         _updatingPlanet = false;
+    }
+
+    /// <summary>
+    /// Fills the planet classification detail controls from the selected classification.
+    /// </summary>
+    /// <param name="item">The selected classification, or <see langword="null"/> to clear the controls.</param>
+    private void UpdatePlanetDetailControls(PlanetClassification? item)
+    {
+        PlanetDistanceMinTextBox.Text = FormatNullableValue(item?.DistanceMin);
+        PlanetDistanceMaxTextBox.Text = FormatNullableValue(item?.DistanceMax);
+        PlanetRadiusMinTextBox.Text = FormatNullableValue(item?.RadiusMin);
+        PlanetRadiusMaxTextBox.Text = FormatNullableValue(item?.RadiusMax);
+        PlanetOrbitalInclinationMinTextBox.Text = FormatNullableValue(item?.OrbitalInclinationMin);
+        PlanetOrbitalInclinationMaxTextBox.Text = FormatNullableValue(item?.OrbitalInclinationMax);
+        PlanetGravityMinTextBox.Text = FormatNullableValue(item?.GravityMin);
+        PlanetGravityMaxTextBox.Text = FormatNullableValue(item?.GravityMax);
+        PlanetTemperatureMinTextBox.Text = FormatNullableValue(item?.TemperatureMin);
+        PlanetTemperatureMaxTextBox.Text = FormatNullableValue(item?.TemperatureMax);
+        PlanetRingsTotalWidthMinTextBox.Text = FormatNullableValue(item?.RingsTotalWidthMin);
+        PlanetRingsTotalWidthMaxTextBox.Text = FormatNullableValue(item?.RingsTotalWidthMax);
+        PlanetRingWidthMinTextBox.Text = FormatNullableValue(item?.RingWidthMin);
+        PlanetRingWidthMaxTextBox.Text = FormatNullableValue(item?.RingWidthMax);
+        PlanetRingDensityMinTextBox.Text = FormatNullableValue(item?.RingDensityMin);
+        PlanetRingDensityMaxTextBox.Text = FormatNullableValue(item?.RingDensityMax);
+        PlanetPlanetClassesTextBox.Text = item?.PlanetClassesAsString ?? string.Empty;
+        PlanetStarClassesTextBox.Text = item?.StarClassesAsString ?? string.Empty;
+        PlanetAtmospheresTextBox.Text = item?.AtmospheresAsString ?? string.Empty;
+        PlanetVolcanismsTextBox.Text = item?.VolcanismsAsString ?? string.Empty;
+        PlanetRingTypesTextBox.Text = item?.RingTypesAsString ?? string.Empty;
+        PlanetRingReserveLevelsTextBox.Text = item?.RingReserveLevelsAsString ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Formats a nullable value for display in a text box.
+    /// </summary>
+    /// <param name="value">The value to format.</param>
+    /// <returns>The formatted value or an empty string.</returns>
+    private static string FormatNullableValue(object? value)
+    {
+        return value switch
+        {
+            null => string.Empty,
+            IFormattable formattable => formattable.ToString(null, CultureInfo.CurrentCulture),
+            _ => value.ToString() ?? string.Empty,
+        };
+    }
+
+    /// <summary>
+    /// Applies a numeric planet classification criterion from the text box identified by its tag.
+    /// </summary>
+    private void PlanetNumberTextBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_updatingPlanet ||
+            sender is not TextBox { Tag: string propertyName } textBox ||
+            PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+
+        var property = typeof(PlanetClassification).GetProperty(propertyName);
+        if (property is null || !property.CanWrite)
+        {
+            return;
+        }
+
+        if (property.PropertyType == typeof(long?))
+        {
+            property.SetValue(item, long.TryParse(textBox.Text, NumberStyles.Integer, CultureInfo.CurrentCulture, out var longValue) ? longValue : (long?)null);
+        }
+        else if (property.PropertyType == typeof(double?))
+        {
+            property.SetValue(item, double.TryParse(textBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out var doubleValue) ? doubleValue : (double?)null);
+        }
+    }
+
+    /// <summary>
+    /// Applies the landable setting of the selected planet classification.
+    /// </summary>
+    private void PlanetLandableComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+        item.Landable = PlanetLandableComboBox.SelectedIndex switch
+        {
+            1 => false,
+            2 => true,
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Opens a dialog to select values for a string list criterion of the selected planet classification.
+    /// </summary>
+    private async void SelectPlanetStringsButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: string key } ||
+            PlanetClassificationListBox?.SelectedItem is not PlanetClassification item ||
+            !Enum.TryParse<UserSelectableInputStringListsKey>(key, out var listKey) ||
+            !Globals.UserSelectableInputStringLists.TryGetValue(listKey, out var allItems))
+        {
+            return;
+        }
+
+        var property = typeof(PlanetClassification).GetProperty(key);
+        if (property is null || property.PropertyType != typeof(List<string>) || !property.CanWrite)
+        {
+            return;
+        }
+
+        var selectedItems = property.GetValue(item) as List<string> ?? new List<string>();
+        var dialog = new InputStringListDialogWindow("Select", allItems, selectedItems);
+        var result = await dialog.ShowDialog<List<string>?>(this);
+        if (result is null)
+        {
+            return;
+        }
+
+        property.SetValue(item, result);
+        _updatingPlanet = true;
+        UpdatePlanetDetailControls(item);
+        _updatingPlanet = false;
+    }
+
+    /// <summary>
+    /// Rebuilds the parent planet classification combo box for the selected classification.
+    /// </summary>
+    /// <param name="selected">The currently selected classification.</param>
+    private void UpdateParentPlanetClassifications(PlanetClassification? selected)
+    {
+        ParentPlanetClassificationsComboBox.Items.Clear();
+        ParentPlanetClassificationsComboBox.Items.Add(new ComboBoxItem
+        {
+            Content = EDEA.Properties.Resources.Preferences_ParentPlanetNone,
+        });
+        if (selected is not null)
+        {
+            foreach (var classification in Preferences.PlanetsOfInterest.PlanetClassifications)
+            {
+                if (classification.Id != selected.Id)
+                {
+                    ParentPlanetClassificationsComboBox.Items.Add(new ComboBoxItem
+                    {
+                        Content = classification.Name,
+                        Tag = classification.Id,
+                    });
+                }
+            }
+        }
+
+        var selectedIndex = 0;
+        if (selected?.ParentPlanetClassificationId is string parentId)
+        {
+            for (var i = 1; i < ParentPlanetClassificationsComboBox.Items.Count; i++)
+            {
+                if (ParentPlanetClassificationsComboBox.Items[i] is ComboBoxItem { Tag: string id } && id == parentId)
+                {
+                    selectedIndex = i;
+                    break;
+                }
+            }
+        }
+        ParentPlanetClassificationsComboBox.SelectedIndex = selectedIndex;
+    }
+
+    /// <summary>
+    /// Applies the selected parent planet classification.
+    /// </summary>
+    private void ParentPlanetClassificationsComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        {
+            return;
+        }
+
+        var id = (ParentPlanetClassificationsComboBox.SelectedItem as ComboBoxItem)?.Tag as string;
+        if (id != item.Id && item.ParentPlanetClassificationId != id)
+        {
+            item.ParentPlanetClassificationId = id!;
+        }
+    }
+
+    /// <summary>
+    /// Clears the keyboard focus when switching planet detail tabs.
+    /// </summary>
+    private void PlanetsOfInterestTabControl_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        TopLevel.GetTopLevel(this)?.FocusManager?.ClearFocus();
     }
 
     /// <summary>
     /// Adds a new planet classification.
     /// </summary>
-    private void AddPlanetFilterButton_Click(object? sender, RoutedEventArgs e)
+    private async void AddPlanetFilterButton_Click(object? sender, RoutedEventArgs e)
     {
-        var item = new PlanetClassification("New filter");
-        Preferences.PlanetsOfInterest.PlanetClassifications.Add(item);
-        PlanetClassificationListBox.ItemsSource = null;
-        PlanetClassificationListBox.ItemsSource = Preferences.PlanetsOfInterest.PlanetClassifications;
-        PlanetClassificationListBox.SelectedItem = item;
+        var dialog = new InputStringDialogWindow
+        {
+            Prompt = "Criteria Set Name",
+            Value = $"Criteria Set {Preferences.PlanetsOfInterest.PlanetClassifications.Count + 1}",
+        };
+        var result = await dialog.ShowDialog<string?>(this);
+        if (!string.IsNullOrWhiteSpace(result))
+        {
+            var item = new PlanetClassification(result, isActive: true);
+            Preferences.PlanetsOfInterest.PlanetClassifications.Add(item);
+            RefreshPlanetClassificationItems(item);
+        }
     }
 
     /// <summary>
     /// Renames the selected planet classification.
     /// </summary>
-    private void RenamePlanetFilterButton_Click(object? sender, RoutedEventArgs e)
+    private async void RenamePlanetFilterButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (PlanetClassificationListBox?.SelectedItem is PlanetClassification item)
+        if (PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
         {
-            PlanetDetailNameTextBox.Focus();
-            PlanetDetailNameTextBox.SelectAll();
+            return;
+        }
+
+        var dialog = new InputStringDialogWindow
+        {
+            Prompt = "Criteria Set Name",
+            Value = item.Name,
+        };
+        var result = await dialog.ShowDialog<string?>(this);
+        if (!string.IsNullOrWhiteSpace(result))
+        {
+            item.Name = result;
+            RefreshPlanetClassificationItems(item);
         }
     }
 
@@ -678,132 +890,28 @@ public partial class PreferencesWindow : Window
     /// </summary>
     private void DeletePlanetFilterButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (PlanetClassificationListBox?.SelectedItem is PlanetClassification item)
-        {
-            Preferences.PlanetsOfInterest.PlanetClassifications.Remove(item);
-            PlanetClassificationListBox.ItemsSource = null;
-            PlanetClassificationListBox.ItemsSource = Preferences.PlanetsOfInterest.PlanetClassifications;
-            PlanetClassificationListBox.SelectedIndex = Preferences.PlanetsOfInterest.PlanetClassifications.Count > 0 ? 0 : -1;
-        }
-    }
-
-    /// <summary>
-    /// Applies the active state of the selected planet classification.
-    /// </summary>
-    private void PlanetDetailActiveCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
-    {
-        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
+        if (PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
         {
             return;
         }
-        item.IsActive = PlanetDetailActiveCheckBox.IsChecked == true;
+
+        Preferences.PlanetsOfInterest.PlanetClassifications.Remove(item);
+        foreach (var dependent in Preferences.PlanetsOfInterest.PlanetClassifications.Where(c => c.ParentPlanetClassificationId == item.Id))
+        {
+            dependent.ParentPlanetClassificationId = null!;
+        }
+        RefreshPlanetClassificationItems(Preferences.PlanetsOfInterest.PlanetClassifications.FirstOrDefault());
+    }
+
+    /// <summary>
+    /// Rebuilds the planet classification list and restores the selection.
+    /// </summary>
+    /// <param name="selected">The classification to select after rebuilding.</param>
+    private void RefreshPlanetClassificationItems(PlanetClassification? selected)
+    {
         PlanetClassificationListBox.ItemsSource = null;
         PlanetClassificationListBox.ItemsSource = Preferences.PlanetsOfInterest.PlanetClassifications;
-    }
-
-    /// <summary>
-    /// Applies the name of the selected planet classification.
-    /// </summary>
-    private void PlanetDetailNameTextBox_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
-        {
-            return;
-        }
-        item.Name = PlanetDetailNameTextBox.Text ?? string.Empty;
-    }
-
-    /// <summary>
-    /// Applies the planet classes of the selected planet classification.
-    /// </summary>
-    private void PlanetDetailPlanetClassesTextBox_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
-        {
-            return;
-        }
-        item.PlanetClasses = (PlanetDetailPlanetClassesTextBox.Text ?? string.Empty)
-            .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .ToList();
-    }
-
-    /// <summary>
-    /// Applies the star classes of the selected planet classification.
-    /// </summary>
-    private void PlanetDetailStarClassesTextBox_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
-        {
-            return;
-        }
-        item.StarClasses = (PlanetDetailStarClassesTextBox.Text ?? string.Empty)
-            .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .ToList();
-    }
-
-    /// <summary>
-    /// Applies the distance min of the selected planet classification.
-    /// </summary>
-    private void PlanetDetailDistanceMinTextBox_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
-        {
-            return;
-        }
-        item.DistanceMin = double.TryParse(PlanetDetailDistanceMinTextBox.Text, out var v) ? v : null;
-    }
-
-    /// <summary>
-    /// Applies the distance max of the selected planet classification.
-    /// </summary>
-    private void PlanetDetailDistanceMaxTextBox_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
-        {
-            return;
-        }
-        item.DistanceMax = double.TryParse(PlanetDetailDistanceMaxTextBox.Text, out var v) ? v : null;
-    }
-
-    /// <summary>
-    /// Applies the radius min of the selected planet classification.
-    /// </summary>
-    private void PlanetDetailRadiusMinTextBox_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
-        {
-            return;
-        }
-        item.RadiusMin = double.TryParse(PlanetDetailRadiusMinTextBox.Text, out var v) ? v : null;
-    }
-
-    /// <summary>
-    /// Applies the radius max of the selected planet classification.
-    /// </summary>
-    private void PlanetDetailRadiusMaxTextBox_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
-        {
-            return;
-        }
-        item.RadiusMax = double.TryParse(PlanetDetailRadiusMaxTextBox.Text, out var v) ? v : null;
-    }
-
-    /// <summary>
-    /// Applies the landable setting of the selected planet classification.
-    /// </summary>
-    private void PlanetDetailLandableComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (_updatingPlanet || PlanetClassificationListBox?.SelectedItem is not PlanetClassification item)
-        {
-            return;
-        }
-        item.Landable = PlanetDetailLandableComboBox.SelectedIndex switch
-        {
-            1 => false,
-            2 => true,
-            _ => null,
-        };
+        PlanetClassificationListBox.SelectedItem = selected;
     }
 
     /// <summary>
