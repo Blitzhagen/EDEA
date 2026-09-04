@@ -284,13 +284,13 @@
               <Border Classes="PreferencesSectionBody" MinHeight="385">
                 <StackPanel Orientation="Horizontal">
                   <StackPanel>
-                    <ListBox x:Name="PlanetClassificationListBox" SelectionMode="Single" Classes="PreferencesListbox" Width="170" Height="270" Margin="1,1,5,5" SelectionChanged="PlanetClassificationListBox_SelectionChanged">
+                    <ListBox x:Name="PlanetClassificationListBox" SelectionMode="Single" Classes="PreferencesListbox" Width="200" Height="270" Margin="1,1,5,5" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="PlanetClassificationListBox_SelectionChanged">
                       <ListBox.ItemTemplate>
                         <DataTemplate x:CompileBindings="False">
-                          <StackPanel Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding IsActive}" Margin="0,0,6,0" />
-                            <TextBlock Text="{Binding Name}" Tag="{Binding Id}" />
-                          </StackPanel>
+                          <Grid ColumnDefinitions="Auto,*">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding IsActive}" Margin="0,0,6,0" />
+                            <TextBlock Grid.Column="1" Text="{Binding Name}" Tag="{Binding Id}" TextWrapping="Wrap" />
+                          </Grid>
                         </DataTemplate>
                       </ListBox.ItemTemplate>
                     </ListBox>
@@ -302,8 +302,8 @@
                   </StackPanel>
                   <TabControl x:Name="PlanetsOfInterestTabControl" Margin="0,0,0,22" SelectionChanged="PlanetsOfInterestTabControl_SelectionChanged">
                     <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_BasicAttributes}">
-                      <StackPanel x:Name="PlanetBasicAttributesPanel" Orientation="Horizontal" MinWidth="565" IsEnabled="False">
-                        <StackPanel Margin="17,15,0,0">
+                      <StackPanel x:Name="PlanetBasicAttributesPanel" Orientation="Horizontal" MinWidth="590" IsEnabled="False">
+                        <StackPanel Width="250" Margin="17,15,0,0">
                           <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_DistanceToMainStar}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
@@ -334,19 +334,19 @@
                             </ComboBox>
                           </Grid>
                         </StackPanel>
-                        <StackPanel Margin="22,15,17,0">
+                        <StackPanel Width="300" Margin="22,15,10,0">
                           <StackPanel>
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_PlanetClassOneOf}" Classes="PreferencesBodyHeadline" />
                             <StackPanel Orientation="Horizontal" Spacing="4">
-                              <TextBox x:Name="PlanetPlanetClassesTextBox" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" Width="212" IsReadOnly="True" />
-                              <Button Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="PlanetClasses" VerticalAlignment="Top" Click="SelectPlanetStringsButton_Click" />
+                              <TextBox x:Name="PlanetPlanetClassesTextBox" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" Width="220" IsReadOnly="True" />
+                              <Button Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="PlanetClasses" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
                             </StackPanel>
                           </StackPanel>
                           <StackPanel Margin="0,15,0,22">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_StarClassOneOf}" Classes="PreferencesBodyHeadline" />
                             <StackPanel Orientation="Horizontal" Spacing="4">
-                              <TextBox x:Name="PlanetStarClassesTextBox" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" Width="212" IsReadOnly="True" />
-                              <Button Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="StarClasses" VerticalAlignment="Top" Click="SelectPlanetStringsButton_Click" />
+                              <TextBox x:Name="PlanetStarClassesTextBox" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" Width="220" IsReadOnly="True" />
+                              <Button Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="StarClasses" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
                             </StackPanel>
                           </StackPanel>
                         </StackPanel>

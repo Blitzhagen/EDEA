@@ -73,12 +73,15 @@
     </Style>
     <Style Selector="TextBlock.PreferencesBodyHeadline">
       <Setter Property="Margin" Value="0,0,0,3" />
+      <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
     <Style Selector="TextBlock.PreferencesBodyHeadlineLight">
       <Setter Property="Foreground" Value="{DynamicResource GrayTextBrush}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
     <Style Selector="TextBlock.PreferencesBodyHeadlineWithTopSpace">
       <Setter Property="Margin" Value="0,10,0,3" />
+      <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
     <Style Selector="TextBlock.PreferencesInfoText">
       <Setter Property="Foreground" Value="{DynamicResource GrayTextBrush}" />
