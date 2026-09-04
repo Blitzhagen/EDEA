@@ -123,6 +123,7 @@
 
     <!-- Main content -->
     <Grid Grid.Row="2">
+      <Thumb Name="ResizeThumb" Width="15" Height="15" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNorthwestSoutheast" Background="Transparent" BorderThickness="0" DragDelta="ResizeThumb_DragDelta" ZIndex="100" />
       <TabControl TabStripPlacement="Left" ItemsSource="{Binding TabViewModels}" SelectedIndex="{Binding SelectedTabIndex}">
         <TabControl.Styles>
           <Style Selector="TabItem" x:DataType="vmcore:TabViewModel" x:CompileBindings="False">

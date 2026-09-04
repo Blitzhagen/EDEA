@@ -146,4 +146,13 @@ public partial class MainWindow : Window
     {
         Close();
     }
+
+    /// <summary>
+    /// Resizes the main window from the bottom-right resize thumb.
+    /// </summary>
+    private void ResizeThumb_DragDelta(object? sender, VectorEventArgs e)
+    {
+        Width = Math.Max(MinWidth, Width + e.Vector.X);
+        Height = Math.Max(MinHeight, Height + e.Vector.Y);
+    }
 }
