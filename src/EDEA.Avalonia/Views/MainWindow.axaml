@@ -57,7 +57,7 @@
         <TextBlock Foreground="{DynamicResource MainColor}" VerticalAlignment="Center" Margin="10,0" FontWeight="Bold" Text="{Binding Title}" DockPanel.Dock="Left"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
           <Button Content="—" Width="30" Background="Transparent" Foreground="{DynamicResource MainColor}" BorderThickness="0" Click="MinimizeButton_Click"/>
-          <Button Content="▢" Width="30" Background="Transparent" Foreground="{DynamicResource MainColor}" BorderThickness="0" Click="MaximizeRestoreButton_Click"/>
+          <Button Name="MaximizeRestoreButton" Content="▢" Width="30" Background="Transparent" Foreground="{DynamicResource MainColor}" BorderThickness="0" Click="MaximizeRestoreButton_Click"/>
           <Button Content="✕" Width="30" Background="Transparent" Foreground="{DynamicResource MainColor}" BorderThickness="0" Click="CloseButton_Click"/>
         </StackPanel>
       </DockPanel>

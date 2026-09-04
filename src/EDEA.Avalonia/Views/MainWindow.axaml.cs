@@ -29,6 +29,8 @@ public partial class MainWindow : Window
     /// </summary>
     private void OnOpened(object? sender, EventArgs e)
     {
+        UpdateMaximizeRestoreButtonContent();
+
         var handle = TryGetPlatformHandle()?.Handle ?? 0;
         if (handle == 0 || PlatformServices.GlobalHotkey is null)
         {
@@ -137,6 +139,16 @@ public partial class MainWindow : Window
     private void MaximizeRestoreButton_Click(object? sender, RoutedEventArgs e)
     {
         WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        UpdateMaximizeRestoreButtonContent();
+    }
+
+    private void UpdateMaximizeRestoreButtonContent()
+    {
+        if (MaximizeRestoreButton is null)
+        {
+            return;
+        }
+        MaximizeRestoreButton.Content = WindowState == WindowState.Maximized ? "□" : "▢";
     }
 
     /// <summary>
