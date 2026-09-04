@@ -302,8 +302,13 @@
                   </StackPanel>
                   <TabControl x:Name="PlanetsOfInterestTabControl" Margin="0,0,0,22" SelectionChanged="PlanetsOfInterestTabControl_SelectionChanged">
                     <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_BasicAttributes}">
-                      <Grid x:Name="PlanetBasicAttributesPanel" MinWidth="590" IsEnabled="False" ColumnDefinitions="Auto,20,*">
+                      <Grid x:Name="PlanetBasicAttributesPanel" Width="590" IsEnabled="False" ColumnDefinitions="Auto,20,*">
                         <StackPanel Grid.Column="0" MaxWidth="260" Margin="0,15,0,0">
+                          <StackPanel.Styles>
+                            <Style Selector="TextBlock">
+                              <Setter Property="MaxWidth" Value="260" />
+                            </Style>
+                          </StackPanel.Styles>
                           <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_DistanceToMainStar}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
@@ -335,6 +340,11 @@
                           </Grid>
                         </StackPanel>
                         <StackPanel Grid.Column="2" MaxWidth="300" Margin="0,15,0,0">
+                          <StackPanel.Styles>
+                            <Style Selector="TextBlock">
+                              <Setter Property="MaxWidth" Value="300" />
+                            </Style>
+                          </StackPanel.Styles>
                           <StackPanel>
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_PlanetClassOneOf}" Classes="PreferencesBodyHeadline" />
                             <StackPanel Orientation="Horizontal" Spacing="4">
@@ -353,8 +363,13 @@
                       </Grid>
                     </TabItem>
                     <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_SurfaceConditions}">
-                      <Grid x:Name="PlanetSurfaceConditionsPanel" MinWidth="590" IsEnabled="False" ColumnDefinitions="Auto,20,*">
+                      <Grid x:Name="PlanetSurfaceConditionsPanel" Width="590" IsEnabled="False" ColumnDefinitions="Auto,20,*">
                         <StackPanel Grid.Column="0" MaxWidth="260" Margin="0,15,0,0">
+                          <StackPanel.Styles>
+                            <Style Selector="TextBlock">
+                              <Setter Property="MaxWidth" Value="260" />
+                            </Style>
+                          </StackPanel.Styles>
                           <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Gravity}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
@@ -371,6 +386,11 @@
                           </StackPanel>
                         </StackPanel>
                         <StackPanel Grid.Column="2" MaxWidth="300" Margin="0,15,0,0">
+                          <StackPanel.Styles>
+                            <Style Selector="TextBlock">
+                              <Setter Property="MaxWidth" Value="300" />
+                            </Style>
+                          </StackPanel.Styles>
                           <StackPanel>
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AtmosphereOneOf}" Classes="PreferencesBodyHeadline" />
                             <StackPanel Orientation="Horizontal" Spacing="4">
@@ -389,8 +409,13 @@
                       </Grid>
                     </TabItem>
                     <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_RingRelated}">
-                      <Grid x:Name="PlanetRingRelatedPanel" MinWidth="590" IsEnabled="False" ColumnDefinitions="Auto,20,*">
+                      <Grid x:Name="PlanetRingRelatedPanel" Width="590" IsEnabled="False" ColumnDefinitions="Auto,20,*">
                         <StackPanel Grid.Column="0" MaxWidth="260" Margin="0,15,0,0">
+                          <StackPanel.Styles>
+                            <Style Selector="TextBlock">
+                              <Setter Property="MaxWidth" Value="260" />
+                            </Style>
+                          </StackPanel.Styles>
                           <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingsTotalWidth}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
@@ -414,6 +439,11 @@
                           </StackPanel>
                         </StackPanel>
                         <StackPanel Grid.Column="2" MaxWidth="300" Margin="0,15,0,0">
+                          <StackPanel.Styles>
+                            <Style Selector="TextBlock">
+                              <Setter Property="MaxWidth" Value="300" />
+                            </Style>
+                          </StackPanel.Styles>
                           <StackPanel>
                             <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingTypeOneOf}" Classes="PreferencesBodyHeadline" />
                             <StackPanel Orientation="Horizontal" Spacing="4">
@@ -432,8 +462,13 @@
                       </Grid>
                     </TabItem>
                     <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_ParentPlanet}">
-                      <Grid x:Name="PlanetParentPlanetPanel" MinWidth="590" IsEnabled="False" ColumnDefinitions="*">
+                      <Grid x:Name="PlanetParentPlanetPanel" Width="590" IsEnabled="False" ColumnDefinitions="*">
                         <StackPanel Grid.Column="0" MaxWidth="570" Margin="17,15,0,0">
+                          <StackPanel.Styles>
+                            <Style Selector="TextBlock">
+                              <Setter Property="MaxWidth" Value="570" />
+                            </Style>
+                          </StackPanel.Styles>
                           <TextBlock Classes="PreferencesInfoText" Text="{x:Static properties:Resources.PreferencesWindow_Tooltip_ParentPlanetCriteria}" />
                           <Grid Margin="0,15,0,0" ColumnDefinitions="Auto,7,Auto,*">
                             <TextBlock Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_CriteriaSetForParentPlanet}" Classes="PreferencesBodyHeadline" VerticalAlignment="Center" Margin="0" />

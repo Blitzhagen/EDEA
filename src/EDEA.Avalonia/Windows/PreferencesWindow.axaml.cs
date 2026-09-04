@@ -285,8 +285,7 @@ public partial class PreferencesWindow : Window
         InitializeHudCheckBoxes(HideOnStackPanel);
 
         PlanetsOfInterestTabControl.SelectedIndex = 0;
-        PlanetClassificationListBox.ItemsSource = null;
-        PlanetClassificationListBox.ItemsSource = Preferences.PlanetsOfInterest.PlanetClassifications;
+        PlanetClassificationListBox.ItemsSource = new List<PlanetClassification>(Preferences.PlanetsOfInterest.PlanetClassifications);
         if (Preferences.PlanetsOfInterest.PlanetClassifications.Count > 0)
         {
             PlanetClassificationListBox.SelectedIndex = 0;
@@ -966,8 +965,7 @@ public partial class PreferencesWindow : Window
     /// <param name="selected">The classification to select after rebuilding.</param>
     private void RefreshPlanetClassificationItems(PlanetClassification? selected)
     {
-        PlanetClassificationListBox.ItemsSource = null;
-        PlanetClassificationListBox.ItemsSource = Preferences.PlanetsOfInterest.PlanetClassifications;
+        PlanetClassificationListBox.ItemsSource = new List<PlanetClassification>(Preferences.PlanetsOfInterest.PlanetClassifications);
         PlanetClassificationListBox.SelectedItem = selected;
     }
 
