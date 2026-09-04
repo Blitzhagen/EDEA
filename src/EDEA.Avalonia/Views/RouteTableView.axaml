@@ -23,10 +23,7 @@
       <TextBlock Text="{Binding Name}" />
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemScoopableTemplate" x:DataType="vm:StarSystemViewModel">
-      <Grid>
-        <materialIcons:MaterialIcon Kind="Fuel" IsVisible="{Binding PrimaryStarIsScoopable}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipScoopableIcon}" />
-        <materialIcons:MaterialIcon Kind="Fuel" IsVisible="{Binding !PrimaryStarIsScoopable}" Foreground="{StaticResource GrayTextBrush}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipScoopableIcon}" Opacity="0.4" />
-      </Grid>
+      <materialIcons:MaterialIcon Kind="Fuel" IsVisible="{Binding PrimaryStarIsScoopable}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipScoopableIcon}" />
     </DataTemplate>
     <DataTemplate x:Key="TextStarSystemStarClassTemplate" x:DataType="vm:StarSystemViewModel">
       <TextBlock Text="{Binding StarClass}" />
@@ -41,22 +38,57 @@
       </Grid>
     </DataTemplate>
     <DataTemplate x:Key="TextStarSystemDiscoveryStatusTemplate" x:DataType="vm:StarSystemViewModel">
-      <TextBlock Text="{Binding ExplorationStatus}" ToolTip.Tip="{Binding ExplorationStatusBodiesInfo}" />
+      <TextBlock Text="{Binding ExplorationStatus}" />
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemPlanetOfInterestTemplate" x:DataType="vm:StarSystemViewModel">
-      <materialIcons:MaterialIcon Kind="StarCircle" IsVisible="{Binding HasMatchingPlanetClassifications}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding PlanetsWithMatchingPlanetClassificationsCount}" />
+      <Grid HorizontalAlignment="Center" IsVisible="{Binding HasMatchingPlanetClassifications}">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <materialIcons:MaterialIcon Grid.Column="0" Kind="StarCircle" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding PlanetsWithMatchingPlanetClassificationsCount}" />
+        <TextBlock Grid.Column="1" Text="{Binding MatchingPlanetClassificationsCount}" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Right" Margin="2,0,0,0" />
+      </Grid>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemValuableTemplate" x:DataType="vm:StarSystemViewModel">
-      <materialIcons:MaterialIcon Kind="DiamondStone" IsVisible="{Binding HasValuableBodies}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding ValuableBodiesCount}" />
+      <Grid HorizontalAlignment="Center" IsVisible="{Binding HasValuableBodies}">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <materialIcons:MaterialIcon Grid.Column="0" Kind="DiamondStone" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding ValuableBodiesCount}" />
+        <TextBlock Grid.Column="1" Text="{Binding ValuableBodiesCount}" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Right" Margin="2,0,0,0" />
+      </Grid>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemTerraformableTemplate" x:DataType="vm:StarSystemViewModel">
-      <materialIcons:MaterialIcon Kind="Terraform" IsVisible="{Binding HasExploredTerraformables}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding ExploredTerraformablesCount}" />
+      <Grid HorizontalAlignment="Center" IsVisible="{Binding HasExploredTerraformables}">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <materialIcons:MaterialIcon Grid.Column="0" Kind="Terraform" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding ExploredTerraformablesCount}" />
+        <TextBlock Grid.Column="1" Text="{Binding ExploredTerraformablesCount}" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Right" Margin="2,0,0,0" />
+      </Grid>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemLandableTemplate" x:DataType="vm:StarSystemViewModel">
-      <materialIcons:MaterialIcon Kind="AirplaneLanding" IsVisible="{Binding HasExploredLandables}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding ExploredLandablesCount}" />
+      <Grid HorizontalAlignment="Center" IsVisible="{Binding HasExploredLandables}">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <materialIcons:MaterialIcon Grid.Column="0" Kind="AirplaneLanding" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding ExploredLandablesCount}" />
+        <TextBlock Grid.Column="1" Text="{Binding ExploredLandablesCount}" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Right" Margin="2,0,0,0" />
+      </Grid>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemPopulatedTemplate" x:DataType="vm:StarSystemViewModel">
-      <materialIcons:MaterialIcon Kind="AccountGroup" IsVisible="{Binding HasPopulation}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding Population}" />
+      <Grid HorizontalAlignment="Center" IsVisible="{Binding HasPopulation}">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <materialIcons:MaterialIcon Grid.Column="0" Kind="AccountGroup" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding Population}" />
+        <TextBlock Grid.Column="1" Text="{Binding Population}" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Right" Margin="2,0,0,0" />
+      </Grid>
     </DataTemplate>
     <DataTemplate x:Key="TextStarSystemJumpDistanceLyTemplate" x:DataType="vm:StarSystemViewModel">
       <TextBlock Text="{Binding JumpDistanceLy}" HorizontalAlignment="Right" />
@@ -128,11 +160,31 @@
         </DataGridTemplateColumn>
         <DataGridTextColumn SortMemberPath="BodiesCartographicMaxValueSort" Header="{x:Static properties:Resources.ColumnHeaderCartographicValue}" Binding="{Binding BodiesCartographicMaxValue}" />
         <DataGridTextColumn SortMemberPath="ExplorationValueSort" Header="{x:Static properties:Resources.ColumnHeaderOverallProgress}" Binding="{Binding OverallProgress}" />
-        <DataGridTemplateColumn SortMemberPath="MatchingPlanetClassificationsSort" Header="POI" CellTemplate="{StaticResource IconStarSystemPlanetOfInterestTemplate}" />
-        <DataGridTemplateColumn SortMemberPath="ValuableBodiesSort" Header="Val" CellTemplate="{StaticResource IconStarSystemValuableTemplate}" />
-        <DataGridTemplateColumn SortMemberPath="ExploredTerraformablesSort" Header="Terra" CellTemplate="{StaticResource IconStarSystemTerraformableTemplate}" />
-        <DataGridTemplateColumn SortMemberPath="ExploredLandablesSort" Header="Land" CellTemplate="{StaticResource IconStarSystemLandableTemplate}" />
-        <DataGridTemplateColumn SortMemberPath="PopulationSort" Header="Pop" CellTemplate="{StaticResource IconStarSystemPopulatedTemplate}" />
+        <DataGridTemplateColumn SortMemberPath="MatchingPlanetClassificationsSort" CellTemplate="{StaticResource IconStarSystemPlanetOfInterestTemplate}">
+          <DataGridTemplateColumn.Header>
+            <materialIcons:MaterialIcon Kind="StarCircle" Width="16" Height="16" Foreground="{StaticResource ForegroundBrush}" ToolTip.Tip="Planeten von Interesse" />
+          </DataGridTemplateColumn.Header>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn SortMemberPath="ValuableBodiesSort" CellTemplate="{StaticResource IconStarSystemValuableTemplate}">
+          <DataGridTemplateColumn.Header>
+            <materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{StaticResource ForegroundBrush}" ToolTip.Tip="Wertvolle Körper" />
+          </DataGridTemplateColumn.Header>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn SortMemberPath="ExploredTerraformablesSort" CellTemplate="{StaticResource IconStarSystemTerraformableTemplate}">
+          <DataGridTemplateColumn.Header>
+            <materialIcons:MaterialIcon Kind="Terraform" Width="16" Height="16" Foreground="{StaticResource ForegroundBrush}" ToolTip.Tip="Terraformierbar" />
+          </DataGridTemplateColumn.Header>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn SortMemberPath="ExploredLandablesSort" CellTemplate="{StaticResource IconStarSystemLandableTemplate}">
+          <DataGridTemplateColumn.Header>
+            <materialIcons:MaterialIcon Kind="AirplaneLanding" Width="16" Height="16" Foreground="{StaticResource ForegroundBrush}" ToolTip.Tip="Landbar" />
+          </DataGridTemplateColumn.Header>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn SortMemberPath="PopulationSort" CellTemplate="{StaticResource IconStarSystemPopulatedTemplate}">
+          <DataGridTemplateColumn.Header>
+            <materialIcons:MaterialIcon Kind="AccountGroup" Width="16" Height="16" Foreground="{StaticResource ForegroundBrush}" ToolTip.Tip="Bevölkert" />
+          </DataGridTemplateColumn.Header>
+        </DataGridTemplateColumn>
         <DataGridTextColumn Header="{x:Static properties:Resources.ColumnHeaderEdsmDiscoverer}" Binding="{Binding EdsmDiscoveryCommander}" />
         <DataGridTemplateColumn SortMemberPath="JumpDistanceLySort" Header="{x:Static properties:Resources.ColumnHeaderDistance}" CellTemplate="{StaticResource TextStarSystemJumpDistanceLyTemplate}" />
       </DataGrid.Columns>
