@@ -490,23 +490,37 @@
                   </StackPanel>
                 </Border>
               </StackPanel>
-              <StackPanel Classes="PreferencesSection">
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Thresholds}" Classes="PreferencesSectionHeadline" />
-                <Border Classes="PreferencesSectionBody">
-                  <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto">
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableBodies}" VerticalAlignment="Center" Margin="0,0,16,8" />
-                    <TextBox x:Name="ValuableBodyThresholdTextBox" Grid.Row="0" Grid.Column="1" Width="120" TextChanged="ValuableBodyThresholdTextBox_TextChanged" Margin="0,0,0,8" />
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableSpecies}" VerticalAlignment="Center" Margin="0,0,16,8" />
-                    <TextBox x:Name="ValuableGenusThresholdTextBox" Grid.Row="1" Grid.Column="1" Width="120" TextChanged="ValuableGenusThresholdTextBox_TextChanged" Margin="0,0,0,8" />
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_BiologicalsViewAltitude}" VerticalAlignment="Center" Margin="0,0,16,8" />
-                    <TextBox x:Name="BiologicalsViewAltitudeThresholdTextBox" Grid.Row="2" Grid.Column="1" Width="120" TextChanged="BiologicalsViewAltitudeThresholdTextBox_TextChanged" Margin="0,0,0,8" />
-                  </Grid>
-                </Border>
+              <StackPanel Orientation="Horizontal">
+                <StackPanel Classes="PreferencesSection">
+                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Thresholds}" Classes="PreferencesSectionHeadline" />
+                  <Border Classes="PreferencesSectionBody">
+                    <StackPanel Orientation="Horizontal" Spacing="17">
+                      <StackPanel>
+                        <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableBodies}" Classes="PreferencesBodyHeadline" />
+                        <TextBlock Classes="PreferencesInfoText" Width="170" Margin="0,0,0,7" Text="{x:Static properties:Resources.PreferencesWindow_Info_BodyValueThreshold}" />
+                        <TextBox x:Name="ValuableBodyThresholdTextBox" MaxLength="7" TextChanged="ValuableBodyThresholdTextBox_TextChanged" />
+                      </StackPanel>
+                      <StackPanel>
+                        <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableSpecies}" Classes="PreferencesBodyHeadline" />
+                        <TextBlock Classes="PreferencesInfoText" Width="170" Margin="0,0,0,7" Text="{x:Static properties:Resources.PreferencesWindow_Info_SpeciesValueThreshold}" />
+                        <TextBox x:Name="ValuableGenusThresholdTextBox" MaxLength="8" TextChanged="ValuableGenusThresholdTextBox_TextChanged" />
+                      </StackPanel>
+                      <StackPanel>
+                        <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_BiologicalsViewAltitude}" Classes="PreferencesBodyHeadline" />
+                        <TextBlock Classes="PreferencesInfoText" Width="170" Margin="0,0,0,7" Text="{x:Static properties:Resources.PreferencesWindow_Info_BiologicalsViewAltitude}" />
+                        <TextBox x:Name="BiologicalsViewAltitudeThresholdTextBox" MaxLength="6" TextChanged="BiologicalsViewAltitudeThresholdTextBox_TextChanged" />
+                      </StackPanel>
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
               </StackPanel>
               <StackPanel Classes="PreferencesSection">
                 <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_ResetPreferences}" Classes="PreferencesSectionHeadline" />
                 <Border Classes="PreferencesSectionBody">
-                  <Button x:Name="RestoreDefaultButton" Content="{x:Static properties:Resources.PreferencesWindow_ResetPreferences}" Click="RestoreDefaultButton_Click" HorizontalAlignment="Left" Padding="12,4" />
+                  <StackPanel>
+                    <TextBlock Classes="PreferencesInfoText" Text="{x:Static properties:Resources.PreferencesWindow_ResetWarning}" />
+                    <Button x:Name="RestoreDefaultButton" Content="{x:Static properties:Resources.PreferencesWindow_ResetPreferences}" Click="RestoreDefaultButton_Click" HorizontalAlignment="Left" Padding="12,4" />
+                  </StackPanel>
                 </Border>
               </StackPanel>
             </StackPanel>
