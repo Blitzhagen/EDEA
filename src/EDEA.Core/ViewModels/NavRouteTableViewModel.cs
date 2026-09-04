@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using EDEA.Models;
 using EDEA.Properties;
@@ -12,15 +10,10 @@ using log4net;
 namespace EDEA.ViewModels;
 
 /// <summary>
-/// View model that manages the route tab and its data presentation.
+/// View model that manages the navigation route tab and its data presentation.
 /// </summary>
 public class NavRouteTableViewModel : TabViewModel
 {
-    /// <summary>
-    /// Gets the name of the tab.
-    /// </summary>
-    public override string TabName => "Route";
-
     /// <summary>
     /// Logger instance for this class.
     /// </summary>
@@ -32,9 +25,24 @@ public class NavRouteTableViewModel : TabViewModel
     private readonly StarSystemProvider _starSystemProvider;
 
     /// <summary>
-    /// Gets the collection of route star system view models.
+    /// The provider for route data.
     /// </summary>
-    public IEnumerable<StarSystemViewModel> RouteStarSystems { get; private set; } = Enumerable.Empty<StarSystemViewModel>();
+    private readonly RouteProvider _routeProvider;
+
+    /// <summary>
+    /// A value indicating whether a refresh task is currently running.
+    /// </summary>
+    private bool _refreshTaskRunning;
+
+    /// <summary>
+    /// The current loading info text for the route.
+    /// </summary>
+    private string _routeIsLoadingInfoText = string.Empty;
+
+    /// <summary>
+    /// The collection of star systems in the route.
+    /// </summary>
+    public IEnumerable<StarSystemViewModel> Route { get; private set; } = Array.Empty<StarSystemViewModel>();
 
     /// <summary>
     /// Gets the localized info text shown when no route is available.
@@ -42,9 +50,58 @@ public class NavRouteTableViewModel : TabViewModel
     public string NoRouteInfo => Resources.NoRouteInfo;
 
     /// <summary>
-    /// Gets a value indicating whether there are no star systems on the route.
+    /// Gets a value indicating whether the no route info banner should be shown.
     /// </summary>
-    public bool IsNoRouteAvailable => _starSystemProvider.StarSystemsOnRoute.Count == 0;
+    public bool ShowNoRouteInfo
+    {
+        get
+        {
+            if (RouteIsLoading || _refreshTaskRunning)
+            {
+                return false;
+            }
+
+            return !Route.Any();
+        }
+    }
+
+    /// <summary>
+    /// Gets the current star system in the route.
+    /// </summary>
+    public StarSystemViewModel? CurrentSystem => Route.FirstOrDefault(starSystem => starSystem.IsCurrentSystemInRoute);
+
+    /// <summary>
+    /// Gets a value indicating whether no current system is present in the route.
+    /// </summary>
+    public bool HasNoCurrentSystem => CurrentSystem == null;
+
+    /// <summary>
+    /// Gets a value indicating whether the route is currently loading.
+    /// </summary>
+    public bool RouteIsLoading => _starSystemProvider.RouteIsLoading || _refreshTaskRunning;
+
+    /// <summary>
+    /// Gets the loading info text for the route.
+    /// </summary>
+    public string RouteIsLoadingInfoText
+    {
+        get => _routeIsLoadingInfoText;
+        private set
+        {
+            _routeIsLoadingInfoText = value;
+            OnPropertyChanged("RouteIsLoadingInfoText");
+        }
+    }
+
+    /// <summary>
+    /// Gets the current commander name.
+    /// </summary>
+    public string CommanderName => _starSystemProvider.CommanderName;
+
+    /// <summary>
+    /// Gets the list of teammate names.
+    /// </summary>
+    public List<string> TeammateNames => _starSystemProvider.TeammateNames;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NavRouteTableViewModel"/> class.
@@ -52,10 +109,13 @@ public class NavRouteTableViewModel : TabViewModel
     /// <param name="tabHeader">The header text for the tab.</param>
     /// <param name="tabVisibility">The initial visibility of the tab.</param>
     /// <param name="starSystemProvider">The provider for star system data.</param>
-    public NavRouteTableViewModel(string tabHeader, string tabVisibility, StarSystemProvider starSystemProvider)
+    /// <param name="routeProvider">The provider for route data.</param>
+    public NavRouteTableViewModel(string tabHeader, string tabVisibility, StarSystemProvider starSystemProvider, RouteProvider routeProvider)
         : base(tabHeader, tabVisibility)
     {
         _starSystemProvider = starSystemProvider;
+        _routeProvider = routeProvider;
+
         _starSystemProvider.GuiDataUpdated += delegate
         {
             PlatformServices.Dispatcher?.Invoke(delegate
@@ -63,35 +123,79 @@ public class NavRouteTableViewModel : TabViewModel
                 RefreshRouteDataView();
             });
         };
-    }
 
-    /// <summary>
-    /// Generates the route star system view models.
-    /// </summary>
-    public void GenerateRouteViews()
-    {
-        RouteStarSystems = _starSystemProvider.StarSystemsOnRoute
-            .Select((KeyValuePair<long, StarSystem> entry) => new StarSystemViewModel(entry.Value))
-            .ToList();
+        _starSystemProvider.CurrentSystemInRouteChanged += delegate
+        {
+            PlatformServices.Dispatcher?.Invoke(delegate
+            {
+                if (CurrentSystem == null)
+                {
+                    RefreshRouteDataView();
+                }
+
+                OnPropertyChanged("CurrentSystem");
+                OnPropertyChanged("HasNoCurrentSystem");
+            });
+        };
+
+        _starSystemProvider.RouteLoadingStatusChanged += delegate (object? sender, string text)
+        {
+            PlatformServices.Dispatcher?.Invoke(delegate
+            {
+                if (!string.IsNullOrEmpty(text))
+                {
+                    RouteIsLoadingInfoText = text;
+                }
+                else
+                {
+                    RouteIsLoadingInfoText = Resources.RouteIsLoading_PleaseWait;
+                }
+
+                OnPropertyChanged("RouteIsLoading");
+                OnPropertyChanged("ShowNoRouteInfo");
+            });
+        };
     }
 
     /// <summary>
     /// Refreshes the route data view on the UI thread.
     /// </summary>
-    private async void RefreshRouteDataView()
+    public async void RefreshRouteDataView()
     {
         try
         {
+            _refreshTaskRunning = true;
+            OnPropertyChanged("RouteIsLoading");
+            OnPropertyChanged("ShowNoRouteInfo");
+
             await Task.Run(delegate
             {
-                GenerateRouteViews();
-                OnPropertyChanged("RouteStarSystems");
-                OnPropertyChanged("IsNoRouteAvailable");
+                Route = _starSystemProvider.StarSystemsOnRoute
+                    .Select((KeyValuePair<long, StarSystem> entry) => new StarSystemViewModel(entry.Value))
+                    .OrderBy(item => item.JumpDistance)
+                    .ToList();
+
+                TabHeader = _routeProvider.IsCustomRoute ? Resources.TabHeader_PlotterRoute : Resources.TabHeader_Route;
+
+                OnPropertyChanged("Route");
+                OnPropertyChanged("RouteIsLoading");
+                OnPropertyChanged("ShowNoRouteInfo");
+                OnPropertyChanged("CurrentSystem");
+                OnPropertyChanged("HasNoCurrentSystem");
+                OnPropertyChanged("CommanderName");
+                OnPropertyChanged("TeammateNames");
+                OnPropertyChanged("TabHeader");
             });
         }
         catch (Exception exception)
         {
             log.Error("Error in RefreshRouteDataView", exception);
+        }
+        finally
+        {
+            _refreshTaskRunning = false;
+            OnPropertyChanged("RouteIsLoading");
+            OnPropertyChanged("ShowNoRouteInfo");
         }
     }
 }
