@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using EDEA;
 using EDEA.Models;
 using EDEA.Services;
 
@@ -33,6 +34,11 @@ public sealed class AvaloniaSpeechService : ISpeechService
     private readonly bool _isLinux;
 
     /// <summary>
+    /// The cached list of installed synthesizer voices.
+    /// </summary>
+    private readonly List<string> _installedVoices = new();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="AvaloniaSpeechService"/> class.
     /// </summary>
     public AvaloniaSpeechService()
@@ -46,6 +52,7 @@ public sealed class AvaloniaSpeechService : ISpeechService
             {
                 var type = Type.GetType("System.Speech.Synthesis.SpeechSynthesizer, System.Speech");
                 _synthesizer = type != null ? Activator.CreateInstance(type) : null;
+                CacheInstalledVoices();
             }
             catch
             {
@@ -58,7 +65,7 @@ public sealed class AvaloniaSpeechService : ISpeechService
     public bool IsSpeaking => false;
 
     /// <inheritdoc />
-    public IReadOnlyList<string> InstalledVoices => new List<string>();
+    public IReadOnlyList<string> InstalledVoices => _installedVoices;
 
     /// <inheritdoc />
 #pragma warning disable CS0067
@@ -137,8 +144,79 @@ public sealed class AvaloniaSpeechService : ISpeechService
         }
     }
 
+    /// <summary>
+    /// Caches the names of all installed synthesizer voices.
+    /// </summary>
+    private void CacheInstalledVoices()
+    {
+        if (_synthesizer == null)
+        {
+            return;
+        }
+
+        try
+        {
+            var getInstalledVoices = _synthesizer.GetType().GetMethod("GetInstalledVoices");
+            if (getInstalledVoices == null)
+            {
+                return;
+            }
+
+            var voices = getInstalledVoices.Invoke(_synthesizer, null) as System.Collections.IEnumerable;
+            if (voices == null)
+            {
+                return;
+            }
+
+            foreach (var voice in voices)
+            {
+                var enabled = voice.GetType().GetProperty("Enabled")?.GetValue(voice) as bool? ?? true;
+                if (!enabled)
+                {
+                    continue;
+                }
+
+                var voiceInfo = voice.GetType().GetProperty("VoiceInfo")?.GetValue(voice);
+                var name = voiceInfo?.GetType().GetProperty("Name")?.GetValue(voiceInfo)?.ToString();
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    _installedVoices.Add(name);
+                }
+            }
+        }
+        catch
+        {
+            // Ignore voice enumeration failures.
+        }
+    }
+
     /// <inheritdoc />
-    public void UpdateSpeechSynthesizerParameter() { }
+    public void UpdateSpeechSynthesizerParameter()
+    {
+        if (_synthesizer == null || !_isWindows)
+        {
+            return;
+        }
+
+        try
+        {
+            var type = _synthesizer.GetType();
+            var speech = Preferences.Speech;
+
+            type.GetProperty("Rate")?.SetValue(_synthesizer, speech.SpeechSynthesizerRate);
+            type.GetProperty("Volume")?.SetValue(_synthesizer, speech.SpeechSynthesizerVolume);
+
+            var voice = speech.SpeechSynthesizerVoice;
+            if (!string.IsNullOrWhiteSpace(voice))
+            {
+                type.GetMethod("SelectVoice", new[] { typeof(string) })?.Invoke(_synthesizer, new object[] { voice });
+            }
+        }
+        catch
+        {
+            // Ignore synthesizer configuration failures.
+        }
+    }
 
     /// <inheritdoc />
     public string GetLabelForSpeechOutput(string outputName)
@@ -167,6 +245,8 @@ public sealed class AvaloniaSpeechService : ISpeechService
     /// <param name="text">The text to speak.</param>
     private void Speak(string text)
     {
+        UpdateSpeechSynthesizerParameter();
+
         if (_isWindows && _synthesizer != null)
         {
             try

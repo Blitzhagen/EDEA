@@ -358,6 +358,7 @@ public partial class PreferencesWindow : Window
         if (SpeechVoiceComboBox?.SelectedItem is string voice)
         {
             Preferences.Speech.SpeechSynthesizerVoice = voice;
+            PlatformServices.Speech?.UpdateSpeechSynthesizerParameter();
         }
     }
 
@@ -369,6 +370,7 @@ public partial class PreferencesWindow : Window
         if (SpeechRateSlider != null)
         {
             Preferences.Speech.SpeechSynthesizerRate = SpeechRateSlider.Value;
+            PlatformServices.Speech?.UpdateSpeechSynthesizerParameter();
         }
     }
 
@@ -380,6 +382,7 @@ public partial class PreferencesWindow : Window
         if (SpeechVolumeSlider != null)
         {
             Preferences.Speech.SpeechSynthesizerVolume = (int)SpeechVolumeSlider.Value;
+            PlatformServices.Speech?.UpdateSpeechSynthesizerParameter();
         }
     }
 

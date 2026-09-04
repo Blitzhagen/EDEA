@@ -110,7 +110,7 @@ public partial class MainWindow : Window
                 viewModel.ToggleHudMousePassThrough();
                 break;
             case HotkeyId.TryCopyNextSystemToClipboard:
-                // TODO: Copy the next system name from the locked/plotter route to the clipboard.
+                viewModel.CopyNextSystemToClipboard();
                 break;
         }
     }

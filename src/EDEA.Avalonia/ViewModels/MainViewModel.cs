@@ -137,6 +137,14 @@ public partial class MainViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Copies the name of the next route system to the clipboard if available.
+    /// </summary>
+    public void CopyNextSystemToClipboard()
+    {
+        _starSystemProvider.CopyNextSystemNametoClipboard();
+    }
+
+    /// <summary>
     /// Toggles mouse pass-through for the currently open HUD window.
     /// </summary>
     public void ToggleHudMousePassThrough()
