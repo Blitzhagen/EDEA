@@ -6,7 +6,7 @@
         x:Class="EDEA.Avalonia.Windows.PreferencesWindow"
         x:Name="ThisWindow"
         Title="{x:Static properties:Resources.PreferencesWindow_Title}"
-        Height="617" MinHeight="617" Width="880" MinWidth="880"
+        Height="617" MinHeight="617" Width="920" MinWidth="920"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
         RequestedThemeVariant="Light"
@@ -282,7 +282,7 @@
             <StackPanel Classes="PreferencesSection">
               <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_CriteriaSets}" Classes="PreferencesSectionHeadline" />
               <Border Classes="PreferencesSectionBody" MinHeight="385">
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Spacing="10">
                   <StackPanel>
                     <ListBox x:Name="PlanetClassificationListBox" SelectionMode="Single" Classes="PreferencesListbox" Width="200" Height="270" Margin="1,1,5,5" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="PlanetClassificationListBox_SelectionChanged">
                       <ListBox.ItemTemplate>
