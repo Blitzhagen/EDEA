@@ -55,5 +55,28 @@
       <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
       <Setter Property="Margin" Value="1,1,5,10" />
     </Style>
+    <Style Selector="CheckBox.PreferencesCheckbox">
+      <Setter Property="Margin" Value="0,0,0,6" />
+    </Style>
+    <Style Selector="ComboBox.PreferencesComboBox">
+      <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+    <Style Selector="TextBlock.PreferencesCheckBoxesHeadline">
+      <Setter Property="Foreground" Value="{DynamicResource DimForegroundBrush}" />
+      <Setter Property="Margin" Value="-10,0,0,7" />
+    </Style>
+    <Style Selector="TextBlock.PreferencesBodyHeadline">
+      <Setter Property="Margin" Value="0,0,0,3" />
+    </Style>
+    <Style Selector="TextBlock.PreferencesBodyHeadlineLight">
+      <Setter Property="Foreground" Value="{DynamicResource DimForegroundBrush}" />
+    </Style>
+    <Style Selector="TextBlock.PreferencesBodyHeadlineWithTopSpace">
+      <Setter Property="Margin" Value="0,10,0,3" />
+    </Style>
+    <Style Selector="TextBlock.PreferencesInfoText">
+      <Setter Property="Foreground" Value="{DynamicResource DimForegroundBrush}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
   </Application.Styles>
 </Application>
