@@ -2,9 +2,66 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
              xmlns:properties="using:EDEA.Properties"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="EDEA.Avalonia.Views.RouteTableView"
              x:DataType="vm:NavRouteTableViewModel"
              x:CompileBindings="False">
+  <UserControl.Resources>
+    <DataTemplate x:Key="IconStarSystemCurrentAndJumpDestinationTemplate" x:DataType="vm:StarSystemViewModel">
+      <Grid>
+        <materialIcons:MaterialIcon Kind="GpsFixed" IsVisible="{Binding IsCurrentSystemInRoute}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipCurrentSystemIcon}" />
+        <materialIcons:MaterialIcon Kind="RocketLaunch" IsVisible="{Binding IsJumpDestinationSystemInRoute}" Foreground="{StaticResource MainColor}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipJumpDestinationSystemIcon}" />
+      </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="IconStarSystemEdsmOnlyTemplate" x:DataType="vm:StarSystemViewModel">
+      <materialIcons:MaterialIcon Kind="Globe" IsVisible="{Binding WasReadFromEdsmOnly}" Foreground="{StaticResource MainColor}" Width="14" Height="14" ToolTip.Tip="{x:Static properties:Resources.TooltipEdsmOnly}" />
+    </DataTemplate>
+    <DataTemplate x:Key="TextStarSystemJumpDistanceTemplate" x:DataType="vm:StarSystemViewModel">
+      <TextBlock Text="{Binding JumpDistance}" />
+    </DataTemplate>
+    <DataTemplate x:Key="TextStarSystemNameTemplate" x:DataType="vm:StarSystemViewModel">
+      <TextBlock Text="{Binding Name}" />
+    </DataTemplate>
+    <DataTemplate x:Key="IconStarSystemScoopableTemplate" x:DataType="vm:StarSystemViewModel">
+      <Grid>
+        <materialIcons:MaterialIcon Kind="Fuel" IsVisible="{Binding PrimaryStarIsScoopable}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipScoopableIcon}" />
+        <materialIcons:MaterialIcon Kind="Fuel" IsVisible="{Binding !PrimaryStarIsScoopable}" Foreground="{StaticResource GrayTextBrush}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipScoopableIcon}" Opacity="0.4" />
+      </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="TextStarSystemStarClassTemplate" x:DataType="vm:StarSystemViewModel">
+      <TextBlock Text="{Binding StarClass}" />
+    </DataTemplate>
+    <DataTemplate x:Key="IconStarSystemDiscoveryStatusTemplate" x:DataType="vm:StarSystemViewModel">
+      <Grid>
+        <materialIcons:MaterialIcon Kind="CheckCircle" IsVisible="{Binding IsExplorationStatusComplete}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" />
+        <materialIcons:MaterialIcon Kind="MapMarkerQuestion" IsVisible="{Binding IsExplorationStatusUnexplored}" Foreground="{StaticResource ForegroundBrush}" Width="16" Height="16" />
+        <materialIcons:MaterialIcon Kind="Radar" IsVisible="{Binding IsExplorationStatusUnscanned}" Foreground="{StaticResource ForegroundBrush}" Width="16" Height="16" />
+        <materialIcons:MaterialIcon Kind="ProgressClock" IsVisible="{Binding IsExplorationStatusIncomplete}" Foreground="{StaticResource ForegroundBrush}" Width="16" Height="16" />
+        <materialIcons:MaterialIcon Kind="HelpCircle" IsVisible="{Binding IsExplorationStatusUnknown}" Foreground="{StaticResource GrayTextBrush}" Width="16" Height="16" />
+      </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="TextStarSystemDiscoveryStatusTemplate" x:DataType="vm:StarSystemViewModel">
+      <TextBlock Text="{Binding ExplorationStatus}" ToolTip.Tip="{Binding ExplorationStatusBodiesInfo}" />
+    </DataTemplate>
+    <DataTemplate x:Key="IconStarSystemPlanetOfInterestTemplate" x:DataType="vm:StarSystemViewModel">
+      <materialIcons:MaterialIcon Kind="StarCircle" IsVisible="{Binding HasMatchingPlanetClassifications}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding PlanetsWithMatchingPlanetClassificationsCount}" />
+    </DataTemplate>
+    <DataTemplate x:Key="IconStarSystemValuableTemplate" x:DataType="vm:StarSystemViewModel">
+      <materialIcons:MaterialIcon Kind="DiamondStone" IsVisible="{Binding HasValuableBodies}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding ValuableBodiesCount}" />
+    </DataTemplate>
+    <DataTemplate x:Key="IconStarSystemTerraformableTemplate" x:DataType="vm:StarSystemViewModel">
+      <materialIcons:MaterialIcon Kind="Terraform" IsVisible="{Binding HasExploredTerraformables}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding ExploredTerraformablesCount}" />
+    </DataTemplate>
+    <DataTemplate x:Key="IconStarSystemLandableTemplate" x:DataType="vm:StarSystemViewModel">
+      <materialIcons:MaterialIcon Kind="AirplaneLanding" IsVisible="{Binding HasExploredLandables}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding ExploredLandablesCount}" />
+    </DataTemplate>
+    <DataTemplate x:Key="IconStarSystemPopulatedTemplate" x:DataType="vm:StarSystemViewModel">
+      <materialIcons:MaterialIcon Kind="AccountGroup" IsVisible="{Binding HasPopulation}" Foreground="{StaticResource AccentBrush}" Width="16" Height="16" ToolTip.Tip="{Binding Population}" />
+    </DataTemplate>
+    <DataTemplate x:Key="TextStarSystemJumpDistanceLyTemplate" x:DataType="vm:StarSystemViewModel">
+      <TextBlock Text="{Binding JumpDistanceLy}" HorizontalAlignment="Right" />
+    </DataTemplate>
+  </UserControl.Resources>
   <Grid>
     <TextBlock Text="{Binding NoRouteInfo}"
                IsVisible="{Binding ShowNoRouteInfo}"
@@ -33,83 +90,51 @@
                   <ColumnDefinition Width="Auto" />
                   <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="●" IsVisible="{Binding IsCurrentSystemInRoute}" ToolTip.Tip="Current" Foreground="{StaticResource AccentBrush}" />
-                <TextBlock Grid.Column="0" Text="→" IsVisible="{Binding IsJumpDestinationSystemInRoute}" ToolTip.Tip="Jump destination" Foreground="{StaticResource AccentBrush}" />
-                <TextBlock Grid.Column="1" Text="E" IsVisible="{Binding WasReadFromEdsmOnly}" ToolTip.Tip="EDSM only" Margin="4,0,0,0" />
-                <TextBlock Grid.Column="2" Text="{Binding JumpDistance}" Margin="4,0,0,0" />
+                <ContentControl Grid.Column="0" ContentTemplate="{StaticResource IconStarSystemCurrentAndJumpDestinationTemplate}" Content="{Binding}" />
+                <ContentControl Grid.Column="1" ContentTemplate="{StaticResource IconStarSystemEdsmOnlyTemplate}" Content="{Binding}" Margin="2,0,0,0" />
+                <ContentControl Grid.Column="2" ContentTemplate="{StaticResource TextStarSystemJumpDistanceTemplate}" Content="{Binding}" Margin="4,0,0,0" />
               </Grid>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
-        <DataGridTemplateColumn SortMemberPath="Name" Header="{x:Static properties:Resources.ColumnHeaderSystemName}">
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <TextBlock Text="{Binding Name}" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
+        <DataGridTemplateColumn SortMemberPath="Name" Header="{x:Static properties:Resources.ColumnHeaderSystemName}" CellTemplate="{StaticResource TextStarSystemNameTemplate}" />
         <DataGridTemplateColumn SortMemberPath="StarClass" Header="{x:Static properties:Resources.ColumnHeaderStarClass}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <StackPanel Orientation="Horizontal">
-                <TextBlock Text="⛽" IsVisible="{Binding PrimaryStarIsScoopable}" ToolTip.Tip="Scoopable" Margin="0,0,4,0" />
-                <TextBlock Text="{Binding StarClass}" />
-              </StackPanel>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <ContentControl Grid.Column="0" ContentTemplate="{StaticResource IconStarSystemScoopableTemplate}" Content="{Binding}" />
+                <ContentControl Grid.Column="1" ContentTemplate="{StaticResource TextStarSystemStarClassTemplate}" Content="{Binding}" Margin="4,0,0,0" />
+              </Grid>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
         <DataGridTemplateColumn SortMemberPath="ExplorationStatus" Header="{x:Static properties:Resources.ColumnHeaderDiscoveryStatus}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <TextBlock Text="{Binding ExplorationStatus}" ToolTip.Tip="{Binding ExplorationStatusBodiesInfo}" />
+              <Grid ToolTip.Tip="{Binding ExplorationStatusBodiesInfo}">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <ContentControl Grid.Column="0" ContentTemplate="{StaticResource IconStarSystemDiscoveryStatusTemplate}" Content="{Binding}" />
+                <ContentControl Grid.Column="1" ContentTemplate="{StaticResource TextStarSystemDiscoveryStatusTemplate}" Content="{Binding}" Margin="4,0,0,0" />
+              </Grid>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
         <DataGridTextColumn SortMemberPath="BodiesCartographicMaxValueSort" Header="{x:Static properties:Resources.ColumnHeaderCartographicValue}" Binding="{Binding BodiesCartographicMaxValue}" />
         <DataGridTextColumn SortMemberPath="ExplorationValueSort" Header="{x:Static properties:Resources.ColumnHeaderOverallProgress}" Binding="{Binding OverallProgress}" />
-        <DataGridTemplateColumn SortMemberPath="MatchingPlanetClassificationsSort" Header="POI">
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <TextBlock Text="{Binding PlanetsWithMatchingPlanetClassificationsCount}" IsVisible="{Binding HasMatchingPlanetClassifications}" ToolTip.Tip="{Binding MatchingPlanetClassificationsCount}" HorizontalAlignment="Center" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
-        <DataGridTemplateColumn SortMemberPath="ValuableBodiesSort" Header="Val">
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <TextBlock Text="{Binding ValuableBodiesCount}" IsVisible="{Binding HasValuableBodies}" HorizontalAlignment="Center" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
-        <DataGridTemplateColumn SortMemberPath="ExploredTerraformablesSort" Header="Terra">
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <TextBlock Text="{Binding ExploredTerraformablesCount}" IsVisible="{Binding HasExploredTerraformables}" HorizontalAlignment="Center" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
-        <DataGridTemplateColumn SortMemberPath="ExploredLandablesSort" Header="Land">
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <TextBlock Text="{Binding ExploredLandablesCount}" IsVisible="{Binding HasExploredLandables}" HorizontalAlignment="Center" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
-        <DataGridTemplateColumn SortMemberPath="PopulationSort" Header="Pop">
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <TextBlock Text="{Binding Population}" IsVisible="{Binding HasPopulation}" HorizontalAlignment="Center" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
+        <DataGridTemplateColumn SortMemberPath="MatchingPlanetClassificationsSort" Header="POI" CellTemplate="{StaticResource IconStarSystemPlanetOfInterestTemplate}" />
+        <DataGridTemplateColumn SortMemberPath="ValuableBodiesSort" Header="Val" CellTemplate="{StaticResource IconStarSystemValuableTemplate}" />
+        <DataGridTemplateColumn SortMemberPath="ExploredTerraformablesSort" Header="Terra" CellTemplate="{StaticResource IconStarSystemTerraformableTemplate}" />
+        <DataGridTemplateColumn SortMemberPath="ExploredLandablesSort" Header="Land" CellTemplate="{StaticResource IconStarSystemLandableTemplate}" />
+        <DataGridTemplateColumn SortMemberPath="PopulationSort" Header="Pop" CellTemplate="{StaticResource IconStarSystemPopulatedTemplate}" />
         <DataGridTextColumn Header="{x:Static properties:Resources.ColumnHeaderEdsmDiscoverer}" Binding="{Binding EdsmDiscoveryCommander}" />
-        <DataGridTemplateColumn SortMemberPath="JumpDistanceLySort" Header="{x:Static properties:Resources.ColumnHeaderDistance}">
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <TextBlock Text="{Binding JumpDistanceLy}" HorizontalAlignment="Right" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
+        <DataGridTemplateColumn SortMemberPath="JumpDistanceLySort" Header="{x:Static properties:Resources.ColumnHeaderDistance}" CellTemplate="{StaticResource TextStarSystemJumpDistanceLyTemplate}" />
       </DataGrid.Columns>
     </DataGrid>
   </Grid>
