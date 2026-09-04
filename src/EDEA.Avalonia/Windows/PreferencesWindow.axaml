@@ -226,52 +226,81 @@
       </TabItem>
 
       <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Speech}">
-        <ScrollViewer>
+        <Grid>
           <Border Classes="PreferencesTabContent">
-            <StackPanel>
-              <StackPanel Classes="PreferencesSection">
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Voice}" Classes="PreferencesSectionHeadline" />
-                <Border Classes="PreferencesSectionBody">
-                  <ComboBox x:Name="SpeechVoiceComboBox" Width="300" HorizontalAlignment="Left" SelectionChanged="SpeechVoiceComboBox_SelectionChanged" />
-                </Border>
-              </StackPanel>
-              <StackPanel Classes="PreferencesSection">
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Rate}" Classes="PreferencesSectionHeadline" />
-                <Border Classes="PreferencesSectionBody">
-                  <Slider x:Name="SpeechRateSlider" Minimum="-4" Maximum="4" TickFrequency="1" Width="200" HorizontalAlignment="Left" ValueChanged="SpeechRateSlider_ValueChanged" />
-                </Border>
-              </StackPanel>
-              <StackPanel Classes="PreferencesSection">
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Volume}" Classes="PreferencesSectionHeadline" />
-                <Border Classes="PreferencesSectionBody">
-                  <Slider x:Name="SpeechVolumeSlider" Minimum="0" Maximum="100" TickFrequency="25" Width="200" HorizontalAlignment="Left" ValueChanged="SpeechVolumeSlider_ValueChanged" />
-                </Border>
-              </StackPanel>
+            <StackPanel Orientation="Horizontal">
               <StackPanel Classes="PreferencesSection">
                 <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Outputs}" Classes="PreferencesSectionHeadline" />
                 <Border Classes="PreferencesSectionBody">
-                  <Grid ColumnDefinitions="200,20,*">
-                    <ListBox x:Name="SpeechOutputListBox" Grid.Column="0" SelectionChanged="SpeechOutputListBox_SelectionChanged" Height="250">
-                      <ListBox.ItemTemplate>
-                        <DataTemplate x:CompileBindings="False">
-                          <TextBlock Text="{Binding Label}" />
-                        </DataTemplate>
-                      </ListBox.ItemTemplate>
-                    </ListBox>
-                    <StackPanel Grid.Column="2" Spacing="8" IsEnabled="{Binding #SpeechOutputListBox.SelectedItem}">
-                      <TextBlock x:Name="SpeechOutputLabel" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" />
-                      <CheckBox x:Name="SpeechOutputEnabledCheckBox" Content="Enabled" IsCheckedChanged="SpeechOutputEnabledCheckBox_IsCheckedChanged" />
-                      <TextBlock Text="Phrase" />
-                      <TextBox x:Name="SpeechOutputPhraseTextBox" AcceptsReturn="True" TextWrapping="Wrap" Height="80" Width="400" HorizontalAlignment="Left" TextChanged="SpeechOutputPhraseTextBox_TextChanged" />
-                      <TextBlock x:Name="SpeechOutputPlaceholdersTextBlock" Foreground="{StaticResource DimForegroundBrush}" TextWrapping="Wrap" Width="400" HorizontalAlignment="Left" />
-                      <Button x:Name="SpeechTestButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_TestSpeechOutput}" Click="SpeechTestButton_Click" HorizontalAlignment="Left" Padding="12,4" />
-                    </StackPanel>
-                  </Grid>
+                  <StackPanel Orientation="Horizontal">
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="22" />
+                        <ColumnDefinition Width="Auto" />
+                      </Grid.ColumnDefinitions>
+                      <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition MinHeight="12" MaxHeight="12" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition MinHeight="10" MaxHeight="10" />
+                        <RowDefinition Height="Auto" />
+                      </Grid.RowDefinitions>
+                      <ListBox x:Name="SpeechOutputListBox" Grid.Row="0" Grid.Column="0" Grid.RowSpan="8" Classes="PreferencesListbox" Width="177" VerticalAlignment="Top" SelectionChanged="SpeechOutputListBox_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                          <DataTemplate x:CompileBindings="False">
+                            <TextBlock Text="{Binding Label}" />
+                          </DataTemplate>
+                        </ListBox.ItemTemplate>
+                      </ListBox>
+                      <TextBlock Grid.Row="0" Grid.Column="2" Text="{x:Static properties:Resources.PreferencesWindow_Label_SpeechOutputText}" Classes="PreferencesBodyHeadline" />
+                      <TextBox x:Name="SpeechOutputPhraseTextBox" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="300" Height="100" Margin="0,2,0,0" TextWrapping="Wrap" MaxLength="500" TextChanged="SpeechOutputPhraseTextBox_TextChanged" />
+                      <CheckBox x:Name="SpeechOutputEnabledCheckBox" Grid.Row="2" Grid.Column="2" Content="Enabled" IsCheckedChanged="SpeechOutputEnabledCheckBox_IsCheckedChanged" />
+                      <Grid Grid.Row="4" Grid.Column="2">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition MinWidth="132" MaxWidth="132" />
+                          <ColumnDefinition MinWidth="10" MaxWidth="10" />
+                          <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_TextPlaceholder}" Classes="PreferencesBodyHeadlineLight" />
+                        <TextBlock Grid.Column="2" Text="{x:Static properties:Resources.PreferencesWindow_Label_Example}" Classes="PreferencesBodyHeadlineLight" />
+                      </Grid>
+                      <ScrollViewer Grid.Row="5" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="140" Width="300">
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="132" MaxWidth="132" />
+                            <ColumnDefinition MinWidth="10" MaxWidth="10" />
+                            <ColumnDefinition />
+                          </Grid.ColumnDefinitions>
+                          <StackPanel x:Name="SpeechOutputPlaceholder" Grid.Column="0" />
+                          <StackPanel x:Name="SpeechOutputExamples" Grid.Column="2" />
+                        </Grid>
+                      </ScrollViewer>
+                      <Button x:Name="SpeechTestButton" Grid.Row="7" Grid.Column="2" VerticalAlignment="Top" Content="{x:Static properties:Resources.PreferencesWindow_Button_TestSpeechOutput}" Click="SpeechTestButton_Click" />
+                    </Grid>
+                  </StackPanel>
                 </Border>
+              </StackPanel>
+              <StackPanel>
+                <StackPanel Classes="PreferencesSection">
+                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Voice}" Classes="PreferencesSectionHeadline" />
+                  <Border Classes="PreferencesSectionBody">
+                    <StackPanel Width="170">
+                      <ComboBox x:Name="SpeechVoiceComboBox" Margin="0,0,0,17" SelectionChanged="SpeechVoiceComboBox_SelectionChanged" />
+                      <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Rate}" Classes="PreferencesBodyHeadline" />
+                      <Slider x:Name="SpeechRateSlider" Margin="0,0,0,12" Minimum="-4" Maximum="4" TickFrequency="2" ValueChanged="SpeechRateSlider_ValueChanged" />
+                      <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Volume}" Classes="PreferencesBodyHeadline" />
+                      <Slider x:Name="SpeechVolumeSlider" Minimum="0" Maximum="100" TickFrequency="25" ValueChanged="SpeechVolumeSlider_ValueChanged" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
               </StackPanel>
             </StackPanel>
           </Border>
-        </ScrollViewer>
+        </Grid>
       </TabItem>
 
       <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_PlanetsOfInterest}">

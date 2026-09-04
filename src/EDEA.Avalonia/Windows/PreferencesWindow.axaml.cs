@@ -68,11 +68,6 @@ public class SpeechOutputItem
     /// Gets or sets the speech phrase.
     /// </summary>
     public string Phrase { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the available placeholder text.
-    /// </summary>
-    public string Placeholders { get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -141,8 +136,13 @@ public partial class PreferencesWindow : Window
         BiologicalsViewAltitudeThresholdTextBox.Text = Preferences.Other.BiologicalsViewAltitudeThreshold.ToString(CultureInfo.CurrentCulture);
 
         var speech = Preferences.Speech;
-        SpeechVoiceComboBox.ItemsSource = new[] { speech.SpeechSynthesizerVoice };
-        SpeechVoiceComboBox.SelectedIndex = 0;
+        var installedVoices = PlatformServices.Speech?.InstalledVoices;
+        var voiceList = installedVoices != null && installedVoices.Count > 0
+            ? new List<string>(installedVoices)
+            : new List<string> { speech.SpeechSynthesizerVoice };
+        SpeechVoiceComboBox.ItemsSource = voiceList;
+        SpeechVoiceComboBox.SelectedIndex = Math.Max(0, voiceList.IndexOf(speech.SpeechSynthesizerVoice));
+
         SpeechRateSlider.Value = speech.SpeechSynthesizerRate;
         SpeechVolumeSlider.Value = speech.SpeechSynthesizerVolume;
 
@@ -164,11 +164,6 @@ public partial class PreferencesWindow : Window
             var value = (bool?)property.GetValue(speech) ?? false;
             var text = (string?)speechTextProperty.GetValue(speech) ?? string.Empty;
             var label = PlatformServices.Speech?.GetLabelForSpeechOutput(property.Name) ?? property.Name;
-            var placeholders = System.Text.RegularExpressions.Regex.Matches(text, @"\{(.*?)\}")
-                .Select(m => m.Groups[1].Value)
-                .Distinct()
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .ToList();
 
             items.Add(new SpeechOutputItem
             {
@@ -176,7 +171,6 @@ public partial class PreferencesWindow : Window
                 Label = label,
                 IsEnabled = value,
                 Phrase = text,
-                Placeholders = placeholders.Count > 0 ? $"Placeholders: {string.Join(", ", placeholders)}" : string.Empty,
             });
         }
 
@@ -305,12 +299,44 @@ public partial class PreferencesWindow : Window
         _updatingSpeechOutput = true;
         if (SpeechOutputListBox?.SelectedItem is SpeechOutputItem item)
         {
-            SpeechOutputLabel.Text = item.Label;
             SpeechOutputEnabledCheckBox.IsChecked = item.IsEnabled;
             SpeechOutputPhraseTextBox.Text = item.Phrase;
-            SpeechOutputPlaceholdersTextBlock.Text = item.Placeholders;
+            BuildSpeechOutputDetails(item);
+        }
+        else
+        {
+            SpeechOutputEnabledCheckBox.IsChecked = false;
+            SpeechOutputPhraseTextBox.Text = string.Empty;
+            SpeechOutputPlaceholder?.Children.Clear();
+            SpeechOutputExamples?.Children.Clear();
         }
         _updatingSpeechOutput = false;
+    }
+
+    /// <summary>
+    /// Fills the placeholder and example lists for the selected speech output.
+    /// </summary>
+    private void BuildSpeechOutputDetails(SpeechOutputItem item)
+    {
+        if (SpeechOutputPlaceholder is null || SpeechOutputExamples is null)
+        {
+            return;
+        }
+
+        SpeechOutputPlaceholder.Children.Clear();
+        SpeechOutputExamples.Children.Clear();
+
+        if (PlatformServices.Speech is null)
+        {
+            return;
+        }
+
+        var exampleOutputs = PlatformServices.Speech.GetExampleSpeechOutputs(item.Name);
+        foreach (var placeholder in PlatformServices.Speech.GetPlaceholdersFromSpeechOutputs(exampleOutputs))
+        {
+            SpeechOutputPlaceholder.Children.Add(new TextBlock { Text = placeholder.Key });
+            SpeechOutputExamples.Children.Add(new TextBlock { Text = placeholder.Value });
+        }
     }
 
     /// <summary>
@@ -356,9 +382,10 @@ public partial class PreferencesWindow : Window
     /// </summary>
     private void SpeechTestButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (SpeechOutputListBox?.SelectedItem is SpeechOutputItem item)
+        if (SpeechOutputListBox?.SelectedItem is SpeechOutputItem item && PlatformServices.Speech is not null)
         {
-            PlatformServices.Speech?.SpeakPreferencesSelection(item.Phrase, System.Array.Empty<EDEA.Models.SpeechOutput>());
+            var examples = PlatformServices.Speech.GetExampleSpeechOutputs(item.Name);
+            PlatformServices.Speech.SpeakPreferencesSelection(item.Phrase, examples);
         }
     }
 
