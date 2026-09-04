@@ -57,8 +57,8 @@
                     <ListBox x:Name="ColorListBox" Classes="PreferencesListbox" Width="260" SelectionChanged="ColorListBox_SelectionChanged" />
                     <StackPanel Spacing="4" Width="170">
                       <colorpicker:SquarePicker x:Name="SquarePicker" PickerType="HSV" Width="150" Height="150" SelectedColor="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
-                      <colorpicker:ColorSliders x:Name="ColorSliders" Classes="ColorPickerLight" ShowAlpha="False" ShowFractionalPart="False" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
-                      <colorpicker:HexColorTextBox x:Name="HexColorTextBox" Classes="ColorPickerLight" ShowAlpha="False" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
+                      <colorpicker:ColorSliders x:Name="ColorSliders" Classes="ColorPickerLight" ShowAlpha="False" ShowFractionalPart="False" SelectedColor="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
+                      <colorpicker:HexColorTextBox x:Name="HexColorTextBox" Classes="ColorPickerLight" ShowAlpha="False" SelectedColor="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
                     </StackPanel>
                   </StackPanel>
                 </Border>

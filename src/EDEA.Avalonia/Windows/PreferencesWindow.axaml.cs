@@ -94,6 +94,11 @@ public partial class PreferencesWindow : Window
     private bool _updatingPlanet;
 
     /// <summary>
+    /// A flag that prevents re-entrant updates when syncing color picker controls.
+    /// </summary>
+    private bool _syncingColor;
+
+    /// <summary>
     /// Gets or sets the currently selected color in the color picker.
     /// </summary>
     public global::Avalonia.Media.Color SelectedColor
@@ -109,6 +114,88 @@ public partial class PreferencesWindow : Window
     {
         InitializeComponent();
         LoadPreferences();
+        Loaded += OnLoaded;
+    }
+
+    /// <summary>
+    /// Hooks color picker control value changes and initializes the sync state.
+    /// </summary>
+    private void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        SyncColorControls(SelectedColor);
+
+        if (SquarePicker is not null)
+        {
+            SquarePicker.PropertyChanged += OnSquarePickerPropertyChanged;
+        }
+
+        if (ColorSliders is not null)
+        {
+            ColorSliders.PropertyChanged += OnColorSlidersPropertyChanged;
+        }
+
+        if (HexColorTextBox is not null)
+        {
+            HexColorTextBox.PropertyChanged += OnHexColorTextBoxPropertyChanged;
+        }
+    }
+
+    /// <summary>
+    /// Pushes the given color into all color picker controls.
+    /// </summary>
+    private void SyncColorControls(global::Avalonia.Media.Color color)
+    {
+        _syncingColor = true;
+
+        if (SquarePicker is not null)
+        {
+            SquarePicker.SelectedColor = color;
+        }
+
+        if (ColorSliders is not null)
+        {
+            ColorSliders.SelectedColor = color;
+        }
+
+        if (HexColorTextBox is not null)
+        {
+            HexColorTextBox.SelectedColor = color;
+        }
+
+        _syncingColor = false;
+    }
+
+    /// <summary>
+    /// Updates <see cref="SelectedColor"/> when the square picker color changes.
+    /// </summary>
+    private void OnSquarePickerPropertyChanged(object? sender, global::Avalonia.AvaloniaPropertyChangedEventArgs e)
+    {
+        if (!_syncingColor && e.Property.Name == "SelectedColor" && e.NewValue is global::Avalonia.Media.Color color)
+        {
+            SelectedColor = color;
+        }
+    }
+
+    /// <summary>
+    /// Updates <see cref="SelectedColor"/> when the color sliders change.
+    /// </summary>
+    private void OnColorSlidersPropertyChanged(object? sender, global::Avalonia.AvaloniaPropertyChangedEventArgs e)
+    {
+        if (!_syncingColor && e.Property.Name == "SelectedColor" && e.NewValue is global::Avalonia.Media.Color color)
+        {
+            SelectedColor = color;
+        }
+    }
+
+    /// <summary>
+    /// Updates <see cref="SelectedColor"/> when the hex text box color changes.
+    /// </summary>
+    private void OnHexColorTextBoxPropertyChanged(object? sender, global::Avalonia.AvaloniaPropertyChangedEventArgs e)
+    {
+        if (!_syncingColor && e.Property.Name == "SelectedColor" && e.NewValue is global::Avalonia.Media.Color color)
+        {
+            SelectedColor = color;
+        }
     }
 
     /// <summary>
@@ -564,6 +651,11 @@ public partial class PreferencesWindow : Window
         if (change.Property == SelectedColorProperty)
         {
             ApplySelectedColor();
+
+            if (!_syncingColor && change.NewValue is global::Avalonia.Media.Color color)
+            {
+                SyncColorControls(color);
+            }
         }
     }
 
