@@ -30,6 +30,7 @@
 
   <Application.Styles>
     <FluentTheme />
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
     <colorPicker:PixiPerfectColorPickerTheme />
     <Style Selector="Border.PreferencesTabContent">
       <Setter Property="Padding" Value="0,0,25,30" />
