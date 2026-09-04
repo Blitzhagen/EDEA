@@ -27,6 +27,11 @@
   </Window.Resources>
   <Window.Styles>
     <SimpleTheme />
+    <Style Selector=".ColorPickerLight" x:SetterTargetType="TemplatedControl">
+      <Setter Property="Background" Value="{DynamicResource WindowBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource WindowTextBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ActiveBorderBrush}" />
+    </Style>
   </Window.Styles>
   <Grid>
     <Grid.ColumnDefinitions>
@@ -52,8 +57,8 @@
                     <ListBox x:Name="ColorListBox" Classes="PreferencesListbox" Width="260" SelectionChanged="ColorListBox_SelectionChanged" />
                     <StackPanel Spacing="4" Width="170">
                       <colorpicker:SquarePicker x:Name="SquarePicker" PickerType="HSV" Width="150" Height="150" SelectedColor="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
-                      <colorpicker:ColorSliders x:Name="ColorSliders" ShowAlpha="False" ShowFractionalPart="False" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
-                      <colorpicker:HexColorTextBox x:Name="HexColorTextBox" ShowAlpha="False" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
+                      <colorpicker:ColorSliders x:Name="ColorSliders" Classes="ColorPickerLight" ShowAlpha="False" ShowFractionalPart="False" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
+                      <colorpicker:HexColorTextBox x:Name="HexColorTextBox" Classes="ColorPickerLight" ShowAlpha="False" Color="{Binding SelectedColor, ElementName=ThisWindow, Mode=TwoWay}" />
                     </StackPanel>
                   </StackPanel>
                 </Border>
