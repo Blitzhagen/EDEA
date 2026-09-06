@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
@@ -162,7 +163,13 @@ public partial class App : Application
                 var mainWindow = new MainWindow { DataContext = new MainViewModel(_starSystemProvider!, _historyProvider!, _routeProvider!, _statusProvider!) };
                 PlatformServices.WindowState?.Track(mainWindow, "MainWindow");
                 desktop.MainWindow = mainWindow;
+                desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                mainWindow.Closing += (_, _) =>
+                {
+                    (mainWindow.DataContext as MainViewModel)?.OnMainWindowClosing();
+                };
                 mainWindow.Show();
+                (mainWindow.DataContext as MainViewModel)?.RestoreWindows();
             }
         }
         catch (Exception exception)

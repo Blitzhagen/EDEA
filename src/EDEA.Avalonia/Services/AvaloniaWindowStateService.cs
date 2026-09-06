@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Avalonia;
 using Avalonia.Controls;
 using EDEA.Services;
@@ -23,7 +22,7 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
     };
 
     private readonly string _stateFilePath;
-    private readonly Dictionary<Window, string> _trackedWindows = new();
+    private readonly Dictionary<Window, WindowTrackingContext> _trackedWindows = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AvaloniaWindowStateService"/> class.
@@ -48,18 +47,23 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
             return;
         }
 
-        _trackedWindows[avaloniaWindow] = windowId;
-        ApplyState(avaloniaWindow, windowId);
+        var context = new WindowTrackingContext(windowId);
+        _trackedWindows[avaloniaWindow] = context;
 
         avaloniaWindow.Opened += TrackedWindow_Opened;
         avaloniaWindow.Closing += TrackedWindow_Closing;
+        avaloniaWindow.Resized += TrackedWindow_Resized;
+        avaloniaWindow.PositionChanged += TrackedWindow_PositionChanged;
+
+        ApplyState(avaloniaWindow, windowId);
     }
 
     /// <summary>
-    /// Stops tracking the specified window and persists its current state.
+    /// Stops tracking the specified window and optionally persists its current state.
     /// </summary>
     /// <param name="window">The window object.</param>
-    public void StopTracking(object window)
+    /// <param name="persist"><c>true</c> to persist the current state; otherwise, <c>false</c>.</param>
+    public void StopTracking(object window, bool persist = true)
     {
         if (window is not Window avaloniaWindow)
         {
@@ -68,7 +72,14 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
 
         avaloniaWindow.Opened -= TrackedWindow_Opened;
         avaloniaWindow.Closing -= TrackedWindow_Closing;
-        SaveState(avaloniaWindow);
+        avaloniaWindow.Resized -= TrackedWindow_Resized;
+        avaloniaWindow.PositionChanged -= TrackedWindow_PositionChanged;
+
+        if (persist)
+        {
+            SaveState(avaloniaWindow);
+        }
+
         _trackedWindows.Remove(avaloniaWindow);
     }
 
@@ -79,9 +90,9 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
     /// <param name="e">The event data.</param>
     private void TrackedWindow_Opened(object? sender, EventArgs e)
     {
-        if (sender is Window window && _trackedWindows.TryGetValue(window, out var windowId))
+        if (sender is Window window && _trackedWindows.TryGetValue(window, out var context))
         {
-            ApplyState(window, windowId);
+            ApplyState(window, context.WindowId);
         }
     }
 
@@ -95,6 +106,51 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
         if (sender is Window window)
         {
             SaveState(window);
+        }
+    }
+
+    /// <summary>
+    /// Handles the window resized event and updates the normal (non-maximized) bounds.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void TrackedWindow_Resized(object? sender, WindowResizedEventArgs e)
+    {
+        if (sender is Window window && _trackedWindows.TryGetValue(window, out var context))
+        {
+            UpdateNormalBounds(window, context);
+        }
+    }
+
+    /// <summary>
+    /// Handles the window position changed event and updates the normal (non-maximized) bounds.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void TrackedWindow_PositionChanged(object? sender, PixelPointEventArgs e)
+    {
+        if (sender is Window window && _trackedWindows.TryGetValue(window, out var context))
+        {
+            UpdateNormalBounds(window, context);
+        }
+    }
+
+    /// <summary>
+    /// Updates the stored normal bounds for the window when it is not maximized or minimized.
+    /// </summary>
+    /// <param name="window">The window.</param>
+    /// <param name="context">The tracking context.</param>
+    private void UpdateNormalBounds(Window window, WindowTrackingContext context)
+    {
+        if (window.WindowState == WindowState.Normal)
+        {
+            context.NormalBounds = new WindowStateDto
+            {
+                X = window.Position.X,
+                Y = window.Position.Y,
+                Width = (int)window.Width,
+                Height = (int)window.Height,
+            };
         }
     }
 
@@ -113,6 +169,7 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
             }
         }
         catch (Exception exception)
+        
         {
             log.Error("Error loading window states", exception);
         }
@@ -126,20 +183,28 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
     /// <param name="window">The window to save.</param>
     private void SaveState(Window window)
     {
-        if (!_trackedWindows.TryGetValue(window, out var windowId))
+        if (!_trackedWindows.TryGetValue(window, out var context))
         {
             return;
         }
 
         try
         {
-            var states = LoadStates();
-            states[windowId] = new WindowStateDto
+            var bounds = context.NormalBounds ?? new WindowStateDto
             {
                 X = window.Position.X,
                 Y = window.Position.Y,
                 Width = (int)window.Width,
                 Height = (int)window.Height,
+            };
+
+            var states = LoadStates();
+            states[context.WindowId] = new WindowStateDto
+            {
+                X = bounds.X,
+                Y = bounds.Y,
+                Width = bounds.Width,
+                Height = bounds.Height,
                 WindowState = window.WindowState.ToString(),
             };
 
@@ -148,7 +213,7 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
         }
         catch (Exception exception)
         {
-            log.Error($"Error saving window state for {windowId}", exception);
+            log.Error($"Error saving window state for {context.WindowId}", exception);
         }
     }
 
@@ -180,6 +245,12 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
 
             if (Enum.TryParse<WindowState>(state.WindowState, out var windowState))
             {
+                // Restore minimized windows as normal; otherwise the window would start hidden.
+                if (windowState == WindowState.Minimized)
+                {
+                    windowState = WindowState.Normal;
+                }
+
                 window.WindowState = windowState;
             }
         }
@@ -187,6 +258,31 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
         {
             log.Error($"Error applying window state for {windowId}", exception);
         }
+    }
+
+    /// <summary>
+    /// Holds tracking information for a window.
+    /// </summary>
+    private sealed class WindowTrackingContext
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WindowTrackingContext"/> class.
+        /// </summary>
+        /// <param name="windowId">The window identifier.</param>
+        public WindowTrackingContext(string windowId)
+        {
+            WindowId = windowId;
+        }
+
+        /// <summary>
+        /// Gets the window identifier.
+        /// </summary>
+        public string WindowId { get; }
+
+        /// <summary>
+        /// Gets or sets the last known normal bounds of the window.
+        /// </summary>
+        public WindowStateDto? NormalBounds { get; set; }
     }
 
     /// <summary>

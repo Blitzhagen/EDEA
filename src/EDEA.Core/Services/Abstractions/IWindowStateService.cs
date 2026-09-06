@@ -13,8 +13,9 @@ public interface IWindowStateService
     void Track(object window, string windowId);
 
     /// <summary>
-    /// Stops tracking the specified window and persists its current state.
+    /// Stops tracking the specified window and optionally persists its current state.
     /// </summary>
     /// <param name="window">The window object.</param>
-    void StopTracking(object window);
+    /// <param name="persist"><c>true</c> to persist the current state; otherwise, <c>false</c>.</param>
+    void StopTracking(object window, bool persist = true);
 }

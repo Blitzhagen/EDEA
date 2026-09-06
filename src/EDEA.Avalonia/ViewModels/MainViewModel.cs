@@ -251,6 +251,7 @@ public partial class MainViewModel : ObservableObject
             {
                 Dispatcher.UIThread.Post(ResetHudWindowState);
             };
+            PlatformServices.WindowState?.Track(_hudWindow, "HudWindow");
             _hudWindow.Show();
         }
 
@@ -262,6 +263,11 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     private void ResetHudWindowState()
     {
+        if (_hudWindow != null)
+        {
+            PlatformServices.WindowState?.StopTracking(_hudWindow, false);
+        }
+
         _hudWindow = null;
         _hudClickThrough = false;
         HudWindowMousePassThroughEnabled = false;
@@ -294,6 +300,30 @@ public partial class MainViewModel : ObservableObject
             ? Resources.MenuItem_HudPassThroughDisable
             : Resources.MenuItem_HudPassThroughEnable;
         Preferences.Application.HudWindowMousePassThroughEnabled = _hudClickThrough;
+    }
+
+    /// <summary>
+    /// Restores the previously selected tab and any windows that were open on shutdown.
+    /// </summary>
+    public void RestoreWindows()
+    {
+        SelectedTabIndex = Math.Min(Math.Max(Preferences.Application.SelectedTabIndex, 0), TabViewModels.Count - 1);
+        OnPropertyChanged(nameof(SelectedTabIndex));
+
+        if (Preferences.Application.HudWindowOpenOnShutdown)
+        {
+            OpenCloseHudWindow();
+        }
+    }
+
+    /// <summary>
+    /// Saves window state information before the main window closes.
+    /// </summary>
+    public void OnMainWindowClosing()
+    {
+        Preferences.Application.HudWindowOpenOnShutdown = _hudWindow != null;
+        Preferences.Application.SelectedTabIndex = SelectedTabIndex;
+        Preferences.SaveUserSettings();
     }
 
     private void ImportJournalHistory()
