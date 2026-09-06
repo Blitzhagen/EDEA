@@ -5,6 +5,7 @@
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:edea="using:EDEA"
              xmlns:views="clr-namespace:EDEA.Avalonia.Views"
+             xmlns:controls="clr-namespace:EDEA.Avalonia.Controls"
              x:Class="EDEA.Avalonia.Views.BodyHudTableView"
              x:DataType="vm:BodyTableViewModel">
   <Grid>
@@ -88,19 +89,13 @@
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:BodyViewModel">
-              <Grid HorizontalAlignment="Stretch" IsVisible="{Binding MatchingPlanetClassificationsAvailable}" Background="Transparent" ToolTip.ShowDelay="100">
+              <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding MatchingPlanetClassificationsAvailable}" Background="Transparent" ToolTip.ShowDelay="100">
                 <ToolTip.Tip>
                   <ContentControl ContentTemplate="{StaticResource BodyPlanetOfInterestTooltipTemplate}" />
                 </ToolTip.Tip>
-                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <materialIcons:MaterialIcon Grid.Column="0" Kind="StarCircle" Foreground="{DynamicResource PlanetOfInterestIconColor}" Width="16" Height="16" />
-                  <TextBlock Grid.Column="1" Text="{Binding MatchingPlanetClassificationsCount}" Foreground="{DynamicResource PlanetOfInterestIconColor}" HorizontalAlignment="Right" Margin="2,0,0,0" />
-                </Grid>
-              </Grid>
+                <materialIcons:MaterialIcon Kind="StarCircle" Foreground="{DynamicResource PlanetOfInterestIconColor}" Width="16" Height="16" />
+                <TextBlock Text="{Binding MatchingPlanetClassificationsCount}" Foreground="{DynamicResource PlanetOfInterestIconColor}" VerticalAlignment="Center" />
+              </controls:BadgePanel>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -146,19 +141,13 @@
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:BodyViewModel">
-              <Grid HorizontalAlignment="Stretch" IsVisible="{Binding HasGeologicals}" Background="Transparent" ToolTip.ShowDelay="100">
+              <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasGeologicals}" Background="Transparent" ToolTip.ShowDelay="100">
                 <ToolTip.Tip>
                   <ContentControl ContentTemplate="{StaticResource BodyGeologicalsTooltipTemplate}" />
                 </ToolTip.Tip>
-                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <materialIcons:MaterialIcon Grid.Column="0" Kind="Pickaxe" Foreground="{DynamicResource GeologicalsIconColor}" Width="16" Height="16" />
-                  <TextBlock Grid.Column="1" Text="{Binding GeologicalsCount}" Foreground="{DynamicResource GeologicalsIconColor}" HorizontalAlignment="Right" Margin="2,0,0,0" />
-                </Grid>
-              </Grid>
+                <materialIcons:MaterialIcon Kind="Pickaxe" Foreground="{DynamicResource GeologicalsIconColor}" Width="16" Height="16" />
+                <TextBlock Text="{Binding GeologicalsCount}" Foreground="{DynamicResource GeologicalsIconColor}" VerticalAlignment="Center" />
+              </controls:BadgePanel>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -169,24 +158,17 @@
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:BodyViewModel">
-              <Grid HorizontalAlignment="Stretch" IsVisible="{Binding HasBiologicals}" Background="Transparent" ToolTip.ShowDelay="100">
+              <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasBiologicals}" Background="Transparent" ToolTip.ShowDelay="100">
                 <ToolTip.Tip>
                   <ContentControl ContentTemplate="{StaticResource BodyBiologicalsTooltipTemplate}" />
                 </ToolTip.Tip>
-                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <materialIcons:MaterialIcon Grid.Column="0" Kind="Biohazard" Foreground="{DynamicResource BiologicalsIconColor}" Width="16" Height="16" />
-                  <TextBlock Grid.Column="1" Text="{Binding BiologicalsCount}" Foreground="{DynamicResource BiologicalsIconColor}" HorizontalAlignment="Right" Margin="2,0,0,0" />
-                  <Grid Grid.Column="2" VerticalAlignment="Top">
-                    <materialIcons:MaterialIcon Kind="DiamondStone" IsVisible="{Binding HasValuablePredictedSpecies}" Foreground="{DynamicResource ValuableIconColor}" Width="12" Height="12" VerticalAlignment="Top" />
-                    <materialIcons:MaterialIcon Kind="DiamondStone" IsVisible="{Binding HasValuableGenera}" Foreground="{Binding AllGenusesAnalysed, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='MainColor;ValuableIconColor'}" Width="12" Height="12" VerticalAlignment="Top" />
-                  </Grid>
+                <materialIcons:MaterialIcon Kind="Biohazard" Foreground="{DynamicResource BiologicalsIconColor}" Width="16" Height="16" />
+                <TextBlock Text="{Binding BiologicalsCount}" Foreground="{DynamicResource BiologicalsIconColor}" VerticalAlignment="Center" />
+                <Grid VerticalAlignment="Top">
+                  <materialIcons:MaterialIcon Kind="DiamondStone" IsVisible="{Binding HasValuablePredictedSpecies}" Foreground="{DynamicResource ValuableIconColor}" Width="12" Height="12" VerticalAlignment="Top" />
+                  <materialIcons:MaterialIcon Kind="DiamondStone" IsVisible="{Binding HasValuableGenera}" Foreground="{Binding AllGenusesAnalysed, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='MainColor;ValuableIconColor'}" Width="12" Height="12" VerticalAlignment="Top" />
                 </Grid>
-              </Grid>
+              </controls:BadgePanel>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>

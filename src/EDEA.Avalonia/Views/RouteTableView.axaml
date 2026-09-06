@@ -4,6 +4,7 @@
              xmlns:properties="using:EDEA.Properties"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:EDEA.Avalonia.Views"
+             xmlns:controls="clr-namespace:EDEA.Avalonia.Controls"
              x:Class="EDEA.Avalonia.Views.RouteTableView"
              x:DataType="vm:NavRouteTableViewModel"
              x:CompileBindings="False">
@@ -42,47 +43,37 @@
       <TextBlock Text="{Binding ExplorationStatusBodiesInfo}" Foreground="{DynamicResource MainColor}" ToolTip.Tip="{Binding ExplorationStatusBodiesInfo}" IsVisible="{Binding IsExplorationStatusKnown}" />
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemPlanetOfInterestTemplate" x:DataType="vm:StarSystemViewModel">
-      <Grid HorizontalAlignment="Stretch" IsVisible="{Binding HasMatchingPlanetClassifications}" Background="Transparent" ToolTip.ShowDelay="100">
+      <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasMatchingPlanetClassifications}" Background="Transparent" ToolTip.ShowDelay="100">
         <ToolTip.Tip>
           <ContentControl ContentTemplate="{StaticResource StarSystemPlanetOfInterestTooltipTemplate}" />
         </ToolTip.Tip>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ColumnDefinitions="Auto,Auto">
-          <materialIcons:MaterialIcon Grid.Column="0" Kind="StarCircle" Foreground="{DynamicResource PlanetOfInterestIconColor}" Width="16" Height="16" />
-          <TextBlock Grid.Column="1" Text="{Binding MatchingPlanetClassificationsCount}" Foreground="{DynamicResource PlanetOfInterestIconColor}" HorizontalAlignment="Right" Margin="2,0,0,0" />
-        </Grid>
-      </Grid>
+        <materialIcons:MaterialIcon Kind="StarCircle" Foreground="{DynamicResource PlanetOfInterestIconColor}" Width="16" Height="16" />
+        <TextBlock Text="{Binding MatchingPlanetClassificationsCount}" Foreground="{DynamicResource PlanetOfInterestIconColor}" VerticalAlignment="Center" />
+      </controls:BadgePanel>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemValuableTemplate" x:DataType="vm:StarSystemViewModel">
-      <Grid HorizontalAlignment="Stretch" IsVisible="{Binding HasValuableBodies}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableBodyIcon}">
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ColumnDefinitions="Auto,Auto">
-          <materialIcons:MaterialIcon Grid.Column="0" Kind="DiamondStone" Foreground="{Binding AllValuableBodiesSurfaceScanned, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='CompleteIconColor;ValuableIconColor'}" Width="16" Height="16" />
-          <TextBlock Grid.Column="1" Text="{Binding ValuableBodiesCount}" Foreground="{Binding AllValuableBodiesSurfaceScanned, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='CompleteIconColor;ValuableIconColor'}" HorizontalAlignment="Right" Margin="2,0,0,0" />
-        </Grid>
-      </Grid>
+      <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasValuableBodies}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableBodyIcon}">
+        <materialIcons:MaterialIcon Kind="DiamondStone" Foreground="{Binding AllValuableBodiesSurfaceScanned, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='CompleteIconColor;ValuableIconColor'}" Width="16" Height="16" />
+        <TextBlock Text="{Binding ValuableBodiesCount}" Foreground="{Binding AllValuableBodiesSurfaceScanned, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='CompleteIconColor;ValuableIconColor'}" VerticalAlignment="Center" />
+      </controls:BadgePanel>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemTerraformableTemplate" x:DataType="vm:StarSystemViewModel">
-      <Grid HorizontalAlignment="Stretch" IsVisible="{Binding HasExploredTerraformables}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipTerraformableIcon}">
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ColumnDefinitions="Auto,Auto">
-          <materialIcons:MaterialIcon Grid.Column="0" Kind="Terraform" Foreground="{DynamicResource TerraformableIconColor}" Width="16" Height="16" />
-          <TextBlock Grid.Column="1" Text="{Binding ExploredTerraformablesCount}" Foreground="{DynamicResource TerraformableIconColor}" HorizontalAlignment="Right" Margin="2,0,0,0" />
-        </Grid>
-      </Grid>
+      <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasExploredTerraformables}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipTerraformableIcon}">
+        <materialIcons:MaterialIcon Kind="Terraform" Foreground="{DynamicResource TerraformableIconColor}" Width="16" Height="16" />
+        <TextBlock Text="{Binding ExploredTerraformablesCount}" Foreground="{DynamicResource TerraformableIconColor}" VerticalAlignment="Center" />
+      </controls:BadgePanel>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemLandableTemplate" x:DataType="vm:StarSystemViewModel">
-      <Grid HorizontalAlignment="Stretch" IsVisible="{Binding HasExploredLandables}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipLandableIcon}">
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ColumnDefinitions="Auto,Auto">
-          <materialIcons:MaterialIcon Grid.Column="0" Kind="AirplaneLanding" Foreground="{DynamicResource LandableIconColor}" Width="16" Height="16" />
-          <TextBlock Grid.Column="1" Text="{Binding ExploredLandablesCount}" Foreground="{DynamicResource LandableIconColor}" HorizontalAlignment="Right" Margin="2,0,0,0" />
-        </Grid>
-      </Grid>
+      <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasExploredLandables}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipLandableIcon}">
+        <materialIcons:MaterialIcon Kind="AirplaneLanding" Foreground="{DynamicResource LandableIconColor}" Width="16" Height="16" />
+        <TextBlock Text="{Binding ExploredLandablesCount}" Foreground="{DynamicResource LandableIconColor}" VerticalAlignment="Center" />
+      </controls:BadgePanel>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemPopulatedTemplate" x:DataType="vm:StarSystemViewModel">
-      <Grid HorizontalAlignment="Stretch" IsVisible="{Binding HasPopulation}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{Binding Population}">
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ColumnDefinitions="Auto,Auto">
-          <materialIcons:MaterialIcon Grid.Column="0" Kind="AccountGroup" Foreground="{DynamicResource PopulatedIconColor}" Width="16" Height="16" />
-          <TextBlock Grid.Column="1" Text="{Binding Population}" Foreground="{DynamicResource PopulatedIconColor}" HorizontalAlignment="Right" Margin="2,0,0,0" />
-        </Grid>
-      </Grid>
+      <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasPopulation}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{Binding Population}">
+        <materialIcons:MaterialIcon Kind="AccountGroup" Foreground="{DynamicResource PopulatedIconColor}" Width="16" Height="16" />
+        <TextBlock Text="{Binding Population}" Foreground="{DynamicResource PopulatedIconColor}" VerticalAlignment="Center" />
+      </controls:BadgePanel>
     </DataTemplate>
     <DataTemplate x:Key="TextStarSystemJumpDistanceLyTemplate" x:DataType="vm:StarSystemViewModel">
       <TextBlock Text="{Binding JumpDistanceLy}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" />

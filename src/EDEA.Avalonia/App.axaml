@@ -76,6 +76,7 @@
     <SolidColorBrush x:Key="HeaderIconColor" Color="#090000"/>
     <sys:Double x:Key="MainFontSize">12</sys:Double>
     <sys:Double x:Key="HeaderFontSize">14</sys:Double>
+    <sys:Double x:Key="DataGridSortIconMinWidth">12</sys:Double>
     <sys:Double x:Key="SmallFontSize">10</sys:Double>
     <sys:Double x:Key="HistoryFontSize">20</sys:Double>
     <sys:Double x:Key="HistoryTotalValueFontSize">30</sys:Double>
@@ -131,8 +132,9 @@
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="Foreground" Value="{DynamicResource MainColor}" />
       <Setter Property="FontSize" Value="{DynamicResource MainFontSize}" />
+      <Setter Property="Padding" Value="4" />
       <Setter Property="VerticalContentAlignment" Value="Center" />
-      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
     </Style>
 
     <Style Selector="DataGridCell:selected">
@@ -144,8 +146,8 @@
       <Setter Property="Background" Value="{DynamicResource MainColor}" />
       <Setter Property="Foreground" Value="{DynamicResource MainBackgroundColor}" />
       <Setter Property="FontSize" Value="{DynamicResource MainFontSize}" />
-      <Setter Property="Padding" Value="4" />
-      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="Padding" Value="12,0,0,0" />
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
       <Setter Property="VerticalContentAlignment" Value="Center" />
       <Setter Property="BorderBrush" Value="Transparent" />
       <Setter Property="BorderThickness" Value="0" />
