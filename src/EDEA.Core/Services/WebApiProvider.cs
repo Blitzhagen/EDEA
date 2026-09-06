@@ -199,6 +199,7 @@ public class WebApiProvider
             $"range={Uri.EscapeDataString(Convert.ToString(range, CultureInfo.InvariantCulture))}&" +
             $"efficiency={efficiency}&" +
             $"supercharge_multiplier={Uri.EscapeDataString(Convert.ToString(superchargeMultiplier, CultureInfo.InvariantCulture))}";
+        log.Info($"Requesting Spansh neutron route: {apiUrl}?{queryData}");
         _ = new WebApiRequest(this, apiUrl, new WepApiQueryData(WepApiQueryType.GetQuery, queryData), onSpanshRequestNeutronRouteCalculation, webApiObject, requestCallBack, ignoreSpeechOutput: true);
     }
 
@@ -238,6 +239,10 @@ public class WebApiProvider
         }
 
         webApiParameterSpanshGalaxyRoute.RequestCount++;
+        if (webApiParameterSpanshGalaxyRoute.RequestCount == 1)
+        {
+            log.Info($"Spansh neutron job {jobId} started (status: {jobStatus}); result can be compared at https://www.spansh.co.uk/plotter/results/{jobId}");
+        }
         switch (webApiParameterSpanshGalaxyRoute.StatusCode)
         {
             case HttpStatusCode.Accepted:
@@ -270,6 +275,20 @@ public class WebApiProvider
                         if (jumps != null && jumps.Count > 1)
                         {
                             webApiParameterSpanshGalaxyRoute.Jumps = jumps;
+                            log.Info($"Spansh neutron job {jobId} finished with {jumps.Count} jumps:");
+                            int jumpIndex = 0;
+                            foreach (JsonNode? node in jumps)
+                            {
+                                if (node is JsonObject jump)
+                                {
+                                    log.Info($"  Jump {jumpIndex}: {Helpsters.ConvertJObjectValue<string>(jump, "name")}, " +
+                                        $"{Helpsters.ConvertJObjectValue(jump, "distance", 0.0):F2} Ly" +
+                                        (Helpsters.ConvertJObjectValue(jump, "has_neutron", false) ? ", neutron" : string.Empty) +
+                                        (Helpsters.ConvertJObjectValue(jump, "is_refuel", false) ? ", refuel" : string.Empty) +
+                                        (Helpsters.ConvertJObjectValue(jump, "is_scoopable", false) ? ", scoopable" : string.Empty));
+                                }
+                                jumpIndex++;
+                            }
                         }
                     }
                     requestCallBack(webApiParameterSpanshGalaxyRoute);

@@ -206,6 +206,19 @@ public class RouteProvider
 
             log.Info("Importing plotter route in memory");
             _plotterJumps = plotterRouteJumps;
+            int jumpIndex = 0;
+            foreach (JsonNode? node in plotterRouteJumps)
+            {
+                if (node is JsonObject jump)
+                {
+                    log.Info($"  Jump {jumpIndex}: {Helpsters.ConvertJObjectValue<string>(jump, "name")}, " +
+                        $"{Helpsters.ConvertJObjectValue(jump, "distance", 0.0):F2} Ly" +
+                        (Helpsters.ConvertJObjectValue(jump, "has_neutron", false) ? ", neutron" : string.Empty) +
+                        (Helpsters.ConvertJObjectValue(jump, "is_refuel", false) ? ", refuel" : string.Empty) +
+                        (Helpsters.ConvertJObjectValue(jump, "is_scoopable", false) ? ", scoopable" : string.Empty));
+                }
+                jumpIndex++;
+            }
             readStarsSystemsTask = ReadStarsSystems();
             return true;
         }

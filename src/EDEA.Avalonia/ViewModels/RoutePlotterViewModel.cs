@@ -241,6 +241,9 @@ public partial class RoutePlotterViewModel : ObservableObject
         LoadingProgress = 0.0;
         IsLoading = true;
 
+        log.Info($"Route plotter request: from '{SelectedSourceSystem!.Name}' to '{SelectedTargetSystem!.Name}', " +
+            $"range {range:F2} Ly, efficiency {efficiency}%, supercharge multiplier {superchargeMultiplier}x");
+
         _webApiProvider.SpanshRequestNeutronRouteCalculation(SelectedSourceSystem!, SelectedTargetSystem!, range, efficiency, superchargeMultiplier, RequestDelayMilliseconds, OnRouteCalculationResponse);
     }
 
