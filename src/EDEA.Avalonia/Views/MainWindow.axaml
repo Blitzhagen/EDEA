@@ -95,7 +95,7 @@
             <materialIcons:MaterialIcon Kind="Menu" Foreground="{DynamicResource MainColor}" Width="20" Height="20" />
           </MenuItem.Header>
           <MenuItem Header="Toggle HUD" Command="{Binding OpenCloseHudWindowCommand}"/>
-          <MenuItem Header="Mouse Pass-Through" IsEnabled="False"/>
+          <MenuItem Header="{Binding ToggleHudMousePassThroughMenuItemHeader}" Command="{Binding ToggleHudMousePassThroughCommand}" ToggleType="CheckBox" IsChecked="{Binding HudWindowMousePassThroughEnabled, Mode=OneWay}" />
           <Separator/>
           <MenuItem Header="Reload EDSM" IsEnabled="False"/>
           <Separator/>

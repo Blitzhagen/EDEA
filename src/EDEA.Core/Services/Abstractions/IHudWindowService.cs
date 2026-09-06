@@ -15,9 +15,9 @@ public interface IHudWindowService
     /// <summary>
     /// Enables or disables click-through mouse input for the specified window.
     /// </summary>
-    /// <param name="windowHandle">The native window handle.</param>
+    /// <param name="window">The window object.</param>
     /// <param name="enabled"><c>true</c> to enable click-through; <c>false</c> to disable it.</param>
-    void SetClickThrough(nint windowHandle, bool enabled);
+    void SetClickThrough(object window, bool enabled);
 
     /// <summary>
     /// Starts a window drag operation (equivalent to WPF DragMove).

@@ -125,6 +125,18 @@ public partial class MainViewModel : ObservableObject
     private bool _dataIsLoading;
 
     /// <summary>
+    /// A value indicating whether the HUD window is currently in mouse pass-through mode.
+    /// </summary>
+    [ObservableProperty]
+    private bool _hudWindowMousePassThroughEnabled;
+
+    /// <summary>
+    /// The menu header for the HUD mouse pass-through toggle command.
+    /// </summary>
+    [ObservableProperty]
+    private string _toggleHudMousePassThroughMenuItemHeader = Resources.MenuItem_HudPassThroughEnable;
+
+    /// <summary>
     /// Gets the main window title.
     /// </summary>
     public string Title => Resources.MainWindow_Title;
@@ -148,6 +160,11 @@ public partial class MainViewModel : ObservableObject
     /// Gets the command that opens the HUD window.
     /// </summary>
     public ICommand OpenCloseHudWindowCommand { get; }
+
+    /// <summary>
+    /// Gets the command that toggles mouse pass-through for the currently open HUD window.
+    /// </summary>
+    public ICommand ToggleHudMousePassThroughCommand { get; }
 
     /// <summary>
     /// Gets the command that opens the journal history import window.
@@ -191,6 +208,7 @@ public partial class MainViewModel : ObservableObject
         ShowPreferencesWindowCommand = new RelayCommand(ShowPreferencesWindow);
         ShowFeedbackReportIssueWindowCommand = new RelayCommand(ShowFeedbackReportIssueWindow);
         OpenCloseHudWindowCommand = new RelayCommand(OpenCloseHudWindow);
+        ToggleHudMousePassThroughCommand = new RelayCommand(ToggleHudMousePassThrough, () => _hudWindow != null);
         ImportJournalHistoryCommand = new RelayCommand(ImportJournalHistory);
     }
 
@@ -214,19 +232,41 @@ public partial class MainViewModel : ObservableObject
         if (_hudWindow != null)
         {
             _hudWindow.Close();
-            _hudWindow = null;
-            _hudClickThrough = false;
+            ResetHudWindowState();
         }
         else
         {
+            _hudClickThrough = Preferences.Application.HudWindowMousePassThroughEnabled;
+            HudWindowMousePassThroughEnabled = _hudClickThrough;
+            ToggleHudMousePassThroughMenuItemHeader = _hudClickThrough
+                ? Resources.MenuItem_HudPassThroughDisable
+                : Resources.MenuItem_HudPassThroughEnable;
+
             _hudWindow = new HudWindow(_starSystemProvider, this);
+            _hudWindow.Opened += (_, _) =>
+            {
+                PlatformServices.HudWindow?.SetClickThrough(_hudWindow, _hudClickThrough);
+            };
             _hudWindow.Closed += (_, _) =>
             {
-                _hudWindow = null;
-                _hudClickThrough = false;
+                Dispatcher.UIThread.Post(ResetHudWindowState);
             };
             _hudWindow.Show();
         }
+
+        ((IRelayCommand)ToggleHudMousePassThroughCommand).NotifyCanExecuteChanged();
+    }
+
+    /// <summary>
+    /// Resets the cached HUD window and mouse pass-through state.
+    /// </summary>
+    private void ResetHudWindowState()
+    {
+        _hudWindow = null;
+        _hudClickThrough = false;
+        HudWindowMousePassThroughEnabled = false;
+        ToggleHudMousePassThroughMenuItemHeader = Resources.MenuItem_HudPassThroughEnable;
+        ((IRelayCommand)ToggleHudMousePassThroughCommand).NotifyCanExecuteChanged();
     }
 
     /// <summary>
@@ -247,14 +287,13 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        var handle = PlatformServices.HudWindow?.GetWindowHandle(_hudWindow) ?? 0;
-        if (handle == 0)
-        {
-            return;
-        }
-
         _hudClickThrough = !_hudClickThrough;
-        PlatformServices.HudWindow?.SetClickThrough(handle, _hudClickThrough);
+        PlatformServices.HudWindow?.SetClickThrough(_hudWindow, _hudClickThrough);
+        HudWindowMousePassThroughEnabled = _hudClickThrough;
+        ToggleHudMousePassThroughMenuItemHeader = _hudClickThrough
+            ? Resources.MenuItem_HudPassThroughDisable
+            : Resources.MenuItem_HudPassThroughEnable;
+        Preferences.Application.HudWindowMousePassThroughEnabled = _hudClickThrough;
     }
 
     private void ImportJournalHistory()
