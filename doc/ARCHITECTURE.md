@@ -1,6 +1,6 @@
 # EDEA-Architektur
 
-Dieses Dokument beschreibt die Softwarearchitektur des **Elite Dangerous Exploration Assistent (EDEA)**: Designprinzipien, MVVM-Schichten, zentrale Komponenten und den Datenfluss von Spiel-Journal-Events bis zur Benutzeroberfläche.
+Dieses Dokument beschreibt die Softwarearchitektur des **ED Exploration Assistant (EDEA)**: Designprinzipien, MVVM-Schichten, zentrale Komponenten und den Datenfluss von Spiel-Journal-Events bis zur Benutzeroberfläche.
 
 ## Ziele und Prinzipien
 

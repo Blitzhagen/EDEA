@@ -92,7 +92,7 @@ public partial class UserSettingsSpeech : ObservableObject
     /// The welcome speech text.
     /// </summary>
     [ObservableProperty]
-    private string _welcomeSpeech = "o7 Commander {CommanderName}, EDEA at your service!";
+    private string _welcomeSpeech = "o7 Commander {CommanderName}, Exploration Assistant at your service!";
 
     /// <summary>
     /// Whether the goodbye speech is enabled.

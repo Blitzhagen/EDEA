@@ -13,7 +13,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="MainWindow_Title" xml:space="preserve">
-    <value>Elite Dangerous Exploration Assistent</value>
+    <value>ED Exploration Assistant</value>
   </data>
   <data name="ApplicationLanguage" xml:space="preserve">
     <value>Language</value>
@@ -58,13 +58,13 @@
     <value>About</value>
   </data>
   <data name="AboutWindow_AppName" xml:space="preserve">
-    <value>Elite Dangerous Exploration Assistent</value>
+    <value>ED Exploration Assistant</value>
   </data>
   <data name="AboutWindow_Version" xml:space="preserve">
     <value>Version 0.1</value>
   </data>
   <data name="AboutWindow_Description" xml:space="preserve">
-    <value>Open-source Elite Dangerous Exploration Assistent</value>
+    <value>Open-source ED Exploration Assistant</value>
   </data>
   <data name="AboutWindow_License" xml:space="preserve">
     <value>Licensed under the MIT License. No telemetry, no auto-updater, no original assets used.</value>
@@ -1012,7 +1012,7 @@
     <value>Please wait ...</value>
   </data>
   <data name="Speech_Welcome" xml:space="preserve">
-    <value>o7 Commander {CommanderName}, EDEA at your service!</value>
+    <value>o7 Commander {CommanderName}, Exploration Assistant at your service!</value>
   </data>
   <data name="Speech_Goodbye" xml:space="preserve">
     <value>See you in the black!</value>

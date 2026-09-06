@@ -2,6 +2,7 @@ using System.IO;
 using System.Text.Json;
 using EDEA.Core.Drawing;
 using EDEA.Models;
+using EDEA.Properties;
 using log4net;
 
 namespace EDEA.Services;
@@ -48,12 +49,26 @@ public class SettingsProvider
         var json = File.ReadAllText(_path);
         try
         {
-            return JsonSerializer.Deserialize<UserSettings>(json, Options) ?? new UserSettings();
+            var settings = JsonSerializer.Deserialize<UserSettings>(json, Options) ?? new UserSettings();
+            MigrateSpeechDefaults(settings);
+            return settings;
         }
         catch (Exception exception)
         {
             log.Warn($"Could not deserialize settings from '{_path}', using defaults", exception);
             return new UserSettings();
+        }
+    }
+
+    /// <summary>
+    /// Replaces speech texts that still contain the old default application name.
+    /// </summary>
+    /// <param name="settings">The loaded user settings.</param>
+    private static void MigrateSpeechDefaults(UserSettings settings)
+    {
+        if (settings.Speech.WelcomeSpeech is "o7 Commander {CommanderName}, Erkundungsassistent ist bereit." or "o7 Commander {CommanderName}, EDEA at your service!")
+        {
+            settings.Speech.WelcomeSpeech = Resources.Speech_Welcome;
         }
     }
 

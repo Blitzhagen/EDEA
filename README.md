@@ -1,4 +1,4 @@
-# Elite Dangerous Exploration Assistent (EDEA)
+# ED Exploration Assistant (EDEA)
 
 EDEA is an open-source, MIT-licensed companion app for Elite Dangerous.
 

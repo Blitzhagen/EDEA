@@ -1,6 +1,6 @@
 # EDEA – Technische Dokumentationsplanung
 
-> Projekt: **Elite Dangerous Exploration Assistent (EDEA)**  
+> Projekt: **ED Exploration Assistant (EDEA)**  
 > Erstellt am: 28.08.2026  
 > Autor: Blitzhagen  
 > Phasen-Status: **Phase 1 abgeschlossen – Freigabe erforderlich**
