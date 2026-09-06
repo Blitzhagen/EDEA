@@ -678,6 +678,19 @@ public class WebApiProvider
         starSystem.WasRequestedFromEdsm = true;
         try
         {
+            if (jToken is JsonArray jsonArray && jsonArray.Count == 0)
+            {
+                log.Debug($"EDSM returned no data for '{starSystem.Name}' ({starSystem.Id}); marking system as read with 0 bodies");
+                starSystem.WasReadFromEdsm = true;
+                starSystem.EdsmTotalBodyCount = 0;
+                if (string.IsNullOrEmpty(starSystem.StarClass))
+                {
+                    starSystem.StarClass = "Unknown";
+                }
+                requestCallBack(webApiParameter);
+                return;
+            }
+
             if (jToken is JsonObject jObject && edsmCheckSystemId(jObject, starSystem) && edsmUpdateBasicSystemData(jObject, starSystem))
             {
                 bool shouldLoadBodies = true;
@@ -742,6 +755,14 @@ public class WebApiProvider
         try
         {
             var starSystem = webApiParameterEdsmStarystem.StarSystem;
+            if (jToken is JsonArray jsonArray && jsonArray.Count == 0)
+            {
+                log.Debug($"EDSM returned no body data for '{starSystem.Name}' ({starSystem.Id}); setting body count to 0");
+                starSystem.EdsmTotalBodyCount = 0;
+                requestCallBack(webEdsmRequestParameter);
+                return;
+            }
+
             if (jToken is not JsonObject jObject || !edsmCheckSystemId(jObject, starSystem))
             {
                 requestCallBack(webEdsmRequestParameter);
@@ -885,6 +906,11 @@ public class WebApiProvider
                 starSystem.EdsmPrimaryStarType = Helpsters.ConvertJObjectValue(primaryStar, "type", string.Empty);
                 starSystem.EdsmPrimaryStarName = Helpsters.ConvertJObjectValue(primaryStar, "name", string.Empty);
                 starSystem.EdsmPrimaryStarIsScoopable = Helpsters.ConvertJObjectValue(primaryStar, "isScoopable", false);
+            }
+
+            if (string.IsNullOrEmpty(starSystem.StarClass) && !string.IsNullOrEmpty(starSystem.EdsmPrimaryStarType))
+            {
+                starSystem.StarClass = starSystem.EdsmPrimaryStarType;
             }
 
             var coords = Helpsters.ConvertJObjectValue<JsonObject?>(jStarSystem, "coords", null!);

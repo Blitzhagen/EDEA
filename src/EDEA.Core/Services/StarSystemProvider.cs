@@ -395,7 +395,7 @@ public class StarSystemProvider
                 pastSystem.IsPastSystemInRoute = true;
             }
             List<StarSystem> upcomingSystems = (from sysItem in StarSystemsOnRoute
-                                                where sysItem.Value.JumpDistance > jd && (sysItem.Value.NeedsEdsmSystemUpdate || sysItem.Value.NeedsEdsmBodiesUpdate)
+                                                where sysItem.Value.JumpDistance > jd && (sysItem.Value.NeedsEdsmSystemUpdate || (sysItem.Value.NeedsEdsmBodiesUpdate && sysItem.Value.JumpDistance - jd <= 3))
                                                 select sysItem.Value into sysItem
                                                 orderby sysItem.JumpDistance
                                                 select sysItem).ToList();
@@ -675,6 +675,15 @@ public class StarSystemProvider
 
     private void onRequestedStarSystemInformation(WebApiParameter webEdsmRequestParameter = null)
     {
+        if (webEdsmRequestParameter is WebApiParameterEdsmStarystem webApiParameterEdsmStarystem)
+        {
+            int result = _historyProvider.AddOrUpdateStarSystem(webApiParameterEdsmStarystem.StarSystem);
+            if (result == 0)
+            {
+                log.Warn($"Could not persist EDSM star system '{webApiParameterEdsmStarystem.StarSystem.Name}' ({webApiParameterEdsmStarystem.StarSystem.Id}) to history");
+            }
+        }
+
         triggerGuiDataUpdateEvent();
     }
 

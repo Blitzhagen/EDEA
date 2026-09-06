@@ -633,7 +633,28 @@ public class SQLiteStore
         try
         {
             return db.Query<StarSystem>(
-                "SELECT Id64 AS Id, Name, IsTripHistory FROM StarSystems").ToList();
+                @"SELECT
+                    Id64 AS Id,
+                    Name,
+                    StarClass,
+                    PrimaryStarName,
+                    TotalBodyCount,
+                    TotalNonBodyCount,
+                    WasReadFromJournal,
+                    WasReadFromEdsm,
+                    WasRequestedFromEdsm,
+                    EdsmName,
+                    EdsmPrimaryStarType,
+                    EdsmPrimaryStarName,
+                    EdsmPrimaryStarIsScoopable,
+                    EdsmTotalBodyCount,
+                    StarPositionX,
+                    StarPositionY,
+                    StarPositionZ,
+                    IsTripHistory,
+                    AllBodiesFound,
+                    Population
+                FROM StarSystems").ToList();
         }
         catch (Exception exception)
         {

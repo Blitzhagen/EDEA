@@ -178,10 +178,25 @@ public class StarSystem
     {
         get
         {
+            if (EdsmTotalBodyCount == 0)
+            {
+                return false;
+            }
+
             if (!_bodies.IsEmpty)
             {
+                if (EdsmTotalBodyCount.HasValue)
+                {
+                    int edsmBodyCount = Bodies.Count(body => body.Value.IsPlanetOrStar && body.Value.WasReadFromEdsm);
+                    if (edsmBodyCount >= EdsmTotalBodyCount.Value)
+                    {
+                        return false;
+                    }
+                }
+
                 return Bodies.Any(body => body.Value.IsPlanetOrStar && !body.Value.WasReadFromEdsm);
             }
+
             return true;
         }
     }
