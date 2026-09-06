@@ -14,6 +14,7 @@ using EDEA.Models;
 using EDEA.Properties;
 using EDEA.Services;
 using EDEA.ViewModels;
+using log4net;
 
 namespace EDEA.Avalonia.ViewModels;
 
@@ -22,6 +23,11 @@ namespace EDEA.Avalonia.ViewModels;
 /// </summary>
 public partial class MainViewModel : ObservableObject
 {
+    /// <summary>
+    /// The logger for this class.
+    /// </summary>
+    private static readonly ILog log = LogManager.GetLogger(typeof(MainViewModel));
+
     /// <summary>
     /// The selected tab index.
     /// </summary>
@@ -102,6 +108,11 @@ public partial class MainViewModel : ObservableObject
     /// The last activity used to avoid redundant automatic tab switches.
     /// </summary>
     private Activity _lastActivity = Activity.Other;
+
+    /// <summary>
+    /// The tab type that should be selected once it becomes visible.
+    /// </summary>
+    private Type? _pendingAutoTabType;
 
     /// <summary>
     /// The currently open HUD window, if any.
@@ -512,7 +523,13 @@ public partial class MainViewModel : ObservableObject
     {
         if (e.PropertyName == nameof(TabViewModel.TabVisibility) && sender is TabViewModel tab)
         {
-            if (SelectedTab == tab && !tab.TabVisibility.Equals("Visible", StringComparison.OrdinalIgnoreCase))
+            if (_pendingAutoTabType != null && tab.GetType() == _pendingAutoTabType && tab.TabVisibility.Equals("Visible", StringComparison.OrdinalIgnoreCase))
+            {
+                log.Debug($"Pending auto tab {_pendingAutoTabType.Name} became visible, selecting it");
+                _pendingAutoTabType = null;
+                SelectedTabIndex = TabViewModels.IndexOf(tab);
+            }
+            else if (SelectedTab == tab && !tab.TabVisibility.Equals("Visible", StringComparison.OrdinalIgnoreCase))
             {
                 EnsureSelectedTabVisible();
             }
@@ -543,6 +560,7 @@ public partial class MainViewModel : ObservableObject
                 {
                     CurrentStatus = Resources.CurrentStatus_ExploringPlanet + _starSystemProvider.CurrentPlanet?.ShortName;
                     Planet? currentPlanet = _starSystemProvider.CurrentPlanet;
+                    log.Debug($"ExplorePlanet activity: currentPlanet={(currentPlanet?.Name ?? "null")}, genuses={(currentPlanet?.Genuses.Count ?? -1)}, biologicalCount={(currentPlanet?.BiologicalCount ?? -1)}");
                     if (currentPlanet == null || currentPlanet.Genuses.Count <= 0)
                     {
                         if (currentPlanet == null || currentPlanet.BiologicalCount <= 0)
@@ -570,13 +588,23 @@ public partial class MainViewModel : ObservableObject
 
     private void OpenTabOfType(Type type, bool forceOpen)
     {
+        log.Debug($"OpenTabOfType({type.Name}, forceOpen={forceOpen}): lastActivity={_lastActivity}, currentActivity={_starSystemProvider.CurrentActivity}, automaticTabSwitching={Preferences.Other.AutomaticTabSwitching}");
+        _pendingAutoTabType = null;
         if (forceOpen || (_lastActivity != _starSystemProvider.CurrentActivity && Preferences.Other.AutomaticTabSwitching))
         {
             var match = TabViewModels.FirstOrDefault(x => x.GetType() == type);
             int tabIndex = match is null ? -1 : TabViewModels.IndexOf(match);
+            log.Debug($"OpenTabOfType({type.Name}): tabIndex={tabIndex}, selectedTabIndex={SelectedTabIndex}, tabVisibility={(match != null ? match.TabVisibility : "n/a")}");
             if (tabIndex >= 0 && tabIndex != SelectedTabIndex)
             {
-                SelectedTabIndex = tabIndex;
+                if (match!.TabVisibility.Equals("Visible", StringComparison.OrdinalIgnoreCase))
+                {
+                    SelectedTabIndex = tabIndex;
+                }
+                else
+                {
+                    _pendingAutoTabType = type;
+                }
             }
         }
     }

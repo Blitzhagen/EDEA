@@ -5,6 +5,7 @@ using EDEA;
 using EDEA.Models;
 using EDEA.Services;
 using EDEA.ViewModels;
+using log4net;
 
 namespace EDEA.Avalonia.ViewModels;
 
@@ -13,6 +14,10 @@ namespace EDEA.Avalonia.ViewModels;
 /// </summary>
 public partial class HudViewModel : ObservableObject
 {
+    /// <summary>
+    /// The logger for this class.
+    /// </summary>
+    private static readonly ILog log = LogManager.GetLogger(typeof(HudViewModel));
     /// <summary>
     /// The star system provider.
     /// </summary>
@@ -97,6 +102,7 @@ public partial class HudViewModel : ObservableObject
     {
         CurrentViewModel = ResolveHudViewModel();
         TableHeadline = CurrentViewModel?.TabHeader ?? string.Empty;
+        log.Debug($"HUD view updated: viewModel={(CurrentViewModel?.GetType().Name ?? "null")}, hudSetting={Preferences.HudWindow.HudWindowTabViewModel}, selectedTab={(_mainViewModel.SelectedTab?.GetType().Name ?? "null")}");
     }
 
     /// <summary>

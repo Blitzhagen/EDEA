@@ -38,7 +38,7 @@
     </Style>
   </UserControl.Styles>
 
-  <Grid RowDefinitions="Auto,*,Auto,*">
+  <Grid RowDefinitions="Auto,Auto,Auto,*">
     <TextBlock Grid.Row="0"
                Text="{Binding UnknownBiologicalsInfo}"
                IsVisible="{Binding AreBiologicalsUnknown}"

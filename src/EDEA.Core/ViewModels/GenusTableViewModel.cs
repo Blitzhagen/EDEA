@@ -132,7 +132,6 @@ public class GenusTableViewModel : TabViewModel
     /// </summary>
     private void refreshView()
     {
-        log.Debug("EDEA4711: Refresh of GenusTableView");
         bool shouldShow = false;
         if (_starSystemProvider.CurrentActivity == Activity.ExplorePlanet)
         {
@@ -141,6 +140,7 @@ public class GenusTableViewModel : TabViewModel
                 && (currentPlanet.Genuses.Count > 0 || currentPlanet.BiologicalCount > 0);
         }
 
+        log.Debug($"Refresh of GenusTableView: activity={_starSystemProvider.CurrentActivity}, currentPlanet={(_starSystemProvider.CurrentPlanet?.Name ?? "null")}, genuses={(_starSystemProvider.CurrentPlanet?.Genuses.Count ?? -1)}, biologicalCount={(_starSystemProvider.CurrentPlanet?.BiologicalCount ?? -1)}, shouldShow={shouldShow}");
         base.TabVisibility = shouldShow ? "Visible" : "Collapsed";
         if (shouldShow)
         {
