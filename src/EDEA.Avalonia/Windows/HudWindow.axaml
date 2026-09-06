@@ -15,7 +15,12 @@
         TransparencyLevelHint="Transparent"
         Background="Transparent"
         CanResize="True">
-  <Grid Background="#00FFFFFF">
+  <Window.Styles>
+    <Style Selector="#HudRootGrid.PassThrough ScrollBar">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+  </Window.Styles>
+  <Grid x:Name="HudRootGrid" Background="#00FFFFFF">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />

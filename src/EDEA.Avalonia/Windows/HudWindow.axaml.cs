@@ -55,6 +55,15 @@ public partial class HudWindow : Window
         CloseHudWindowButton.IsVisible = !enabled;
         ResizeHudWindowButton.IsVisible = !enabled;
         HudWindowMoveGrabber.IsVisible = !enabled;
+
+        if (enabled)
+        {
+            HudRootGrid.Classes.Add("PassThrough");
+        }
+        else
+        {
+            HudRootGrid.Classes.Remove("PassThrough");
+        }
     }
 
     /// <summary>
