@@ -16,7 +16,7 @@ public sealed class AvaloniaColorThemeService : IColorThemeService
     /// </summary>
     private static readonly Dictionary<string, string[]> ColorKeyMapping = new()
     {
-        { "MainColor", new[] { "MainColor", "JournalIconColor", "TouchdownIconColor", "NewIconColor", "CurrentEntityIconColor", "CompleteIconColor", "SurfaceScannedIconColor", "BiologicalsCompleteIconColor" } },
+        { "MainColor", new[] { "MainColor", "JournalIconColor", "TouchdownIconColor", "NewIconColor", "CurrentEntityIconColor", "CompleteIconColor", "SurfaceScannedIconColor", "BiologicalsCompleteIconColor", "CloseIconColor", "ResizeIconColor" } },
         { "InactiveMainColor", new[] { "InactiveMainColor" } },
         { "HighlightColor", new[] { "HighlightColor", "HighlightGreen" } },
         { "HighlightColor2", new[] { "HighlightGreen" } },

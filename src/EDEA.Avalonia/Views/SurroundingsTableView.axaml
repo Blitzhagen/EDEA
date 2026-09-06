@@ -10,15 +10,19 @@
   <Grid>
     <TextBlock Text="{Binding NoSurroundingsInfo}"
                IsVisible="{Binding ShowNoSurroundingsInfo}"
-               VerticalAlignment="Center"
+               VerticalAlignment="Top"
                HorizontalAlignment="Center"
-               Foreground="{DynamicResource DimForegroundBrush}"
+               FontSize="{DynamicResource HeaderFontSize}"
+               Margin="0,50,30,0"
+               Foreground="{DynamicResource MainColor}"
                ZIndex="2" />
     <TextBlock Text="{Binding SurroundingsLoadingInfo}"
                IsVisible="{Binding ShowSurroundingsLoadingInfo}"
-               VerticalAlignment="Center"
+               VerticalAlignment="Top"
                HorizontalAlignment="Center"
-               Foreground="{DynamicResource AccentBrush}"
+               FontSize="{DynamicResource HeaderFontSize}"
+               Margin="0,50,30,0"
+               Foreground="{DynamicResource MainColor}"
                ZIndex="1" />
     <DataGrid Name="SurroundingsDataGrid"
               AutoGenerateColumns="False"

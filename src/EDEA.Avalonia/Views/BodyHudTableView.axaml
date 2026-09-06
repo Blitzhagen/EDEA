@@ -11,9 +11,11 @@
   <Grid>
     <TextBlock Text="{Binding NoBodiesInfo}"
                IsVisible="{Binding AreNoBodiesAvailable}"
-               VerticalAlignment="Center"
-               HorizontalAlignment="Center"
-               Foreground="{DynamicResource DimForegroundBrush}" />
+               VerticalAlignment="Top"
+               HorizontalAlignment="Left"
+               TextWrapping="Wrap"
+               Margin="7,10,0,0"
+               Foreground="{DynamicResource MainColor}" />
     <DataGrid Name="BodyDataGrid" Classes="Hud"
               AutoGenerateColumns="False"
               IsReadOnly="True"
@@ -36,7 +38,7 @@
                 </Grid.ColumnDefinitions>
                 <materialIcons:MaterialIcon Grid.Column="0" Kind="GpsFixed" IsVisible="{Binding IsCurrentPlanetInSystem}" Foreground="{DynamicResource CurrentEntityIconColor}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipCurrentBodyIcon}" />
                 <materialIcons:MaterialIcon Grid.Column="1" Kind="Globe" IsVisible="{Binding WasReadFromEdsmOnly}" Foreground="{DynamicResource EdsmIconColor}" Width="14" Height="14" ToolTip.Tip="{x:Static properties:Resources.TooltipEdsmOnly}" Margin="2,0,0,0" />
-                <TextBlock Grid.Column="2" Text="{Binding Name}" Foreground="{DynamicResource MainColor}" Margin="4,0,0,0" />
+                <TextBlock Grid.Column="2" Text="{Binding ShortName}" Foreground="{DynamicResource MainColor}" Margin="4,0,0,0" />
               </Grid>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>

@@ -73,6 +73,8 @@
     <SolidColorBrush x:Key="TouchdownIconColor" Color="#FF6A00"/>
     <SolidColorBrush x:Key="NewIconColor" Color="#FF6A00"/>
     <SolidColorBrush x:Key="BiologicalsCompleteIconColor" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="CloseIconColor" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="ResizeIconColor" Color="#FF6A00"/>
     <SolidColorBrush x:Key="HeaderIconColor" Color="#090000"/>
     <sys:Double x:Key="MainFontSize">12</sys:Double>
     <sys:Double x:Key="HeaderFontSize">14</sys:Double>
@@ -88,6 +90,7 @@
     <Thickness x:Key="TabViewInverseBorderSizes">0,21,0,0</Thickness>
     <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
     <converters:BoolToResourceBrushConverter x:Key="BoolToResourceBrushConverter" />
+    <converters:SystemExplorationStatusToBrushColorConverter x:Key="SystemExplorationStatusToBrushColorConverter" />
     <converters:TabVisibilityConverter x:Key="TabVisibilityConverter" />
     </ResourceDictionary>
   </Application.Resources>

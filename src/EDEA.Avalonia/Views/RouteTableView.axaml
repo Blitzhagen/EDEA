@@ -82,9 +82,11 @@
   <Grid>
     <TextBlock Text="{Binding NoRouteInfo}"
                IsVisible="{Binding ShowNoRouteInfo}"
-               VerticalAlignment="Center"
+               VerticalAlignment="Top"
                HorizontalAlignment="Center"
-               Foreground="{StaticResource DimForegroundBrush}" />
+               FontSize="{DynamicResource HeaderFontSize}"
+               Margin="0,50,30,0"
+               Foreground="{DynamicResource MainColor}" />
     <DataGrid Name="RouteDataGrid"
               AutoGenerateColumns="False"
               IsReadOnly="True"

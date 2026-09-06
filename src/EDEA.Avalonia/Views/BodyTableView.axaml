@@ -10,9 +10,11 @@
   <Grid>
     <TextBlock Text="{Binding NoBodiesInfo}"
                IsVisible="{Binding AreNoBodiesAvailable}"
-               VerticalAlignment="Center"
+               VerticalAlignment="Top"
                HorizontalAlignment="Center"
-               Foreground="{DynamicResource DimForegroundBrush}" />
+               FontSize="{DynamicResource HeaderFontSize}"
+               Margin="0,50,30,0"
+               Foreground="{DynamicResource MainColor}" />
     <DataGrid Name="BodyDataGrid"
               AutoGenerateColumns="False"
               IsReadOnly="True"
