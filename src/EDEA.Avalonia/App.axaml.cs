@@ -61,6 +61,11 @@ public partial class App : Application
     private StatusProvider? _statusProvider;
 
     /// <summary>
+    /// The web API provider.
+    /// </summary>
+    private WebApiProvider? _webApiProvider;
+
+    /// <summary>
     /// Shared <see cref="HttpClient"/> used for web API calls.
     /// </summary>
     private static readonly HttpClient httpClient = new();
@@ -160,7 +165,7 @@ public partial class App : Application
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var mainWindow = new MainWindow { DataContext = new MainViewModel(_starSystemProvider!, _historyProvider!, _routeProvider!, _statusProvider!) };
+                var mainWindow = new MainWindow { DataContext = new MainViewModel(_starSystemProvider!, _historyProvider!, _routeProvider!, _statusProvider!, _webApiProvider!) };
                 PlatformServices.WindowState?.Track(mainWindow, "MainWindow");
                 desktop.MainWindow = mainWindow;
                 desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
@@ -206,7 +211,7 @@ public partial class App : Application
         var sqliteStore = SQLiteStore.Instance(Path.Combine(Globals.AppDataFolder, "db", "EDEA.db"));
         _historyProvider = HistoryProvider.Instance(sqliteStore);
         _starSystemProvider = StarSystemProvider.Instance(_historyProvider);
-        var webApiProvider = WebApiProvider.Instance(httpClient, _starSystemProvider);
+        _webApiProvider = WebApiProvider.Instance(httpClient, _starSystemProvider);
         var journalProvider = JournalProvider.Instance(journalStore, _starSystemProvider);
         _routeProvider = RouteProvider.Instance(fileWatcher, _starSystemProvider, journalProvider);
         _statusProvider = StatusProvider.Instance(fileWatcher, _starSystemProvider);

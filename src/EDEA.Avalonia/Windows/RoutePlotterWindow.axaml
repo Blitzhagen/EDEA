@@ -1,19 +1,144 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:EDEA.Avalonia.ViewModels"
+        xmlns:models="clr-namespace:EDEA.Models;assembly=EDEA.Core"
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         x:Class="EDEA.Avalonia.Windows.RoutePlotterWindow"
-        Title="{x:Static properties:Resources.RoutePlotterWindow_Title}"
-        Height="300" Width="500"
-        Background="{StaticResource MainBackgroundColor}"
+        x:DataType="vm:RoutePlotterViewModel"
+        Title="{Binding WindowTitle}"
+        MinWidth="420"
+        SizeToContent="WidthAndHeight"
+        CanResize="False"
+        Background="{StaticResource BackgroundBrush}"
         Foreground="{StaticResource ForegroundBrush}"
-        WindowStartupLocation="CenterOwner"
-        CanResize="False">
-  <Grid Margin="20" RowDefinitions="Auto,*,Auto">
-    <TextBlock Grid.Row="0" Text="Enter Spansh route URL" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,8"/>
-    <TextBox Grid.Row="1" x:Name="RouteUrlTextBox" Watermark="https://spansh.co.uk/plotter/..." AcceptsReturn="False" TextWrapping="NoWrap" VerticalAlignment="Top" Height="30"/>
-    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
-      <Button Content="Generate" Padding="16,4" Margin="0,0,10,0" Click="GenerateButton_Click"/>
-      <Button Content="{x:Static properties:Resources.RoutePlotterWindow_Cancel}" Padding="16,4" Click="CancelButton_Click"/>
-    </StackPanel>
+        WindowStartupLocation="CenterOwner">
+  <Grid>
+    <!-- Overlay: no ship data -->
+    <Grid Panel.ZIndex="103" IsVisible="{Binding HasNoShipData}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="70" />
+      </Grid.RowDefinitions>
+      <Border Grid.RowSpan="2" Background="{StaticResource BackgroundBrush}" />
+      <TextBlock Grid.Row="0" Text="{x:Static properties:Resources.RoutePlotterWindow_NoShipData}"
+                 HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Margin="20" />
+      <Button Grid.Row="1" Content="{x:Static properties:Resources.RoutePlotterWindow_Cancel}"
+              Command="{Binding CancelCommand}" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="16,4" />
+    </Grid>
+
+    <!-- Overlay: error -->
+    <Grid Panel.ZIndex="102" IsVisible="{Binding HasError}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="70" />
+      </Grid.RowDefinitions>
+      <Border Grid.RowSpan="2" Background="{StaticResource BackgroundBrush}" />
+      <TextBlock Grid.Row="0" Text="{x:Static properties:Resources.RoutePlotterWindow_ErrorMessage}"
+                 HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Margin="20" />
+      <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Spacing="8">
+        <Button Content="{x:Static properties:Resources.RoutePlotterWindow_TryAgain}"
+                Command="{Binding DismissErrorCommand}" Padding="16,4" />
+        <Button Content="{x:Static properties:Resources.RoutePlotterWindow_Cancel}"
+                Command="{Binding CancelCommand}" Padding="16,4" />
+      </StackPanel>
+    </Grid>
+
+    <!-- Overlay: loading -->
+    <Grid Panel.ZIndex="101" IsVisible="{Binding IsLoading}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="70" />
+      </Grid.RowDefinitions>
+      <Border Grid.RowSpan="2" Background="{StaticResource BackgroundBrush}" />
+      <StackPanel Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="20">
+        <ProgressBar Minimum="0" Maximum="{Binding LoadingMaximum}" Value="{Binding LoadingProgress}"
+                     Height="22" Width="300" Margin="0,0,0,17" />
+        <TextBlock Text="{Binding LoadingText}" TextWrapping="Wrap" TextAlignment="Center" />
+      </StackPanel>
+      <Button Grid.Row="1" Content="{x:Static properties:Resources.RoutePlotterWindow_Cancel}"
+              Command="{Binding CancelCommand}" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="16,4" />
+    </Grid>
+
+    <!-- Main content -->
+    <Grid Margin="17,16,17,17" RowDefinitions="Auto,Auto,Auto">
+      <!-- Ship information -->
+      <Border Grid.Row="0" Background="{StaticResource MainCellColor}" Padding="12" Margin="0,0,0,17" CornerRadius="7">
+        <Grid ColumnDefinitions="Auto,*,24,Auto,*" RowDefinitions="Auto,Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static properties:Resources.RoutePlotterWindow_ShipName}"
+                     Foreground="{StaticResource AccentBrush}" Margin="0,0,8,4" />
+          <TextBlock Grid.Row="0" Grid.Column="1" Margin="0,0,0,4">
+            <Run Text="{Binding CurrentShip.Name}" />
+            <Run Text="(" /><Run Text="{Binding CurrentShip.Identification}" /><Run Text=")" />
+          </TextBlock>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static properties:Resources.RoutePlotterWindow_FrameShiftDrive}"
+                     Foreground="{StaticResource AccentBrush}" Margin="0,0,8,4" />
+          <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,0,0,4">
+            <Run Text="{x:Static properties:Resources.RoutePlotterWindow_Class}" />
+            <Run Text="{Binding CurrentShip.FrameShiftDrive.Class, Mode=OneWay}" /><Run Text=", " />
+            <Run Text="{x:Static properties:Resources.RoutePlotterWindow_Rating}" />
+            <Run Text="{Binding CurrentShip.FrameShiftDrive.Rating, Mode=OneWay}" />
+          </TextBlock>
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static properties:Resources.RoutePlotterWindow_FsdBooster}"
+                     Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" />
+          <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding InfoBooster}" />
+
+          <TextBlock Grid.Row="0" Grid.Column="3" Text="{x:Static properties:Resources.RoutePlotterWindow_CargoCount}"
+                     Foreground="{StaticResource AccentBrush}" Margin="0,0,8,4" />
+          <TextBlock Grid.Row="0" Grid.Column="4" Margin="0,0,0,4">
+            <Run Text="{Binding CurrentShip.CargoCount, Mode=OneWay}" /><Run Text=" t" />
+          </TextBlock>
+          <TextBlock Grid.Row="1" Grid.Column="3" Text="{x:Static properties:Resources.RoutePlotterWindow_FsdOptimalMass}"
+                     Foreground="{StaticResource AccentBrush}" Margin="0,0,8,4" />
+          <TextBlock Grid.Row="1" Grid.Column="4" Margin="0,0,0,4">
+            <Run Text="{Binding CurrentShip.FrameShiftDrive.OptimalMass, Mode=OneWay}" /><Run Text=" t" />
+          </TextBlock>
+          <TextBlock Grid.Row="2" Grid.Column="3" Text="{x:Static properties:Resources.RoutePlotterWindow_Supercharged}"
+                     Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" />
+          <TextBlock Grid.Row="2" Grid.Column="4" Text="{Binding InfoSupercharged}" />
+        </Grid>
+      </Border>
+
+      <!-- Route parameters -->
+      <Grid Grid.Row="1" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto">
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static properties:Resources.RoutePlotterWindow_SourceSystem}"
+                   Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center" Margin="0,0,8,5" />
+        <AutoCompleteBox Grid.Row="0" Grid.Column="1" MinWidth="280" Margin="0,0,0,5" x:CompileBindings="False"
+                         SelectedItem="{Binding SelectedSourceSystem}"
+                         AsyncPopulator="{Binding SourceSystemPopulator}"
+                         FilterMode="None" MinimumPrefixLength="2" MinimumPopulateDelay="0:0:0.3"
+                         ValueMemberBinding="{Binding Name}">
+          <AutoCompleteBox.ItemTemplate>
+            <DataTemplate x:DataType="models:StarSystem">
+              <TextBlock Text="{Binding Name}" />
+            </DataTemplate>
+          </AutoCompleteBox.ItemTemplate>
+        </AutoCompleteBox>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static properties:Resources.RoutePlotterWindow_DestinationSystem}"
+                   Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center" Margin="0,0,8,5" />
+        <AutoCompleteBox Grid.Row="1" Grid.Column="1" MinWidth="280" Margin="0,0,0,5" x:CompileBindings="False"
+                         SelectedItem="{Binding SelectedTargetSystem}"
+                         AsyncPopulator="{Binding TargetSystemPopulator}"
+                         FilterMode="None" MinimumPrefixLength="2" MinimumPopulateDelay="0:0:0.3"
+                         ValueMemberBinding="{Binding Name}">
+          <AutoCompleteBox.ItemTemplate>
+            <DataTemplate x:DataType="models:StarSystem">
+              <TextBlock Text="{Binding Name}" />
+            </DataTemplate>
+          </AutoCompleteBox.ItemTemplate>
+        </AutoCompleteBox>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static properties:Resources.RoutePlotterWindow_Efficiency}"
+                   Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center" Margin="0,0,8,0" />
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+          <TextBox Text="{Binding Spansh.Efficiency}" Width="50" />
+          <Slider Minimum="10" Maximum="100" Value="{Binding Spansh.Efficiency}" Width="120"
+                  VerticalAlignment="Center" Margin="5,0,0,0" />
+        </StackPanel>
+      </Grid>
+
+      <Button Grid.Row="2" Content="{x:Static properties:Resources.RoutePlotterWindow_GenerateRoute}"
+              Command="{Binding GenerateRouteCommand}" HorizontalAlignment="Center" Padding="16,4" Margin="0,12,0,0" />
+    </Grid>
   </Grid>
 </Window>

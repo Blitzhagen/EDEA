@@ -1221,6 +1221,12 @@
   <data name="MenuItem_RouteImport" xml:space="preserve">
     <value>Import Locked Route</value>
   </data>
+  <data name="RouteImport_InvalidFileTitle" xml:space="preserve">
+    <value>Error: Invalid file</value>
+  </data>
+  <data name="RouteImport_InvalidFileMessage" xml:space="preserve">
+    <value>This does not seem to be a valid Spansh route file.</value>
+  </data>
   <data name="MenuItem_RouteExport" xml:space="preserve">
     <value>Export Locked Route</value>
   </data>

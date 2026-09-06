@@ -1,6 +1,10 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -75,9 +79,24 @@ public partial class MainViewModel : ObservableObject
     private readonly StarSystemProvider _starSystemProvider;
 
     /// <summary>
+    /// The route provider.
+    /// </summary>
+    private readonly RouteProvider _routeProvider;
+
+    /// <summary>
+    /// The web API provider.
+    /// </summary>
+    private readonly WebApiProvider _webApiProvider;
+
+    /// <summary>
     /// The status provider.
     /// </summary>
     private readonly StatusProvider _statusProvider;
+
+    /// <summary>
+    /// The currently open route plotter window, if any.
+    /// </summary>
+    private RoutePlotterWindow? _routePlotterWindow;
 
     /// <summary>
     /// The last activity used to avoid redundant automatic tab switches.
@@ -177,15 +196,50 @@ public partial class MainViewModel : ObservableObject
     public ICommand ReloadEdsmDataCommand { get; }
 
     /// <summary>
+    /// Gets the command that generates or clears the neutron plotter route.
+    /// </summary>
+    public ICommand GenerateClearPlotterRouteCommand { get; }
+
+    /// <summary>
+    /// Gets the command that locks or unlocks the current route.
+    /// </summary>
+    public ICommand LockUnlockRouteCommand { get; }
+
+    /// <summary>
+    /// Gets the command that imports a route from a Spansh file.
+    /// </summary>
+    public ICommand ImportSpanshRouteCommand { get; }
+
+    /// <summary>
+    /// Gets the localized menu text for the generate or clear plotter route command.
+    /// </summary>
+    public string GenerateClearPlotterRouteMenuItemHeader =>
+        _routeProvider.IsCustomRoute ? Resources.MenuItem_ClearGalaxyPlotterRoute : Resources.MenuItem_GenerateGalaxyPlotterRoute;
+
+    /// <summary>
+    /// Gets the localized menu text for the lock or unlock route command.
+    /// </summary>
+    public string LockUnlockRouteMenuItemHeader =>
+        _routeProvider.IsLocked ? Resources.MenuItem_UnlockRoute : Resources.MenuItem_LockRoute;
+
+    /// <summary>
+    /// Gets a value indicating whether a custom route is active.
+    /// </summary>
+    public bool IsRouteAvailable => _routeProvider.IsCustomRoute;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="MainViewModel"/> class with the specified providers.
     /// </summary>
-    public MainViewModel(StarSystemProvider starSystemProvider, HistoryProvider historyProvider, RouteProvider routeProvider, StatusProvider statusProvider)
+    public MainViewModel(StarSystemProvider starSystemProvider, HistoryProvider historyProvider, RouteProvider routeProvider, StatusProvider statusProvider, WebApiProvider webApiProvider)
     {
         _starSystemProvider = starSystemProvider;
+        _routeProvider = routeProvider;
+        _webApiProvider = webApiProvider;
         _statusProvider = statusProvider;
 
         _starSystemProvider.GuiDataUpdated += (_, _) => Dispatcher.UIThread.Post(UpdateDataView);
         _starSystemProvider.RouteLoadingStatusChanged += (_, _) => Dispatcher.UIThread.Post(() => DataIsLoading = _starSystemProvider.RouteIsLoading);
+        _routeProvider.RouteChanged += () => Dispatcher.UIThread.Post(RefreshMenuItems);
 
         var navRouteTableViewModel = new NavRouteTableViewModel(Resources.TabHeader_Route, "Visible", starSystemProvider, routeProvider);
         var bodyTableViewModel = new BodyTableViewModel(Resources.TabHeader_Bodies, "Visible", starSystemProvider);
@@ -216,11 +270,121 @@ public partial class MainViewModel : ObservableObject
         ToggleHudMousePassThroughCommand = new RelayCommand(ToggleHudMousePassThrough, () => _hudWindow != null);
         ImportJournalHistoryCommand = new RelayCommand(ImportJournalHistory);
         ReloadEdsmDataCommand = new RelayCommand(ReloadEdsmData);
+        GenerateClearPlotterRouteCommand = new RelayCommand(GenerateClearPlotterRoute, CanGenerateClearPlotterRoute);
+        LockUnlockRouteCommand = new RelayCommand(ToggleRouteLock);
+        ImportSpanshRouteCommand = new AsyncRelayCommand(ImportSpanshRoute);
     }
 
     private void ReloadEdsmData()
     {
         _starSystemProvider.HandleLoadEdsmSystemDataCommand(true);
+    }
+
+    /// <summary>
+    /// Determines whether the plotter route can be generated or cleared.
+    /// Clearing is disabled while the route is locked.
+    /// </summary>
+    private bool CanGenerateClearPlotterRoute()
+    {
+        return !_routeProvider.IsCustomRoute || !_routeProvider.IsLocked;
+    }
+
+    /// <summary>
+    /// Clears an existing, unlocked custom plotter route or opens the route plotter window.
+    /// </summary>
+    private void GenerateClearPlotterRoute()
+    {
+        if (_routeProvider.IsCustomRoute)
+        {
+            _routeProvider.DeletePlotterRoute();
+            RefreshMenuItems();
+        }
+        else if (_routePlotterWindow == null)
+        {
+            var viewModel = new RoutePlotterViewModel(this, _starSystemProvider, _routeProvider, _webApiProvider);
+            _routePlotterWindow = new RoutePlotterWindow(viewModel);
+            _routePlotterWindow.Closed += (_, _) => _routePlotterWindow = null;
+            PlatformServices.WindowState?.Track(_routePlotterWindow, "RoutePlotterWindow");
+            _routePlotterWindow.Show();
+        }
+        else
+        {
+            _routePlotterWindow.Activate();
+        }
+    }
+
+    /// <summary>
+    /// Locks the current route when unlocked, otherwise unlocks it.
+    /// </summary>
+    private void ToggleRouteLock()
+    {
+        OpenRouteTab();
+        if (_routeProvider.IsLocked)
+        {
+            _routeProvider.UnlockRoute();
+        }
+        else
+        {
+            _routeProvider.LockRoute();
+        }
+        RefreshMenuItems();
+    }
+
+    /// <summary>
+    /// Opens a file picker and imports the selected Spansh route file.
+    /// </summary>
+    private async Task ImportSpanshRoute()
+    {
+        OpenRouteTab();
+        var mainWindow = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+        if (mainWindow == null)
+        {
+            return;
+        }
+
+        var files = await mainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = "Import Spansh route",
+            AllowMultiple = false,
+            FileTypeFilter = new[]
+            {
+                new FilePickerFileType("Spansh route files")
+                {
+                    Patterns = new[] { "*.json", "*.csv" }
+                }
+            }
+        });
+
+        var filePath = files.Count > 0 ? files[0].TryGetLocalPath() : null;
+        if (filePath == null)
+        {
+            return;
+        }
+
+        if (!_routeProvider.ImportSpanshRouteFile(filePath))
+        {
+            PlatformServices.Dialog?.ShowError(Resources.RouteImport_InvalidFileMessage, Resources.RouteImport_InvalidFileTitle);
+        }
+        RefreshMenuItems();
+    }
+
+    /// <summary>
+    /// Selects the route tab.
+    /// </summary>
+    public void OpenRouteTab()
+    {
+        OpenTabOfType(typeof(NavRouteTableViewModel), true);
+    }
+
+    /// <summary>
+    /// Refreshes the menu item texts and states related to route and plotter commands.
+    /// </summary>
+    public void RefreshMenuItems()
+    {
+        OnPropertyChanged(nameof(GenerateClearPlotterRouteMenuItemHeader));
+        OnPropertyChanged(nameof(LockUnlockRouteMenuItemHeader));
+        OnPropertyChanged(nameof(IsRouteAvailable));
+        ((IRelayCommand)GenerateClearPlotterRouteCommand).NotifyCanExecuteChanged();
     }
 
     private void ShowAboutWindow()
@@ -401,6 +565,7 @@ public partial class MainViewModel : ObservableObject
         CurrentSystemViewModel = new StarSystemViewModel(_starSystemProvider.CurrentSystem);
         BodyExplorationStatus = string.Format(Resources.StatusBodiesExploredOfTotal, CurrentSystemViewModel.ExploredBodies, CurrentSystemViewModel.TotalBodies);
         NonBodyExplorationStatus = string.Format(Resources.StatusNonBodyBelts, CurrentSystemViewModel.TotalNonBodyCount, CurrentSystemViewModel.ExploredNonBodies);
+        RefreshMenuItems();
     }
 
     private void OpenTabOfType(Type type, bool forceOpen)

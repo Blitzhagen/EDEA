@@ -99,9 +99,9 @@
           <Separator/>
           <MenuItem Header="{x:Static properties:Resources.MenuItem_ReloadEdsm}" Command="{Binding ReloadEdsmDataCommand}"/>
           <Separator/>
-          <MenuItem Header="Generate/Clear Plotter Route" IsEnabled="False"/>
-          <MenuItem Header="Lock/Unlock Route" IsEnabled="False"/>
-          <MenuItem Header="Import Spansh Route" IsEnabled="False"/>
+          <MenuItem Header="{Binding GenerateClearPlotterRouteMenuItemHeader}" Command="{Binding GenerateClearPlotterRouteCommand}"/>
+          <MenuItem Header="{Binding LockUnlockRouteMenuItemHeader}" Command="{Binding LockUnlockRouteCommand}" IsEnabled="{Binding IsRouteAvailable}"/>
+          <MenuItem Header="{x:Static properties:Resources.MenuItem_ImportLockedRoute}" Command="{Binding ImportSpanshRouteCommand}"/>
           <Separator/>
           <MenuItem Header="{x:Static properties:Resources.MenuItem_ImportJournalHistory}" Command="{Binding ImportJournalHistoryCommand}"/>
           <Separator/>

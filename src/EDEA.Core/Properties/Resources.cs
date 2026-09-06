@@ -1273,6 +1273,12 @@ public static class Resources
     public static string MenuItem_RouteExport => Get(nameof(MenuItem_RouteExport));
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>
+    public static string RouteImport_InvalidFileTitle => Get(nameof(RouteImport_InvalidFileTitle));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string RouteImport_InvalidFileMessage => Get(nameof(RouteImport_InvalidFileMessage));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
     public static string MenuItem_HudOpen => Get(nameof(MenuItem_HudOpen));
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>

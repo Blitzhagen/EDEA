@@ -1223,6 +1223,12 @@
   <data name="MenuItem_RouteImport" xml:space="preserve">
     <value>Gesperrte Route importieren</value>
   </data>
+  <data name="RouteImport_InvalidFileTitle" xml:space="preserve">
+    <value>Fehler: Ungültige Datei</value>
+  </data>
+  <data name="RouteImport_InvalidFileMessage" xml:space="preserve">
+    <value>Das scheint keine gültige Spansh-Routen-Datei zu sein.</value>
+  </data>
   <data name="MenuItem_RouteExport" xml:space="preserve">
     <value>Gesperrte Route exportieren</value>
   </data>
