@@ -295,7 +295,6 @@ public class StarSystem
         _bodies = new ConcurrentDictionary<int, Body>();
         Id = id;
         Name = name;
-        IsTripHistory = true;
     }
 
     /// <summary>

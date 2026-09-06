@@ -33,7 +33,17 @@ public static class GeneraIndexProvider
             }
 
             string value = File.ReadAllText(gcFile);
-            if (JsonNode.Parse(value) is JsonArray array)
+            JsonArray? array = null;
+            if (JsonNode.Parse(value) is JsonArray topArray)
+            {
+                array = topArray;
+            }
+            else if (JsonNode.Parse(value) is JsonObject topObject && topObject["value"] is JsonArray valueArray)
+            {
+                array = valueArray;
+            }
+
+            if (array != null)
             {
                 foreach (JsonNode? node in array)
                 {

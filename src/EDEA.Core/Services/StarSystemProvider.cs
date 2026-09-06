@@ -244,6 +244,7 @@ public class StarSystemProvider
         if (_historyProvider.TryGetStarSystem(potentialNewSystem.Id, out var starSystem))
         {
             starSystem.WasReadFromJournal |= potentialNewSystem.WasReadFromJournal;
+            starSystem.IsTripHistory = true;
             CurrentSystem = starSystem;
             log.Debug($"Restored current system '{CurrentSystem.Name}' ({CurrentSystem.Id}) from the history");
             if (!_journalProvider.JournalFirstParse)
@@ -258,6 +259,7 @@ public class StarSystemProvider
             CurrentSystem = potentialNewSystem;
             log.Debug($"Current system '{CurrentSystem.Name}' ({CurrentSystem.Id}) is a new system with primary star '{CurrentSystem.PrimaryStarName}'");
         }
+        CurrentSystem.IsTripHistory = true;
 
         int historyResult = _historyProvider.AddOrUpdateStarSystem(CurrentSystem);
         if (historyResult > 0)
@@ -705,6 +707,10 @@ public class StarSystemProvider
     /// <param name="force">A <see cref="Boolean"/> indicating whether to force the update immediately.</param>
     public void triggerGuiDataUpdateEvent(bool force = false)
     {
+        if (_planetNameExploring != null && (CurrentPlanet == null || CurrentPlanet.Name != _planetNameExploring))
+        {
+            UpdateCurrentPlanet();
+        }
         if (force)
         {
             GuiDataUpdated?.Invoke(this, EventArgs.Empty);
@@ -912,29 +918,53 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>The name of the planet currently being explored, taken from status.json.</summary>
+    private string _planetNameExploring;
+
+    /// <summary>
+    /// Resolves <see cref="CurrentPlanet"/> from <see cref="_planetNameExploring"/> against
+    /// <see cref="CurrentSystem"/>. Retried on every GUI data update so a lookup that failed
+    /// while bodies were still loading succeeds once the body exists.
+    /// </summary>
+    private void UpdateCurrentPlanet()
+    {
+        if (_planetNameExploring == null)
+        {
+            if (CurrentPlanet != null)
+            {
+                CurrentPlanet.IsCurrentPlanetInSystem = false;
+                CurrentPlanet = null;
+                CurrentPlanetChanged?.Invoke(this, EventArgs.Empty);
+            }
+            return;
+        }
+        if (CurrentPlanet?.Name == _planetNameExploring)
+        {
+            return;
+        }
+        Planet planet = (Planet)CurrentSystem.Bodies.FirstOrDefault((KeyValuePair<int, Body> body) => body.Value.Name == _planetNameExploring && body.Value.GetType() == typeof(Planet)).Value;
+        if (planet != null)
+        {
+            if (CurrentPlanet != null)
+            {
+                CurrentPlanet.IsCurrentPlanetInSystem = false;
+            }
+            CurrentPlanet = planet;
+            CurrentPlanet.IsCurrentPlanetInSystem = true;
+            if (!planet.PredictedSpecies.Any())
+            {
+                GeneraIndexProvider.PredictOccurrenceOfSpecies(planet);
+                planet.InitialPredictionOfSpecies = false;
+            }
+            CurrentPlanetChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     private void _statusProvider_StatusUpdated(object sender, Activity nextActivity, bool isInTeam, string planetNameExploring, long? destinationSystemId)
     {
         IsInTeam = isInTeam;
-        if (planetNameExploring == null && CurrentPlanet != null)
-        {
-            CurrentPlanet.IsCurrentPlanetInSystem = false;
-            CurrentPlanet = null;
-            CurrentPlanetChanged?.Invoke(this, EventArgs.Empty);
-        }
-        else if (CurrentPlanet?.Name != planetNameExploring)
-        {
-            Planet planet = (Planet)CurrentSystem.Bodies.FirstOrDefault((KeyValuePair<int, Body> body) => body.Value.Name == planetNameExploring && body.Value.GetType() == typeof(Planet)).Value;
-            if (planet != null)
-            {
-                if (CurrentPlanet != null)
-                {
-                    CurrentPlanet.IsCurrentPlanetInSystem = false;
-                }
-                CurrentPlanet = planet;
-                CurrentPlanet.IsCurrentPlanetInSystem = true;
-                CurrentPlanetChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
+        _planetNameExploring = planetNameExploring;
+        UpdateCurrentPlanet();
         if (CurrentActivity != nextActivity)
         {
             if (nextActivity == Activity.Jump && destinationSystemId.HasValue && StarSystemsOnRoute.ContainsKey(destinationSystemId.Value))

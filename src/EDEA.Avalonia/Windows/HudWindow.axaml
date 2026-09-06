@@ -32,7 +32,7 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
     <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" ZIndex="0" Fill="{DynamicResource MainBackgroundColor}" Opacity="{Binding Opacity, Source={x:Static edea:Preferences.HudWindow}}" />
-    <Rectangle Name="HudWindowMoveGrabber" ZIndex="100" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Fill="#00FFFFFF" Height="25" VerticalAlignment="Top" PointerPressed="HudWindowMoveGrabber_PointerPressed"/>
+    <Border Name="HudWindowMoveGrabber" ZIndex="100" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Background="Transparent" Height="25" VerticalAlignment="Top" PointerPressed="HudWindowMoveGrabber_PointerPressed" />
 
     <StackPanel Grid.Column="0" Grid.Row="0" Margin="4">
       <TextBlock Text="{Binding CurrentSystem.Name}" FontSize="{DynamicResource MainFontSize}" FontWeight="Bold" Foreground="{DynamicResource HighlightColor}" Margin="7,4,0,0" />

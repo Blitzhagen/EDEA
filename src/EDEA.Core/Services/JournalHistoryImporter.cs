@@ -435,6 +435,7 @@ public class JournalHistoryImporter
                     _starSystemProvider.CurrentSystem.TryAddOrUpdateBody(memorizedBody, ignoreSpeechOutput: true, DataSource.Journal, out var _);
                     _starSystemProvider.triggerGuiDataUpdateEvent();
                 }
+                memorizedStarSystem.IsTripHistory = _starSystemProvider.CurrentSystem.IsTripHistory;
             }
             switch (_historyProvider.AddOrUpdateStarSystem(memorizedStarSystem, shouldReport))
             {

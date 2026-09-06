@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using EDEA.Services;
 using log4net;
 
 namespace EDEA.Models;
@@ -497,6 +498,10 @@ public class Planet : Body
         {
             _genuses.TryAdd(genus.Name, genus);
             log.Info($"Genus '{genus.Name}' with {(string.IsNullOrEmpty(genus.Species) ? "unknown " : string.Empty)}species {(string.IsNullOrEmpty(genus.Species) ? string.Empty : ("'" + genus.SpeciesShort + "' "))}and {(string.IsNullOrEmpty(genus.Variant) ? "unknown " : string.Empty)}variant {(string.IsNullOrEmpty(genus.Variant) ? string.Empty : ("'" + genus.VariantShort + "' "))}added to planet '{base.Name}', scan count is {genus.ScanCount}, analysis is{(genus.AnalysisComplete ? "" : " not")} completed");
+        }
+        if (Genuses[genus.Name].ClonalColonyRange == 0)
+        {
+            Genuses[genus.Name].ClonalColonyRange = GeneraIndexProvider.GetClonalColonyRangeForGenus(genus.Name);
         }
         DetermineFirstDiscoveryStatusForGenus(Genuses[genus.Name]);
         switch (scanType)

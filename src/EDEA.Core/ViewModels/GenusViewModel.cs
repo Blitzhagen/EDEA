@@ -1,5 +1,6 @@
 using System;
 using EDEA.Models;
+using EDEA.Services;
 
 namespace EDEA.ViewModels;
 
@@ -70,6 +71,18 @@ public class GenusViewModel : ViewModelBase
     /// </summary>
     /// <value><c>true</c> if the analysis is not complete; otherwise, <c>false</c>.</value>
     public bool AnalysisNotComplete => !_genus.AnalysisComplete;
+
+    /// <summary>
+    /// Gets the scan count as a string, always showing the numeric value.
+    /// </summary>
+    /// <value>The scan count string, including zero.</value>
+    public string ScanCountDisplay => _genus.ScanCount.ToString();
+
+    /// <summary>
+    /// Gets the formatted Vista Genomics value, always showing the numeric value.
+    /// </summary>
+    /// <value>The formatted value string, including zero.</value>
+    public string VistaGenomicsValueDisplay => $"{_genus.VistaGenomicsValue:n0} {"Cr"}";
 
     /// <summary>
     /// Gets the Vista Genomics base value used for sorting.
@@ -291,9 +304,10 @@ public class GenusViewModel : ViewModelBase
     {
         get
         {
-            if (_genus.ClonalColonyRange != 0)
+            int range = _genus.ClonalColonyRange != 0 ? _genus.ClonalColonyRange : GeneraIndexProvider.GetClonalColonyRangeForGenus(_genus.Name);
+            if (range != 0)
             {
-                return $"{_genus.ClonalColonyRange:n0} m";
+                return $"{range:n0} m";
             }
             return string.Empty;
         }

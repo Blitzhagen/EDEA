@@ -26,13 +26,13 @@
       <Setter Property="Margin" Value="6,0,0,0" />
     </Style>
     <Style Selector="DataGrid.Predicted DataGridRow">
-      <Setter Property="Background" Value="{DynamicResource InverseCellColor}" />
+      <Setter Property="Background" Value="Transparent" />
     </Style>
     <Style Selector="DataGrid.Predicted DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
-      <Setter Property="Fill" Value="{DynamicResource InverseCellHighlightColor}" />
+      <Setter Property="Fill" Value="Transparent" />
     </Style>
     <Style Selector="DataGrid.Predicted DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
-      <Setter Property="Fill" Value="{DynamicResource InverseCellHighlightColor}" />
+      <Setter Property="Fill" Value="Transparent" />
     </Style>
     <Style Selector="DataGrid.Predicted DataGridColumnHeader">
       <Setter Property="Background" Value="{DynamicResource HighlightGrey}" />
@@ -47,7 +47,7 @@
 
     <DataGrid Grid.Row="0"
               Grid.RowSpan="2"
-              x:Name="GenusDataGrid" HeadersVisibility="None"
+              x:Name="GenusDataGrid" Classes="Hud" HeadersVisibility="None"
               AutoGenerateColumns="False"
               IsReadOnly="True"
               IsVisible="{Binding AreBiologicalsKnown}"
@@ -141,7 +141,7 @@
 
     <DataGrid Grid.Row="3"
               x:Name="PredictedSpeciesDataGrid" HeadersVisibility="None"
-              Classes="Predicted"
+              Classes="Hud Predicted"
               AutoGenerateColumns="False"
               IsReadOnly="True"
               IsVisible="{Binding PredictedSpeciesAvailable}"
