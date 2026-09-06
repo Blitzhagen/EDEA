@@ -8,7 +8,7 @@ Diese Dokumentation beschreibt die Diensteschicht von EDEA. Fast alle Services s
 |---------|-------|------------|
 | `EDFileWatcher` | Überwacht das Elite-Dangerous-Saved-Games-Verzeichnis auf Änderungen an Journal, NavRoute und Status. | [`src/EDEA/Services/EDFileWatcher.cs`](../src/EDEA/Services/EDFileWatcher.cs) |
 | `EdDataProvider` | Liest statische Spieldaten aus `mc.dat` (Module, FSD, Guardian FSD Booster). | [`src/EDEA/Services/EdDataProvider.cs`](../src/EDEA/Services/EdDataProvider.cs) |
-| `GeneraIndexProvider` | Lädt biologische Klassifikationsdaten aus `gc.dat` und stellt Genus-Klassifikationen bereit. | [`src/EDEA/Services/GeneraIndexProvider.cs`](../src/EDEA/Services/GeneraIndexProvider.cs) |
+| `GeneraIndexProvider` | Lädt biologische Klassifikationsdaten aus `gc.json` und stellt Genus-Klassifikationen bereit. | [`src/EDEA/Services/GeneraIndexProvider.cs`](../src/EDEA/Services/GeneraIndexProvider.cs) |
 | `HistoryProvider` | Verwaltet die im Speicher gehaltene Sternensystem-Historie, persistiert über `SQLiteStore`. | [`src/EDEA/Services/HistoryProvider.cs`](../src/EDEA/Services/HistoryProvider.cs) |
 | `HotkeyProvider` | Registriert globale Hotkeys und verknüpft sie mit `MainViewModel`-Aktionen. | [`src/EDEA/Services/HotkeyProvider.cs`](../src/EDEA/Services/HotkeyProvider.cs) |
 | `JotSettingsProvider` | Zentrale Instanz des `Jot`-Trackers für Fensterpositionen und -zustände. | [`src/EDEA/Services/JotSettingsProvider.cs`](../src/EDEA/Services/JotSettingsProvider.cs) |
@@ -124,7 +124,7 @@ Diese Dokumentation beschreibt die Diensteschicht von EDEA. Fast alle Services s
 
 ### `GeneraIndexProvider`
 
-- **Zweck:** Liest `gc.dat` und liefert `GenusClassification`-Objekte inklusive Schwerkraft-, Temperatur- und Atmosphären-Ranges.
+- **Zweck:** Liest `gc.json` und liefert `GenusClassification`-Objekte inklusive Schwerkraft-, Temperatur- und Atmosphären-Ranges.
 - **Eigenschaft:** Interne `_genusClassifications`-Liste.
 
 ### `SpeechProvider`

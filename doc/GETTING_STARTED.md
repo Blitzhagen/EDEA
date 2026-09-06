@@ -95,7 +95,7 @@ Das Projekt enthält folgende Ressourcen, die in die Ausgabe kopiert werden:
 
 - `src/EDEA/Resources/app.ico` – Anwendungssymbol.
 - `src/EDEA/Resources/mc.dat` – Inhalt in `EDEA.csproj` als `Content` mit `CopyToOutputDirectory=PreserveNewest`.
-- `src/EDEA/Resources/gc.dat` – Inhalt in `EDEA.csproj` als `Content` mit `CopyToOutputDirectory=PreserveNewest`.
+- `src/EDEA/Resources/gc.json` – Inhalt in `EDEA.csproj` als `Content` mit `CopyToOutputDirectory=PreserveNewest`.
 
 Diese Dateien müssen im Build-Output im Anwendungsverzeichnis vorhanden sein.
 

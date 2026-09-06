@@ -26,13 +26,13 @@ public static class GeneraIndexProvider
         _genusClassifications = new List<GenusClassification>();
         try
         {
-            string gcFile = Path.Combine(Globals.ApplicationFolder, "gc.dat");
+            string gcFile = Path.Combine(Globals.ApplicationFolder, "gc.json");
             if (!File.Exists(gcFile))
             {
-                gcFile = Path.Combine(Globals.ApplicationFolder, "Resources", "gc.dat");
+                gcFile = Path.Combine(Globals.ApplicationFolder, "Resources", "gc.json");
             }
 
-            string value = Encoding.UTF8.GetString(Convert.FromBase64String(File.ReadAllText(gcFile)));
+            string value = File.ReadAllText(gcFile);
             if (JsonNode.Parse(value) is JsonArray array)
             {
                 foreach (JsonNode? node in array)
@@ -295,7 +295,7 @@ public static class GeneraIndexProvider
     private static void generateGenusClassificationData(string bioStatsFilePath)
     {
         // Canonn bio stats based generation is not currently triggered in this app.
-        // The pre-generated gc.dat provides the required genus classification data.
+        // The pre-generated gc.json provides the required genus classification data.
         // This method is kept for parity with the decompiled reference.
     }
 }
