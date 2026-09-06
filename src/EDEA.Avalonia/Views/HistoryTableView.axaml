@@ -63,7 +63,7 @@
                      Classes="HistoryGroupHeadline" />
           <Border Classes="HistoryPanel" MinWidth="160">
             <TextBlock Text="{Binding HistoryData.TripTotalExplorationDataValueSum}"
-                       FontSize="{DynamicResource HeaderFontSize}"
+                       FontSize="{DynamicResource HistoryTotalValueFontSize}"
                        Classes="HistoryPanelValue" />
           </Border>
         </StackPanel>
@@ -354,7 +354,7 @@
                      Classes="HistoryGroupHeadline" />
           <Border Classes="HistoryPanel" MinWidth="160">
             <TextBlock Text="{Binding HistoryData.TotalExplorationDataValueSum}"
-                       FontSize="{DynamicResource HeaderFontSize}"
+                       FontSize="{DynamicResource HistoryTotalValueFontSize}"
                        Classes="HistoryPanelValue" />
           </Border>
         </StackPanel>
