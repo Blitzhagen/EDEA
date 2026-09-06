@@ -100,7 +100,6 @@ Einstellungen, Datenbank und Logs liegen unter `%LOCALAPPDATA%\EDEA.Core`.
 
 Weitere technische Dokumentation befindet sich im Ordner `doc/`:
 
-- [Dokumentationsplanung](doc/DOCS_PLAN.md)
 - [Architektur](doc/ARCHITECTURE.md)
 - [Erste Schritte](doc/GETTING_STARTED.md)
 

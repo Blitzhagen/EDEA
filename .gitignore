@@ -49,3 +49,8 @@ artifacts/
 *.db-journal
 publish/
 EDEA-win-x64.zip
+
+# Agent tooling / working notes (not part of the repository)
+.devin/
+AGENTS.md
+doc/DOCS_PLAN.md
