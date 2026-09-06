@@ -154,6 +154,21 @@ public class HistoryProvider
         return _history.Count;
     }
 
+    /// <summary>Retrieves the journal files that have already been imported.</summary>
+    /// <returns>The imported journal files.</returns>
+    public IEnumerable<ImportedJournalFile> GetImportedJournalFiles()
+    {
+        return _store.GetImportedJournalFiles();
+    }
+
+    /// <summary>Records that journal files have been imported.</summary>
+    /// <param name="files">The imported journal files.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task RecordImportedJournalFilesAsync(IEnumerable<ImportedJournalFile> files)
+    {
+        await _store.RecordImportedJournalFilesAsync(files);
+    }
+
     /// <summary>Removes All.</summary>
     /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task ClearAll()

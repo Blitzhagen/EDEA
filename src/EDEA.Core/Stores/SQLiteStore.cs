@@ -566,6 +566,12 @@ public class SQLiteStore
                 UNIQUE(StarSystemId, BodyId, Name)
             );
 
+            CREATE TABLE IF NOT EXISTS ImportedJournalFiles (
+                FileName TEXT PRIMARY KEY,
+                LastWriteTimeUtc INTEGER NOT NULL,
+                Length INTEGER NOT NULL
+            );
+
         ");
 
         _initialized = true;
@@ -1015,6 +1021,58 @@ public class SQLiteStore
             log.Error("Could not reset trip history", exception);
         }
         DatabaseStarSystemTableUpdated?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Retrieves all journal files that have already been imported.
+    /// </summary>
+    /// <returns>The imported journal files.</returns>
+    public IEnumerable<ImportedJournalFile> GetImportedJournalFiles()
+    {
+        using var db = Connect();
+        db.Open();
+        try
+        {
+            return db.Query<ImportedJournalFile>("SELECT FileName, LastWriteTimeUtc, Length FROM ImportedJournalFiles").ToList();
+        }
+        catch (Exception exception)
+        {
+            log.Error("Could not read imported journal files from database", exception);
+        }
+        return Enumerable.Empty<ImportedJournalFile>();
+    }
+
+    /// <summary>
+    /// Records that a set of journal files has been imported.
+    /// </summary>
+    /// <param name="files">The journal files to record.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task RecordImportedJournalFilesAsync(IEnumerable<ImportedJournalFile> files)
+    {
+        if (files == null)
+        {
+            return;
+        }
+
+        using var db = Connect();
+        db.Open();
+        try
+        {
+            var fileList = files.ToList();
+            if (fileList.Count > 0)
+            {
+                await db.ExecuteAsync(@"
+                    INSERT INTO ImportedJournalFiles (FileName, LastWriteTimeUtc, Length)
+                    VALUES (@FileName, @LastWriteTimeUtc, @Length)
+                    ON CONFLICT(FileName) DO UPDATE SET
+                        LastWriteTimeUtc = excluded.LastWriteTimeUtc,
+                        Length = excluded.Length", fileList);
+            }
+        }
+        catch (Exception exception)
+        {
+            log.Error("Could not record imported journal files", exception);
+        }
     }
 
     /// <summary>

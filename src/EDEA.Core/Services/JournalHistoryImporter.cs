@@ -169,15 +169,41 @@ public class JournalHistoryImporter
     /// <returns>A int result.</returns>
     public int ReadJournalFiles()
     {
-        journalFiles = (from f in Helpsters.GetJournalFiles(Preferences.Other.EdSavedGamePath)
+        var allFiles = (from f in Helpsters.GetJournalFiles(Preferences.Other.EdSavedGamePath)
                         orderby f.LastWriteTime
                         select f).ToList();
-        if (journalFiles != null && journalFiles.Count > 1)
+        if (allFiles == null || allFiles.Count == 0)
         {
-            journalFiles.RemoveAt(journalFiles.Count - 1);
-            return journalFiles.Count;
+            journalFiles = new List<FileInfo>();
+            return 0;
         }
-        return 0;
+
+        if (allFiles.Count > 1)
+        {
+            allFiles.RemoveAt(allFiles.Count - 1);
+        }
+
+        var importedFiles = _historyProvider.GetImportedJournalFiles().ToDictionary(f => f.FileName, StringComparer.OrdinalIgnoreCase);
+        var filesToImport = new List<FileInfo>();
+        int skippedCount = 0;
+        foreach (var file in allFiles)
+        {
+            if (importedFiles.TryGetValue(file.FullName, out var importedFile) && importedFile.LastWriteTimeUtc == file.LastWriteTimeUtc.Ticks && importedFile.Length == file.Length)
+            {
+                skippedCount++;
+                continue;
+            }
+
+            filesToImport.Add(file);
+        }
+
+        if (skippedCount > 0)
+        {
+            log.Info($"Skipping {skippedCount} unchanged historical journal file(s) that are already imported");
+        }
+
+        journalFiles = filesToImport;
+        return journalFiles.Count;
     }
 
     /// <summary>Determines whether CancelJournalImport.</summary>
@@ -434,6 +460,17 @@ public class JournalHistoryImporter
         if (!importCanceled)
         {
             log.Info($"Imported journal files to history in {stopwatch.ElapsedMilliseconds}ms, processed {journalFiles.Count} journal files, added {newStarSystemCount} star systems and updated {updatedStarSystemCount} star systems");
+
+            if (journalFiles != null && journalFiles.Count > 0)
+            {
+                var importedFiles = journalFiles.Select(f => new ImportedJournalFile
+                {
+                    FileName = f.FullName,
+                    LastWriteTimeUtc = f.LastWriteTimeUtc.Ticks,
+                    Length = f.Length
+                }).ToList();
+                await _historyProvider.RecordImportedJournalFilesAsync(importedFiles);
+            }
         }
         if (!importCanceled && _starSystemProvider.CurrentSystem.Id != 0L)
         {
