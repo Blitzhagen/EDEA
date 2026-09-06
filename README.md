@@ -36,6 +36,17 @@ EDEA hilft Explorern dabei, **keine wertvollen Entdeckungen zu übersehen** und 
 - Konfigurierbare Ansagen (Text-to-Speech) für nahezu alle Ereignisse: Begrüßung, geologische/biologische Signale, Erstentdeckungen von Systemen und Körpern, terraformbare und landbare Welten, wertvolle Körper, Gattungsprognosen, Klonkolonie-Reichweite und mehr.
 - Jede Ansage lässt sich einzeln ein-/ausschalten und der Text frei anpassen.
 
+### Einstellungen
+
+EDEA lässt sich in nahezu jedem Bereich an die eigenen Bedürfnisse anpassen:
+
+- **Aussehen**: Alle Farben der Oberfläche sind frei wählbar (Farbwähler mit HSV-, Slider- und Hex-Eingabe), die Anzeigegröße ist in vier Stufen einstellbar, und der automatische Tab-Wechsel kann aktiviert werden.
+- **HUD-Fenster**: Jede Spalte der drei HUD-Tabs (Route, Himmelskörper, Biologie) lässt sich einzeln ein- oder ausblenden; Deckkraft und dargestellte Ansicht (synchron zum Hauptfenster oder fest gewählt) sind konfigurierbar. Zusätzlich lässt sich festlegen, bei welchen Spiel-Panels das HUD automatisch ausgeblendet wird (z. B. Galaxie- und Systemkarte, FSS-Modus, SAA-Modus, Codex, Stationsdienste, zu Fuß u. v. m.).
+- **Sprachausgabe**: Für jedes Ereignis kann der Ansagetext mit Platzhaltern frei formuliert und einzeln aktiviert werden – inklusive Beispielen und Test-Funktion. Stimme, Sprechgeschwindigkeit und Lautstärke sind einstellbar.
+- **Planets of Interest**: Eigene Kriteriensätze (Basisattribute, Oberflächenbedingungen, Ringe, Mutterplanet) definieren, welche Welten als besonders interessant markiert werden.
+- **Globale Hotkeys**: Tastenkombinationen für wichtige Aktionen sind frei belegbar.
+- **Konfiguration**: Pfad zu den Journal-Dateien, Schwellenwerte für wertvolle Körper und Arten sowie die Höhe der Biologie-Ansicht; auf Wunsch lassen sich alle Einstellungen auf die Standardwerte zurücksetzen.
+
 ### Historie und Statistik
 
 - **Aktuelle Erkundungstour** und **gesamte Erkundungshistorie** getrennt ausgewertet: entdeckte Systeme und Körper, Erstentdeckungen, häufigste und seltenste Sternklassen/Ringtypen/Arten sowie die geschätzten Gesamtwerte aller Erkundungsdaten.
