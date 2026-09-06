@@ -78,8 +78,10 @@
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:BodyViewModel">
               <Grid>
-                <materialIcons:MaterialIcon Kind="Check" IsVisible="{Binding SurfaceScanned}" Foreground="{DynamicResource MainColor}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipScannedAndFirstMappedIcon}" />
-                <materialIcons:MaterialIcon Kind="HelpCircle" IsVisible="{Binding !SurfaceScanned}" Foreground="{DynamicResource InactiveHighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipUnknownSurfaceScanStatusIcon}" />
+                <materialIcons:MaterialIcon Kind="Check" IsVisible="{Binding IsSurfaceScannedByMeFirst}" Foreground="{DynamicResource MainColor}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipScannedAndFirstMappedIcon}" />
+                <materialIcons:MaterialIcon Kind="Check" IsVisible="{Binding IsSurfaceScannedByMe}" Foreground="{DynamicResource InactiveMainColor}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipScannedAndWasMappedIcon}" />
+                <materialIcons:MaterialIcon Kind="Check" IsVisible="{Binding IsSurfaceScannedByOther}" Foreground="{DynamicResource InactiveHighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipUnscannedAndWasMappedIcon}" />
+                <materialIcons:MaterialIcon Kind="HelpCircle" IsVisible="{Binding IsSurfaceScanStatusUnknown}" Foreground="{DynamicResource InactiveHighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipUnknownSurfaceScanStatusIcon}" />
               </Grid>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>

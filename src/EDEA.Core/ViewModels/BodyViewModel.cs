@@ -161,6 +161,36 @@ public class BodyViewModel : ViewModelBase
     public SurfaceScanStatus SurfaceScanStatus { get; }
 
     /// <summary>
+    /// Gets a value indicating whether the mapped icon should be shown (journal data available and body mapped).
+    /// </summary>
+    /// <value><c>true</c> if the body was mapped by anyone; otherwise, <c>false</c>.</value>
+    public bool IsSurfaceScanStatusKnown => !WasReadFromEdsmOnly && SurfaceScanStatus != EDEA.SurfaceScanStatus.UnscannedAndWasNotMapped;
+
+    /// <summary>
+    /// Gets a value indicating whether the body was mapped by the commander but data came before this app's tracking.
+    /// </summary>
+    /// <value><c>true</c> if mapped by someone else; otherwise, <c>false</c>.</value>
+    public bool IsSurfaceScannedByOther => SurfaceScanStatus == EDEA.SurfaceScanStatus.UnscannedAndWasMapped;
+
+    /// <summary>
+    /// Gets a value indicating whether the body was mapped by the commander (not first).
+    /// </summary>
+    /// <value><c>true</c> if scanned and already mapped; otherwise, <c>false</c>.</value>
+    public bool IsSurfaceScannedByMe => SurfaceScanStatus == EDEA.SurfaceScanStatus.ScannedAndWasMapped;
+
+    /// <summary>
+    /// Gets a value indicating whether the body was first mapped by the commander.
+    /// </summary>
+    /// <value><c>true</c> if scanned and not previously mapped; otherwise, <c>false</c>.</value>
+    public bool IsSurfaceScannedByMeFirst => SurfaceScanStatus == EDEA.SurfaceScanStatus.ScannedAndWasNotMapped;
+
+    /// <summary>
+    /// Gets a value indicating whether the surface scan status is unknown (EDSM-only data).
+    /// </summary>
+    /// <value><c>true</c> if only EDSM data is available for this planet; otherwise, <c>false</c>.</value>
+    public bool IsSurfaceScanStatusUnknown => IsPlanet && WasReadFromEdsmOnly;
+
+    /// <summary>
     /// Gets a value indicating whether the body was efficiently scanned.
     /// </summary>
     /// <value><c>true</c> if the body was efficiently scanned; otherwise, <c>false</c>.</value>
