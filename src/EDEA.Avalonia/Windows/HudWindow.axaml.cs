@@ -46,6 +46,18 @@ public partial class HudWindow : Window
     }
 
     /// <summary>
+    /// Hides interactive overlay controls while mouse pass-through is active,
+    /// because they cannot receive input in that state anyway.
+    /// </summary>
+    /// <param name="enabled">Whether mouse pass-through is enabled.</param>
+    public void SetMousePassThrough(bool enabled)
+    {
+        CloseHudWindowButton.IsVisible = !enabled;
+        ResizeHudWindowButton.IsVisible = !enabled;
+        HudWindowMoveGrabber.IsVisible = !enabled;
+    }
+
+    /// <summary>
     /// Starts dragging the HUD window when the grabber is pressed.
     /// </summary>
     /// <param name="sender">The source of the event.</param>

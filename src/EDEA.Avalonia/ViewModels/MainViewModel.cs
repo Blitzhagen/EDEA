@@ -257,6 +257,7 @@ public partial class MainViewModel : ObservableObject
             _hudWindow.Opened += (_, _) =>
             {
                 PlatformServices.HudWindow?.SetClickThrough(_hudWindow, _hudClickThrough);
+                _hudWindow.SetMousePassThrough(_hudClickThrough);
             };
             _hudWindow.Closed += (_, _) =>
             {
@@ -306,6 +307,7 @@ public partial class MainViewModel : ObservableObject
 
         _hudClickThrough = !_hudClickThrough;
         PlatformServices.HudWindow?.SetClickThrough(_hudWindow, _hudClickThrough);
+        _hudWindow.SetMousePassThrough(_hudClickThrough);
         HudWindowMousePassThroughEnabled = _hudClickThrough;
         ToggleHudMousePassThroughMenuItemHeader = _hudClickThrough
             ? Resources.MenuItem_HudPassThroughDisable
