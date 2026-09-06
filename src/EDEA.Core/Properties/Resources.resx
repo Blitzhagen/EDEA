@@ -756,6 +756,21 @@
   <data name="RoutePlotterWindow_Title" xml:space="preserve">
     <value>Generate Neutron Plotter Route - https://www.spansh.co.uk/plotter</value>
   </data>
+  <data name="RoutePlotterWindow_CarrierName" xml:space="preserve">
+    <value>Carrier Name:</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierType" xml:space="preserve">
+    <value>Carrier Type:</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierFuel" xml:space="preserve">
+    <value>Tritium (depot):</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierRange" xml:space="preserve">
+    <value>Jump Range:</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierCapacity" xml:space="preserve">
+    <value>Used Capacity:</value>
+  </data>
   <data name="MessageBoxTitle_Error" xml:space="preserve">
     <value>EDEA Error</value>
   </data>

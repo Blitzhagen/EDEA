@@ -62,7 +62,7 @@
     <!-- Main content -->
     <Grid Margin="17,16,17,17" RowDefinitions="Auto,Auto,Auto">
       <!-- Ship information -->
-      <Border Grid.Row="0" Background="{StaticResource MainCellColor}" Padding="12" Margin="0,0,0,17" CornerRadius="7">
+      <Border Grid.Row="0" IsVisible="{Binding !IsCarrierMode}" Background="{StaticResource MainCellColor}" Padding="12" Margin="0,0,0,17" CornerRadius="7">
         <Grid ColumnDefinitions="Auto,*,24,Auto,*" RowDefinitions="Auto,Auto,Auto">
           <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static properties:Resources.RoutePlotterWindow_ShipName}"
                      Foreground="{StaticResource AccentBrush}" Margin="0,0,8,4" />
@@ -95,6 +95,38 @@
           <TextBlock Grid.Row="2" Grid.Column="3" Text="{x:Static properties:Resources.RoutePlotterWindow_Supercharged}"
                      Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" />
           <TextBlock Grid.Row="2" Grid.Column="4" Text="{Binding InfoSupercharged}" />
+        </Grid>
+      </Border>
+
+      <!-- Fleet carrier information -->
+      <Border Grid.Row="0" IsVisible="{Binding IsCarrierMode}" Background="{StaticResource MainCellColor}" Padding="12" Margin="0,0,0,17" CornerRadius="7">
+        <Grid ColumnDefinitions="Auto,*,24,Auto,*" RowDefinitions="Auto,Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static properties:Resources.RoutePlotterWindow_CarrierName}"
+                     Foreground="{StaticResource AccentBrush}" Margin="0,0,8,4" />
+          <TextBlock Grid.Row="0" Grid.Column="1" Margin="0,0,0,4">
+            <Run Text="{Binding CurrentCarrier.Name, Mode=OneWay}" />
+            <Run Text="(" /><Run Text="{Binding CurrentCarrier.Callsign, Mode=OneWay}" /><Run Text=")" />
+          </TextBlock>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static properties:Resources.RoutePlotterWindow_CarrierType}"
+                     Foreground="{StaticResource AccentBrush}" Margin="0,0,8,4" />
+          <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentCarrier.CarrierType, Mode=OneWay}" Margin="0,0,0,4" />
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static properties:Resources.RoutePlotterWindow_CarrierRange}"
+                     Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" />
+          <TextBlock Grid.Row="2" Grid.Column="1">
+            <Run Text="{Binding CurrentCarrier.JumpRangeCurr, Mode=OneWay}" /><Run Text=" Ly" />
+          </TextBlock>
+
+          <TextBlock Grid.Row="0" Grid.Column="3" Text="{x:Static properties:Resources.RoutePlotterWindow_CarrierFuel}"
+                     Foreground="{StaticResource AccentBrush}" Margin="0,0,8,4" />
+          <TextBlock Grid.Row="0" Grid.Column="4" Margin="0,0,0,4">
+            <Run Text="{Binding CurrentCarrier.FuelLevel, Mode=OneWay}" /><Run Text=" t" />
+          </TextBlock>
+          <TextBlock Grid.Row="1" Grid.Column="3" Text="{x:Static properties:Resources.RoutePlotterWindow_CarrierCapacity}"
+                     Foreground="{StaticResource AccentBrush}" Margin="0,0,8,4" />
+          <TextBlock Grid.Row="1" Grid.Column="4" Margin="0,0,0,4">
+            <Run Text="{Binding CurrentCarrier.CapacityUsed, Mode=OneWay}" /><Run Text=" / " />
+            <Run Text="{Binding CurrentCarrier.TotalCapacity, Mode=OneWay}" /><Run Text=" t" />
+          </TextBlock>
         </Grid>
       </Border>
 

@@ -565,6 +565,39 @@ public class JournalProvider
                         }
                         processJournalStartJumpEvent(jObject, _journalSystemMemory);
                         break;
+                    case "CarrierStats":
+                        processJournalCarrierStatsEvent(jObject);
+                        break;
+                    case "CarrierLocation":
+                    case "CarrierJump":
+                        processJournalCarrierLocationEvent(jObject);
+                        break;
+                    case "Docked":
+                        if (Helpsters.ConvertJObjectValue<string>(jObject, "StationType") == "FleetCarrier")
+                        {
+                            _starSystemProvider.IsOnFleetCarrier = true;
+                            _starSystemProvider.DockedCarrierId = Helpsters.ConvertJObjectValue(jObject, "MarketID", 0L);
+                            _starSystemProvider.triggerGuiDataUpdateEvent();
+                        }
+                        break;
+                    case "Undocked":
+                        if (Helpsters.ConvertJObjectValue<string>(jObject, "StationType") == "FleetCarrier" &&
+                            Helpsters.ConvertJObjectValue(jObject, "MarketID", 0L) == _starSystemProvider.DockedCarrierId)
+                        {
+                            _starSystemProvider.IsOnFleetCarrier = false;
+                            _starSystemProvider.DockedCarrierId = 0L;
+                            _starSystemProvider.triggerGuiDataUpdateEvent();
+                        }
+                        break;
+                    case "Location":
+                        if (Helpsters.ConvertJObjectValue(jObject, "Docked", false) &&
+                            Helpsters.ConvertJObjectValue<string>(jObject, "StationType") == "FleetCarrier")
+                        {
+                            _starSystemProvider.IsOnFleetCarrier = true;
+                            _starSystemProvider.DockedCarrierId = Helpsters.ConvertJObjectValue(jObject, "MarketID", 0L);
+                            _starSystemProvider.triggerGuiDataUpdateEvent();
+                        }
+                        break;
                 }
                 switch (eventName)
                 {
@@ -630,6 +663,45 @@ public class JournalProvider
         log.Debug($"parsing journal finished after {elapsedMilliseconds}ms");
         journalParseRunning = false;
         parseJournalTask = null;
+    }
+
+    /// <summary>Processes a CarrierStats journal event and updates the known carrier data.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    private void processJournalCarrierStatsEvent(JsonObject jObject)
+    {
+        var carrier = _starSystemProvider.CurrentCarrier ?? new FleetCarrier();
+        carrier.CarrierId = Helpsters.ConvertJObjectValue(jObject, "CarrierID", 0L);
+        carrier.Callsign = Helpsters.ConvertJObjectValue<string>(jObject, "Callsign") ?? string.Empty;
+        carrier.Name = Helpsters.ConvertJObjectValue<string>(jObject, "Name") ?? string.Empty;
+        carrier.CarrierType = Helpsters.ConvertJObjectValue<string>(jObject, "CarrierType") ?? string.Empty;
+        carrier.FuelLevel = Helpsters.ConvertJObjectValue(jObject, "FuelLevel", 0);
+        carrier.JumpRangeCurr = Helpsters.ConvertJObjectValue(jObject, "JumpRangeCurr", 0.0);
+        carrier.JumpRangeMax = Helpsters.ConvertJObjectValue(jObject, "JumpRangeMax", 500.0);
+
+        if (jObject["SpaceUsage"] is JsonObject spaceUsage)
+        {
+            carrier.TotalCapacity = Helpsters.ConvertJObjectValue(spaceUsage, "TotalCapacity", 25000);
+            carrier.FreeSpace = Helpsters.ConvertJObjectValue(spaceUsage, "FreeSpace", 0);
+        }
+
+        _starSystemProvider.CurrentCarrier = carrier;
+        _starSystemProvider.triggerGuiDataUpdateEvent();
+        log.Debug($"Carrier stats updated: {carrier.Callsign} '{carrier.Name}', fuel {carrier.FuelLevel} t, capacity {carrier.CapacityUsed}/{carrier.TotalCapacity} t");
+    }
+
+    /// <summary>Processes a CarrierLocation or CarrierJump journal event and updates the carrier position.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    private void processJournalCarrierLocationEvent(JsonObject jObject)
+    {
+        var carrier = _starSystemProvider.CurrentCarrier;
+        long carrierId = Helpsters.ConvertJObjectValue(jObject, "CarrierID", 0L);
+        if (carrier == null || (carrierId != 0L && carrierId != carrier.CarrierId))
+        {
+            return;
+        }
+
+        carrier.StarSystemId = Helpsters.ConvertJObjectValue(jObject, "SystemAddress", 0L);
+        carrier.StarSystemName = Helpsters.ConvertJObjectValue<string>(jObject, "StarSystem") ?? string.Empty;
     }
 
     /// <summary>Performs the isProcessable operation.</summary>

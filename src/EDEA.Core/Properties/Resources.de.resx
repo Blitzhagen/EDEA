@@ -758,6 +758,21 @@
   <data name="RoutePlotterWindow_Title" xml:space="preserve">
     <value>Neutronen-Plotter-Route generieren - https://www.spansh.co.uk/plotter</value>
   </data>
+  <data name="RoutePlotterWindow_CarrierName" xml:space="preserve">
+    <value>Carrier-Name:</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierType" xml:space="preserve">
+    <value>Carrier-Typ:</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierFuel" xml:space="preserve">
+    <value>Tritium (Depot):</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierRange" xml:space="preserve">
+    <value>Sprungreichweite:</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierCapacity" xml:space="preserve">
+    <value>Genutzte Kapazität:</value>
+  </data>
   <data name="MessageBoxTitle_Error" xml:space="preserve">
     <value>EDEA-Fehler</value>
   </data>

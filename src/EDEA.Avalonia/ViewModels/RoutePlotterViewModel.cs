@@ -110,9 +110,24 @@ public partial class RoutePlotterViewModel : ObservableObject
     public Ship? CurrentShip => _starSystemProvider.CurrentShip;
 
     /// <summary>
+    /// Gets the last known own fleet carrier.
+    /// </summary>
+    public FleetCarrier? CurrentCarrier => _starSystemProvider.CurrentCarrier;
+
+    /// <summary>
+    /// Gets a value indicating whether the commander is aboard a fleet carrier and carrier routing applies.
+    /// </summary>
+    public bool IsCarrierMode => _starSystemProvider.IsOnFleetCarrier;
+
+    /// <summary>
+    /// Gets a value indicating whether carrier route parameters are available (aboard, optionally with stats).
+    /// </summary>
+    public bool HasCarrierData => IsCarrierMode;
+
+    /// <summary>
     /// Gets a value indicating whether no ship data is available.
     /// </summary>
-    public bool HasNoShipData => CurrentShip == null;
+    public bool HasNoShipData => !IsCarrierMode && CurrentShip == null;
 
     /// <summary>
     /// Gets a value indicating whether both source and target systems are selected.
@@ -216,15 +231,30 @@ public partial class RoutePlotterViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Requests a neutron route calculation from Spansh.
+    /// Requests a neutron or fleet carrier route calculation from Spansh.
     /// </summary>
     [RelayCommand(CanExecute = nameof(IsSelectionValid))]
     private void GenerateRoute()
     {
+        Preferences.SaveUserSettings();
+        LoadingProgress = 0.0;
+        IsLoading = true;
+
+        if (IsCarrierMode)
+        {
+            var carrier = _starSystemProvider.CurrentCarrier;
+            log.Info($"Carrier route request: from '{SelectedSourceSystem!.Name}' to '{SelectedTargetSystem!.Name}', " +
+                $"carrier '{carrier?.Name ?? "?"}' ({carrier?.Callsign ?? "?"}), fuel {carrier?.FuelLevel ?? 0} t, " +
+                $"capacity {carrier?.CapacityUsed ?? 0}/{carrier?.TotalCapacity ?? 25000} t");
+            _webApiProvider.SpanshRequestCarrierRouteCalculation(SelectedSourceSystem!, SelectedTargetSystem!, carrier, RequestDelayMilliseconds, OnRouteCalculationResponse);
+            return;
+        }
+
         var currentShip = _starSystemProvider.CurrentShip;
         if (currentShip == null)
         {
             log.Warn("Cannot calculate neutron route: no current ship");
+            IsLoading = false;
             HasError = true;
             return;
         }
@@ -236,10 +266,6 @@ public partial class RoutePlotterViewModel : ObservableObject
         {
             superchargeMultiplier = 4.0;
         }
-
-        Preferences.SaveUserSettings();
-        LoadingProgress = 0.0;
-        IsLoading = true;
 
         log.Info($"Route plotter request: from '{SelectedSourceSystem!.Name}' to '{SelectedTargetSystem!.Name}', " +
             $"range {range:F2} Ly, efficiency {efficiency}%, supercharge multiplier {superchargeMultiplier}x");
@@ -345,6 +371,9 @@ public partial class RoutePlotterViewModel : ObservableObject
         {
             RequestCurrentSystemData();
             OnPropertyChanged(nameof(CurrentShip));
+            OnPropertyChanged(nameof(CurrentCarrier));
+            OnPropertyChanged(nameof(IsCarrierMode));
+            OnPropertyChanged(nameof(HasCarrierData));
             OnPropertyChanged(nameof(InfoBooster));
             OnPropertyChanged(nameof(InfoSupercharged));
             OnPropertyChanged(nameof(HasNoShipData));

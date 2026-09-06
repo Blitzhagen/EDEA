@@ -801,6 +801,21 @@ public static class Resources
     public static string RoutePlotterWindow_Title => Get(nameof(RoutePlotterWindow_Title));
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>
+    public static string RoutePlotterWindow_CarrierName => Get(nameof(RoutePlotterWindow_CarrierName));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string RoutePlotterWindow_CarrierType => Get(nameof(RoutePlotterWindow_CarrierType));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string RoutePlotterWindow_CarrierFuel => Get(nameof(RoutePlotterWindow_CarrierFuel));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string RoutePlotterWindow_CarrierRange => Get(nameof(RoutePlotterWindow_CarrierRange));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string RoutePlotterWindow_CarrierCapacity => Get(nameof(RoutePlotterWindow_CarrierCapacity));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
     public static string MessageBoxTitle_Error => Get(nameof(MessageBoxTitle_Error));
 
     /// <summary>Gets the localized string for this resource.</summary>

@@ -113,6 +113,20 @@ public class StarSystemProvider
     /// <value>The current <see cref="Ship"/>.</value>
     public Ship CurrentShip { get; set; }
 
+#nullable enable
+    /// <summary>Gets or sets the last known own fleet carrier.</summary>
+    /// <value>The <see cref="FleetCarrier"/> or <c>null</c> if no carrier stats have been received.</value>
+    public FleetCarrier? CurrentCarrier { get; set; }
+#nullable disable
+
+    /// <summary>Gets or sets a value indicating whether the commander is currently aboard a fleet carrier.</summary>
+    /// <value><c>true</c> if aboard a fleet carrier; otherwise, <c>false</c>.</value>
+    public bool IsOnFleetCarrier { get; set; }
+
+    /// <summary>Gets or sets the market ID of the fleet carrier the commander is docked at.</summary>
+    /// <value>The market ID of the docked carrier, or 0.</value>
+    public long DockedCarrierId { get; set; }
+
     /// <summary>Raised when general GUI data has been updated.</summary>
     public event EventHandler GuiDataUpdated = delegate { };
     /// <summary>Raised when planetary location data has been updated.</summary>

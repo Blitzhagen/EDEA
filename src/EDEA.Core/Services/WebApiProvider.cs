@@ -203,6 +203,35 @@ public class WebApiProvider
         _ = new WebApiRequest(this, apiUrl, new WepApiQueryData(WepApiQueryType.GetQuery, queryData), onSpanshRequestNeutronRouteCalculation, webApiObject, requestCallBack, ignoreSpeechOutput: true);
     }
 
+    /// <summary>Requests a fleet carrier route calculation from the Spansh API.</summary>
+    /// <param name="sourceSystem">The source system.</param>
+    /// <param name="targetSystem">The destination system.</param>
+    /// <param name="carrier">The known carrier data, or <c>null</c> to use defaults.</param>
+    /// <param name="requestDelay">The delay between result polling requests in milliseconds.</param>
+    /// <param name="requestCallBack">The callback invoked when the request completes.</param>
+#nullable enable
+    public void SpanshRequestCarrierRouteCalculation(StarSystem sourceSystem, StarSystem targetSystem, FleetCarrier? carrier, int requestDelay, Action<WebApiParameter> requestCallBack)
+#nullable restore
+    {
+        spanshCancellationOfGalaxyRouteCalculationRequested = false;
+        var webApiObject = new WebApiParameterSpanshGalaxyRoute(0, requestDelay);
+        int capacity = carrier?.TotalCapacity ?? 25000;
+        int capacityUsed = carrier?.CapacityUsed ?? 0;
+        int fuelLoaded = carrier?.FuelLevel ?? 0;
+        string queryData =
+            $"source={Uri.EscapeDataString(sourceSystem.Name)}&" +
+            $"destinations={Uri.EscapeDataString(targetSystem.Name)}&" +
+            $"capacity={capacity}&" +
+            $"mass={capacity}&" +
+            $"capacity_used={capacityUsed}&" +
+            $"calculate_starting_fuel={(fuelLoaded > 0 ? 0 : 1)}&" +
+            $"fuel_loaded={fuelLoaded}&" +
+            $"tritium_stored=0";
+        string apiUrl = "https://spansh.co.uk/api/fleetcarrier/route?" + queryData;
+        log.Info($"Requesting Spansh fleet carrier route: {apiUrl}");
+        _ = new WebApiRequest(this, apiUrl, new WepApiQueryData(WepApiQueryType.PostFormUrlEncodedContent, new FormUrlEncodedContent(Enumerable.Empty<KeyValuePair<string, string?>>())), onSpanshRequestCarrierRouteCalculation, webApiObject, requestCallBack, ignoreSpeechOutput: true);
+    }
+
     /// <summary>Performs the SpanshRequestCancellationOfGalaxyRouteCalculation operation.</summary>
     public void SpanshRequestCancellationOfGalaxyRouteCalculation()
     {
@@ -286,6 +315,95 @@ public class WebApiProvider
                                         (Helpsters.ConvertJObjectValue(jump, "has_neutron", false) ? ", neutron" : string.Empty) +
                                         (Helpsters.ConvertJObjectValue(jump, "is_refuel", false) ? ", refuel" : string.Empty) +
                                         (Helpsters.ConvertJObjectValue(jump, "is_scoopable", false) ? ", scoopable" : string.Empty));
+                                }
+                                jumpIndex++;
+                            }
+                        }
+                    }
+                    requestCallBack(webApiParameterSpanshGalaxyRoute);
+                    break;
+                }
+            default:
+                requestCallBack(webApiParameter);
+                break;
+        }
+    }
+
+    /// <summary>Performs the onSpanshRequestCarrierRouteCalculation operation.</summary>
+    /// <param name="jToken">The JsonNode? value of the jToken parameter.</param>
+    /// <param name="webApiParameter">The WebApiParameter value of the webApiParameter parameter.</param>
+    /// <param name="requestCallBack">The Action<WebApiParameter> value of the requestCallBack parameter.</param>
+    /// <param name="ignoreSpeechOutput">The bool value of the ignoreSpeechOutput parameter.</param>
+    private void onSpanshRequestCarrierRouteCalculation(JsonNode? jToken, WebApiParameter webApiParameter, Action<WebApiParameter> requestCallBack, bool ignoreSpeechOutput)
+    {
+        if (jToken is not JsonObject jObject)
+        {
+            requestCallBack(webApiParameter);
+            return;
+        }
+
+        string jobId = Helpsters.ConvertJObjectValue<string>(jObject, "job");
+        string jobStatus = Helpsters.ConvertJObjectValue<string>(jObject, "status");
+        if (string.IsNullOrEmpty(jobId) || string.IsNullOrEmpty(jobStatus))
+        {
+            log.Error($"Spansh carrier job has unknown parameter: jobId {(jobId)}, status {(jobStatus)}");
+            requestCallBack(webApiParameter);
+            return;
+        }
+
+        if (webApiParameter is not WebApiParameterSpanshGalaxyRoute webApiParameterSpanshGalaxyRoute)
+        {
+            log.Error($"Spansh carrier job has invalid web API parameter: type is {(webApiParameter.GetType())} instead of {(typeof(WebApiParameterSpanshGalaxyRoute))}");
+            requestCallBack(webApiParameter);
+            return;
+        }
+
+        webApiParameterSpanshGalaxyRoute.RequestCount++;
+        if (webApiParameterSpanshGalaxyRoute.RequestCount == 1)
+        {
+            log.Info($"Spansh carrier job {jobId} started (status: {jobStatus}); result can be compared at https://www.spansh.co.uk/fleet-carrier/results/{jobId}");
+        }
+        switch (webApiParameterSpanshGalaxyRoute.StatusCode)
+        {
+            case HttpStatusCode.Accepted:
+                Task.Run(async () =>
+                {
+                    log.Debug($"Got job {(jobId)} with status {(jobStatus)} from spansh carrier API, waiting for {(webApiParameterSpanshGalaxyRoute.RequestDelay)} ms before requesting again ...");
+                    await Task.Delay(webApiParameterSpanshGalaxyRoute.RequestDelay);
+                    string apiUrl = "https://spansh.co.uk";
+                    string queryData = "/api/results/" + jobId;
+                    if (spanshCancellationOfGalaxyRouteCalculationRequested)
+                    {
+                        spanshCancellationOfGalaxyRouteCalculationRequested = false;
+                    }
+                    else
+                    {
+                        _ = new WebApiRequest(this, apiUrl, new WepApiQueryData(WepApiQueryType.GetPath, queryData), onSpanshRequestCarrierRouteCalculation, webApiParameter, requestCallBack, ignoreSpeechOutput: true);
+                    }
+                });
+                break;
+            case HttpStatusCode.OK:
+                {
+                    var result = Helpsters.ConvertJObjectValue<JsonObject?>(jObject, "result");
+                    if (result == null)
+                    {
+                        log.Error($"Spansh carrier job {(jobId)} with status {(jobStatus)} returned an invalid response: {(result)}");
+                    }
+                    else
+                    {
+                        var jumps = BuildCarrierJumps(result);
+                        if (jumps != null && jumps.Count > 1)
+                        {
+                            webApiParameterSpanshGalaxyRoute.Jumps = jumps;
+                            log.Info($"Spansh carrier job {jobId} finished with {jumps.Count} jumps:");
+                            int jumpIndex = 0;
+                            foreach (JsonNode? node in jumps)
+                            {
+                                if (node is JsonObject jump)
+                                {
+                                    log.Info($"  Jump {jumpIndex}: {Helpsters.ConvertJObjectValue<string>(jump, "name")}, " +
+                                        $"{Helpsters.ConvertJObjectValue(jump, "distance", 0.0):F2} Ly" +
+                                        (Helpsters.ConvertJObjectValue(jump, "is_refuel", false) ? ", refuel" : string.Empty));
                                 }
                                 jumpIndex++;
                             }
@@ -1165,6 +1283,52 @@ public class WebApiProvider
                 {
                     normalized["has_neutron"] = true;
                 }
+            }
+
+            jumps.Add(normalized);
+        }
+
+        return jumps;
+    }
+
+    /// <summary>Normalizes fleet carrier route jumps into the internal plotter jump format.</summary>
+    /// <param name="result">The JsonObject value of the result parameter.</param>
+    /// <returns>A JsonArray? result.</returns>
+    private static JsonArray? BuildCarrierJumps(JsonObject result)
+    {
+        var resultJumps = Helpsters.ConvertJObjectValue<JsonArray?>(result, "jumps");
+        if (resultJumps == null)
+        {
+            return null;
+        }
+
+        var jumps = new JsonArray();
+        foreach (JsonNode? node in resultJumps)
+        {
+            if (node is not JsonObject jump)
+            {
+                continue;
+            }
+
+            long id64 = Helpsters.ConvertJObjectValue(jump, "id64", 0L);
+            string? name = Helpsters.ConvertJObjectValue<string?>(jump, "name") ?? Helpsters.ConvertJObjectValue<string?>(jump, "system");
+            double distance = Helpsters.ConvertJObjectValue(jump, "distance", 0.0);
+            if (id64 == 0L || string.IsNullOrEmpty(name))
+            {
+                continue;
+            }
+
+            var normalized = new JsonObject
+            {
+                ["id64"] = id64,
+                ["name"] = name,
+                ["distance"] = distance
+            };
+
+            if (Helpsters.ConvertJObjectValue(jump, "must_restock", 0) != 0 ||
+                Helpsters.ConvertJObjectValue(jump, "refuel", false))
+            {
+                normalized["is_refuel"] = true;
             }
 
             jumps.Add(normalized);
