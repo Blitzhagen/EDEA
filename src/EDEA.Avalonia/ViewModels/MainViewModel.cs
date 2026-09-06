@@ -172,6 +172,11 @@ public partial class MainViewModel : ObservableObject
     public ICommand ImportJournalHistoryCommand { get; }
 
     /// <summary>
+    /// Gets the command that reloads EDSM data for the current star system.
+    /// </summary>
+    public ICommand ReloadEdsmDataCommand { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="MainViewModel"/> class with the specified providers.
     /// </summary>
     public MainViewModel(StarSystemProvider starSystemProvider, HistoryProvider historyProvider, RouteProvider routeProvider, StatusProvider statusProvider)
@@ -210,6 +215,12 @@ public partial class MainViewModel : ObservableObject
         OpenCloseHudWindowCommand = new RelayCommand(OpenCloseHudWindow);
         ToggleHudMousePassThroughCommand = new RelayCommand(ToggleHudMousePassThrough, () => _hudWindow != null);
         ImportJournalHistoryCommand = new RelayCommand(ImportJournalHistory);
+        ReloadEdsmDataCommand = new RelayCommand(ReloadEdsmData);
+    }
+
+    private void ReloadEdsmData()
+    {
+        _starSystemProvider.HandleLoadEdsmSystemDataCommand(true);
     }
 
     private void ShowAboutWindow()

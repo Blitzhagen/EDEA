@@ -97,7 +97,7 @@
           <MenuItem Header="Toggle HUD" Command="{Binding OpenCloseHudWindowCommand}"/>
           <MenuItem Header="{Binding ToggleHudMousePassThroughMenuItemHeader}" Command="{Binding ToggleHudMousePassThroughCommand}" ToggleType="CheckBox" IsChecked="{Binding HudWindowMousePassThroughEnabled, Mode=OneWay}" />
           <Separator/>
-          <MenuItem Header="Reload EDSM" IsEnabled="False"/>
+          <MenuItem Header="{x:Static properties:Resources.MenuItem_ReloadEdsm}" Command="{Binding ReloadEdsmDataCommand}"/>
           <Separator/>
           <MenuItem Header="Generate/Clear Plotter Route" IsEnabled="False"/>
           <MenuItem Header="Lock/Unlock Route" IsEnabled="False"/>
