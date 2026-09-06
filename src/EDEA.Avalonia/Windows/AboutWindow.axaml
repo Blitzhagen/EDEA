@@ -15,7 +15,7 @@
 
       <Image x:Name="AboutImage" Width="96" Height="96" HorizontalAlignment="Center" Source="/Assets/app.ico" Margin="0,0,0,16"/>
 
-      <TextBlock Text="Elite Dangerous Exploration Assistent" FontSize="20" FontWeight="Bold" Foreground="#00BFFF" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,20"/>
+      <TextBlock Text="Elite Dangerous Exploration Assistant" FontSize="20" FontWeight="Bold" Foreground="#00BFFF" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,20"/>
 
       <Grid HorizontalAlignment="Center" Width="520">
         <Grid.ColumnDefinitions>
@@ -40,7 +40,7 @@
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Libraries" Foreground="{StaticResource AccentBrush}" TextAlignment="Right" TextWrapping="Wrap" Margin="0,0,6,6" VerticalAlignment="Top"/>
         <TextBlock Grid.Row="2" Grid.Column="1" Foreground="#00BFFF" TextAlignment="Left" TextWrapping="Wrap" Margin="0,0,0,6" VerticalAlignment="Top">
           <TextBlock.Text>
-CommunityToolkit.Mvvm, Dapper, Jot, log4net, Material.Icons.Avalonia, Microsoft.Data.Sqlite, Avalonia, NAudio, SayIt
+Avalonia UI, CommunityToolkit.Mvvm, Dapper, log4net, Material.Icons.Avalonia, Microsoft.Data.Sqlite, NAudio, PixiEditor.ColorPicker.AvaloniaUI, SayIt
           </TextBlock.Text>
         </TextBlock>
 
