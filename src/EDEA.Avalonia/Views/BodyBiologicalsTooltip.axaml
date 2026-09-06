@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
+             xmlns:properties="using:EDEA.Properties"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             x:Class="EDEA.Avalonia.Views.BodyBiologicalsTooltip"
+             x:DataType="vm:BodyViewModel">
+
+  <Border Background="{DynamicResource MainBackgroundColor}" Padding="4">
+    <StackPanel Grid.IsSharedSizeScope="True">
+    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto">
+      <TextBlock Grid.Column="0" Text="{x:Static properties:Resources.Templates_Tooltip_BiologicalSignalsDetected}" Foreground="{DynamicResource MainColor}" Margin="0,0,8,0" />
+      <TextBlock Grid.Column="1" Text="{Binding BiologicalsCount}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" />
+
+      <TextBlock Grid.Column="0" Grid.Row="1" Text="{x:Static properties:Resources.Templates_Tooltip_AnalysedDiscoveredBiologicals}" Foreground="{DynamicResource MainColor}" Margin="0,0,8,0" />
+      <TextBlock Grid.Column="1" Grid.Row="1" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right">
+        <TextBlock.Text>
+          <MultiBinding StringFormat="{}{0} / {1}">
+            <Binding Path="AnalysedGenusesCount" />
+            <Binding Path="GenusesCount" />
+          </MultiBinding>
+        </TextBlock.Text>
+      </TextBlock>
+
+      <TextBlock Grid.Column="0" Grid.Row="2" Text="{x:Static properties:Resources.Templates_Tooltip_FirstDiscoveryBonusApplicable}" Foreground="{DynamicResource MainColor}" Margin="0,0,8,0" />
+      <TextBlock Grid.Column="1" Grid.Row="2" Text="{x:Static properties:Resources.Templates_Tooltip_Yes}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" IsVisible="{Binding WasNotMapped}" />
+      <TextBlock Grid.Column="1" Grid.Row="2" Text="{x:Static properties:Resources.Templates_Tooltip_No}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" IsVisible="{Binding WasMapped}" />
+    </Grid>
+
+    <ItemsControl ItemsSource="{Binding Genuses}" IsVisible="{Binding GenusesAvailable}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="vm:GenusViewModel">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="BioName" />
+              <ColumnDefinition Width="Auto" SharedSizeGroup="BioScan" />
+              <ColumnDefinition Width="Auto" SharedSizeGroup="BioValue" />
+              <ColumnDefinition Width="Auto" SharedSizeGroup="BioValuable" />
+              <ColumnDefinition Width="Auto" SharedSizeGroup="BioNew" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+              <TextBlock Text="{Binding Name}" IsVisible="{Binding SpeciesNotSet}" Foreground="{DynamicResource MainColor}" />
+              <TextBlock Text="{Binding Species}" IsVisible="{Binding SpeciesSet}" Foreground="{DynamicResource MainColor}" />
+            </StackPanel>
+            <Grid Grid.Column="1" HorizontalAlignment="Center">
+              <TextBlock Text="{Binding ScanCount}" IsVisible="{Binding AnalysisNotComplete}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Center" />
+              <materialIcons:MaterialIcon Kind="Check" IsVisible="{Binding AnalysisComplete}" Foreground="{DynamicResource CompleteIconColor}" Width="16" Height="16" />
+            </Grid>
+            <TextBlock Grid.Column="2" Text="{Binding VistaGenomicsValue}" Foreground="{Binding AnalysisNotComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='HighlightGrey;MainColor'}" HorizontalAlignment="Right" />
+            <materialIcons:MaterialIcon Grid.Column="3" Kind="DiamondStone" IsVisible="{Binding IsValuableGenus}" Foreground="{Binding AnalysisComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='MainColor;ValuableIconColor'}" Width="16" Height="16" />
+            <materialIcons:MaterialIcon Grid.Column="4" Kind="NewBox" IsVisible="{Binding IsFirstDiscoveryAndAnalysisComplete}" Foreground="{DynamicResource NewIconColor}" Width="16" Height="16" />
+          </Grid>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+    <TextBlock Text="{x:Static properties:Resources.Templates_Tooltip_PossibleOccurrences}" IsVisible="{Binding PredictedSpeciesAvailable}" Foreground="{DynamicResource HighlightGrey}" FontWeight="Bold" Margin="0,4,0,0" />
+
+    <ItemsControl ItemsSource="{Binding PredictedSpecies}" IsVisible="{Binding PredictedSpeciesAvailable}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="vm:GenusClassificationViewModel">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="PredSpecies" />
+              <ColumnDefinition Width="Auto" SharedSizeGroup="PredValue" />
+              <ColumnDefinition Width="Auto" SharedSizeGroup="PredValuable" />
+              <ColumnDefinition Width="Auto" SharedSizeGroup="PredNew" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding Species}" Foreground="{DynamicResource HighlightGrey}" />
+            <TextBlock Grid.Column="1" Text="{Binding VistaGenomicsMaxValue}" Foreground="{DynamicResource HighlightGrey}" HorizontalAlignment="Right" />
+            <materialIcons:MaterialIcon Grid.Column="2" Kind="DiamondStone" IsVisible="{Binding IsValuable}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" />
+            <materialIcons:MaterialIcon Grid.Column="3" Kind="NewBox" IsVisible="{Binding IsFirstDiscovery}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" />
+          </Grid>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </StackPanel>
+  </Border>
+</UserControl>

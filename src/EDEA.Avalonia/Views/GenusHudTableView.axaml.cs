@@ -7,16 +7,16 @@ using EDEA.ViewModels;
 namespace EDEA.Avalonia.Views;
 
 /// <summary>
-/// Avalonia view for the genus table.
+/// Avalonia view for the genus HUD table.
 /// </summary>
-public partial class GenusTableView : UserControl
+public partial class GenusHudTableView : UserControl
 {
     private GenusTableViewModel? _viewModel;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GenusTableView"/> class.
+    /// Initializes a new instance of the <see cref="GenusHudTableView"/> class.
     /// </summary>
-    public GenusTableView()
+    public GenusHudTableView()
     {
         InitializeComponent();
         DataContextChanged += OnDataContextChanged;

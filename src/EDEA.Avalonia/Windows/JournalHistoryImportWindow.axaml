@@ -4,30 +4,30 @@
         xmlns:vm="clr-namespace:EDEA.Avalonia.ViewModels"
         x:Class="EDEA.Avalonia.Windows.JournalHistoryImportWindow"
         x:DataType="vm:JournalHistoryImportViewModel"
-        Title="{x:Static properties:Resources.JournalHistoryImportWindow_Title}" MinHeight="300" SizeToContent="Height" MinWidth="450" MaxWidth="450"
+        Title="{x:Static properties:Resources.JournalHistoryImportWindow_Title}" MinHeight="400" SizeToContent="Height" MinWidth="520" MaxWidth="520"
         CanResize="False" WindowStartupLocation="CenterScreen"
         Background="{StaticResource MainBackgroundColor}">
-  <Grid Margin="17,16,17,0" ColumnDefinitions="0.62*,0.38*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto">
-    <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" TextWrapping="Wrap" Margin="0,0,0,7" Text="{Binding IntroText}" />
+  <Grid Margin="17,16,17,16" ColumnDefinitions="0.62*,0.38*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+    <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" TextWrapping="Wrap" Margin="0,0,0,7" Text="{Binding IntroText}" Foreground="{StaticResource ForegroundBrush}" />
     <ProgressBar Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Height="22" Minimum="0" Maximum="100" VerticalAlignment="Center" Value="{Binding ProgressBarValue, Mode=OneWay}" />
-    <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Padding="0,0,0,1" Text="{Binding StatusPercentage, Mode=OneWay}" />
-    <TextBlock Grid.Column="0" Grid.Row="3" Text="{x:Static properties:Resources.JournalHistoryImportWindow_JournalFilesProcessed}" Foreground="{StaticResource MainColor}" />
-    <TextBlock Grid.Column="1" Grid.Row="3" Foreground="{StaticResource MainColor}" Text="{Binding JournalFilesProcessed, Mode=OneWay}" />
-    <TextBlock Grid.Column="0" Grid.Row="4" Text="{x:Static properties:Resources.JournalHistoryImportWindow_DetectingStarSystems}" Foreground="{StaticResource MainColor}" />
-    <TextBlock Grid.Column="1" Grid.Row="4" Foreground="{StaticResource MainColor}" Text="{Binding SystemsScanProgress, Mode=OneWay}" />
-    <TextBlock Grid.Column="0" Grid.Row="5" Text="{x:Static properties:Resources.JournalHistoryImportWindow_DetectingBodies}" Foreground="{StaticResource MainColor}" />
-    <TextBlock Grid.Column="1" Grid.Row="5" Foreground="{StaticResource MainColor}" Text="{Binding BodiesScanProgress, Mode=OneWay}" />
-    <TextBlock Grid.Column="0" Grid.Row="6" Text="{x:Static properties:Resources.JournalHistoryImportWindow_DetectingAdditionalData}" Foreground="{StaticResource MainColor}" />
-    <TextBlock Grid.Column="1" Grid.Row="6" Foreground="{StaticResource MainColor}" Text="{Binding AdditionalDataScanProgress, Mode=OneWay}" />
-    <TextBlock Grid.Column="0" Grid.Row="7" Text="{x:Static properties:Resources.JournalHistoryImportWindow_NewSystemsAdded}" Foreground="{StaticResource MainColor}" />
-    <TextBlock Grid.Column="1" Grid.Row="7" Foreground="{StaticResource MainColor}" Text="{Binding AddedToHistoryCount, Mode=OneWay}" />
-    <TextBlock Grid.Column="0" Grid.Row="8" Text="{x:Static properties:Resources.JournalHistoryImportWindow_SystemsUpdated}" Foreground="{StaticResource MainColor}" />
-    <TextBlock Grid.Column="1" Grid.Row="8" Foreground="{StaticResource MainColor}" Text="{Binding UpdatedInHistoryCount, Mode=OneWay}" />
-    <TextBlock Grid.Column="0" Grid.Row="9" Text="{x:Static properties:Resources.JournalHistoryImportWindow_SystemsIgnored}" Foreground="{StaticResource MainColor}" />
-    <TextBlock Grid.Column="1" Grid.Row="9" Foreground="{StaticResource MainColor}" Text="{Binding IgnoredSystemsCount, Mode=OneWay}" />
-    <Grid Grid.Column="0" Grid.Row="11" Grid.ColumnSpan="2" VerticalAlignment="Top">
-      <Button x:Name="StartImportButton" Content="{x:Static properties:Resources.JournalHistoryImportWindow_StartImport}" Click="StartImportButton_Click" IsVisible="{Binding IsStartVisible}" HorizontalAlignment="Center" />
-      <Button x:Name="StopImportCloseButton" Content="{x:Static properties:Resources.JournalHistoryImportWindow_StopImport}" Click="StopImportCloseButton_Click" IsVisible="{Binding IsStopCloseVisible}" HorizontalAlignment="Center" />
+    <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Padding="0,0,0,1" Text="{Binding StatusPercentage, Mode=OneWay}" Foreground="{StaticResource MainColor}" HorizontalAlignment="Center" />
+    <TextBlock Grid.Column="0" Grid.Row="3" Text="{x:Static properties:Resources.JournalHistoryImportWindow_JournalFilesProcessed}" Foreground="{StaticResource MainColor}" TextWrapping="Wrap" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,4,4,0" />
+    <TextBlock Grid.Column="1" Grid.Row="3" Foreground="{StaticResource MainColor}" Text="{Binding JournalFilesProcessed, Mode=OneWay}" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="4,4,0,0" />
+    <TextBlock Grid.Column="0" Grid.Row="4" Text="{x:Static properties:Resources.JournalHistoryImportWindow_DetectingStarSystems}" Foreground="{StaticResource MainColor}" TextWrapping="Wrap" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,4,4,0" />
+    <TextBlock Grid.Column="1" Grid.Row="4" Foreground="{StaticResource MainColor}" Text="{Binding SystemsScanProgress, Mode=OneWay}" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="4,4,0,0" />
+    <TextBlock Grid.Column="0" Grid.Row="5" Text="{x:Static properties:Resources.JournalHistoryImportWindow_DetectingBodies}" Foreground="{StaticResource MainColor}" TextWrapping="Wrap" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,4,4,0" />
+    <TextBlock Grid.Column="1" Grid.Row="5" Foreground="{StaticResource MainColor}" Text="{Binding BodiesScanProgress, Mode=OneWay}" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="4,4,0,0" />
+    <TextBlock Grid.Column="0" Grid.Row="6" Text="{x:Static properties:Resources.JournalHistoryImportWindow_DetectingAdditionalData}" Foreground="{StaticResource MainColor}" TextWrapping="Wrap" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,4,4,0" />
+    <TextBlock Grid.Column="1" Grid.Row="6" Foreground="{StaticResource MainColor}" Text="{Binding AdditionalDataScanProgress, Mode=OneWay}" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="4,4,0,0" />
+    <TextBlock Grid.Column="0" Grid.Row="7" Text="{x:Static properties:Resources.JournalHistoryImportWindow_NewSystemsAdded}" Foreground="{StaticResource MainColor}" TextWrapping="Wrap" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,4,4,0" />
+    <TextBlock Grid.Column="1" Grid.Row="7" Foreground="{StaticResource MainColor}" Text="{Binding AddedToHistoryCount, Mode=OneWay}" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="4,4,0,0" />
+    <TextBlock Grid.Column="0" Grid.Row="8" Text="{x:Static properties:Resources.JournalHistoryImportWindow_SystemsUpdated}" Foreground="{StaticResource MainColor}" TextWrapping="Wrap" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,4,4,0" />
+    <TextBlock Grid.Column="1" Grid.Row="8" Foreground="{StaticResource MainColor}" Text="{Binding UpdatedInHistoryCount, Mode=OneWay}" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="4,4,0,0" />
+    <TextBlock Grid.Column="0" Grid.Row="9" Text="{x:Static properties:Resources.JournalHistoryImportWindow_SystemsIgnored}" Foreground="{StaticResource MainColor}" TextWrapping="Wrap" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,4,4,0" />
+    <TextBlock Grid.Column="1" Grid.Row="9" Foreground="{StaticResource MainColor}" Text="{Binding IgnoredSystemsCount, Mode=OneWay}" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="4,4,0,0" />
+    <Grid Grid.Column="0" Grid.Row="11" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="0,20,0,0">
+      <Button x:Name="StartImportButton" Content="{x:Static properties:Resources.JournalHistoryImportWindow_StartImport}" Click="StartImportButton_Click" IsVisible="{Binding IsStartVisible}" HorizontalAlignment="Center" VerticalAlignment="Top" />
+      <Button x:Name="StopImportCloseButton" Content="{Binding StopCloseButtonContent, Mode=OneWay}" Click="StopImportCloseButton_Click" IsVisible="{Binding IsStopCloseVisible}" HorizontalAlignment="Center" VerticalAlignment="Top" />
     </Grid>
   </Grid>
 </Window>

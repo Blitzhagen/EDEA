@@ -837,10 +837,10 @@
     <value>Interessante Planeten:</value>
   </data>
   <data name="Templates_Tooltip_TotalWidthOfRings" xml:space="preserve">
-    <value>Gesamtbreite der Ringe:</value>
+    <value>Ring-Gesamtbreite:</value>
   </data>
   <data name="Templates_Tooltip_ReserveLevel" xml:space="preserve">
-    <value>Vorkommen-Konzentration:</value>
+    <value>Vorkommen:</value>
   </data>
   <data name="Templates_Tooltip_BiologicalSignalsDetected" xml:space="preserve">
     <value>Biologische Signale entdeckt:</value>
@@ -1092,7 +1092,7 @@
     <value>Metallisch</value>
   </data>
   <data name="RingType_Rocky" xml:space="preserve">
-    <value>Gesteinig</value>
+    <value>Felsig</value>
   </data>
   <data name="RingType_Icy" xml:space="preserve">
     <value>Eisig</value>
@@ -1101,7 +1101,7 @@
     <value>Unbekannt</value>
   </data>
   <data name="RingReserveLevel_Pristine" xml:space="preserve">
-    <value>Unversehrt</value>
+    <value>Unberührt</value>
   </data>
   <data name="RingReserveLevel_Major" xml:space="preserve">
     <value>Hoch</value>

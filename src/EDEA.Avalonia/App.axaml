@@ -7,11 +7,17 @@
              xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
              xmlns:colorPicker="clr-namespace:ColorPicker.AvaloniaUI.Templates;assembly=ColorPicker.AvaloniaUI"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:helpers="clr-namespace:EDEA.Avalonia.Helpers"
              x:Class="EDEA.Avalonia.App"
              RequestedThemeVariant="Dark">
 
   <Application.Resources>
-    <SolidColorBrush x:Key="BackgroundBrush" Color="#1A0F05"/>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="/ToolTipTemplates.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+
+      <SolidColorBrush x:Key="BackgroundBrush" Color="#1A0F05"/>
     <SolidColorBrush x:Key="PanelBrush" Color="#2A1A0A"/>
     <SolidColorBrush x:Key="CardBrush" Color="#331E0C"/>
     <SolidColorBrush x:Key="AccentBrush" Color="#FF6A00"/>
@@ -46,6 +52,8 @@
     <SolidColorBrush x:Key="ValuableIconColor" Color="#DABE54"/>
     <SolidColorBrush x:Key="GeologicalsIconColor" Color="#FF7C7C"/>
     <SolidColorBrush x:Key="BiologicalsIconColor" Color="#88CF7F"/>
+    <SolidColorBrush x:Key="InClonalColonyRangeColor" Color="#FFFF7C7C"/>
+    <SolidColorBrush x:Key="OutOfClonalColonyRangeColor" Color="#FF88CF7F"/>
     <SolidColorBrush x:Key="TerraformableIconColor" Color="#2491DF"/>
     <SolidColorBrush x:Key="LandableIconColor" Color="#A1DFE0"/>
     <SolidColorBrush x:Key="ScoopableIconColor" Color="#88CF7F"/>
@@ -78,7 +86,9 @@
     <Thickness x:Key="TabViewBorderSizes">6,21,0,0</Thickness>
     <Thickness x:Key="TabViewInverseBorderSizes">0,21,0,0</Thickness>
     <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+    <converters:BoolToResourceBrushConverter x:Key="BoolToResourceBrushConverter" />
     <converters:TabVisibilityConverter x:Key="TabVisibilityConverter" />
+    </ResourceDictionary>
   </Application.Resources>
 
   <Application.Styles>
@@ -99,6 +109,7 @@
       <Setter Property="CanUserReorderColumns" Value="False" />
       <Setter Property="CanUserResizeColumns" Value="True" />
       <Setter Property="CanUserSortColumns" Value="True" />
+      <Setter Property="helpers:DataGridSingleSortBehavior.IsEnabled" Value="False" />
       <Setter Property="IsReadOnly" Value="True" />
       <Setter Property="AutoGenerateColumns" Value="False" />
     </Style>
@@ -144,12 +155,47 @@
       <Setter Property="Background" Value="{DynamicResource HighlightColor}" />
     </Style>
 
+    <Style Selector="DataGrid.Hud">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Margin" Value="8,0,0,0" />
+      <Setter Property="GridLinesVisibility" Value="Horizontal" />
+      <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource CellHighlightColor}" />
+      <Setter Property="HeadersVisibility" Value="None" />
+      <Setter Property="CanUserReorderColumns" Value="False" />
+      <Setter Property="CanUserResizeColumns" Value="True" />
+    </Style>
+
+    <Style Selector="DataGrid.Hud DataGridRow">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="DataGrid.Hud DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+      <Setter Property="Fill" Value="Transparent" />
+    </Style>
+
+    <Style Selector="DataGrid.Hud DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+      <Setter Property="Fill" Value="Transparent" />
+    </Style>
+
+    <Style Selector="DataGrid.Hud DataGridCell">
+      <Setter Property="FontSize" Value="{DynamicResource SmallFontSize}" />
+      <Setter Property="Padding" Value="2" />
+    </Style>
+
+    <Style Selector="DataGrid.Hud DataGridCell:selected">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+
     <Style Selector="ToolTip">
       <Setter Property="Background" Value="{DynamicResource MainBackgroundColor}" />
-      <Setter Property="Foreground" Value="{DynamicResource HighlightGrey}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource HighlightGrey}" />
+      <Setter Property="Foreground" Value="{DynamicResource MainColor}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource MainColor}" />
       <Setter Property="BorderThickness" Value="1" />
       <Setter Property="Padding" Value="7,6,7,7" />
+      <Setter Property="CornerRadius" Value="0" />
+      <Setter Property="FontSize" Value="{DynamicResource MainFontSize}" />
+      <Setter Property="MaxWidth" Value="10000" />
     </Style>
 
     <Style Selector="Border.PreferencesTabContent">

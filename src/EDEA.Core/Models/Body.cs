@@ -386,6 +386,11 @@ public class Body
             CartographicFirstDiscoveryBonusWithoutEfficiencyValue = body.CartographicFirstDiscoveryBonusWithoutEfficiencyValue;
             CartographicFirstDiscoveryBonusWithoutSurfaceScanValue = body.CartographicFirstDiscoveryBonusWithoutSurfaceScanValue;
             RingsReserveLevel = body.RingsReserveLevel;
+
+            foreach (var ring in body.Rings.Values)
+            {
+                TryAddOrUpdateRing(ring, dataSource);
+            }
         }
     }
 
@@ -398,15 +403,43 @@ public class Body
     {
         if (ring.BodyId != Id || ring.StarSystemId != StarSystemId)
         {
-            log.Warn($"Ring '{ring.Name}' was not added or updated on planet '{Name}' ({Id}) because it belongs to planet id {ring.BodyId} / star system id {ring.StarSystemId}");
+            log.Warn($"Ring '{ring.Name}' was not added or updated on body '{Name}' ({Id}) because it belongs to body id {ring.BodyId} / star system id {ring.StarSystemId}");
+            return;
         }
-        else if (_rings.TryAdd(ring.Name, ring))
+
+        if (_rings.TryAdd(ring.Name, ring))
         {
-            log.Info($"New ring {_rings[ring.Name].Name} added to planet '{Name}' ({Id})");
+            log.Info($"New ring {ring.Name} added to body '{Name}' ({Id})");
+            return;
+        }
+
+        if (dataSource != DataSource.Journal && WasReadFromJournal)
+        {
+            log.Debug($"Ring {ring.Name} at body '{Name}' ({Id}) was not updated because the body already contains journal data");
+            return;
+        }
+
+        if (!_rings.TryGetValue(ring.Name, out var existingRing))
+        {
+            return;
+        }
+
+        bool newHasBetterData = (existingRing.Width <= 0 && ring.Width > 0)
+            || (existingRing.Density <= 0 && ring.Width > 0 && ring.Density > 0);
+
+        if (!newHasBetterData)
+        {
+            log.Debug($"Ring {ring.Name} already exists at body '{Name}' ({Id}) and was not updated");
+            return;
+        }
+
+        if (_rings.TryUpdate(ring.Name, ring, existingRing))
+        {
+            log.Info($"Ring {ring.Name} updated at body '{Name}' ({Id})");
         }
         else
         {
-            log.Debug($"Ring {ring.Name} already exits at planet '{Name}' ({Id}) - was not added");
+            log.Debug($"Ring {ring.Name} could not be updated at body '{Name}' ({Id}) because it changed concurrently");
         }
     }
 

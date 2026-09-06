@@ -3,7 +3,8 @@
              xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
              xmlns:properties="using:EDEA.Properties"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             x:Class="EDEA.Avalonia.Views.GenusTableView"
+             xmlns:edea="using:EDEA"
+             x:Class="EDEA.Avalonia.Views.GenusHudTableView"
              x:DataType="vm:GenusTableViewModel">
 
   <UserControl.Styles>
@@ -46,7 +47,7 @@
 
     <DataGrid Grid.Row="0"
               Grid.RowSpan="2"
-              x:Name="GenusDataGrid"
+              x:Name="GenusDataGrid" HeadersVisibility="None"
               AutoGenerateColumns="False"
               IsReadOnly="True"
               IsVisible="{Binding AreBiologicalsKnown}"
@@ -55,13 +56,10 @@
               GridLinesVisibility="Horizontal">
       <DataGrid.Columns>
         <DataGridTextColumn CanUserSort="True" SortMemberPath="Name" Header="{x:Static properties:Resources.ColumnHeaderName}" Binding="{Binding Name}" />
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="SpeciesShort" Header="{x:Static properties:Resources.ColumnHeaderSpecies}" Binding="{Binding SpeciesShort}" />
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="VariantShort" Header="{x:Static properties:Resources.ColumnHeaderVariant}" Binding="{Binding VariantShort}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="SpeciesShort" Header="{x:Static properties:Resources.ColumnHeaderSpecies}" Binding="{Binding SpeciesShort}" IsVisible="{Binding GenusColumnSpeciesVisible, Source={x:Static edea:Preferences.HudWindow}}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="VariantShort" Header="{x:Static properties:Resources.ColumnHeaderVariant}" Binding="{Binding VariantShort}" IsVisible="{Binding GenusColumnVariantVisible, Source={x:Static edea:Preferences.HudWindow}}" />
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="AnalysisComplete">
-          <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipAnalysisCompleteIcon}"><materialIcons:MaterialIcon Kind="CheckCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
-          </DataGridTemplateColumn.Header>
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="AnalysisComplete" IsVisible="{Binding GenusColumnAnalysisCompleteIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
               <materialIcons:MaterialIcon Kind="Check" IsVisible="{Binding AnalysisComplete}" Foreground="{DynamicResource MainColor}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipAnalysisCompleteIcon}" />
@@ -69,9 +67,9 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="ScanCount" Header="{x:Static properties:Resources.ColumnHeaderScans}" Binding="{Binding ScanCount}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="ScanCount" Header="{x:Static properties:Resources.ColumnHeaderScans}" Binding="{Binding ScanCount}" IsVisible="{Binding GenusColumnScansVisible, Source={x:Static edea:Preferences.HudWindow}}" />
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ClonalColonyRangeSort" Header="{x:Static properties:Resources.ColumnHeaderClonalColonyRange}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ClonalColonyRangeSort" Header="{x:Static properties:Resources.ColumnHeaderClonalColonyRange}" IsVisible="{Binding GenusColumnClonalColonyRangeVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
               <TextBlock Text="{Binding ClonalColonyRange}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" />
@@ -99,7 +97,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="VistaGenomicsValueSort" Header="{x:Static properties:Resources.ColumnHeaderVistaGenomicsValue}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="VistaGenomicsValueSort" Header="{x:Static properties:Resources.ColumnHeaderVistaGenomicsValue}" IsVisible="{Binding GenusColumnVistaGenomicsValueVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
               <Grid HorizontalAlignment="Right" IsVisible="{Binding SpeciesSet}">
@@ -112,7 +110,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsValuableGenus">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsValuableGenus" IsVisible="{Binding GenusColumnValuableIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableGenusIcon}"><materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -123,7 +121,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsFirstDiscoveryAndSpeciesSet">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsFirstDiscoveryAndSpeciesSet" IsVisible="{Binding GenusColumnNewIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}"><materialIcons:MaterialIcon Kind="NewBox" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -142,7 +140,7 @@
                Classes="DataGridHeadline" />
 
     <DataGrid Grid.Row="3"
-              x:Name="PredictedSpeciesDataGrid"
+              x:Name="PredictedSpeciesDataGrid" HeadersVisibility="None"
               Classes="Predicted"
               AutoGenerateColumns="False"
               IsReadOnly="True"
@@ -152,9 +150,9 @@
               GridLinesVisibility="Horizontal">
       <DataGrid.Columns>
         <DataGridTextColumn CanUserSort="True" SortMemberPath="Name" Header="{x:Static properties:Resources.ColumnHeaderName}" Binding="{Binding Name}" />
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="SpeciesShort" Header="{x:Static properties:Resources.ColumnHeaderSpecies}" Binding="{Binding SpeciesShort}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="SpeciesShort" Header="{x:Static properties:Resources.ColumnHeaderSpecies}" Binding="{Binding SpeciesShort}" IsVisible="{Binding GenusColumnSpeciesVisible, Source={x:Static edea:Preferences.HudWindow}}" />
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ClonalColonyRangeSort" Header="{x:Static properties:Resources.ColumnHeaderClonalColonyRange}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ClonalColonyRangeSort" Header="{x:Static properties:Resources.ColumnHeaderClonalColonyRange}" IsVisible="{Binding GenusColumnClonalColonyRangeVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusClassificationViewModel">
               <TextBlock Text="{Binding ClonalColonyRange}" Foreground="{DynamicResource HighlightGrey}" HorizontalAlignment="Right" />
@@ -162,7 +160,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="VistaGenomicsMaxValueSort" Header="{x:Static properties:Resources.ColumnHeaderVistaGenomicsValue}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="VistaGenomicsMaxValueSort" Header="{x:Static properties:Resources.ColumnHeaderVistaGenomicsValue}" IsVisible="{Binding GenusColumnVistaGenomicsValueVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusClassificationViewModel">
               <Grid HorizontalAlignment="Right">
@@ -175,7 +173,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsValuable">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsValuable" IsVisible="{Binding GenusColumnValuableIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableGenusPredictedIcon}"><materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -186,7 +184,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsFirstDiscovery">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsFirstDiscovery" IsVisible="{Binding GenusColumnNewIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}"><materialIcons:MaterialIcon Kind="NewBox" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>

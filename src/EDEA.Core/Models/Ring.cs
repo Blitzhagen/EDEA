@@ -114,7 +114,24 @@ public class Ring
         Mass = mass;
         InnerRadius = innerRadius;
         OuterRadius = outerRadius;
-        Width = width;
-        Density = double.IsFinite(density) ? density : 0.0;
+        if (width <= 0 && outerRadius > innerRadius)
+        {
+            Width = outerRadius - innerRadius;
+        }
+        else
+        {
+            Width = width;
+        }
+
+        if ((density <= 0.0 || !double.IsFinite(density)) && Mass > 0 && Width > 0)
+        {
+            double outerArea = Math.PI * (Convert.ToDouble(OuterRadius) * Convert.ToDouble(OuterRadius) - Convert.ToDouble(InnerRadius) * Convert.ToDouble(InnerRadius));
+            double computedDensity = outerArea > 0.0 ? Convert.ToDouble(Mass) * 1000000.0 / outerArea : 0.0;
+            Density = double.IsFinite(computedDensity) ? computedDensity : 0.0;
+        }
+        else
+        {
+            Density = double.IsFinite(density) ? density : 0.0;
+        }
     }
 }

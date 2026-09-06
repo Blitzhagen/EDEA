@@ -165,6 +165,7 @@
                       <RadioButton x:Name="HudViewAutoRadioButton" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Radio_SyncedWithMainWindow}" Tag="Auto" IsCheckedChanged="HudViewRadioButton_Changed" />
                       <RadioButton x:Name="HudViewRouteRadioButton" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Route}" Tag="NavRouteTableViewModel" IsCheckedChanged="HudViewRadioButton_Changed" />
                       <RadioButton x:Name="HudViewBodiesRadioButton" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Bodies}" Tag="BodyTableViewModel" IsCheckedChanged="HudViewRadioButton_Changed" />
+                      <RadioButton x:Name="HudViewGenusRadioButton" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Biologicals}" Tag="GenusTableViewModel" IsCheckedChanged="HudViewRadioButton_Changed" />
                     </StackPanel>
                   </Border>
                 </StackPanel>

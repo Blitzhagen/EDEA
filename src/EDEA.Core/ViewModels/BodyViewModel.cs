@@ -263,6 +263,12 @@ public class BodyViewModel : ViewModelBase
     public RingReserveLevel RingsReserveLevel { get; }
 
     /// <summary>
+    /// Gets the localized display name of the ring reserve level.
+    /// </summary>
+    /// <value>The localized ring reserve level name.</value>
+    public string RingsReserveLevelName { get; }
+
+    /// <summary>
     /// Gets the formatted total width of all rings.
     /// </summary>
     /// <value>The total ring width string.</value>
@@ -630,6 +636,8 @@ public class BodyViewModel : ViewModelBase
             RingsReserveLevel = _body.RingsReserveLevel;
             RingsTotalWidth = (_body.RingsTotalWidth / 1000).ToString("n0") + " " + Resources.UnitKilometers;
         }
+
+        RingsReserveLevelName = Helpsters.GetRingReserveLevelName(RingsReserveLevel);
         if (_body.IsPlanet)
         {
             Planet planet = (Planet)_body;

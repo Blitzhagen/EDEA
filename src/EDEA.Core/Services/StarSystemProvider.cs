@@ -830,6 +830,40 @@ public class StarSystemProvider
         }
     }
 
+    /// <summary>
+    /// Refreshes each star system on the current route with the fuller data now available in the history.
+    /// </summary>
+    public void RefreshStarSystemsOnRouteFromHistory()
+    {
+        if (StarSystemsOnRoute.IsEmpty)
+        {
+            return;
+        }
+
+        foreach (var routeEntry in StarSystemsOnRoute.ToList())
+        {
+            StarSystem historySystem;
+            if (!_historyProvider.TryGetStarSystem(routeEntry.Key, out historySystem))
+            {
+                continue;
+            }
+
+            StarSystem oldSystem = StarSystemsOnRoute[routeEntry.Key];
+            historySystem.JumpDistance = oldSystem.JumpDistance;
+            historySystem.JumpDistanceLy = oldSystem.JumpDistanceLy;
+            historySystem.IsPastSystemInRoute = oldSystem.IsPastSystemInRoute;
+            historySystem.IsCurrentSystemInRoute = oldSystem.IsCurrentSystemInRoute;
+            historySystem.IsJumpDestinationSystemInRoute = oldSystem.IsJumpDestinationSystemInRoute;
+            StarSystemsOnRoute[routeEntry.Key] = historySystem;
+            calculateCartographicValues(historySystem);
+            FindMatchingClassificationsForSystem(historySystem, ignoreSpeechOutput: true);
+            log.Debug($"Refreshed star system on route '{historySystem.Name}' ({historySystem.Id}) from the history after import");
+        }
+
+        SetPastStarSystemsOnRouteAndRequestEDSMDataForUpcomingStarSystemsOnRoute().ConfigureAwait(false);
+        triggerGuiDataUpdateEvent();
+    }
+
     private void _journalProvider_ParsedJournalDataUpdated(object sender, bool shutdown)
     {
         if (CurrentSystem.EdsmTotalBodyCount.HasValue && CurrentSystem.EdsmTotalBodyCount > CurrentSystem.Bodies.Count && IsInTeam)

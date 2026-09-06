@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
+             xmlns:properties="using:EDEA.Properties"
+             x:Class="EDEA.Avalonia.Views.BodyRingsTooltip"
+             x:DataType="vm:BodyViewModel">
+
+  <StackPanel Background="{DynamicResource MainBackgroundColor}">
+    <Grid HorizontalAlignment="Left">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static properties:Resources.Templates_Tooltip_TotalWidthOfRings}" Padding="4,0,4,2" FontSize="{DynamicResource MainFontSize}" Foreground="{DynamicResource MainColor}" />
+      <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding RingsTotalWidth}" Padding="4,0,4,2" FontSize="{DynamicResource MainFontSize}" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}" />
+      <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static properties:Resources.Templates_Tooltip_ReserveLevel}" Padding="4,0,4,2" FontSize="{DynamicResource MainFontSize}" Foreground="{DynamicResource MainColor}" />
+      <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding RingsReserveLevelName}" Padding="4,0,4,2" FontSize="{DynamicResource MainFontSize}" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}" />
+    </Grid>
+
+    <Border x:Name="RingsListBorder"
+            HorizontalAlignment="Left"
+            BorderThickness="0,1,0,0"
+            BorderBrush="{DynamicResource CellHighlightColor}"
+            Background="{DynamicResource MainBackgroundColor}"
+            Margin="0,7,0,0">
+      <Grid x:Name="RingsGrid" HorizontalAlignment="Left">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+      </Grid>
+    </Border>
+  </StackPanel>
+</UserControl>

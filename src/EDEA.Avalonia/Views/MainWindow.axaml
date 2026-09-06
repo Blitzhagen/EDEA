@@ -21,6 +21,7 @@
 
   <Window.Resources>
     <converters:TabHeaderToHeightConverter x:Key="TabHeaderToHeightConverter" />
+    <converters:TabVisibilityConverter x:Key="TabVisibilityConverter" />
     <DataTemplate x:Key="HeaderTextTemplate" x:DataType="sys:String">
       <TextBlock Text="{Binding}"
                  Foreground="{DynamicResource MainColor}"
@@ -149,7 +150,7 @@
 
     <!-- Main content -->
     <Grid Grid.Row="2" ColumnDefinitions="Auto,*">
-      <ListBox Grid.Column="0" ItemsSource="{Binding TabViewModels}" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}" Background="Transparent" BorderBrush="{DynamicResource MainColor}" BorderThickness="0,0,6,0" VerticalAlignment="Stretch" ClipToBounds="False">
+      <ListBox Grid.Column="0" ItemsSource="{Binding TabViewModels}" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}" Background="Transparent" BorderThickness="0" Margin="0,0,5,0" VerticalAlignment="Stretch" ClipToBounds="False">
         <ListBox.Template>
           <ControlTemplate>
             <ItemsPresenter x:Name="PART_ItemsPresenter" ClipToBounds="False" />
@@ -162,6 +163,7 @@
         </ListBox.ItemsPanel>
         <ListBox.Styles>
           <Style Selector="ListBoxItem" x:DataType="vmcore:TabViewModel">
+            <Setter Property="IsVisible" Value="{Binding TabVisibility, Converter={StaticResource TabVisibilityConverter}}" />
             <Setter Property="MinHeight" Value="40" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0,4,0,0" />
@@ -198,28 +200,30 @@
           </DataTemplate>
         </ListBox.ItemTemplate>
       </ListBox>
-      <ContentControl Grid.Column="1" Content="{Binding SelectedTab}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-        <ContentControl.DataTemplates>
-          <DataTemplate x:DataType="vmcore:NavRouteTableViewModel">
-            <views:RouteTableView />
-          </DataTemplate>
-          <DataTemplate x:DataType="vmcore:BodyTableViewModel">
-            <views:BodyTableView />
-          </DataTemplate>
-          <DataTemplate x:DataType="vmcore:GenusTableViewModel">
-            <views:GenusTableView />
-          </DataTemplate>
-          <DataTemplate x:DataType="vmcore:SurroundingsTableViewModel">
-            <views:SurroundingsTableView />
-          </DataTemplate>
-          <DataTemplate x:DataType="vmcore:HistoryViewModel">
-            <views:HistoryTableView />
-          </DataTemplate>
-          <DataTemplate x:DataType="vmcore:TabViewModel">
-            <TextBlock Text="{Binding TabHeader}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource DimForegroundBrush}"/>
-          </DataTemplate>
-        </ContentControl.DataTemplates>
-      </ContentControl>
+      <Border Grid.Column="1" BorderBrush="{DynamicResource MainColor}" BorderThickness="{DynamicResource TabViewInverseBorderSizes}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <ContentControl Content="{Binding SelectedTab}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+          <ContentControl.DataTemplates>
+            <DataTemplate x:DataType="vmcore:NavRouteTableViewModel">
+              <views:RouteTableView />
+            </DataTemplate>
+            <DataTemplate x:DataType="vmcore:BodyTableViewModel">
+              <views:BodyTableView />
+            </DataTemplate>
+            <DataTemplate x:DataType="vmcore:GenusTableViewModel">
+              <views:GenusTableView />
+            </DataTemplate>
+            <DataTemplate x:DataType="vmcore:SurroundingsTableViewModel">
+              <views:SurroundingsTableView />
+            </DataTemplate>
+            <DataTemplate x:DataType="vmcore:HistoryViewModel">
+              <views:HistoryTableView />
+            </DataTemplate>
+            <DataTemplate x:DataType="vmcore:TabViewModel">
+              <TextBlock Text="{Binding TabHeader}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource DimForegroundBrush}"/>
+            </DataTemplate>
+          </ContentControl.DataTemplates>
+        </ContentControl>
+      </Border>
       <Thumb Name="ResizeThumb" Grid.Column="1" Classes="ResizeGrip" HorizontalAlignment="Right" VerticalAlignment="Bottom" DragDelta="ResizeThumb_DragDelta" ZIndex="100" />
     </Grid>
   </Grid>

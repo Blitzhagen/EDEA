@@ -177,7 +177,7 @@ public class EDFileWatcher : FileSystemWatcher
         }
         else if (edFileEvent.FileName == NavRouteFileName)
         {
-            log.Debug($"{NavRouteFileName} was {edFileEvent.ChangeType}");
+            log.Info($"{NavRouteFileName} was {edFileEvent.ChangeType}");
             if (edFileEvent.ChangeType == WatcherChangeTypes.Changed || edFileEvent.ChangeType == WatcherChangeTypes.Created)
             {
                 NavRouteFileChanged?.Invoke(this, edFileEvent);

@@ -57,7 +57,7 @@ public class RingViewModel : ViewModelBase
     public RingViewModel(Ring ring, string bodyName)
     {
         Name = ring.Name.Replace(bodyName, string.Empty).Replace("Ring", string.Empty).Trim();
-        Type = Helpsters.GetRingTypeSourceDesciption(DataSource.Edsm, ring.Type);
+        Type = Helpsters.GetRingTypeName(ring.Type);
         Mass = $"{ring.Mass:n0} Mt";
         InnerRadius = $"{ring.InnerRadius / 1000:n0} km";
         OuterRadius = $"{ring.OuterRadius / 1000:n0} km";

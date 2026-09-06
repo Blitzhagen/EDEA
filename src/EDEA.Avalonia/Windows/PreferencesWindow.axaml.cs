@@ -238,10 +238,10 @@ public partial class PreferencesWindow : Window
     private void LoadPreferences()
     {
         var displaySize = Preferences.Other.DisplaySize;
-        DisplaySizeSmall.IsChecked = displaySize == 0;
-        DisplaySizeStandard.IsChecked = displaySize == 1;
-        DisplaySizeLarge.IsChecked = displaySize == 2;
-        DisplaySizeHuge.IsChecked = displaySize == 3;
+        DisplaySizeSmall.IsChecked = displaySize == 1;
+        DisplaySizeStandard.IsChecked = displaySize == 2;
+        DisplaySizeLarge.IsChecked = displaySize == 3;
+        DisplaySizeHuge.IsChecked = displaySize == 4;
 
         AutomaticTabSwitchingCheckBox.IsChecked = Preferences.Other.AutomaticTabSwitching;
 
@@ -311,6 +311,7 @@ public partial class PreferencesWindow : Window
         HudViewAutoRadioButton.IsChecked = hud.HudWindowTabViewModel == 0;
         HudViewBodiesRadioButton.IsChecked = hud.HudWindowTabViewModel == 1;
         HudViewRouteRadioButton.IsChecked = hud.HudWindowTabViewModel == 2;
+        HudViewGenusRadioButton.IsChecked = hud.HudWindowTabViewModel == 3;
 
         InitializeHudCheckBoxes(HudBodiesPanel);
         InitializeHudCheckBoxes(HudRoutePanel);
@@ -360,13 +361,14 @@ public partial class PreferencesWindow : Window
         {
             var displaySize = radio.Name switch
             {
-                "DisplaySizeSmall" => 0,
-                "DisplaySizeStandard" => 1,
-                "DisplaySizeLarge" => 2,
-                "DisplaySizeHuge" => 3,
+                "DisplaySizeSmall" => 1,
+                "DisplaySizeStandard" => 2,
+                "DisplaySizeLarge" => 3,
+                "DisplaySizeHuge" => 4,
                 _ => Preferences.Other.DisplaySize,
             };
             Preferences.Other.DisplaySize = displaySize;
+            EDEA.Services.PlatformServices.ColorTheme?.ApplyCurrentDisplaySize();
         }
     }
 
@@ -1087,6 +1089,7 @@ public partial class PreferencesWindow : Window
             "Auto" => 0,
             "BodyTableViewModel" => 1,
             "NavRouteTableViewModel" => 2,
+            "GenusTableViewModel" => 3,
             _ => Preferences.HudWindow.HudWindowTabViewModel,
         };
     }
@@ -1174,6 +1177,8 @@ public partial class PreferencesWindow : Window
     private void CancelButton_Click(object? sender, RoutedEventArgs e)
     {
         Preferences.ReloadUserSettings();
+        EDEA.Services.PlatformServices.ColorTheme?.ApplyCurrentColors();
+        EDEA.Services.PlatformServices.ColorTheme?.ApplyCurrentDisplaySize();
         Close();
     }
 }

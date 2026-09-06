@@ -76,6 +76,9 @@ public class JournalHistoryImporter
     {
     };
 
+    /// <summary>Occurs when the journal history import finishes or is cancelled.</summary>
+    public event EventHandler? JournalHistoryImportFinished;
+
     /// <summary>Initializes a new instance of the JournalHistoryImporter class.</summary>
     /// <param name="historyProvider">The HistoryProvider value of the historyProvider parameter.</param>
     /// <param name="journalProvider">The JournalProvider value of the journalProvider parameter.</param>
@@ -97,6 +100,9 @@ public class JournalHistoryImporter
     /// <param name="journalProvider">The JournalProvider value of the journalProvider parameter.</param>
     /// <param name="starSystemProvider">The StarSystemProvider value of the starSystemProvider parameter.</param>
     /// <returns>A JournalHistoryImporter result.</returns>
+    /// <summary>Gets the current singleton instance, if any.</summary>
+    public static JournalHistoryImporter? Current => instance;
+
     public static JournalHistoryImporter Instance(HistoryProvider historyProvider, JournalProvider journalProvider, StarSystemProvider starSystemProvider)
     {
         if (instance == null)
@@ -156,6 +162,7 @@ public class JournalHistoryImporter
         updatedStarSystemCount = 0;
         ignoredStarSystemCount = 0;
         importCanceled = false;
+        JournalHistoryImportFinished?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>Retrieves JournalFiles.</summary>
@@ -432,6 +439,7 @@ public class JournalHistoryImporter
         {
             await _starSystemProvider.HandleCurrentSystemChange(_starSystemProvider.CurrentSystem);
         }
+        _starSystemProvider.RefreshStarSystemsOnRouteFromHistory();
         stopwatch.Stop();
         }
         finally

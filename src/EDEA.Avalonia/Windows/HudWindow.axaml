@@ -2,6 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         xmlns:vm="clr-namespace:EDEA.Avalonia.ViewModels"
+        xmlns:edea="using:EDEA"
+        xmlns:edeaCore="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
+        xmlns:views="clr-namespace:EDEA.Avalonia.Views"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         x:Class="EDEA.Avalonia.Windows.HudWindow"
         x:DataType="vm:HudViewModel"
         Title="{x:Static properties:Resources.HudWindow_Title}"
@@ -22,22 +26,38 @@
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-
+    <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" ZIndex="0" Fill="{DynamicResource MainBackgroundColor}" Opacity="{Binding Opacity, Source={x:Static edea:Preferences.HudWindow}}" />
     <Rectangle Name="HudWindowMoveGrabber" ZIndex="100" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Fill="#00FFFFFF" Height="25" VerticalAlignment="Top" PointerPressed="HudWindowMoveGrabber_PointerPressed"/>
 
-    <StackPanel Grid.Column="0" Grid.Row="0">
-      <TextBlock Text="{Binding CurrentSystem.Name}" Foreground="{StaticResource ForegroundBrush}"/>
-      <TextBlock Text="{Binding CurrentSystem.ExplorationStatusBodiesInfo}" Foreground="{StaticResource DimForegroundBrush}"/>
-      <TextBlock Text="{Binding CurrentSystem.ExplorationStatus}" Foreground="{StaticResource AccentBrush}"/>
-      <TextBlock Text="{Binding TableHeadline}" Padding="0,6,0,2" Foreground="{StaticResource ForegroundBrush}"/>
+    <StackPanel Grid.Column="0" Grid.Row="0" Margin="4">
+      <TextBlock Text="{Binding CurrentSystem.Name}" FontSize="{DynamicResource HeaderFontSize}" Foreground="{StaticResource ForegroundBrush}" />
+      <TextBlock Text="{Binding MainViewModel.BodyExplorationStatus}" Foreground="{StaticResource DimForegroundBrush}" />
+      <TextBlock Text="{Binding MainViewModel.NonBodyExplorationStatus}" Foreground="{StaticResource DimForegroundBrush}" />
+      <TextBlock Text="{Binding CurrentSystem.ExplorationStatus}" Foreground="{StaticResource MainColor}" />
+      <TextBlock Text="{Binding TableHeadline}" Padding="0,6,0,2" Foreground="{StaticResource ForegroundBrush}" />
     </StackPanel>
 
-    <Button Name="CloseHudWindowButton" Grid.Column="2" Grid.Row="0" Content="X" Foreground="{StaticResource ForegroundBrush}" Background="Transparent" BorderThickness="0" Click="CloseButton_Click" HorizontalAlignment="Right"/>
+    <Button Name="CloseHudWindowButton" Grid.Column="2" Grid.Row="0" Content="X" Foreground="{StaticResource ForegroundBrush}" Background="Transparent" BorderThickness="0" Click="CloseButton_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4" />
 
-    <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2">
-      <TextBlock Text="HUD table placeholder" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource ForegroundBrush}"/>
-    </Grid>
+    <ContentControl Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2"
+                    Content="{Binding CurrentViewModel}"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Stretch">
+      <ContentControl.DataTemplates>
+        <DataTemplate x:DataType="edeaCore:BodyTableViewModel">
+          <views:BodyHudTableView />
+        </DataTemplate>
+        <DataTemplate x:DataType="edeaCore:NavRouteTableViewModel">
+          <views:NavRouteHudTableView />
+        </DataTemplate>
+        <DataTemplate x:DataType="edeaCore:GenusTableViewModel">
+          <views:GenusHudTableView />
+        </DataTemplate>
+      </ContentControl.DataTemplates>
+    </ContentControl>
 
-    <Button Name="ResizeHudWindowButton" Grid.Column="2" Grid.Row="2" Content="Resize" Foreground="{StaticResource ForegroundBrush}" Background="Transparent" BorderThickness="0" HorizontalAlignment="Right"/>
+    <Border Name="ResizeHudWindowButton" Grid.Column="2" Grid.Row="2" Background="Transparent" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="4" PointerPressed="ResizeButton_PointerPressed" PointerMoved="ResizeButton_PointerMoved" PointerReleased="ResizeButton_PointerReleased">
+      <materialIcons:MaterialIcon Kind="ArrowBottomRight" Width="14" Height="14" Foreground="{StaticResource ForegroundBrush}" ToolTip.Tip="Resize" />
+    </Border>
   </Grid>
 </Window>

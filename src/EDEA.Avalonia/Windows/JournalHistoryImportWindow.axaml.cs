@@ -17,7 +17,7 @@ public partial class JournalHistoryImportWindow : Window
     public JournalHistoryImportWindow()
     {
         InitializeComponent();
-        DataContext = new JournalHistoryImportViewModel(null);
+        DataContext = new JournalHistoryImportViewModel(JournalHistoryImporter.Current);
         Opened += JournalHistoryImportWindow_Opened;
     }
 
@@ -51,7 +51,10 @@ public partial class JournalHistoryImportWindow : Window
     /// <param name="e">The routed event data.</param>
     private void StopImportCloseButton_Click(object? sender, RoutedEventArgs e)
     {
-        (DataContext as JournalHistoryImportViewModel)?.CancelImport();
+        if (DataContext is JournalHistoryImportViewModel viewModel && !viewModel.IsImportCompleted)
+        {
+            viewModel.CancelImport();
+        }
         Close();
     }
 }

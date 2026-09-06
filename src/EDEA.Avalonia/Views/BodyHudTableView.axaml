@@ -3,8 +3,9 @@
              xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
              xmlns:properties="using:EDEA.Properties"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:edea="using:EDEA"
              xmlns:views="clr-namespace:EDEA.Avalonia.Views"
-             x:Class="EDEA.Avalonia.Views.BodyTableView"
+             x:Class="EDEA.Avalonia.Views.BodyHudTableView"
              x:DataType="vm:BodyTableViewModel">
   <Grid>
     <TextBlock Text="{Binding NoBodiesInfo}"
@@ -12,7 +13,7 @@
                VerticalAlignment="Center"
                HorizontalAlignment="Center"
                Foreground="{DynamicResource DimForegroundBrush}" />
-    <DataGrid Name="BodyDataGrid"
+    <DataGrid Name="BodyDataGrid" Classes="Hud"
               AutoGenerateColumns="False"
               IsReadOnly="True"
               IsVisible="{Binding AreNoBodiesAvailable, Converter={StaticResource InverseBoolConverter}}"
@@ -20,9 +21,8 @@
               ScrollViewer.HorizontalScrollBarVisibility="Hidden"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
-              GridLinesVisibility="Horizontal"
-              CanUserReorderColumns="True"
-              CanUserResizeColumns="True">
+              CanUserResizeColumns="True"
+              GridLinesVisibility="Horizontal">
       <DataGrid.Columns>
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Id" Header="{x:Static properties:Resources.ColumnHeaderName}">
           <DataGridTemplateColumn.CellTemplate>
@@ -41,7 +41,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="TypeHumanReadable" Header="{x:Static properties:Resources.ColumnHeaderType}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="TypeHumanReadable" Header="{x:Static properties:Resources.ColumnHeaderType}" IsVisible="{Binding BodiesColumnTypeVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:BodyViewModel">
               <StackPanel Orientation="Horizontal">
@@ -52,7 +52,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Atmosphere" Header="{x:Static properties:Resources.ColumnHeaderAtmosphere}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Atmosphere" Header="{x:Static properties:Resources.ColumnHeaderAtmosphere}" IsVisible="{Binding BodiesColumnAtmosphereVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:BodyViewModel">
               <TextBlock Text="{Binding Atmosphere}" Foreground="{DynamicResource MainColor}" />
@@ -60,7 +60,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="SurfaceTemperatureSort" Header="{x:Static properties:Resources.ColumnHeaderTemperature}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="SurfaceTemperatureSort" Header="{x:Static properties:Resources.ColumnHeaderTemperature}" IsVisible="{Binding BodiesColumnTemperatureVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:BodyViewModel">
               <TextBlock Text="{Binding SurfaceTemperature}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" />
@@ -68,7 +68,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="SurfaceScanStatus" Header="{x:Static properties:Resources.TooltipSurfaceScannedStatusIcon}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="SurfaceScanStatus" Header="{x:Static properties:Resources.TooltipSurfaceScannedStatusIcon}" IsVisible="{Binding BodiesColumnSurfaceScannedIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipSurfaceScannedStatusIcon}"><materialIcons:MaterialIcon Kind="Check" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -82,7 +82,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="MatchingPlanetClassificationsSort">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="MatchingPlanetClassificationsSort" IsVisible="{Binding BodiesColumnPlanetOfInterestIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipPlanetOfInterestIcon}"><materialIcons:MaterialIcon Kind="StarCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -105,7 +105,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsValuableBody">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsValuableBody" IsVisible="{Binding BodiesColumnValuableIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableBodyIcon}"><materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -116,7 +116,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="CartographicMaxValueSort" Header="{x:Static properties:Resources.ColumnHeaderCartographicValue}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="CartographicMaxValueSort" Header="{x:Static properties:Resources.ColumnHeaderCartographicValue}" IsVisible="{Binding BodiesColumnCartographicValueVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:BodyViewModel">
               <TextBlock Text="{Binding CartographicMaxValue}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" />
@@ -124,7 +124,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="RingsSort">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="RingsSort" IsVisible="{Binding BodiesColumnRingsIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipRingsIcon}"><materialIcons:MaterialIcon Kind="Orbit" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -140,7 +140,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="GeologicalsSort">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="GeologicalsSort" IsVisible="{Binding BodiesColumnGeologicalsIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipGeologicalsIcon}"><materialIcons:MaterialIcon Kind="Pickaxe" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -163,7 +163,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="BiologicalsSort">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="BiologicalsSort" IsVisible="{Binding BodiesColumnBiologicalsIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipBiologicalsIcon}"><materialIcons:MaterialIcon Kind="Biohazard" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -191,7 +191,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Terraformable">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Terraformable" IsVisible="{Binding BodiesColumnTerraformableIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipTerraformableIcon}"><materialIcons:MaterialIcon Kind="Terraform" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -202,7 +202,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Landable">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Landable" IsVisible="{Binding BodiesColumnLandableIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipLandableIcon}"><materialIcons:MaterialIcon Kind="AirplaneLanding" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -220,7 +220,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="NewDiscovery">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="NewDiscovery" IsVisible="{Binding BodiesColumnNewIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
             <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipNewIcon}"><materialIcons:MaterialIcon Kind="PlusCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
@@ -231,7 +231,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="EdsmDiscoveryCommander" Header="{x:Static properties:Resources.ColumnHeaderEdsmDiscoverer}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="EdsmDiscoveryCommander" Header="{x:Static properties:Resources.ColumnHeaderEdsmDiscoverer}" IsVisible="{Binding BodiesColumnEdsmDiscovererVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:BodyViewModel">
               <TextBlock Text="{Binding EdsmDiscoveryCommander}" Foreground="{DynamicResource MainColor}" />
@@ -239,7 +239,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="DistanceSort" Header="{x:Static properties:Resources.ColumnHeaderDistance}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="DistanceSort" Header="{x:Static properties:Resources.ColumnHeaderDistance}" IsVisible="{Binding BodiesColumnDistanceVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:BodyViewModel">
               <TextBlock Text="{Binding Distance}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" />

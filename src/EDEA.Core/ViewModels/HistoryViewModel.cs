@@ -74,8 +74,12 @@ public class HistoryViewModel : TabViewModel
     /// <returns>A task representing the asynchronous operation.</returns>
     private async Task getHistoryData()
     {
-        HistoryData = new HistoryDataViewModel(await _historyProvider.GetHistoryData());
-        updateView();
+        HistoryData data = await _historyProvider.GetHistoryData();
+        PlatformServices.Dispatcher?.Invoke(delegate
+        {
+            HistoryData = new HistoryDataViewModel(data);
+            updateView();
+        });
     }
 
     /// <summary>

@@ -475,6 +475,7 @@ public class RouteProvider
     /// <param name="e">The event data.</param>
     private void FileWatcher_NavRouteFileChanged(object? sender, EdFileEvent e)
     {
+        log.Info("NavRoute.json changed, reloading route");
         if (!IsCustomRoute && !IsLocked)
         {
             readStarsSystemsTask = ReadStarsSystems();
@@ -574,7 +575,7 @@ public class RouteProvider
                 {
                     break;
                 }
-                log.Debug("Route file " + _fileWatcher.NavRouteFilePath + " read");
+                log.Info("Route file " + _fileWatcher.NavRouteFilePath + " read");
                 JsonArray? routeArray = Helpsters.ConvertJObjectValue<JsonArray?>(obj, "Route");
                 if (routeArray == null || routeArray.Count < 2)
                 {

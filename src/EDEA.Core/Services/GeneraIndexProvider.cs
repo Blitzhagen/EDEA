@@ -26,7 +26,13 @@ public static class GeneraIndexProvider
         _genusClassifications = new List<GenusClassification>();
         try
         {
-            string value = Encoding.UTF8.GetString(Convert.FromBase64String(File.ReadAllText(Path.Combine(Globals.ApplicationFolder, "gc.dat"))));
+            string gcFile = Path.Combine(Globals.ApplicationFolder, "gc.dat");
+            if (!File.Exists(gcFile))
+            {
+                gcFile = Path.Combine(Globals.ApplicationFolder, "Resources", "gc.dat");
+            }
+
+            string value = Encoding.UTF8.GetString(Convert.FromBase64String(File.ReadAllText(gcFile)));
             if (JsonNode.Parse(value) is JsonArray array)
             {
                 foreach (JsonNode? node in array)

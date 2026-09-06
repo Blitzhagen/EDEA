@@ -47,6 +47,8 @@ public sealed class AvaloniaColorThemeService : IColorThemeService
         { "ExplorationInactiveUnknownColor", new[] { "InactiveUnknownIconColor" } },
         { "ExplorationUnscannedColor", new[] { "UnscannedIconColor" } },
         { "ExplorationIncompleteColor", new[] { "IncompleteIconColor" } },
+        { "InClonalColonyRangeColor", new[] { "InClonalColonyRangeColor" } },
+        { "OutOfClonalColonyRangeColor", new[] { "OutOfClonalColonyRangeColor" } },
     };
 
     /// <summary>

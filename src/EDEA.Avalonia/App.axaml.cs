@@ -6,10 +6,13 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using EDEA;
+using EDEA.Avalonia.Helpers;
 using EDEA.Avalonia.Services;
 using EDEA.Avalonia.ViewModels;
 using EDEA.Avalonia.Views;
@@ -92,6 +95,7 @@ public partial class App : Application
     </filter>
     <file type=""log4net.Util.PatternString"" value=""%property{{LogFileFullPath}}"" />
     <appendToFile value=""true"" />
+    <immediateFlush value=""true"" />
     <rollingStyle value=""Size"" />
     <maximumFileSize value=""5MB"" />
     <maxSizeRollBackups value=""5"" />
@@ -116,7 +120,16 @@ public partial class App : Application
     /// </summary>
     public override void Initialize()
     {
-        AvaloniaXamlLoader.Load(this);
+        try
+        {
+            AvaloniaXamlLoader.Load(this);
+            ToolTipDataContextBehavior.Initialize();
+        }
+        catch (Exception exception)
+        {
+            log.Fatal("Application initialization failed", exception);
+            throw;
+        }
     }
 
     /// <summary>
@@ -124,6 +137,20 @@ public partial class App : Application
     /// </summary>
     public override void OnFrameworkInitializationCompleted()
     {
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+        {
+            log.Fatal("Unhandled AppDomain exception", e.ExceptionObject as Exception);
+        };
+        TaskScheduler.UnobservedTaskException += (_, e) =>
+        {
+            log.Fatal("Unobserved task exception", e.Exception);
+        };
+        Dispatcher.UIThread.UnhandledException += (_, e) =>
+        {
+            log.Fatal("Unhandled dispatcher exception", e.Exception);
+            e.Handled = true;
+        };
+
         try
         {
             RegisterPlatformServices();
@@ -178,6 +205,13 @@ public partial class App : Application
         _statusProvider = StatusProvider.Instance(fileWatcher, _starSystemProvider);
         var planetsOfInterestProvider = PlanetsOfInterestProvider.Instance(_starSystemProvider);
         var journalHistoryImporter = JournalHistoryImporter.Instance(_historyProvider, journalProvider, _starSystemProvider);
+
+        int journalFileCount = journalHistoryImporter.ReadJournalFiles();
+        if (journalFileCount > 0)
+        {
+            log.Info($"Auto-starting journal history import for {journalFileCount} older journal files");
+            journalHistoryImporter.StartJournalImport();
+        }
 
         journalProvider.Initialize();
     }

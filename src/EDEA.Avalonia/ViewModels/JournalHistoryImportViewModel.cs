@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using EDEA;
 using EDEA.Properties;
 using EDEA.Services;
 
@@ -90,6 +91,18 @@ public partial class JournalHistoryImportViewModel : ObservableObject
     private bool _isStopCloseVisible;
 
     /// <summary>
+    /// Gets or sets a value indicating whether the import has finished.
+    /// </summary>
+    [ObservableProperty]
+    private bool _isImportCompleted;
+
+    /// <summary>
+    /// Gets or sets the content of the stop/close button.
+    /// </summary>
+    [ObservableProperty]
+    private string _stopCloseButtonContent = string.Empty;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="JournalHistoryImportViewModel"/> class.
     /// </summary>
     /// <param name="journalHistoryImporter">The importer for journal history data.</param>
@@ -99,6 +112,7 @@ public partial class JournalHistoryImportViewModel : ObservableObject
         if (_journalHistoryImporter != null)
         {
             _journalHistoryImporter.JournalHistoryImportProgressChanged += OnJournalHistoryImportProgressChanged;
+            _journalHistoryImporter.JournalHistoryImportFinished += OnJournalHistoryImportFinished;
         }
     }
 
@@ -112,6 +126,7 @@ public partial class JournalHistoryImportViewModel : ObservableObject
             IntroText = Resources.JournalHistoryImport_IntroText_None;
             IsStartVisible = false;
             IsStopCloseVisible = true;
+            StopCloseButtonContent = Resources.Button_Close;
             return;
         }
 
@@ -121,12 +136,14 @@ public partial class JournalHistoryImportViewModel : ObservableObject
             IntroText = string.Format(Resources.JournalHistoryImport_IntroText_Found, journalFileCount);
             IsStartVisible = true;
             IsStopCloseVisible = false;
+            StopCloseButtonContent = Resources.JournalHistoryImportWindow_StopImport;
         }
         else
         {
             IntroText = Resources.JournalHistoryImport_IntroText_None;
             IsStartVisible = false;
             IsStopCloseVisible = true;
+            StopCloseButtonContent = Resources.Button_Close;
         }
         OnPropertyChanged(string.Empty);
     }
@@ -138,6 +155,8 @@ public partial class JournalHistoryImportViewModel : ObservableObject
     {
         IsStartVisible = false;
         IsStopCloseVisible = true;
+        IsImportCompleted = false;
+        StopCloseButtonContent = Resources.JournalHistoryImportWindow_StopImport;
         _journalHistoryImporter?.StartJournalImport();
     }
 
@@ -157,5 +176,19 @@ public partial class JournalHistoryImportViewModel : ObservableObject
     private void OnJournalHistoryImportProgressChanged(object? sender, EventArgs e)
     {
         OnPropertyChanged(string.Empty);
+    }
+
+    /// <summary>
+    /// Marks the import as completed and changes the stop button to a close button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void OnJournalHistoryImportFinished(object? sender, EventArgs e)
+    {
+        PlatformServices.Dispatcher?.Invoke(delegate
+        {
+            IsImportCompleted = true;
+            StopCloseButtonContent = Resources.Button_Close;
+        });
     }
 }

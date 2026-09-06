@@ -1,21 +1,25 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace EDEA.ViewModels;
 
 /// <summary>
 /// Base class for view models that are presented as tabs.
 /// </summary>
-public class TabViewModel : ViewModelBase
+public partial class TabViewModel : ViewModelBase
 {
     /// <summary>
     /// Gets or sets the header text of the tab.
     /// </summary>
     /// <value>The tab header text.</value>
-    public string TabHeader { get; set; }
+    [ObservableProperty]
+    private string _tabHeader;
 
     /// <summary>
     /// Gets or sets the visibility of the tab.
     /// </summary>
     /// <value>The tab visibility string.</value>
-    public string TabVisibility { get; set; }
+    [ObservableProperty]
+    private string _tabVisibility;
 
     /// <summary>
     /// Gets the name of the tab.
@@ -30,7 +34,7 @@ public class TabViewModel : ViewModelBase
     /// <param name="tabVisibility">The initial visibility of the tab.</param>
     public TabViewModel(string tabHeader, string tabVisibility)
     {
-        TabHeader = tabHeader;
-        TabVisibility = tabVisibility;
+        _tabHeader = tabHeader;
+        _tabVisibility = tabVisibility;
     }
 }
