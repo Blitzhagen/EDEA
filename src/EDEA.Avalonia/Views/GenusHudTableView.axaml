@@ -123,11 +123,11 @@
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsFirstDiscoveryAndSpeciesSet" IsVisible="{Binding GenusColumnNewIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}"><materialIcons:MaterialIcon Kind="NewBox" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}"><materialIcons:MaterialIcon Kind="PlusCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
-              <materialIcons:MaterialIcon Kind="NewBox" IsVisible="{Binding IsFirstDiscoveryAndSpeciesSet}" Foreground="{Binding AnalysisComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='NewIconColor;HighlightGrey'}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}" />
+              <materialIcons:MaterialIcon Kind="PlusCircle" IsVisible="{Binding IsFirstDiscoveryAndSpeciesSet}" Foreground="{Binding AnalysisComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='NewIconColor;HighlightGrey'}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -186,11 +186,11 @@
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsFirstDiscovery" IsVisible="{Binding GenusColumnNewIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}"><materialIcons:MaterialIcon Kind="NewBox" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}"><materialIcons:MaterialIcon Kind="PlusCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-              <materialIcons:MaterialIcon Kind="NewBox" IsVisible="{Binding IsFirstDiscovery}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}" />
+              <materialIcons:MaterialIcon Kind="PlusCircle" IsVisible="{Binding IsFirstDiscovery}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>

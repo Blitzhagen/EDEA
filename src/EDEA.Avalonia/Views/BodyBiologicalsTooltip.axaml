@@ -48,7 +48,7 @@
             </Grid>
             <TextBlock Grid.Column="2" Text="{Binding VistaGenomicsValue}" Foreground="{Binding AnalysisNotComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='HighlightGrey;MainColor'}" HorizontalAlignment="Right" />
             <materialIcons:MaterialIcon Grid.Column="3" Kind="DiamondStone" IsVisible="{Binding IsValuableGenus}" Foreground="{Binding AnalysisComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='MainColor;ValuableIconColor'}" Width="16" Height="16" />
-            <materialIcons:MaterialIcon Grid.Column="4" Kind="NewBox" IsVisible="{Binding IsFirstDiscoveryAndAnalysisComplete}" Foreground="{DynamicResource NewIconColor}" Width="16" Height="16" />
+            <materialIcons:MaterialIcon Grid.Column="4" Kind="PlusCircle" IsVisible="{Binding IsFirstDiscoveryAndAnalysisComplete}" Foreground="{DynamicResource NewIconColor}" Width="16" Height="16" />
           </Grid>
         </DataTemplate>
       </ItemsControl.ItemTemplate>
@@ -69,7 +69,7 @@
             <TextBlock Grid.Column="0" Text="{Binding Species}" Foreground="{DynamicResource HighlightGrey}" />
             <TextBlock Grid.Column="1" Text="{Binding VistaGenomicsMaxValue}" Foreground="{DynamicResource HighlightGrey}" HorizontalAlignment="Right" />
             <materialIcons:MaterialIcon Grid.Column="2" Kind="DiamondStone" IsVisible="{Binding IsValuable}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" />
-            <materialIcons:MaterialIcon Grid.Column="3" Kind="NewBox" IsVisible="{Binding IsFirstDiscovery}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" />
+            <materialIcons:MaterialIcon Grid.Column="3" Kind="PlusCircle" IsVisible="{Binding IsFirstDiscovery}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" />
           </Grid>
         </DataTemplate>
       </ItemsControl.ItemTemplate>
