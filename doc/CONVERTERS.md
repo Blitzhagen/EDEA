@@ -1,25 +1,28 @@
-# EDEA – Wertkonverter und Selektoren
+# EDEA – Converter und Behaviors
 
-Dieses Dokument beschreibt die in `src/EDEA/Converters/` enthaltenen WPF-Value-Converter, Multi-Value-Converter sowie den `TabTemplateSelector` in `src/EDEA/Selectors/`. Sie kümmern sich um die Darstellung von Daten in XAML, beispielsweise die Umwandlung boolescher Werte in Farben oder Symbole.
+Wertkonverter und Attached Behaviors für die Avalonia-Oberfläche (`src/EDEA.Avalonia/`). Die früheren WPF-`IValueConverter` existieren nicht mehr.
 
-## Wertkonverter
+## Converter (`Converters/`)
 
-| Konverter | Konvertierungsrichtung | Einsatzzweck |
-| --- | --- | --- |
-| `BooleanToBrushConverter` | `bool` → `Brush` (`ConvertBack` nicht unterstützt) | Wandelt einen booleschen Wert in eine WPF-Farbe um. Über `TrueBrush` und `FalseBrush` lassen sich die Farben konfigurieren. |
-| `BooleanToSymbolConverter` | `bool` → `string` (`ConvertBack` nicht unterstützt) | Wandelt einen booleschen Wert in ein Symbol-Zeichen (z. B. Checkmark) um, optional invertiert. |
-| `CommanderNameToBrushColorConverter` | Werte-Array → `Brush` (`ConvertBack` nicht unterstützt) | Wählt anhand des Commander-Namens eine Brush-Farbe aus den Anwendungsressourcen aus. |
-| `ElementsToCopyToClipboardCommandParameterConverter` | `object[]` → `CopyToClipboardCommandParameter` (`ConvertBack` nicht unterstützt) | Kombiniert einen Text und ein Popup-Objekt zu einem Parameter für `CopyToClipboardCommand`. |
-| `EnumToBoolConverter` | `enum` ↔ `bool` | Prüft, ob ein Aufzählungswert dem per Parameter übergebenen Wert entspricht und konvertiert zurück. |
-| `IntEqualsConverter` | `int` → `bool` (`ConvertBack` liefert `int` bei `true`) | Vergleicht eine Ganzzahl mit dem im Parameter angegebenen Wert. |
-| `InverseBooleanConverter` | `bool` ↔ `bool` | Invertiert einen booleschen Wert in beide Richtungen. |
-| `NullToBoolConverter` | `object?` → `bool` (`ConvertBack` nicht unterstützt) | Gibt `true` zurück, wenn der Wert nicht `null` ist. |
-| `NullableDoubleToStringConverter` | `double?` ↔ `string` | Konvertiert eine nullable `double`-Zahl in einen String und zurück unter Verwendung der aktuellen Kultur. |
-| `NullableLongToStringConverter` | `long?` ↔ `string` | Konvertiert eine nullable `long`-Zahl in einen String und zurück. |
-| `SystemExplorationStatusToBrushColorConverter` | `StarSystemExplorationStatus`/Route-View → `Brush` (`ConvertBack` nicht unterstützt) | Wählt eine Farbe anhand des Erforschungs-Status eines Sternensystems oder einer Route. |
+| Converter | Zweck |
+|-----------|-------|
+| `BoolToResourceBrushConverter` | Mappt `bool` auf eine Resource-Brush. `ConverterParameter` im Format `TrueBrush;FalseBrush[;DefaultBrush]` – nützlich für Zustandsfarben (z. B. abgeschlossen/wertvoll). |
+| `InverseBoolConverter` | `true` ↔ `false` – für `IsVisible`-Negationen u. ä. |
+| `SystemExplorationStatusToBrushColorConverter` | Färbt den `StarSystemExplorationStatus` (unentdeckt/teilweise/vollständig) mit den Statusfarben ein. |
+| `TabHeaderToHeightConverter` | Rechnet Tab-Header-Schriftgröße/-Höhe auf kompakte Header um. |
+| `TabVisibilityConverter` | Blendet Tabs anhand des `TabVisibility`-Status ein/aus. |
 
-## Selektoren
+## Behaviors und Controls (`Helpers/`, `Controls/`)
 
-| Selektor | Auswahllogik | Einsatzzweck |
-| --- | --- | --- |
-| `TabTemplateSelector` | Wählt ein `DataTemplate` anhand des ViewModel-Namens des Tabs. | Ermöglicht tab-spezifische Darstellungen in der Hauptnavigation. |
+| Element | Zweck |
+|---------|-------|
+| `DataGridSingleSortBehavior` | Erzwingt Sortierung nach genau einer Spalte (Avalonia-DataGrid erlaubt sonst Multi-Sort). |
+| `ToolTipDataContextBehavior` | Reicht den DataContext in Tooltips weiter, damit Tooltip-Templates binden können; statisch initialisiert in `App.Initialize`. |
+| `BadgePanel` | Kleines Panel für Icon+Zähler-Badges in Grid-Zellen (z. B. Signal-Icons mit Anzahl). |
+
+## Lokalisierungs-Markup (`Localization/`)
+
+| Element | Zweck |
+|---------|-------|
+| `LocExtension` | Markup-Extension `{l:Loc ResourceKey}` – liefert eine Binding auf `LocalizedStrings`. |
+| `LocalizedStrings` | Indexer über `EDEA.Properties.Resources.Lookup`; invalidiert alle Bindungen bei `Resources.CultureChanged` (Live-Sprachwechsel). |

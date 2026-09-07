@@ -4,11 +4,12 @@ Diese Anleitung beschreibt Voraussetzungen, Build, Konfiguration und erforderlic
 
 ## Voraussetzungen
 
-- **Betriebssystem**: Windows 10 Version 19041 (20H1) oder neuer.
-- **.NET SDK**: .NET 8 SDK (`net8.0-windows10.0.19041.0`).
+- **.NET SDK**: .NET 8 SDK (`net8.0`).
+- **Betriebssystem**: Windows 10 oder neuer (durch Avalonia UI prinzipiell plattformübergreifend).
 - **Elite Dangerous**: Installiert und gespielt, damit Journal-Dateien existieren.
-- **EDMarketConnector (empfohlen)**: Ermöglicht EDSM-Datenanreicherung und flüssigere Journal-Verarbeitung.
-- **Internet**: Optional, für EDSM- und Spansh-Abfragen.
+- **Internet**: Für EDSM- und Spansh-Abfragen sowie für die Sprachausgabe (Microsoft Edge TTS).
+
+EDEA fragt EDSM und Spansh selbstständig ab – ein Parallelbetrieb von EDMarketConnector ist **nicht** erforderlich.
 
 ## Repository
 
@@ -21,30 +22,39 @@ cd EDEA
 
 Im Repository-Root:
 
-```bash
+```powershell
 dotnet build EDEA.slnx
 ```
 
-Alternativ für Release:
+Tests:
 
-```bash
-dotnet build EDEA.slnx -c Release
+```powershell
+dotnet test EDEA.slnx --no-build
 ```
 
 Das Solution-File `EDEA.slnx` enthält:
 
-- `src/EDEA/EDEA.csproj` (Hauptanwendung)
-- `test/EDEA.Tests/EDEA.Tests.csproj` (Unit-Tests)
+- `src/EDEA.Core/EDEA.Core.csproj` – plattformunabhängige Kernbibliothek (Modelle, ViewModels, Services, SQLite-Store).
+- `src/EDEA.Avalonia/EDEA.Avalonia.csproj` – Avalonia-UI-Anwendung.
+- `test/EDEA.Tests/EDEA.Tests.csproj` – Unit-Tests.
 
 ## Ausführung
 
-Nach erfolgreichem Build:
-
-```bash
-dotnet run --project src/EDEA/EDEA.csproj
+```powershell
+dotnet run --project src\EDEA.Avalonia\EDEA.Avalonia.csproj
 ```
 
-Oder die erzeugte `.exe` im Ausgabeverzeichnis starten.
+Oder die erzeugte `EDEA.Avalonia.exe` im Ausgabeverzeichnis starten.
+
+### Veröffentlichung ohne .NET-Installation
+
+Self-contained-Build für Windows x64 (Zielrechner braucht kein .NET):
+
+```powershell
+dotnet publish src\EDEA.Avalonia\EDEA.Avalonia.csproj -c Release -r win-x64 --self-contained -o publish\win-x64
+```
+
+Das Ergebnis liegt in `publish\win-x64` inklusive aller Laufzeit-Ressourcen.
 
 ## Konfiguration
 
@@ -59,57 +69,51 @@ EDEA benötigt den Pfad zu den Elite-Dangerous-Savegame-Dateien. Standard:
 Falls der Pfad abweicht:
 
 - EDEA starten.
-- `Preferences` öffnen.
-- Im Bereich **Configuration** den korrekten Ordner für `EdSavedGamePath` setzen.
-- EDEA neu starten.
-
-### EDMC
-
-*Elite Dangerous Market Connector* sollte parallel laufen, damit Journal-Events und EDSM-Daten optimal verfügbar sind. EDEA prüft beim Start, ob EDMC läuft, und gibt ggf. eine Warnung aus.
+- `Einstellungen` öffnen.
+- Im Bereich **Konfiguration** den korrekten Ordner für `EdSavedGamePath` setzen.
 
 ### Einstellungen
 
-Einstellungen werden in `%LOCALAPPDATA%\EDEA\settings.json` gespeichert. Wichtige Bereiche:
+Einstellungen werden in `%LOCALAPPDATA%\EDEA.Core\settings.json` gespeichert. Wichtige Bereiche:
 
-- **Application**: Sprache (`Language`), ausgewählter Tab (`SelectedTabIndex`), Fensterzustände.
-- **Other**: Journal-Pfad, automatischer Tab-Wechsel, wertvolle Body-/Genus-Schwellen, biologische Sichtbarkeit.
-- **HudWindow**: Sichtbarkeit und Anordnung der HUD-Spalten, Deckkraft (`Opacity`), Ausblendverhalten.
-- **Speech**: Aktivierung und Textvorlagen für Sprachausgabe.
+- **Application**: Sprache (`Language`), ausgewählter Tab (`SelectedTabIndex`).
+- **Other**: Journal-Pfad, automatischer Tab-Wechsel, Schwellenwerte für wertvolle Körper und Arten.
+- **HudWindow**: Sichtbarkeit der HUD-Spalten, Deckkraft (`Opacity`), Ausblendverhalten.
+- **Speech**: Aktivierung und Textvorlagen für die Sprachausgabe. Gespeicherte Standardtexte folgen der UI-Sprache; eigene Anpassungen bleiben erhalten.
 - **Hotkeys**: Benutzerdefinierte Tastenkombinationen.
 - **PlanetsOfInterest**: Filterkriterien für interessante Planeten.
 - **Spansh**: Einstellungen für Spansh-Routen.
 
-Unterstützte Sprachen: `Auto`, `en`, `de`, `es`, `fr`, `ru`, `pt-BR`.
+Unterstützte Sprachen: `Auto` (Systemsprache), `en`, `de`, `ru`. Die Sprache lässt sich in den Einstellungen **live umschalten** – ohne Neustart. Die Infrastruktur ist für `es`, `fr` und `pt-BR` vorbereitet (diese fallen ohne Sprachdatei auf Englisch zurück).
 
 ### Erste Nutzung
 
 1. EDEA starten.
-2. Im Willkommensdialog oder über `Preferences` den Journal-Pfad prüfen.
-3. EDMC starten (empfohlen).
-4. Elite Dangerous starten oder ein Journal laden.
-5. Den gewünschten Tab auswählen (Bodies, Route, Surroundings, History, Biologicals).
+2. Über `Einstellungen` den Journal-Pfad prüfen.
+3. Elite Dangerous starten oder ein Journal laden.
+4. Den gewünschten Tab auswählen (Route, Himmelskörper, Biologie, Umgebung, Historie).
 
 ## Ressourcen
 
-Das Projekt enthält folgende Ressourcen, die in die Ausgabe kopiert werden:
+Die folgenden Dateien werden als `Content` mit `CopyToOutputDirectory=PreserveNewest` in die Ausgabe kopiert und müssen neben der Anwendung liegen:
 
-- `src/EDEA/Resources/app.ico` – Anwendungssymbol.
-- `src/EDEA/Resources/mc.dat` – Inhalt in `EDEA.csproj` als `Content` mit `CopyToOutputDirectory=PreserveNewest`.
-- `src/EDEA/Resources/gc.json` – Inhalt in `EDEA.csproj` als `Content` mit `CopyToOutputDirectory=PreserveNewest`.
-
-Diese Dateien müssen im Build-Output im Anwendungsverzeichnis vorhanden sein.
+- `src/EDEA.Avalonia/Resources/mc.dat` – statische Spieldaten (Module, FSD, Guardian-FSD-Booster).
+- `src/EDEA.Avalonia/Resources/bio_catalog.json` – Biologie-Katalog (Artenregeln, Vista-Genomics-Werte).
+- `src/EDEA.Avalonia/Resources/regions.json` – Galaktische Regionen inkl. Guardian-/Tuber-Zonen.
+- `src/EDEA.Avalonia/Resources/nebulae.json` – Nebel-Volumen.
+- `src/EDEA.Avalonia/Assets/app.ico` – Anwendungssymbol (eingebettet als Avalonia-Ressource).
 
 ## Dateien im Anwendungsdatenverzeichnis
 
-Nach dem ersten Start legt EDEA unter `%LOCALAPPDATA%\EDEA` folgende Dateien an:
+Nach dem ersten Start legt EDEA unter `%LOCALAPPDATA%\EDEA.Core` folgende Dateien an:
 
 - `settings.json` – Benutzereinstellungen.
-- `db/EDEA.db` – SQLite-Datenbank.
-- `log/EDEA.log` – Anwendungslog.
-- `jot/` – Jot-Fensterzustände.
+- `windowstate.json` – Fensterpositionen und -zustände.
+- `db/EDEA.db` – SQLite-Datenbank (Historie, Codex-Scans, Journal-Import-Index).
+- `log/` – Anwendungslogs (log4net, rotierend).
 
 ## Fehlerbehebung
 
-- **"Missing Journal Files!"**: Journal-Pfad in den Einstellungen korrigieren.
-- **EDEA startet nicht**: Prüfen, ob bereits eine EDEA-Instanz läuft (Singleton-Mutex).
-- **Keine Web-Daten**: Internetverbindung und EDMC-Status prüfen.
+- **„Missing Journal Files!"**: Journal-Pfad in den Einstellungen korrigieren.
+- **Keine Web-Daten**: Internetverbindung prüfen; EDSM/Spansh können auch kurzfristig nicht erreichbar sein.
+- **Keine Sprachausgabe**: Edge TTS benötigt Internet; ohne Verbindung stehen keine Stimmen zur Verfügung.

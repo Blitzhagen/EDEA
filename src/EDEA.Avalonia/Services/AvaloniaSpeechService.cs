@@ -95,6 +95,14 @@ public sealed class AvaloniaSpeechService : ISpeechService
         Log.Info("Speech provider initialized with SayIt (Edge TTS).");
         Interlocked.Exchange(ref _voicesLoading, 1);
         _ = LoadVoicesAsync();
+        Resources.CultureChanged += () =>
+        {
+            _voicesLoaded = false;
+            if (Interlocked.CompareExchange(ref _voicesLoading, 1, 0) == 0)
+            {
+                _ = LoadVoicesAsync();
+            }
+        };
     }
 
     /// <inheritdoc />

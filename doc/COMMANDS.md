@@ -1,51 +1,36 @@
-# EDEA – Befehle
+# EDEA – Aktionen und Befehle
 
-Dieses Dokument beschreibt alle in `src/EDEA/Commands/` implementierten Befehle. Befehle kapseln UI-Operationen und leiten diese an Provider, ViewModels oder Dialoge weiter. Alle abgeleiteten Befehle setzen auf `CommandBase` auf.
+Die früheren separaten `ICommand`-Klassen (`src/EDEA/Commands/`, WPF) existieren nicht mehr. UI-Aktionen sind heute:
 
-## CommandBase
+1. **`ICommand`-Properties auf dem `MainViewModel`** (`src/EDEA.Avalonia/ViewModels/MainViewModel.cs`), erzeugt über `CommunityToolkit.Mvvm` (`RelayCommand`) und aus den Menüs per `{Binding}` gebunden.
+2. **Code-Behind-Handler** in den Fenstern (z. B. `PreferencesWindow.axaml.cs`) für Einstellungs-Interaktionen.
+3. **Globale Hotkeys** über `AvaloniaGlobalHotkeyService` (`IGlobalHotkeyService`), die auf dieselben ViewModel-Aktionen zugreifen.
 
-`CommandBase` ist die abstrakte Basisklasse für alle Befehle und implementiert `ICommand`.
+## Befehle des MainViewModel
 
-| Eigenschaft / Methode | Beschreibung |
-| --- | --- |
-| `CanExecute(object? parameter)` | Gibt standardmäßig `true` zurück; kann in abgeleiteten Klassen überschrieben werden. |
-| `Execute(object? parameter)` | Abstrakte Ausführungslogik; muss in jedem Befehl implementiert werden. |
-| `CanExecuteChanged` | Ereignis, das auslöst, wenn sich die Ausführbarkeit ändert. |
-| `OnCanExecuteChanged()` | Löst `CanExecuteChanged` aus. |
+| Command | Aktion |
+|---------|--------|
+| `ShowAboutWindowCommand` | Öffnet das Info-Fenster. |
+| `ShowPreferencesWindowCommand` | Öffnet die Einstellungen. |
+| `ShowFeedbackReportIssueWindowCommand` | Öffnet Feedback/Problem-Melden. |
+| `OpenCloseHudWindowCommand` | HUD-Fenster ein-/ausblenden. |
+| `ToggleHudMousePassThroughCommand` | HUD-Maus-Durchgriff umschalten. |
+| `ImportJournalHistoryCommand` | Historischen Journal-Import starten. |
+| `ReloadEdsmDataCommand` | EDSM-Daten des aktuellen Systems neu laden. |
+| `GenerateClearPlotterRouteCommand` | Neutron-Plotter-Route erzeugen/löschen. |
+| `LockUnlockRouteCommand` | Route sperren/entsperren. |
+| `ImportSpanshRouteCommand` | Spansh-Route importieren. |
 
-## Befehlsübersicht
+Weitere Aktionen als Methoden: `CopyNextSystemToClipboard()`, `OpenRouteTab()`, `RefreshMenuItems()`, `ToggleHudMousePassThrough()`, `RestoreWindows()`, `OnMainWindowClosing()`.
 
-| Befehl | Zweck | Basisklasse | Wichtige Parameter |
-| --- | --- | --- | --- |
-| `AddCustomPlanetFilterCommand` | Fügt der Einstellungsansicht einen neuen benutzerdefinierten Planetenfilter hinzu. | `CommandBase` | `PreferencesViewModel preferencesViewModel` |
-| `AssignHotkeyCommand` | Weist einem Hotkey eine neue Tastenkombination zu. | `CommandBase` | `HotkeyProvider hotkeyProvider`, `PreferencesWindow preferencesWindow` |
-| `CancelPreferencesCommand` | Bricht ausstehende Einstellungsänderungen ab und schließt das Einstellungsfenster. | `CommandBase` | `PreferencesViewModel viewModel`, `Window window` |
-| `ClearHistoryCommand` | Löscht nach Rückfrage die aktuelle Trip-Historie oder die gesamte Explorationshistorie. | `CommandBase` | `MainViewModel mainViewModel`, `HistoryProvider historyProvider`, `StarSystemProvider starSystemProvider` |
-| `CloseWindowCommand` | Schließt das zugehörige WPF-Fenster. | `CommandBase` | `Window window` |
-| `CopyToClipboardCommand` | Kopiert Texte oder numerische Werte in die Zwischenablage und zeigt optional ein Popup an. | `CommandBase` | `Execute(parameter)`: `object?` (Text, Zahl oder `CopyToClipboardCommandParameter`) |
-| `EnableDisableHudWindowMousePassThroughCommand` | Schaltet den Maus-Durchgriff des HUD-Fensters um. | `CommandBase` | `HudViewModel hudViewModel` |
-| `GenerateClearPlotterRouteCommand` | Löscht eine vorhandene, nicht gesperrte Plotter-Route oder öffnet das Routen-Plotter-Fenster. Der Löschmodus ist deaktiviert, solange die Route gesperrt ist. | `CommandBase` | `RoutePlotterViewModel routePlotterViewModel`, `RouteProvider routeProvider`, `Action? onCleared` |
-| `ImportJournalHistoryCommand` | Öffnet das Fenster zum Importieren der Journal-Historie. | `CommandBase` | `JournalHistoryImportViewModel importJournalHistoryViewModel` |
-| `ImportSpanshRouteCommand` | Importiert eine Spansh-Routen-Datei in die Anwendung. | `CommandBase` | `MainViewModel mainViewModel`, `RouteProvider routeProvider` |
-| `LoadEdsmSystemDataCommand` | Lädt EDSM-Systemdaten und wechselt in den Bodies-Tab. | `CommandBase` | `MainViewModel mainViewModel`, `StarSystemProvider starSystemProvider` |
-| `LockUnlockRouteCommand` | Sperrt die aktuelle Route oder hebt die Sperre auf, ohne die Plotter-Route zu löschen. | `CommandBase` | `MainViewModel mainViewModel`, `RouteProvider routeProvider` |
-| `MailToFeedbackReportIssueMailAddressCommand` | Öffnet das Standard-Mailprogramm mit vorkonfiguriertem Feedback. | `CommandBase` | – |
-| `OpenCloseHudWindowCommand` | Öffnet oder schließt das HUD-Fenster je nach aktuellem Zustand. | `CommandBase` | `HudViewModel hudViewModel` |
-| `OpenLogfileFolderCommand` | Öffnet den Anwendungs-Logordner im Windows-Explorer. | `CommandBase` | – |
-| `PlaySpeechCommand` | Spielt die aktuell ausgewählte Sprachausgabevorschau ab. | `CommandBase` | `PreferencesViewModel preferencesViewModel` |
-| `RemoveCustomPlanetFilterCommand` | Entfernt nach Rückfrage den ausgewählten benutzerdefinierten Planetenfilter. | `CommandBase` | `PreferencesViewModel preferencesViewModel` |
-| `RenameCustomPlanetFilterCommand` | Benennt den ausgewählten benutzerdefinierten Planetenfilter um. | `CommandBase` | `PreferencesViewModel preferencesViewModel` |
-| `RestoreDefaultPreferencesCommand` | Stellt Standardeinstellungen nach Bestätigung wieder her und schließt das Fenster. | `CommandBase` | `PreferencesViewModel preferencesViewModel`, `PreferencesWindow preferencesWindow` |
-| `SaveAndClosePreferencesCommand` | Speichert alle Einstellungen und schließt das Einstellungsfenster. | `CommandBase` | `PreferencesViewModel preferencesViewModel`, `PreferencesWindow preferencesWindow` |
-| `SaveSettingsCommand` | Speichert die aktuellen Einstellungen persistiert. | `CommandBase` | `SettingsProvider settingsProvider` |
-| `SelectStringsFromStringListCommand` | Öffnet einen Dialog zur Auswahl von Zeichenketten für die Planetenklassifikation. | `CommandBase` | `PreferencesViewModel preferencesViewModel`; `Execute(parameter)`: `UserSelectableInputStringListsKey` |
-| `SetJournalFolderCommand` | Legt das Elite-Dangerous-Saved-Game-Verzeichnis mit den Journal-Dateien fest. | `CommandBase` | `PreferencesViewModel preferencesViewModel` |
-| `ShowAboutWindowCommand` | Öffnet das Info-Fenster. | `CommandBase` | `AboutViewModel aboutViewModel` |
-| `ShowFeedbackReportIssueWindowCommand` | Öffnet das Feedback- und Issue-Report-Fenster. | `CommandBase` | `FeedbackReportIssueViewModel feedbackReportIssueViewModel` |
-| `ShowPreferencesWindowCommand` | Öffnet das Einstellungsfenster. | `CommandBase` | `PreferencesViewModel preferencesViewModel` |
+## Globale Hotkeys
 
-## Hilfsobjekte
+- Verwaltung: `AvaloniaGlobalHotkeyService` (Win32 `RegisterHotKey`).
+- Belegung in den Einstellungen unter **Globale Hotkeys** (`HotkeyViewModel`, `UserSettingsHotkeys`); `HotkeyInputDialog` erfasst neue Tastenkombinationen.
+- Belegbare Aktionen entsprechen den `HotkeyId`-Werten (`src/EDEA.Core/Enums/HotkeyId.cs`) – u. a. HUD ein/aus, Mouse-Pass-Through, Tab-Wechsel, Systemname kopieren, Sprachausgabe stoppen.
 
-| Typ | Zweck | Wichtige Parameter |
-| --- | --- | --- |
-| `CopyToClipboardCommandParameter` | Parameter-Container für `CopyToClipboardCommand`. | `string text`, `Popup popup` |
+## Fenster- und Tab-Interaktionen
+
+- Menüeinträge in `Views/MainWindow.axaml` binden an die Commands des `MainViewModel`.
+- Tab-Sichtbarkeit und automatischer Wechsel laufen über `TabViewModel`/`TabVisibilityConverter`.
+- Daten-Grids: Sortierung über `DataGridSingleSortBehavior` (einzelne Spalte) und `SortMemberPath`; Zeilen-Kontextmenüs/Tooltips über Templates in `ToolTipTemplates.axaml`.

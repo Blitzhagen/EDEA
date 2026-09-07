@@ -1,77 +1,45 @@
-# Views und Windows
+# EDEA – Views und Fenster
 
-Diese Dokumentation beschreibt die XAML-Views, WPF-Windows und das Hauptfenster von EDEA. Sie ergänzt die ViewModel-Dokumentation und zeigt, welche ViewModel-Schicht hinter den jeweiligen Benutzeroberflächen steht.
+Alle UI-Dateien liegen in `src/EDEA.Avalonia/` (AXAML, Avalonia 11). Statische Texte werden über `{l:Loc Key}` lokalisiert (Live-Sprachwechsel).
 
-## XAML-Views in `src/EDEA/Views/`
+## Views (`Views/`)
 
-Die Views sind `UserControl`-Implementierungen, die ausschließlich das Layout definieren. Sie werden über DataTemplates in `MainWindow.xaml` oder `HudWindow.xaml` je nach aktivem ViewModel ausgewählt.
+| View | Inhalt |
+|------|--------|
+| `MainWindow.axaml` | Hauptfenster: Menüleiste, TabControl (Route, Himmelskörper, Biologie, Umgebung, Historie), Statusleiste. |
+| `RouteTableView.axaml` | Routen-Tabelle (Hauptfenster). |
+| `NavRouteHudTableView.axaml` | Routen-Tabelle (HUD). |
+| `BodyTableView.axaml` | Himmelskörper-Tabelle (Hauptfenster). |
+| `BodyHudTableView.axaml` | Himmelskörper-Tabelle (HUD). |
+| `GenusTableView.axaml` | Biologie-Tabelle (Hauptfenster, inkl. Vorhersage-Grid). |
+| `GenusHudTableView.axaml` | Biologie-Tabelle (HUD). |
+| `SurroundingsTableView.axaml` | Umgebungs-Tabelle. |
+| `HistoryTableView.axaml` | Historie/Statistik. |
+| `BodyRingsTooltip.axaml` | Tooltip-View für Ringdaten eines Körpers. |
 
-| View | Beschreibung | Verwendendes ViewModel |
-|------|--------------|------------------------|
-| `BodyHudTableView.xaml` | Kompakte Körper-Tabelle für das HUD-Overlay | `BodyTableViewModel` |
-| `BodyTableView.xaml` | Haupttabelle der Himmelskörper im Körper-Tab | `BodyTableViewModel` |
-| `GenusHudTableView.xaml` | Kompakte biologische Tabelle für das HUD-Overlay | `GenusTableViewModel` |
-| `GenusTableView.xaml` | Haupttabelle der Genus-/Art-Daten im Biologisches-Tab | `GenusTableViewModel` |
-| `HistoryTableView.xaml` | Übersicht der Historien- und Statistik-Informationen | `HistoryViewModel` |
-| `NavRouteHudTableView.xaml` | Kompakte Routen-Tabelle für das HUD-Overlay | `NavRouteTableViewModel` |
-| `RouteTableView.xaml` | Haupttabelle der Navigation/Route im Route-Tab | `NavRouteTableViewModel` |
-| `SurroundingsTableView.xaml` | Tabelle der umliegenden Systeme im Umgebung-Tab | `SurroundingsTableViewModel` |
+Tooltip-Templates für komplexe Zellen-Tooltips liegen in `ToolTipTemplates.axaml` (App-Ressourcen).
 
-## WPF-Windows in `src/EDEA/Windows/`
+## Fenster (`Windows/`)
 
-Dialog- und Hilfsfenster werden von den entsprechenden ViewModels erzeugt, positioniert und geschlossen. Der `DataContext` wird jeweils im ViewModel-Code zugewiesen.
+| Fenster | Zweck |
+|---------|-------|
+| `PreferencesWindow.axaml` | Einstellungen (Aussehen/Farben/Größe/Sprache, HUD, Sprachausgabe, Planets of Interest, Hotkeys, Konfiguration). |
+| `HudWindow.axaml` | Transparentes Overlay mit den Tabs Route, Himmelskörper, Biologie; Click-Through-fähig. |
+| `RoutePlotterWindow.axaml` | Neutron-/Spansh-Routenplotter inkl. Fleet-Carrier-Modus. |
+| `JournalHistoryImportWindow.axaml` | Fortschrittsdialog des Journal-Imports. |
+| `AboutWindow.axaml` | Info-Fenster (Version, Libraries, Credits). |
+| `FeedbackReportIssueWindow.axaml` | Feedback-/Problem-Formular. |
+| `HotkeyInputDialog.axaml` | Erfasst neue Hotkey-Kombinationen. |
+| `InputStringDialogWindow.axaml` | Generischer Texteingabe-Dialog. |
+| `InputStringListDialogWindow.axaml` | Generischer Auswahllisten-Dialog. |
+| `MessageBoxWindow.axaml` | Einfache Meldungsbox. |
 
-| Window | Beschreibung | DataContext / zugehöriges ViewModel |
-|--------|--------------|--------------------------------------|
-| `AboutWindow.xaml` | Versions-, Lizenz- und Kurzbeschreibung | `AboutViewModel` |
-| `FeedbackReportIssueWindow.xaml` | Feedback-Formular mit Name, E-Mail und Nachricht | `FeedbackReportIssueViewModel` |
-| `HudWindow.xaml` | Transparentes HUD-Overlay mit bewegbarem Inhalt | `HudViewModel` |
-| `InputStringDialogWindow.xaml` | Eingabe-Dialog für einzelne Texte | Wird per Aufrufparameter gefüllt |
-| `InputStringListDialogWindow.xaml` | Auswahldialog für mehrere Texte | Wird per Aufrufparameter gefüllt |
-| `JournalHistoryImportWindow.xaml` | Fortschrittsanzeige beim Journal-Historien-Import | `JournalHistoryImportViewModel` |
-| `PreferencesWindow.xaml` | Einstellungsfenster mit Farben, HUD, Sprache, Hotkeys und POIs | `PreferencesViewModel` |
-| `RoutePlotterWindow.xaml` | Dialog zur Berechnung einer Neutronen-Route über Spansh | `RoutePlotterViewModel` |
+## Styles und Ressourcen
 
-## `MainWindow`
+- `App.axaml`: globale Styles, Brushes (Farbschema aus den Einstellungen), Tooltip-Templates-Einbindung.
+- Anzeigegröße/Farben werden zur Laufzeit vom `AvaloniaColorThemeService` als `DynamicResource` gesetzt.
+- HUD-Styles: `Classes="Hud"` auf den DataGrids + kompakte Header über `TabHeaderToHeightConverter`.
 
-`MainWindow.xaml` ist das zentrale Fenster der Anwendung.
+## Fensterzustand
 
-### Charakteristika
-
-- Besitzt eine benutzerdefinierte Titelleiste (kein Standardrahmen, `WindowStyle="None"`, `AllowsTransparency="True"`).
-- Enthält eine Statusleiste mit dem aktuellen Systemnamen, Erforschungsstatus, Körper-/Nicht-Körper-Signalen, Gesamtfortschritt und aktueller Aktivität.
-- Bietet ein Menü mit Zugriff auf HUD, EDSM-Neuladen, Plotter, Einstellungen, About und Feedback.
-- Hostet ein `TabControl` mit `TabStripPlacement="Left"`, dessen `ItemsSource` an `MainViewModel.TabViewModels` gebunden ist.
-
-### View-ViewModel-Verknüpfung
-
-`MainWindow` bindet sich an `MainViewModel`. Der konkrete Inhalt eines Tabs wird über `TabTemplateSelector` und DataTemplates im Fenster-`ResourceDictionary` aufgelöst:
-
-| DataTemplate-Schlüssel | View |
-|------------------------|------|
-| `Route` | `RouteTableView` |
-| `Bodies` | `BodyTableView` |
-| `Biologicals` | `GenusTableView` |
-| `Surroundings` | `SurroundingsTableView` |
-| `History` | `HistoryTableView` |
-
-Die `TabItem`-Header und -Sichtbarkeiten kommen direkt aus den jeweiligen `TabViewModel`-Instanzen (`TabHeader`, `TabVisibility`).
-
-### HUD-Window
-
-`HudWindow` verwendet ebenfalls DataTemplates, um zwischen den HUD-Varianten der drei Haupttabs zu wechseln:
-
-| ViewModel | HUD-View |
-|-----------|----------|
-| `BodyTableViewModel` | `BodyHudTableView` |
-| `NavRouteTableViewModel` | `NavRouteHudTableView` |
-| `GenusTableViewModel` | `GenusHudTableView` |
-
-`HudViewModel.CurrentViewModel` legt fest, welche View aktuell im HUD angezeigt wird.
-
-## Verknüpfung zwischen ViewModels und Views
-
-- `MainWindow` → `MainViewModel` (zugewiesen in `App.xaml.cs`).
-- Tab-Inhalte → `TabViewModel`-basierte DataTemplate-Auswahl über `TabTemplateSelector`.
-- `HudWindow` → `HudViewModel`, dessen `CurrentViewModel` durch DataTemplates in `HudWindow.xaml` aufgelöst wird.
-- Alle weiteren Fenster werden durch ihre ViewModels instanziiert und bekommen dort über `window.DataContext = this;` den DataContext zugewiesen.
+`AvaloniaWindowStateService` persistiert Position/Größe/Sichtbarkeit der Fenster in `%LOCALAPPDATA%\EDEA.Core\windowstate.json`; `MainViewModel.RestoreWindows()` öffnet beim Start zuvor offene Fenster (u. a. HUD).

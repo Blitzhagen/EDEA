@@ -29,10 +29,25 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
     /// </summary>
     public AvaloniaWindowStateService()
     {
-        var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        var directory = Path.Combine(appData, "EDEA");
+        var directory = Globals.AppDataFolder;
         Directory.CreateDirectory(directory);
         _stateFilePath = Path.Combine(directory, "windowstate.json");
+
+        var legacyPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "EDEA",
+            "windowstate.json");
+        if (File.Exists(legacyPath) && !File.Exists(_stateFilePath))
+        {
+            try
+            {
+                File.Move(legacyPath, _stateFilePath);
+            }
+            catch (Exception)
+            {
+                // Best effort: state is re-saved on next window change anyway.
+            }
+        }
     }
 
     /// <summary>
