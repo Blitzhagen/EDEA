@@ -400,6 +400,29 @@ namespace EDEA
         { "helium gas giant", "Helium-Gasriese" }
     }.ToImmutableDictionary();
 
+        /// <summary>German dative-case planet class names (with indefinite article) for use after prepositions like "auf".</summary>
+        public static readonly ImmutableDictionary<string, string> GermanPlanetClassNamesDative = new Dictionary<string, string>
+    {
+        { "Metallreiche Welt", "der metallreichen Welt" },
+        { "Welt mit hohem Metallgehalt", "der Welt mit hohem Metallgehalt" },
+        { "Felsige Welt", "der felsigen Welt" },
+        { "Eiswelt", "der Eiswelt" },
+        { "Felsige Eiswelt", "der felsigen Eiswelt" },
+        { "Erdähnliche Welt", "der erdähnlichen Welt" },
+        { "Wasserwelt", "der Wasserwelt" },
+        { "Ammoniakwelt", "der Ammoniakwelt" },
+        { "Wasserriese", "dem Wasserriesen" },
+        { "Gasriese mit wasserbasiertem Leben", "dem Gasriesen mit wasserbasiertem Leben" },
+        { "Gasriese mit ammoniakbasiertem Leben", "dem Gasriesen mit ammoniakbasiertem Leben" },
+        { "Gasriese der Klasse I", "dem Gasriesen der Klasse I" },
+        { "Gasriese der Klasse II", "dem Gasriesen der Klasse II" },
+        { "Gasriese der Klasse III", "dem Gasriesen der Klasse III" },
+        { "Gasriese der Klasse IV", "dem Gasriesen der Klasse IV" },
+        { "Gasriese der Klasse V", "dem Gasriesen der Klasse V" },
+        { "Heliumreicher Gasriese", "dem heliumreichen Gasriesen" },
+        { "Helium-Gasriese", "dem Helium-Gasriesen" }
+    }.ToImmutableDictionary();
+
         public static readonly ImmutableDictionary<string, string> GermanAtmospherePrefixes = new Dictionary<string, string>
     {
         { "thin", "Dünne" },
@@ -524,6 +547,23 @@ namespace EDEA
                 normalized = normalized.Replace("  ", " ");
 
             return GermanPlanetClassNames.TryGetValue(normalized, out var german) ? german : planetClass;
+        }
+
+        /// <summary>
+        /// Returns a localized dative-case planet class name for use after "auf".
+        /// </summary>
+        /// <param name="planetClass">The raw planet class.</param>
+        /// <returns>The dative planet class or the original value.</returns>
+        public static string GetLocalizedPlanetClassDative(string planetClass)
+        {
+            if (string.IsNullOrEmpty(planetClass))
+                return planetClass;
+
+            if (!Resources.Culture.TwoLetterISOLanguageName.Equals("de", StringComparison.OrdinalIgnoreCase))
+                return planetClass;
+
+            var nominative = GetLocalizedPlanetClass(planetClass);
+            return GermanPlanetClassNamesDative.TryGetValue(nominative, out var dative) ? dative : nominative;
         }
 
         /// <summary>

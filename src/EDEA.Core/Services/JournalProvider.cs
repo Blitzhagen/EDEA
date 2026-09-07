@@ -161,15 +161,19 @@ public class JournalProvider
         {
             body.StarSystem = starSystem;
             body.WasDiscovered = Helpsters.ConvertJObjectValue(jObject, "WasDiscovered", false);
+
+            // Set the primary star name and class before TryAddOrUpdateBody so the
+            // first-discovery speech output can identify the system correctly.
+            if (body.Distance == 0.0 && body.Type == BodyType.Star)
+            {
+                starSystem.PrimaryStarName = body.Name;
+                starSystem.StarClass = (body as Star)!.StarType;
+            }
+
             addOrUpdateResult = starSystem.TryAddOrUpdateBody(body, ignoreSpeechOutput, DataSource.Journal, out addedOrUpdatedBody);
             if (addOrUpdateResult == 0)
             {
                 return;
-            }
-            if (addedOrUpdatedBody.Distance == 0.0 && addedOrUpdatedBody.Type == BodyType.Star)
-            {
-                starSystem.PrimaryStarName = addedOrUpdatedBody.Name;
-                starSystem.StarClass = (addedOrUpdatedBody as Star)!.StarType;
             }
             if (_journalPlanetMemory.Contains(addedOrUpdatedBody.StarSystemId, addedOrUpdatedBody.Id))
             {

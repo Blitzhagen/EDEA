@@ -552,20 +552,35 @@ public sealed class AvaloniaSpeechService : ISpeechService
         var text = message.ToString().Trim();
         if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "de")
         {
-            text = FixGermanSingularOne(text);
+            text = FixGerman(text);
         }
 
         return text;
     }
 
     /// <summary>
-    /// Fixes common German singular/plural mismatches.
+    /// Fixes common German grammar issues for speech output.
     /// </summary>
-    private static string FixGermanSingularOne(string text)
+    private static string FixGerman(string text)
     {
+        if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != "de")
+        {
+            return text;
+        }
+
+        // "1" -> "Ein" for singular signal counts.
         text = Regex.Replace(text, @"\b1\s+biologische\s+Signale\b", "Ein biologisches Signal");
         text = Regex.Replace(text, @"\b1\s+geologische\s+Signale\b", "Ein geologisches Signal");
+        text = Regex.Replace(text, @"\b1\s+(biologisches|geologisches)\s+Signal\b", "Ein $1 Signal");
         text = Regex.Replace(text, @"\b1\s+(geologischen|biologischen)\s+Signalen\b", "einem $1 Signal");
+
+        // Convert planet class to dative after "auf".
+        foreach (var (nominative, dative) in Globals.GermanPlanetClassNamesDative)
+        {
+            var pattern = @"\bauf\s+" + Regex.Escape(nominative) + @"\b";
+            text = Regex.Replace(text, pattern, "auf " + dative, RegexOptions.IgnoreCase);
+        }
+
         return text;
     }
 
