@@ -2,6 +2,14 @@
 
 EDEA ist ein Open-Source-Begleitprogramm (Companion App) für **Elite Dangerous**, das sich auf die **Erkundung der Galaxie** spezialisiert. Das Programm liest das Journal des Spiels live mit und wertet daraus Systeme, Himmelskörper, biologische Signale, Routen und Erkundungsdaten aus.
 
+## Ursprung und Dank
+
+Dieses Projekt basiert auf dem Quellcode des ursprünglichen **Elite Dangerous Exploration Buddy** von **CMDR Panostrede**. Der ursprüngliche Code wurde durch **Dekompilierung des Original-Programms mit `ilspycmd` (ILSpy)** gewonnen und als Grundlage für diese Weiterentwicklung verwendet.
+
+Dabei sei ausdrücklich auch die Arbeit gewürdigt, die darin steckte: die ursprüngliche Entwicklung des Programms durch CMDR Panostrede ebenso wie die mühsame Rekonstruktion aus dem Dekompilat — ein decompilierter Zwischenstand ist kein fertiges Projekt; Namen, Struktur und Zusammenhänge mussten Stück für Stück wiederhergestellt werden, bevor daraus ein weiterentwickelbarer Quellcode werden konnte.
+
+Ein besonderer Dank geht an den ursprünglichen Entwickler **CMDR Panostrede**, der uns freundlicherweise erlaubt hat, den Code zu nutzen und das Programm in dieser Form bereitzustellen.
+
 ## Was macht EDEA?
 
 EDEA hilft Explorern dabei, **keine wertvollen Entdeckungen zu übersehen** und den Ertrag einer Erkundungstour zu maximieren. Dazu wertet das Programm das Spiel-Journal in Echtzeit aus und beantwortet die Fragen, die im Spiel sonst umständlich nachgeschlagen werden müssten:
@@ -61,12 +69,6 @@ EDEA lässt sich in nahezu jedem Bereich an die eigenen Bedürfnisse anpassen:
 ### Datenschutz
 
 Keine Telemetrie, kein Auto-Updater, keine Original-Spiel-Assets. Alle Daten bleiben lokal.
-
-## Ursprung und Dank
-
-Dieses Projekt basiert auf dem Quellcode des ursprünglichen **Elite Dangerous Exploration Buddy** von **CMDR Panostrede**. Der ursprüngliche Code wurde durch **Dekompilierung des Original-Programms mit `ilspycmd` (ILSpy)** gewonnen und als Grundlage für diese Weiterentwicklung verwendet.
-
-Ein besonderer Dank geht an den ursprünglichen Entwickler **CMDR Panostrede**, der uns freundlicherweise erlaubt hat, den Code zu nutzen und das Programm in dieser Form bereitzustellen.
 
 ## Technik
 
