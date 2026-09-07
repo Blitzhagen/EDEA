@@ -92,6 +92,7 @@
                         <ComboBoxItem Content="{l:Loc PreferencesWindow_Combo_LanguageAuto}" />
                         <ComboBoxItem Content="English" />
                         <ComboBoxItem Content="Deutsch" />
+                        <ComboBoxItem Content="Русский" />
                       </ComboBox>
                     </StackPanel>
                   </Border>

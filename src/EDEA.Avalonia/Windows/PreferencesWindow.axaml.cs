@@ -249,6 +249,7 @@ public partial class PreferencesWindow : Window
         {
             "en" => 1,
             "de" => 2,
+            "ru" => 3,
             _ => 0,
         };
 
@@ -406,6 +407,7 @@ public partial class PreferencesWindow : Window
         {
             1 => "en",
             2 => "de",
+            3 => "ru",
             _ => "Auto",
         };
         App.ApplyLanguage();

@@ -69,7 +69,7 @@ public class SettingsProvider
     /// <param name="settings">The loaded user settings.</param>
     private static void MigrateSpeechDefaults(UserSettings settings)
     {
-        var knownCultures = new[] { new CultureInfo("en"), new CultureInfo("de") };
+        var knownCultures = new[] { new CultureInfo("en"), new CultureInfo("de"), new CultureInfo("ru") };
         foreach (var property in typeof(UserSettingsSpeech).GetProperties())
         {
             if (!property.Name.EndsWith("Speech", StringComparison.Ordinal)

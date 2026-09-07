@@ -1,0 +1,1325 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="MainWindow_Title" xml:space="preserve">
+    <value>ED Exploration Assistant</value>
+  </data>
+  <data name="ApplicationLanguage" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="MenuItem_ReloadEdsm" xml:space="preserve">
+    <value>Обновить данные EDSM для текущей системы</value>
+  </data>
+  <data name="MenuItem_ResetTripData" xml:space="preserve">
+    <value>Сбросить данные экспедиции</value>
+  </data>
+  <data name="MenuItem_ImportJournalHistory" xml:space="preserve">
+    <value>Импорт истории исследований из журнала</value>
+  </data>
+  <data name="MenuItem_DeleteExplorationHistory" xml:space="preserve">
+    <value>Удалить всю историю исследований</value>
+  </data>
+  <data name="MenuItem_Preferences" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="MenuItem_FeedbackReportIssue" xml:space="preserve">
+    <value>Обратная связь / Сообщить о проблеме</value>
+  </data>
+  <data name="MenuItem_About" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="StatusBar_CurrentSystem" xml:space="preserve">
+    <value>Текущая система</value>
+  </data>
+  <data name="StatusBar_DiscoveredBodies" xml:space="preserve">
+    <value>Обнаруженные тела</value>
+  </data>
+  <data name="StatusBar_NonBodySignals" xml:space="preserve">
+    <value>Прочие сигналы</value>
+  </data>
+  <data name="StatusBar_CurrentActivity" xml:space="preserve">
+    <value>Текущее действие</value>
+  </data>
+  <data name="HudWindow_Title" xml:space="preserve">
+    <value>EDEA HUD</value>
+  </data>
+  <data name="AboutWindow_Title" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="AboutWindow_AppName" xml:space="preserve">
+    <value>ED Exploration Assistant</value>
+  </data>
+  <data name="AboutWindow_Version" xml:space="preserve">
+    <value>Версия 0.1</value>
+  </data>
+  <data name="AboutWindow_Description" xml:space="preserve">
+    <value>Помощник исследователя ED с открытым кодом</value>
+  </data>
+  <data name="AboutWindow_License" xml:space="preserve">
+    <value>Лицензия MIT. Без телеметрии, без автообновлений, оригинальные ресурсы не используются.</value>
+  </data>
+  <data name="AboutWindow_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Title" xml:space="preserve">
+    <value>Обратная связь / Сообщить о проблеме</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Headline" xml:space="preserve">
+    <value>Обратная связь / Сообщить о проблеме</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Description" xml:space="preserve">
+    <value>Ваш отзыв помогает улучшить EDEA.</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Name" xml:space="preserve">
+    <value>Имя:</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Email" xml:space="preserve">
+    <value>Email:</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Message" xml:space="preserve">
+    <value>Сообщение:</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Send" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="FeedbackReportIssueWindow_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="PreferencesWindow_Title" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="PreferencesWindow_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="PreferencesWindow_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="PreferencesWindow_ResetPreferences" xml:space="preserve">
+    <value>Сбросить настройки</value>
+  </data>
+  <data name="PreferencesWindow_ResetWarning" xml:space="preserve">
+    <value>ВНИМАНИЕ: нажатие кнопки ниже сбросит ВСЕ настройки на значения по умолчанию. Окно настроек будет закрыто.</value>
+  </data>
+  <data name="RoutePlotterWindow_NoShipData" xml:space="preserve">
+    <value>Данные о корабле недоступны. Они необходимы для построения маршрута. Сядьте в корабль и повторите попытку.</value>
+  </data>
+  <data name="RoutePlotterWindow_ErrorMessage" xml:space="preserve">
+    <value>Произошла ошибка. Маршрут не удалось построить. Повторите попытку или отмените.</value>
+  </data>
+  <data name="RoutePlotterWindow_TryAgain" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="RoutePlotterWindow_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="RoutePlotterWindow_GenerateRoute" xml:space="preserve">
+    <value>Построить маршрут</value>
+  </data>
+  <data name="RoutePlotterWindow_ShipName" xml:space="preserve">
+    <value>Название корабля</value>
+  </data>
+  <data name="RoutePlotterWindow_FrameShiftDrive" xml:space="preserve">
+    <value>Рамочно-сдвиговой двигатель</value>
+  </data>
+  <data name="RoutePlotterWindow_FsdBooster" xml:space="preserve">
+    <value>Усилитель РСД</value>
+  </data>
+  <data name="RoutePlotterWindow_Class" xml:space="preserve">
+    <value>Класс</value>
+  </data>
+  <data name="RoutePlotterWindow_Rating" xml:space="preserve">
+    <value>Рейтинг</value>
+  </data>
+  <data name="RoutePlotterWindow_CargoCount" xml:space="preserve">
+    <value>Грузовой отсек</value>
+  </data>
+  <data name="RoutePlotterWindow_Supercharged" xml:space="preserve">
+    <value>Сверхзаряд</value>
+  </data>
+  <data name="RoutePlotterWindow_FsdOptimalMass" xml:space="preserve">
+    <value>Оптимальная масса РСД</value>
+  </data>
+  <data name="RoutePlotterWindow_SourceSystem" xml:space="preserve">
+    <value>Исходная система</value>
+  </data>
+  <data name="RoutePlotterWindow_DestinationSystem" xml:space="preserve">
+    <value>Система назначения</value>
+  </data>
+  <data name="RoutePlotterWindow_Algorithm" xml:space="preserve">
+    <value>Алгоритм</value>
+  </data>
+  <data name="RoutePlotterWindow_UseSupercharge" xml:space="preserve">
+    <value>Использовать сверхзаряд</value>
+  </data>
+  <data name="RoutePlotterWindow_UseFsdInjections" xml:space="preserve">
+    <value>Использовать инъекции РСД</value>
+  </data>
+  <data name="RoutePlotterWindow_ExcludeSecondaryStars" xml:space="preserve">
+    <value>Исключить второстепенные звёзды</value>
+  </data>
+  <data name="RoutePlotterWindow_RefuelEveryScoopable" xml:space="preserve">
+    <value>Заправка у каждой подходящей звезды</value>
+  </data>
+  <data name="JournalHistoryImportWindow_Title" xml:space="preserve">
+    <value>Импорт истории исследований из журнала</value>
+  </data>
+  <data name="JournalHistoryImportWindow_JournalFilesProcessed" xml:space="preserve">
+    <value>Обработано файлов журнала:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_DetectingStarSystems" xml:space="preserve">
+    <value>Обнаружено звёздных систем:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_DetectingBodies" xml:space="preserve">
+    <value>Обнаружено небесных тел:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_DetectingAdditionalData" xml:space="preserve">
+    <value>Обнаружено доп. данных:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_NewSystemsAdded" xml:space="preserve">
+    <value>Новых систем добавлено в историю:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_SystemsUpdated" xml:space="preserve">
+    <value>Систем обновлено в истории:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_SystemsIgnored" xml:space="preserve">
+    <value>Систем пропущено из журнала:</value>
+  </data>
+  <data name="JournalHistoryImportWindow_StartImport" xml:space="preserve">
+    <value>Начать импорт</value>
+  </data>
+  <data name="JournalHistoryImportWindow_StopImport" xml:space="preserve">
+    <value>Остановить импорт</value>
+  </data>
+  <data name="InputStringDialogWindow_Title" xml:space="preserve">
+    <value>Ввод</value>
+  </data>
+  <data name="InputStringDialogWindow_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="InputStringDialogWindow_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="InputStringListDialogWindow_Title" xml:space="preserve">
+    <value>Выбор</value>
+  </data>
+  <data name="InputStringListDialogWindow_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="InputStringListDialogWindow_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="PreferencesWindow_Tab_Appearance" xml:space="preserve">
+    <value>Внешний вид</value>
+  </data>
+  <data name="PreferencesWindow_Tab_HudWindow" xml:space="preserve">
+    <value>Окно HUD</value>
+  </data>
+  <data name="PreferencesWindow_Tab_Speech" xml:space="preserve">
+    <value>Озвучка</value>
+  </data>
+  <data name="PreferencesWindow_Tab_PlanetsOfInterest" xml:space="preserve">
+    <value>Интересные планеты</value>
+  </data>
+  <data name="PreferencesWindow_SubTab_BasicAttributes" xml:space="preserve">
+    <value>Базовые атрибуты</value>
+  </data>
+  <data name="PreferencesWindow_SubTab_SurfaceConditions" xml:space="preserve">
+    <value>Условия на поверхности</value>
+  </data>
+  <data name="PreferencesWindow_SubTab_RingRelated" xml:space="preserve">
+    <value>Кольца</value>
+  </data>
+  <data name="PreferencesWindow_SubTab_ParentPlanet" xml:space="preserve">
+    <value>Родительская планета</value>
+  </data>
+  <data name="PreferencesWindow_Tab_GlobalHotkeys" xml:space="preserve">
+    <value>Глобальные горячие клавиши</value>
+  </data>
+  <data name="PreferencesWindow_Tab_Configuration" xml:space="preserve">
+    <value>Конфигурация</value>
+  </data>
+  <data name="ColumnHeaderName" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="ColumnHeaderType" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="ColumnHeaderTemperature" xml:space="preserve">
+    <value>Температура</value>
+  </data>
+  <data name="ColumnHeaderAtmosphere" xml:space="preserve">
+    <value>Атмосфера</value>
+  </data>
+  <data name="ColumnHeaderEdsmDiscoverer" xml:space="preserve">
+    <value>Первооткрыватель EDSM</value>
+  </data>
+  <data name="ColumnHeaderCartographicValue" xml:space="preserve">
+    <value>Картографическая ценность</value>
+  </data>
+  <data name="ColumnHeaderOverallProgress" xml:space="preserve">
+    <value>Прогресс</value>
+  </data>
+  <data name="ColumnHeaderDistance" xml:space="preserve">
+    <value>Расстояние</value>
+  </data>
+  <data name="ColumnHeaderJump" xml:space="preserve">
+    <value>Прыжок</value>
+  </data>
+  <data name="ColumnHeaderSystemName" xml:space="preserve">
+    <value>Система</value>
+  </data>
+  <data name="ColumnHeaderStarClass" xml:space="preserve">
+    <value>Класс звезды</value>
+  </data>
+  <data name="ColumnHeaderDiscoveryStatus" xml:space="preserve">
+    <value>Статус открытия</value>
+  </data>
+  <data name="ColumnHeaderSpecies" xml:space="preserve">
+    <value>Вид</value>
+  </data>
+  <data name="ColumnHeaderVariant" xml:space="preserve">
+    <value>Вариант</value>
+  </data>
+  <data name="ColumnHeaderScans" xml:space="preserve">
+    <value>Сканирования</value>
+  </data>
+  <data name="ColumnHeaderClonalColonyRange" xml:space="preserve">
+    <value>Радиус клональной колонии</value>
+  </data>
+  <data name="ColumnHeader1stScanDistance" xml:space="preserve">
+    <value>Дистанция до 1-го сканирования</value>
+  </data>
+  <data name="ColumnHeader2ndScanDistance" xml:space="preserve">
+    <value>Дистанция до 2-го сканирования</value>
+  </data>
+  <data name="ColumnHeaderVistaGenomicsValue" xml:space="preserve">
+    <value>Ценность Vista Genomics</value>
+  </data>
+  <data name="MenuItem_ClearGalaxyPlotterRoute" xml:space="preserve">
+    <value>Очистить нейтронный маршрут</value>
+  </data>
+  <data name="MenuItem_GenerateGalaxyPlotterRoute" xml:space="preserve">
+    <value>Построить нейтронный маршрут</value>
+  </data>
+  <data name="MenuItem_UnlockRoute" xml:space="preserve">
+    <value>Снять блокировку маршрута</value>
+  </data>
+  <data name="MenuItem_LockRoute" xml:space="preserve">
+    <value>Заблокировать маршрут</value>
+  </data>
+  <data name="MenuItem_ExportLockedRoute" xml:space="preserve">
+    <value>Экспорт заблокированного маршрута</value>
+  </data>
+  <data name="MenuItem_ImportLockedRoute" xml:space="preserve">
+    <value>Импорт маршрута Spansh</value>
+  </data>
+  <data name="MenuItem_OpenHudWindow" xml:space="preserve">
+    <value>Открыть окно HUD</value>
+  </data>
+  <data name="MenuItem_CloseHudWindow" xml:space="preserve">
+    <value>Закрыть окно HUD</value>
+  </data>
+  <data name="MenuItem_EnableHudMousePassThrough" xml:space="preserve">
+    <value>Включить пропуск кликов через HUD</value>
+  </data>
+  <data name="MenuItem_DisableHudMousePassThrough" xml:space="preserve">
+    <value>Отключить пропуск кликов через HUD</value>
+  </data>
+  <data name="TooltipJournalIcon" xml:space="preserve">
+    <value>Данные тела прочитаны из локального файла журнала</value>
+  </data>
+  <data name="TooltipEdsmOnly" xml:space="preserve">
+    <value>Данные только из EDSM</value>
+  </data>
+  <data name="TooltipNewIcon" xml:space="preserve">
+    <value>Первооткрытие</value>
+  </data>
+  <data name="TooltipValuableBodyIcon" xml:space="preserve">
+    <value>Ценное тело</value>
+  </data>
+  <data name="TooltipValuableGenusIcon" xml:space="preserve">
+    <value>Ценный вид</value>
+  </data>
+  <data name="TooltipValuableGenusPredictedIcon" xml:space="preserve">
+    <value>Возможные находки ценных видов</value>
+  </data>
+  <data name="TooltipLoadingIcon" xml:space="preserve">
+    <value>Загрузка данных ...</value>
+  </data>
+  <data name="TooltipPopulatedIcon" xml:space="preserve">
+    <value>Обжитая система</value>
+  </data>
+  <data name="TooltipTerraformableIcon" xml:space="preserve">
+    <value>Терраформируемое тело</value>
+  </data>
+  <data name="TooltipLandableIcon" xml:space="preserve">
+    <value>Возможна посадка</value>
+  </data>
+  <data name="TooltipTouchdownIcon" xml:space="preserve">
+    <value>Посадка на тело</value>
+  </data>
+  <data name="TooltipLandableTouchdownCombiIcon" xml:space="preserve">
+    <value>Посадка возможна / совершена</value>
+  </data>
+  <data name="TooltipRingsIcon" xml:space="preserve">
+    <value>У тела есть кольца</value>
+  </data>
+  <data name="TooltipGeologicalsIcon" xml:space="preserve">
+    <value>На теле есть геологические сигналы</value>
+  </data>
+  <data name="TooltipBiologicalsIcon" xml:space="preserve">
+    <value>На теле есть биологические сигналы</value>
+  </data>
+  <data name="TooltipScoopableIcon" xml:space="preserve">
+    <value>У звезды возможен топливосбор</value>
+  </data>
+  <data name="TooltipCurrentBodyIcon" xml:space="preserve">
+    <value>Текущее тело в системе</value>
+  </data>
+  <data name="TooltipCurrentSystemIcon" xml:space="preserve">
+    <value>Текущая система маршрута</value>
+  </data>
+  <data name="TooltipJumpDestinationSystemIcon" xml:space="preserve">
+    <value>Система назначения прыжка</value>
+  </data>
+  <data name="TooltipSurfaceScannedStatusIcon" xml:space="preserve">
+    <value>Статус картографирования поверхности</value>
+  </data>
+  <data name="TooltipScannedAndWasMappedIcon" xml:space="preserve">
+    <value>Планета картографирована мной</value>
+  </data>
+  <data name="TooltipScannedAndFirstMappedIcon" xml:space="preserve">
+    <value>Планета впервые картографирована мной</value>
+  </data>
+  <data name="TooltipUnscannedAndWasMappedIcon" xml:space="preserve">
+    <value>Планета впервые картографирована другим командиром</value>
+  </data>
+  <data name="TooltipUnknownSurfaceScanStatusIcon" xml:space="preserve">
+    <value>Статус картографирования неизвестен
+(данные только из EDSM)</value>
+  </data>
+  <data name="TooltipAnalysisCompleteIcon" xml:space="preserve">
+    <value>Анализ завершён</value>
+  </data>
+  <data name="TooltipPlanetOfInterestIcon" xml:space="preserve">
+    <value>Интересная планета</value>
+  </data>
+  <data name="TooltipGenusIsFirstDiscovery" xml:space="preserve">
+    <value>Применим бонус за первооткрытие
+(планета не картографировалась другим командиром)</value>
+  </data>
+  <data name="TooltipDistanceToPreviousSystem" xml:space="preserve">
+    <value>Расстояние от предыдущей системы</value>
+  </data>
+  <data name="TooltipDistanceToCurrentSystem" xml:space="preserve">
+    <value>Расстояние до текущей системы</value>
+  </data>
+  <data name="PreferencesWindow_Label_Colors" xml:space="preserve">
+    <value>Цвета</value>
+  </data>
+  <data name="PreferencesWindow_Label_DisplaySize" xml:space="preserve">
+    <value>Размер отображения</value>
+  </data>
+  <data name="PreferencesWindow_Radio_Small" xml:space="preserve">
+    <value>Маленький</value>
+  </data>
+  <data name="PreferencesWindow_Radio_Standard" xml:space="preserve">
+    <value>Стандартный</value>
+  </data>
+  <data name="PreferencesWindow_Radio_Large" xml:space="preserve">
+    <value>Большой</value>
+  </data>
+  <data name="PreferencesWindow_Radio_Huge" xml:space="preserve">
+    <value>Огромный</value>
+  </data>
+  <data name="PreferencesWindow_Label_Behavior" xml:space="preserve">
+    <value>Поведение</value>
+  </data>
+  <data name="PreferencesWindow_Checkbox_AutomaticTabSwitching" xml:space="preserve">
+    <value>Автопереключение вкладок</value>
+  </data>
+  <data name="PreferencesWindow_Label_Columns" xml:space="preserve">
+    <value>Столбцы</value>
+  </data>
+  <data name="PreferencesWindow_Bodies" xml:space="preserve">
+    <value>Небесные тела</value>
+  </data>
+  <data name="PreferencesWindow_Route" xml:space="preserve">
+    <value>Маршрут</value>
+  </data>
+  <data name="PreferencesWindow_Biologicals" xml:space="preserve">
+    <value>Биология</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_SurfaceScanIcon" xml:space="preserve">
+    <value>Значок: сканирование поверхности</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_PlanetOfInterestIcon" xml:space="preserve">
+    <value>Значок: интересная планета</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_ValuableBodyIcon" xml:space="preserve">
+    <value>Значок: ценное тело</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_RingsIcon" xml:space="preserve">
+    <value>Значок: кольца</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_GeologicalsIcon" xml:space="preserve">
+    <value>Значок: геология</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_BiologicalsIcon" xml:space="preserve">
+    <value>Значок: биология</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_TerraformableIcon" xml:space="preserve">
+    <value>Значок: терраформирование</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_LandableIcon" xml:space="preserve">
+    <value>Значок: посадка</value>
+  </data>
+  <data name="PreferencesWindow_BodiesColumn_FirstDiscoveryIcon" xml:space="preserve">
+    <value>Значок: первооткрытие</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_ScoopableStarIconStarClass" xml:space="preserve">
+    <value>Значок топливосбора / класс звезды</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_ExplorationStatusIcon" xml:space="preserve">
+    <value>Значок: статус исследования</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_PlanetOfInterestIcon" xml:space="preserve">
+    <value>Значок: интересная планета</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_ValuableBodiesIcon" xml:space="preserve">
+    <value>Значок: ценные тела</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_TerraformablesIcon" xml:space="preserve">
+    <value>Значок: терраформирование</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_LandablesIcon" xml:space="preserve">
+    <value>Значок: посадка</value>
+  </data>
+  <data name="PreferencesWindow_RouteColumn_PopulatedIcon" xml:space="preserve">
+    <value>Значок: населённая</value>
+  </data>
+  <data name="PreferencesWindow_GenusColumn_AnalysisCompleteIcon" xml:space="preserve">
+    <value>Значок: анализ завершён</value>
+  </data>
+  <data name="PreferencesWindow_GenusColumn_ValuableSpeciesIcon" xml:space="preserve">
+    <value>Значок: ценный вид</value>
+  </data>
+  <data name="PreferencesWindow_GenusColumn_FirstDiscoveryIcon" xml:space="preserve">
+    <value>Значок: первооткрытие</value>
+  </data>
+  <data name="PreferencesWindow_Label_Opacity" xml:space="preserve">
+    <value>Непрозрачность</value>
+  </data>
+  <data name="PreferencesWindow_Label_View" xml:space="preserve">
+    <value>Отображение</value>
+  </data>
+  <data name="PreferencesWindow_Radio_SyncedWithMainWindow" xml:space="preserve">
+    <value>Как в главном окне</value>
+  </data>
+  <data name="PreferencesWindow_Label_AutomaticHideOn" xml:space="preserve">
+    <value>Автоскрытие при</value>
+  </data>
+  <data name="PreferencesWindow_Label_InShipSrvFighter" xml:space="preserve">
+    <value>В корабле, SRV, истребителе</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_NoActivePanel" xml:space="preserve">
+    <value>Нет активной панели</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_InternalPanel" xml:space="preserve">
+    <value>Внутренняя панель</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_ExternalPanel" xml:space="preserve">
+    <value>Внешняя панель</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_CommsPanel" xml:space="preserve">
+    <value>Панель связи</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_RolePanel" xml:space="preserve">
+    <value>Панель ролей</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_StationServices" xml:space="preserve">
+    <value>Услуги станции</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_GalaxyMap" xml:space="preserve">
+    <value>Карта галактики</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_SystemMap" xml:space="preserve">
+    <value>Карта системы</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_Orrery" xml:space="preserve">
+    <value>Оррери</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_FssMode" xml:space="preserve">
+    <value>Режим FSS</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_SaaMode" xml:space="preserve">
+    <value>Режим SAA</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_Codex" xml:space="preserve">
+    <value>Кодекс</value>
+  </data>
+  <data name="PreferencesWindow_Label_OnFoot" xml:space="preserve">
+    <value>Пешком</value>
+  </data>
+  <data name="PreferencesWindow_HideOn_Always" xml:space="preserve">
+    <value>Всегда</value>
+  </data>
+  <data name="PreferencesWindow_Label_Outputs" xml:space="preserve">
+    <value>Сообщения</value>
+  </data>
+  <data name="PreferencesWindow_Label_SpeechOutputText" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="PreferencesWindow_Label_TextPlaceholder" xml:space="preserve">
+    <value>Текстовый заполнитель</value>
+  </data>
+  <data name="PreferencesWindow_Label_Example" xml:space="preserve">
+    <value>Пример</value>
+  </data>
+  <data name="PreferencesWindow_Button_TestSpeechOutput" xml:space="preserve">
+    <value>Тест озвучки</value>
+  </data>
+  <data name="PreferencesWindow_Label_Voice" xml:space="preserve">
+    <value>Голос</value>
+  </data>
+  <data name="PreferencesWindow_Label_Rate" xml:space="preserve">
+    <value>Скорость</value>
+  </data>
+  <data name="PreferencesWindow_Label_Volume" xml:space="preserve">
+    <value>Громкость</value>
+  </data>
+  <data name="PreferencesWindow_Label_CriteriaSets" xml:space="preserve">
+    <value>Наборы критериев</value>
+  </data>
+  <data name="PreferencesWindow_Button_Add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="PreferencesWindow_Button_Rename" xml:space="preserve">
+    <value>Переименовать</value>
+  </data>
+  <data name="PreferencesWindow_Button_Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="PreferencesWindow_Label_DistanceToMainStar" xml:space="preserve">
+    <value>Расстояние до главной звезды (св. с.)</value>
+  </data>
+  <data name="PreferencesWindow_Label_HigherThan" xml:space="preserve">
+    <value>больше, чем</value>
+  </data>
+  <data name="PreferencesWindow_Label_AndLowerThan" xml:space="preserve">
+    <value>и меньше, чем</value>
+  </data>
+  <data name="PreferencesWindow_Label_BodyRadius" xml:space="preserve">
+    <value>Радиус тела (км)</value>
+  </data>
+  <data name="PreferencesWindow_Label_OrbitalInclination" xml:space="preserve">
+    <value>Наклонение орбиты (°)</value>
+  </data>
+  <data name="PreferencesWindow_Label_IsLandable" xml:space="preserve">
+    <value>Возможна посадка</value>
+  </data>
+  <data name="PreferencesWindow_Label_PlanetClassOneOf" xml:space="preserve">
+    <value>Класс планеты — один из:</value>
+  </data>
+  <data name="PreferencesWindow_Button_Set" xml:space="preserve">
+    <value>Установить</value>
+  </data>
+  <data name="PreferencesWindow_Label_StarClassOneOf" xml:space="preserve">
+    <value>Класс звезды (обращаемой) — один из:</value>
+  </data>
+  <data name="PreferencesWindow_Label_Gravity" xml:space="preserve">
+    <value>Гравитация (g)</value>
+  </data>
+  <data name="PreferencesWindow_Label_Temperature" xml:space="preserve">
+    <value>Температура (K)</value>
+  </data>
+  <data name="PreferencesWindow_Label_AtmosphereOneOf" xml:space="preserve">
+    <value>Атмосфера — одна из:</value>
+  </data>
+  <data name="PreferencesWindow_Label_VolcanismOneOf" xml:space="preserve">
+    <value>Вулканизм — один из:</value>
+  </data>
+  <data name="PreferencesWindow_Label_RingsTotalWidth" xml:space="preserve">
+    <value>Общая ширина колец (км)</value>
+  </data>
+  <data name="PreferencesWindow_Label_RingWidth" xml:space="preserve">
+    <value>Ширина кольца (км)</value>
+  </data>
+  <data name="PreferencesWindow_Label_RingDensity" xml:space="preserve">
+    <value>Плотность кольца (Мт/км²)</value>
+  </data>
+  <data name="PreferencesWindow_Label_RingTypeOneOf" xml:space="preserve">
+    <value>Тип кольца — один из:</value>
+  </data>
+  <data name="PreferencesWindow_Label_RingReserveLevelOneOf" xml:space="preserve">
+    <value>Запас кольца — один из:</value>
+  </data>
+  <data name="PreferencesWindow_Label_CriteriaSetForParentPlanet" xml:space="preserve">
+    <value>Набор критериев для родительской планеты</value>
+  </data>
+  <data name="PreferencesWindow_Label_Assignment" xml:space="preserve">
+    <value>Привязка</value>
+  </data>
+  <data name="PreferencesWindow_Label_JournalFilesPath" xml:space="preserve">
+    <value>Путь к файлам журнала</value>
+  </data>
+  <data name="PreferencesWindow_Label_Thresholds" xml:space="preserve">
+    <value>Пороговые значения</value>
+  </data>
+  <data name="PreferencesWindow_Label_ValuableBodies" xml:space="preserve">
+    <value>Ценные тела (кр.)</value>
+  </data>
+  <data name="PreferencesWindow_Label_ValuableSpecies" xml:space="preserve">
+    <value>Ценные виды (кр.)</value>
+  </data>
+  <data name="PreferencesWindow_Label_BiologicalsViewAltitude" xml:space="preserve">
+    <value>Высота отображения биологии (м)</value>
+  </data>
+  <data name="PreferencesWindow_Label_ResetPreferences" xml:space="preserve">
+    <value>Сброс настроек</value>
+  </data>
+  <data name="StatusNoData" xml:space="preserve">
+    <value>Нет данных</value>
+  </data>
+  <data name="StatusSingleBody" xml:space="preserve">
+    <value>одно тело</value>
+  </data>
+  <data name="UnitBodySingular" xml:space="preserve">
+    <value>тело</value>
+  </data>
+  <data name="UnitBodyPlural" xml:space="preserve">
+    <value>тела</value>
+  </data>
+  <data name="UnitCredits" xml:space="preserve">
+    <value>кр.</value>
+  </data>
+  <data name="UnitPercent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="TabHeader_PlotterRoute" xml:space="preserve">
+    <value>Маршрут плоттера</value>
+  </data>
+  <data name="TabHeader_LockedRoute" xml:space="preserve">
+    <value>Заблокированный маршрут</value>
+  </data>
+  <data name="TabHeader_Route" xml:space="preserve">
+    <value>Маршрут</value>
+  </data>
+  <data name="TabHeader_Bodies" xml:space="preserve">
+    <value>Небесные тела</value>
+  </data>
+  <data name="TabHeader_Biologicals" xml:space="preserve">
+    <value>Биология</value>
+  </data>
+  <data name="TabHeader_Surroundings" xml:space="preserve">
+    <value>Окрестности</value>
+  </data>
+  <data name="TabHeader_History" xml:space="preserve">
+    <value>История</value>
+  </data>
+  <data name="NoSurroundingsInfo" xml:space="preserve">
+    <value>Данные об окрестностях от EDSM отсутствуют.</value>
+  </data>
+  <data name="RoutePlotterWindow_Loading_Part1" xml:space="preserve">
+    <value>Маршрут строится на </value>
+  </data>
+  <data name="RoutePlotterWindow_Loading_Line2" xml:space="preserve">
+    <value>Это может занять некоторое время — пожалуйста, не закрывайте окно.</value>
+  </data>
+  <data name="RoutePlotterWindow_Loading_Line4" xml:space="preserve">
+    <value>Как только маршрут будет готов, это окно закроется</value>
+  </data>
+  <data name="RoutePlotterWindow_Loading_Line5" xml:space="preserve">
+    <value>и вид маршрута откроется в главном окне.</value>
+  </data>
+  <data name="NoRouteInfo" xml:space="preserve">
+    <value>Маршрут недоступен.</value>
+  </data>
+  <data name="NoBodiesInfo" xml:space="preserve">
+    <value>Пока не исследовано ни одного тела.</value>
+  </data>
+  <data name="Hud_BodyExplorationStatus" xml:space="preserve">
+    <value>Тела: </value>
+  </data>
+  <data name="Hud_NonBodyExplorationStatus" xml:space="preserve">
+    <value>Прочее: </value>
+  </data>
+  <data name="RoutePlotterWindow_Title" xml:space="preserve">
+    <value>Построить нейтронный маршрут - https://www.spansh.co.uk/plotter</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierName" xml:space="preserve">
+    <value>Имя носителя:</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierType" xml:space="preserve">
+    <value>Тип носителя:</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierFuel" xml:space="preserve">
+    <value>Тритий (склад):</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierRange" xml:space="preserve">
+    <value>Дальность прыжка:</value>
+  </data>
+  <data name="RoutePlotterWindow_CarrierCapacity" xml:space="preserve">
+    <value>Занято ёмкости:</value>
+  </data>
+  <data name="MessageBoxTitle_Error" xml:space="preserve">
+    <value>Ошибка EDEA</value>
+  </data>
+  <data name="Templates_Tooltip_Status" xml:space="preserve">
+    <value>Статус:</value>
+  </data>
+  <data name="Templates_Tooltip_BodyCount" xml:space="preserve">
+    <value>Количество тел:</value>
+  </data>
+  <data name="Templates_Tooltip_Journal" xml:space="preserve">
+    <value>Журнал</value>
+  </data>
+  <data name="Templates_Tooltip_AllBodiesFound" xml:space="preserve">
+    <value>Все тела обнаружены.</value>
+  </data>
+  <data name="Templates_Tooltip_EDSM" xml:space="preserve">
+    <value>EDSM</value>
+  </data>
+  <data name="Templates_Tooltip_CartographicProgress" xml:space="preserve">
+    <value>Картографический прогресс:</value>
+  </data>
+  <data name="Templates_Tooltip_ValueAchieved" xml:space="preserve">
+    <value>Достигнутая ценность:</value>
+  </data>
+  <data name="Templates_Tooltip_AchievableValue" xml:space="preserve">
+    <value>Достижимая ценность:</value>
+  </data>
+  <data name="Templates_Tooltip_VistaGenomicsProgress" xml:space="preserve">
+    <value>Прогресс Vista Genomics:</value>
+  </data>
+  <data name="Templates_Tooltip_ValueAchievedLabel" xml:space="preserve">
+    <value>Достигнутая ценность</value>
+  </data>
+  <data name="Templates_Tooltip_BiologicalsAnalyzed" xml:space="preserve">
+    <value>Биология проанализирована:</value>
+  </data>
+  <data name="Templates_Tooltip_OverallProgress" xml:space="preserve">
+    <value>Общий прогресс</value>
+  </data>
+  <data name="Templates_Tooltip_TotalValueAchieved" xml:space="preserve">
+    <value>Суммарная достигнутая ценность</value>
+  </data>
+  <data name="Templates_Tooltip_BaseValue" xml:space="preserve">
+    <value>Базовая ценность:</value>
+  </data>
+  <data name="Templates_Tooltip_SurfaceScanValue" xml:space="preserve">
+    <value>Ценность сканирования поверхности:</value>
+  </data>
+  <data name="Templates_Tooltip_BonusesValue" xml:space="preserve">
+    <value>Ценность бонусов:</value>
+  </data>
+  <data name="Templates_Tooltip_Radius" xml:space="preserve">
+    <value>Радиус: </value>
+  </data>
+  <data name="Templates_Tooltip_Gravity" xml:space="preserve">
+    <value>Гравитация: </value>
+  </data>
+  <data name="Templates_Tooltip_Mass" xml:space="preserve">
+    <value>Масса: </value>
+  </data>
+  <data name="Templates_Tooltip_OrbitalInclination" xml:space="preserve">
+    <value>Наклонение орбиты: </value>
+  </data>
+  <data name="Templates_Tooltip_FirstDiscoveryBonus" xml:space="preserve">
+    <value>Бонус за первооткрытие:</value>
+  </data>
+  <data name="Templates_Tooltip_FirstSurfaceScanBonus" xml:space="preserve">
+    <value>Бонус за первое картографирование:</value>
+  </data>
+  <data name="Templates_Tooltip_EfficientlyScannedBonus" xml:space="preserve">
+    <value>Бонус за эффективное сканирование:</value>
+  </data>
+  <data name="Templates_Tooltip_MatchingCriteriaSets" xml:space="preserve">
+    <value>Подходящие наборы критериев:</value>
+  </data>
+  <data name="Templates_Tooltip_PlanetsOfInterest" xml:space="preserve">
+    <value>Интересные планеты:</value>
+  </data>
+  <data name="Templates_Tooltip_TotalWidthOfRings" xml:space="preserve">
+    <value>Общая ширина колец:</value>
+  </data>
+  <data name="Templates_Tooltip_ReserveLevel" xml:space="preserve">
+    <value>Уровень запасов:</value>
+  </data>
+  <data name="Templates_Tooltip_BiologicalSignalsDetected" xml:space="preserve">
+    <value>Обнаружено биологических сигналов:</value>
+  </data>
+  <data name="Templates_Tooltip_AnalysedDiscoveredBiologicals" xml:space="preserve">
+    <value>Проанализировано / обнаружено биологии:</value>
+  </data>
+  <data name="Templates_Tooltip_FirstDiscoveryBonusApplicable" xml:space="preserve">
+    <value>Применим бонус за первооткрытие:</value>
+  </data>
+  <data name="Templates_Tooltip_Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="Templates_Tooltip_No" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="Hotkey_Unassigned" xml:space="preserve">
+    <value>&lt;Не назначено&gt;</value>
+  </data>
+  <data name="Templates_Tooltip_PossibleOccurrences" xml:space="preserve">
+    <value>Возможные находки</value>
+  </data>
+  <data name="History_Headline_CurrentExplorationTrip" xml:space="preserve">
+    <value>Текущая экспедиция</value>
+  </data>
+  <data name="History_Headline_EntireExplorationHistory" xml:space="preserve">
+    <value>Вся история исследований</value>
+  </data>
+  <data name="History_Group_EstimatedTotalValueOfExplorationData" xml:space="preserve">
+    <value>Оценочная общая ценность данных исследований</value>
+  </data>
+  <data name="History_Group_EstimatedCartographicValues" xml:space="preserve">
+    <value>Оценочная картографическая ценность</value>
+  </data>
+  <data name="History_Group_EstimatedVistaGenomicsValues" xml:space="preserve">
+    <value>Оценочная ценность Vista Genomics</value>
+  </data>
+  <data name="History_Group_Systems" xml:space="preserve">
+    <value>Системы</value>
+  </data>
+  <data name="History_Group_Bodies" xml:space="preserve">
+    <value>Тела</value>
+  </data>
+  <data name="History_Group_Rings" xml:space="preserve">
+    <value>Кольца</value>
+  </data>
+  <data name="History_Group_Biologicals" xml:space="preserve">
+    <value>Биология</value>
+  </data>
+  <data name="History_Panel_Base" xml:space="preserve">
+    <value>Базовая</value>
+  </data>
+  <data name="History_Panel_SurfaceScan" xml:space="preserve">
+    <value>Сканирование поверхности</value>
+  </data>
+  <data name="History_Panel_Bonuses" xml:space="preserve">
+    <value>Бонусы</value>
+  </data>
+  <data name="History_Panel_FirstDiscoveryBonus" xml:space="preserve">
+    <value>Бонус за первооткрытие</value>
+  </data>
+  <data name="History_Panel_Discovered" xml:space="preserve">
+    <value>Обнаружено</value>
+  </data>
+  <data name="History_Panel_FirstDiscovery" xml:space="preserve">
+    <value>Первооткрытия</value>
+  </data>
+  <data name="History_Panel_MostFrequent" xml:space="preserve">
+    <value>Самые частые</value>
+  </data>
+  <data name="History_Panel_Rarest" xml:space="preserve">
+    <value>Самые редкие</value>
+  </data>
+  <data name="History_Panel_Signals" xml:space="preserve">
+    <value>Сигналы</value>
+  </data>
+  <data name="History_Panel_Mapped" xml:space="preserve">
+    <value>Картографировано</value>
+  </data>
+  <data name="History_Panel_Terraformable" xml:space="preserve">
+    <value>Терраформируемые</value>
+  </data>
+  <data name="History_Panel_WithTouchdowns" xml:space="preserve">
+    <value>С посадками</value>
+  </data>
+  <data name="History_Panel_Valuable" xml:space="preserve">
+    <value>Ценные</value>
+  </data>
+  <data name="History_Panel_WithRings" xml:space="preserve">
+    <value>С кольцами</value>
+  </data>
+  <data name="History_Panel_Analysed" xml:space="preserve">
+    <value>Проанализировано</value>
+  </data>
+  <data name="History_Panel_MostFrequentAnalysed" xml:space="preserve">
+    <value>Чаще всего анализировались</value>
+  </data>
+  <data name="History_Panel_RarestAnalysed" xml:space="preserve">
+    <value>Реже всего анализировались</value>
+  </data>
+  <data name="GenusTable_PossibleOccurrences" xml:space="preserve">
+    <value>Возможные находки</value>
+  </data>
+  <data name="GenusHud_PossibleOccurrences" xml:space="preserve">
+    <value>Возможные находки</value>
+  </data>
+  <data name="CurrentStatus_WaitingForGame" xml:space="preserve">
+    <value>Ожидание игры</value>
+  </data>
+  <data name="CurrentStatus_ExploringSystem" xml:space="preserve">
+    <value>Исследование системы</value>
+  </data>
+  <data name="CurrentStatus_UsingPlotterRoute" xml:space="preserve">
+    <value>Маршрут плоттера</value>
+  </data>
+  <data name="CurrentStatus_UsingLockedRoute" xml:space="preserve">
+    <value>Заблокированный маршрут</value>
+  </data>
+  <data name="CurrentStatus_PlanningRoute" xml:space="preserve">
+    <value>Планирование маршрута</value>
+  </data>
+  <data name="CurrentStatus_Jumping" xml:space="preserve">
+    <value>Прыжок</value>
+  </data>
+  <data name="CurrentStatus_ExploringPlanet" xml:space="preserve">
+    <value>Исследование планеты </value>
+  </data>
+  <data name="CurrentStatus_Loitering" xml:space="preserve">
+    <value>Ожидание на месте</value>
+  </data>
+  <data name="Styles_TextBoxPlaceholder_Any" xml:space="preserve">
+    <value>любой</value>
+  </data>
+  <data name="Status_Unknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="Status_Unexplored" xml:space="preserve">
+    <value>Не исследовано</value>
+  </data>
+  <data name="Status_Unscanned" xml:space="preserve">
+    <value>Не сканировано</value>
+  </data>
+  <data name="Status_Incomplete" xml:space="preserve">
+    <value>Неполный</value>
+  </data>
+  <data name="Status_Complete" xml:space="preserve">
+    <value>Завершён</value>
+  </data>
+  <data name="UnitFileSingular" xml:space="preserve">
+    <value>файл</value>
+  </data>
+  <data name="UnitFilePlural" xml:space="preserve">
+    <value>файлов</value>
+  </data>
+  <data name="UnitSystemSingular" xml:space="preserve">
+    <value>система</value>
+  </data>
+  <data name="UnitSystemPlural" xml:space="preserve">
+    <value>систем</value>
+  </data>
+  <data name="Button_Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="JournalHistoryImport_IntroText_Found" xml:space="preserve">
+    <value>Найдено файлов старых журналов для импорта: {0}. Если данные из файлов уже есть в истории, история будет обновлена. Новые данные будут добавлены.</value>
+  </data>
+  <data name="JournalHistoryImport_IntroText_None" xml:space="preserve">
+    <value>Файлы старых журналов для импорта не найдены. Создайте новые файлы журнала, играя в Elite Dangerous несколько дней.</value>
+  </data>
+  <data name="RouteIsLoading_PleaseWait" xml:space="preserve">
+    <value>Пожалуйста, подождите ...</value>
+  </data>
+  <data name="Speech_Welcome" xml:space="preserve">
+    <value>o7, командир {CommanderName}, ассистент исследователя к вашим услугам!</value>
+  </data>
+  <data name="Speech_Goodbye" xml:space="preserve">
+    <value>До встречи в чёрной пустоте!</value>
+  </data>
+  <data name="Speech_GeologicalSignals" xml:space="preserve">
+    <value>На объекте {PlanetType} {PlanetName} обнаружено: {PlanetGeoCount} {PlanetGeoSignalNoun}.</value>
+  </data>
+  <data name="Speech_BiologicalSignals" xml:space="preserve">
+    <value>На объекте {PlanetType} {PlanetName} обнаружено: {PlanetBioCount} {PlanetBioSignalNoun}.</value>
+  </data>
+  <data name="Speech_FirstDiscoverySystem" xml:space="preserve">
+    <value>Первооткрыватель звёздной системы {SystemName} с главной звездой типа {SystemStarType}.</value>
+  </data>
+  <data name="Speech_FirstDiscoveryBody" xml:space="preserve">
+    <value>Первооткрыватель объекта {BodyType} {BodyName}.</value>
+  </data>
+  <data name="Speech_Terraformable" xml:space="preserve">
+    <value>{PlanetType} {PlanetName} подлежит терраформированию.</value>
+  </data>
+  <data name="Speech_Landable" xml:space="preserve">
+    <value>{PlanetType} {PlanetName} доступен для посадки на расстоянии {PlanetDistance} световых секунд. Атмосфера: {PlanetAtmosphere}, температура {PlanetTemperature} кельвинов, гравитация {PlanetGravity} g, вулканизм: {PlanetVolcanism}, радиус {PlanetRadius} километров, {PlanetGeoCount} геологических и {PlanetBioCount} биологических сигналов.</value>
+  </data>
+  <data name="Speech_ValuableBody" xml:space="preserve">
+    <value>Потенциальная исследовательская ценность объекта {BodyType} {BodyName} — {BodyAchievableValue} кредитов.</value>
+  </data>
+  <data name="Speech_ValuableGenusPredicted" xml:space="preserve">
+    <value>На объекте {PlanetType} {PlanetName} предсказано возможное присутствие ценного вида {SpeciesName}.</value>
+  </data>
+  <data name="Speech_ValuableGeneraPredicted" xml:space="preserve">
+    <value>На объекте {PlanetType} {PlanetName} предсказано возможное присутствие {ValuableSpeciesCount} потенциально ценных видов.</value>
+  </data>
+  <data name="Speech_LeaveClonalColonyRange" xml:space="preserve">
+    <value>Выход за пределы радиуса клональной колонии {SpeciesName} — {SpeciesClonColRng} метров, количество сканирований — {SpeciesScanCount}.</value>
+  </data>
+  <data name="Speech_EnterClonalColonyRange" xml:space="preserve">
+    <value>Вход в радиус клональной колонии {SpeciesName}.</value>
+  </data>
+  <data name="Speech_MatchingClassificationsFound" xml:space="preserve">
+    <value>{PlanetType} {PlanetName} — интересная планета с {PoiCriteriaSetsCount} {PoiCriteriaSetNoun}.</value>
+  </data>
+  <data name="Speech_MatchingClassificationFound" xml:space="preserve">
+    <value>{PlanetType} {PlanetName} — интересная планета по критерию {PoiCriteriaSetName}.</value>
+  </data>
+  <data name="Speech_Ring" xml:space="preserve">
+    <value>Кольцо типа {RingType} плотностью {RingDensity} мегатонн на квадратный километр с уровнем запасов {RingsReserveLevel} у объекта {BodyType} {BodyName}.</value>
+  </data>
+  <data name="Speech_RingCount" xml:space="preserve">
+    <value>{BodyType} {BodyName} — тело с кольцами, уровень запасов — {RingsReserveLevel}, количество колец — {RingsCount}.</value>
+  </data>
+  <data name="Speech_GeologicalSignalSingular" xml:space="preserve">
+    <value>геологический сигнал</value>
+  </data>
+  <data name="Speech_GeologicalSignalPlural" xml:space="preserve">
+    <value>геологических сигналов</value>
+  </data>
+  <data name="Speech_BiologicalSignalSingular" xml:space="preserve">
+    <value>биологический сигнал</value>
+  </data>
+  <data name="Speech_BiologicalSignalPlural" xml:space="preserve">
+    <value>биологических сигналов</value>
+  </data>
+  <data name="Speech_PoiCriteriaSetSingular" xml:space="preserve">
+    <value>подходящим набором критериев</value>
+  </data>
+  <data name="Speech_PoiCriteriaSetPlural" xml:space="preserve">
+    <value>подходящими наборами критериев</value>
+  </data>
+  <data name="RoutePlotterWindow_Efficiency" xml:space="preserve">
+    <value>Эффективность</value>
+  </data>
+  <data name="RingType_Unknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="RingType_MetalRich" xml:space="preserve">
+    <value>Богатое металлами</value>
+  </data>
+  <data name="RingType_Metallic" xml:space="preserve">
+    <value>Металлическое</value>
+  </data>
+  <data name="RingType_Rocky" xml:space="preserve">
+    <value>Каменистое</value>
+  </data>
+  <data name="RingType_Icy" xml:space="preserve">
+    <value>Ледяное</value>
+  </data>
+  <data name="RingReserveLevel_Unknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="RingReserveLevel_Pristine" xml:space="preserve">
+    <value>Нетронутые</value>
+  </data>
+  <data name="RingReserveLevel_Major" xml:space="preserve">
+    <value>Значительные</value>
+  </data>
+  <data name="RingReserveLevel_Common" xml:space="preserve">
+    <value>Обычные</value>
+  </data>
+  <data name="RingReserveLevel_Low" xml:space="preserve">
+    <value>Низкие</value>
+  </data>
+  <data name="RingReserveLevel_Depleted" xml:space="preserve">
+    <value>Истощённые</value>
+  </data>
+  <data name="SpeechOutput_Ring" xml:space="preserve">
+    <value>Кольцо</value>
+  </data>
+  <data name="SpeechOutput_RingCount" xml:space="preserve">
+    <value>Тело с кольцами</value>
+  </data>
+  <data name="SpeechOutput_Welcome" xml:space="preserve">
+    <value>Приветствие</value>
+  </data>
+  <data name="SpeechOutput_Goodbye" xml:space="preserve">
+    <value>Прощание</value>
+  </data>
+  <data name="SpeechOutput_GeologicalSignals" xml:space="preserve">
+    <value>Геологические сигналы</value>
+  </data>
+  <data name="SpeechOutput_BiologicalSignals" xml:space="preserve">
+    <value>Биологические сигналы</value>
+  </data>
+  <data name="SpeechOutput_FirstDiscoverySystem" xml:space="preserve">
+    <value>Первооткрытие системы</value>
+  </data>
+  <data name="SpeechOutput_FirstDiscoveryBody" xml:space="preserve">
+    <value>Первооткрытие тела</value>
+  </data>
+  <data name="SpeechOutput_Terraformable" xml:space="preserve">
+    <value>Терраформируемая планета</value>
+  </data>
+  <data name="SpeechOutput_Landable" xml:space="preserve">
+    <value>Планета с посадкой</value>
+  </data>
+  <data name="SpeechOutput_ValuableBody" xml:space="preserve">
+    <value>Ценное тело</value>
+  </data>
+  <data name="SpeechOutput_ValuableGenusPredicted" xml:space="preserve">
+    <value>Ценный вид</value>
+  </data>
+  <data name="SpeechOutput_ValuableGeneraPredicted" xml:space="preserve">
+    <value>Количество ценных видов</value>
+  </data>
+  <data name="SpeechOutput_LeaveClonalColonyRange" xml:space="preserve">
+    <value>Выход из радиуса колонии</value>
+  </data>
+  <data name="SpeechOutput_EnterClonalColonyRange" xml:space="preserve">
+    <value>Вход в радиус колонии</value>
+  </data>
+  <data name="SpeechOutput_MatchingClassificationFound" xml:space="preserve">
+    <value>Набор критериев интересной планеты</value>
+  </data>
+  <data name="SpeechOutput_MatchingClassificationsFound" xml:space="preserve">
+    <value>Число наборов критериев интересной планеты</value>
+  </data>
+  <data name="UnitLightYears" xml:space="preserve">
+    <value>св. г.</value>
+  </data>
+  <data name="UnitLightSeconds" xml:space="preserve">
+    <value>св. с.</value>
+  </data>
+  <data name="UnitMeters" xml:space="preserve">
+    <value>м</value>
+  </data>
+  <data name="UnitKilometers" xml:space="preserve">
+    <value>км</value>
+  </data>
+  <data name="WordOf" xml:space="preserve">
+    <value>из</value>
+  </data>
+  <data name="PlanetOfInterest_NearbyHMC" xml:space="preserve">
+    <value>HMC поблизости</value>
+  </data>
+  <data name="PlanetOfInterest_HighGravityLandable" xml:space="preserve">
+    <value>Высокая гравитация, посадка возможна</value>
+  </data>
+  <data name="PlanetOfInterest_GuardianRuins" xml:space="preserve">
+    <value>Руины стражей?</value>
+  </data>
+  <data name="BodyTypeStar" xml:space="preserve">
+    <value>Звезда</value>
+  </data>
+  <data name="BodyTypePlanet" xml:space="preserve">
+    <value>Планета</value>
+  </data>
+  <data name="TerraformingState_Terraformable" xml:space="preserve">
+    <value>Терраформируемое</value>
+  </data>
+  <data name="TerraformingState_CandidateForTerraforming" xml:space="preserve">
+    <value>Кандидат на терраформирование</value>
+  </data>
+  <data name="CommanderNamePrefix" xml:space="preserve">
+    <value>КМДР </value>
+  </data>
+  <data name="MenuItem_PlotterRouteGenerate" xml:space="preserve">
+    <value>Построить нейтронный маршрут</value>
+  </data>
+  <data name="MenuItem_PlotterRouteClear" xml:space="preserve">
+    <value>Очистить нейтронный маршрут</value>
+  </data>
+  <data name="MenuItem_RouteLock" xml:space="preserve">
+    <value>Заблокировать маршрут</value>
+  </data>
+  <data name="MenuItem_RouteUnlock" xml:space="preserve">
+    <value>Снять блокировку маршрута</value>
+  </data>
+  <data name="MenuItem_RouteImport" xml:space="preserve">
+    <value>Импорт заблокированного маршрута</value>
+  </data>
+  <data name="RouteImport_InvalidFileTitle" xml:space="preserve">
+    <value>Ошибка: недопустимый файл</value>
+  </data>
+  <data name="RouteImport_InvalidFileMessage" xml:space="preserve">
+    <value>Похоже, это недопустимый файл маршрута Spansh.</value>
+  </data>
+  <data name="MenuItem_RouteExport" xml:space="preserve">
+    <value>Экспорт заблокированного маршрута</value>
+  </data>
+  <data name="MenuItem_HudOpen" xml:space="preserve">
+    <value>Открыть окно HUD</value>
+  </data>
+  <data name="MenuItem_HudClose" xml:space="preserve">
+    <value>Закрыть окно HUD</value>
+  </data>
+  <data name="MenuItem_HudPassThroughEnable" xml:space="preserve">
+    <value>Включить пропуск кликов через HUD</value>
+  </data>
+  <data name="MenuItem_HudPassThroughDisable" xml:space="preserve">
+    <value>Отключить пропуск кликов через HUD</value>
+  </data>
+  <data name="FeedbackReportIssueMailSubject" xml:space="preserve">
+    <value>EDEA — отзыв/проблема</value>
+  </data>
+  <data name="GenusTable_UnknownBiologicalSignalsInfo" xml:space="preserve">
+    <value>На планете {0} неизвестных биологических сигналов.</value>
+  </data>
+  <data name="RoutePlotter_No" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="RoutePlotter_Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="Preferences_ParentPlanetNone" xml:space="preserve">
+    <value>нет</value>
+  </data>
+  <data name="PreferencesWindow_Combo_DoesNotMatter" xml:space="preserve">
+    <value>не важно</value>
+  </data>
+  <data name="PreferencesWindow_Combo_No" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="PreferencesWindow_Combo_Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="PreferencesWindow_Tooltip_ParentPlanetCriteria" xml:space="preserve">
+    <value>Здесь выбирается набор критериев для родительской планеты оцениваемой планеты. Если выбран, метка интересной планеты ставится только при наличии родительской планеты, соответствующей критериям. Выбранный набор оценивается всегда, независимо от того, активен ли он сам как набор критериев.</value>
+  </data>
+  <data name="PreferencesWindow_Info_BodyValueThreshold" xml:space="preserve">
+    <value>Тела с ценностью ниже порога не считаются ценными.</value>
+  </data>
+  <data name="PreferencesWindow_Info_SpeciesValueThreshold" xml:space="preserve">
+    <value>Виды с ценностью ниже порога не считаются ценными.</value>
+  </data>
+  <data name="PreferencesWindow_Info_BiologicalsViewAltitude" xml:space="preserve">
+    <value>Ниже этой высоты для планет с биосигналами отображается вид «Биология».</value>
+  </data>
+  <data name="WordStar" xml:space="preserve">
+    <value>Звезда</value>
+  </data>
+  <data name="StatusBodiesExploredOfTotal" xml:space="preserve">
+    <value>{0} из {1}</value>
+  </data>
+  <data name="StatusNonBodyBelts" xml:space="preserve">
+    <value>{0}  |  поясов: {1}</value>
+  </data>
+  <data name="StatusScanMissing" xml:space="preserve">
+    <value>{0}, сканирования нет</value>
+  </data>
+  <data name="StatusBodiesMissing" xml:space="preserve">
+    <value>отсутствует: {0}</value>
+  </data>
+  <data name="TooltipNewSpeciesToGalaxy" xml:space="preserve">
+    <value>Вид ещё не записан в кодекс — новый для галактики</value>
+  </data>
+  <data name="TooltipNewSpeciesToRegion" xml:space="preserve">
+    <value>Вид ещё не записан в кодекс этого региона</value>
+  </data>
+  <data name="PreferencesWindow_Label_Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="PreferencesWindow_Combo_LanguageAuto" xml:space="preserve">
+    <value>Авто (язык системы)</value>
+  </data>
+</root>
