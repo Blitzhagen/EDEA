@@ -103,6 +103,12 @@ public class JournalHistoryImporter
     /// <summary>Gets the current singleton instance, if any.</summary>
     public static JournalHistoryImporter? Current => instance;
 
+    /// <summary>
+    /// Gets a value indicating whether a journal import is currently running.
+    /// </summary>
+    /// <value><see langword="true"/> while the import task is active.</value>
+    public bool IsRunning => _importTask is { IsCompleted: false };
+
     public static JournalHistoryImporter Instance(HistoryProvider historyProvider, JournalProvider journalProvider, StarSystemProvider starSystemProvider)
     {
         if (instance == null)
@@ -394,6 +400,9 @@ public class JournalHistoryImporter
                                 case "ScanOrganic":
                                     _journalProvider.processJournalScanOrganicEvent(jObject, memorizedEventStarSystem);
                                     break;
+                                case "CodexEntry":
+                                    _journalProvider.processJournalCodexEntryEvent(jObject, memorizedEventStarSystem);
+                                    break;
                             }
                         }
                     }
@@ -435,6 +444,9 @@ public class JournalHistoryImporter
                     _starSystemProvider.CurrentSystem.TryAddOrUpdateBody(memorizedBody, ignoreSpeechOutput: true, DataSource.Journal, out var _);
                     _starSystemProvider.triggerGuiDataUpdateEvent();
                 }
+                // Planet updates may have invalidated stale predictions that were computed
+                // from incomplete data - re-run predictions for the current system.
+                _starSystemProvider.PredictOccurrenceOfSpeciesForCurrentSystem();
                 memorizedStarSystem.IsTripHistory = _starSystemProvider.CurrentSystem.IsTripHistory;
             }
             switch (_historyProvider.AddOrUpdateStarSystem(memorizedStarSystem, shouldReport))

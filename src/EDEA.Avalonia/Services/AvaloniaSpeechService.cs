@@ -503,6 +503,7 @@ public sealed class AvaloniaSpeechService : ISpeechService
             var phrase = (string)phraseProperty.GetValue(Preferences.Speech)!;
             var placeholders = GetPlaceholdersFromSpeechOutputs(outputs);
             var text = BuildSpeechText(phrase, placeholders);
+            Log.Debug($"Speech output '{outputName}': {text}");
             Speak(text);
         }
         catch (Exception ex)

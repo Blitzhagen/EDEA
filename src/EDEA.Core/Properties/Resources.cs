@@ -454,6 +454,12 @@ public static class Resources
     public static string TooltipGenusIsFirstDiscovery => Get(nameof(TooltipGenusIsFirstDiscovery));
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>
+    public static string TooltipNewSpeciesToGalaxy => Get(nameof(TooltipNewSpeciesToGalaxy));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string TooltipNewSpeciesToRegion => Get(nameof(TooltipNewSpeciesToRegion));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
     public static string TooltipDistanceToPreviousSystem => Get(nameof(TooltipDistanceToPreviousSystem));
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>

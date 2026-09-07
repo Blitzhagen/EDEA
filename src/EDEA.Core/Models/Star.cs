@@ -14,11 +14,18 @@ public class Star : Body
     public string StarType { get; set; }
 
     /// <summary>
+    /// Gets or sets the star luminosity class (e.g. "V", "Va", "IV").
+    /// </summary>
+    /// <value>The journal luminosity value.</value>
+    public string Luminosity { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Star"/> class.
     /// </summary>
     public Star()
     {
         StarType = string.Empty;
+        Luminosity = string.Empty;
     }
 
     /// <summary>
@@ -36,6 +43,7 @@ public class Star : Body
         : base(id, starSystemId, name, distance, radius, mass, orbitalInclination)
     {
         StarType = starType ?? string.Empty;
+        Luminosity = string.Empty;
         base.Type = BodyType.Star;
     }
 
@@ -81,9 +89,11 @@ public class Star : Body
     /// <param name="cartographicFirstDiscoveryBonusWithoutEfficiencyValue">The first discovery bonus without efficiency value.</param>
     /// <param name="cartographicFirstDiscoveryBonusWithoutSurfaceScanValue">The first discovery bonus without surface scan value.</param>
     /// <param name="ringsReserveLevel">The rings reserve level.</param>
-    public Star(long id, long starSystemId, string name, long type, double distance, long wasDiscovered, long wasMapped, long? wasFootfalled, long wasReadFromJournal, long wasReadFromEdsm, string edsmDiscoveryCommander, string planetClass, long isLandable, string terraformingState, long surfaceScanned, double gravity, long geologicalCount, long biologicalCount, string starType, double surfaceTemperature, long touchdown, string volcanism, string atmosphere, double radius, long? parentStarId, long? parentPlanetId, double mass, double? orbitalInclination, long efficientlyScanned, long cartographicValue, long cartographicMaxValue, long cartographicBaseValue, long cartographicFirstDiscoveryBonusValue, long cartographicSurfaceScanValue, long cartographicFirstSurfaceScanBonusValue, long cartographicEfficientlyScannedBonusValue, long cartographicFirstDiscoveryBonusWithoutEfficiencyValue, long cartographicFirstDiscoveryBonusWithoutSurfaceScanValue, long ringsReserveLevel)
+    /// <param name="luminosity">The star luminosity class.</param>
+    public Star(long id, long starSystemId, string name, long type, double distance, long wasDiscovered, long wasMapped, long? wasFootfalled, long wasReadFromJournal, long wasReadFromEdsm, string edsmDiscoveryCommander, string planetClass, long isLandable, string terraformingState, long surfaceScanned, double gravity, long geologicalCount, long biologicalCount, string starType, double surfaceTemperature, long touchdown, string volcanism, string atmosphere, double radius, long? parentStarId, long? parentPlanetId, double mass, double? orbitalInclination, long efficientlyScanned, long cartographicValue, long cartographicMaxValue, long cartographicBaseValue, long cartographicFirstDiscoveryBonusValue, long cartographicSurfaceScanValue, long cartographicFirstSurfaceScanBonusValue, long cartographicEfficientlyScannedBonusValue, long cartographicFirstDiscoveryBonusWithoutEfficiencyValue, long cartographicFirstDiscoveryBonusWithoutSurfaceScanValue, long ringsReserveLevel, string? luminosity)
         : this(Convert.ToInt32(id), starSystemId, name, distance, starType, radius, mass, orbitalInclination)
     {
+        Luminosity = luminosity ?? string.Empty;
         base.WasDiscovered = Convert.ToBoolean(wasDiscovered);
         base.Type = (BodyType)type;
         base.WasReadFromJournal = Convert.ToBoolean(wasReadFromJournal);
@@ -109,6 +119,10 @@ public class Star : Body
         if (dataSource != DataSource.Edsm || !base.WasReadFromJournal)
         {
             StarType = star.StarType;
+            if (!string.IsNullOrEmpty(star.Luminosity))
+            {
+                Luminosity = star.Luminosity;
+            }
         }
     }
 }

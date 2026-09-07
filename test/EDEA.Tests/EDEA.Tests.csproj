@@ -17,6 +17,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\EDEA.Core\EDEA.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\src\EDEA.Avalonia\Resources\bio_catalog.json" Link="Resources\bio_catalog.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\EDEA.Avalonia\Resources\regions.json" Link="Resources\regions.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\EDEA.Avalonia\Resources\nebulae.json" Link="Resources\nebulae.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 

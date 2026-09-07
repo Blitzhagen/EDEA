@@ -278,6 +278,130 @@ public class StarSystem
     public long Population { get; set; }
 
     /// <summary>
+    /// Gets or sets the galactic region identifier of this system.
+    /// </summary>
+    /// <value>The region identifier from the galactic region map, or <see langword="null"/> if unknown.</value>
+    public int? Region { get; set; }
+
+    /// <summary>
+    /// Gets or sets the galactic region name of this system.
+    /// </summary>
+    /// <value>The region name, or <see langword="null"/> if unknown.</value>
+    public string? RegionName { get; set; }
+
+    /// <summary>
+    /// Updates the galactic region from the system coordinates.
+    /// </summary>
+    public void UpdateRegion()
+    {
+        if (!StarPositionX.HasValue || !StarPositionY.HasValue || !StarPositionZ.HasValue)
+        {
+            return;
+        }
+        var region = GalacticRegionProvider.FindRegion(StarPositionX.Value, StarPositionY.Value, StarPositionZ.Value);
+        Region = region.id;
+        RegionName = region.name;
+    }
+
+    /// <summary>
+    /// Gets all stars in this system.
+    /// </summary>
+    /// <value>An enumerable of all star bodies.</value>
+    public IEnumerable<Star> Stars => _bodies.Values.OfType<Star>();
+
+    /// <summary>
+    /// Gets the short name of a body relative to this system's name.
+    /// </summary>
+    /// <param name="bodyName">The full body name.</param>
+    /// <returns>The short name, or the full name when the body is the main star.</returns>
+    public string GetBodyShortName(string bodyName)
+    {
+        if (bodyName.StartsWith(Name + " "))
+        {
+            return bodyName[(Name.Length + 1)..];
+        }
+        return bodyName;
+    }
+
+    /// <summary>
+    /// Finds a star in this system by its short name (e.g. "A" for "System A").
+    /// </summary>
+    /// <param name="shortName">The short name to look up.</param>
+    /// <returns>The star, or <see langword="null"/> when not found.</returns>
+    public Star? GetStarByShortName(string shortName)
+    {
+        return Stars.FirstOrDefault(star => GetBodyShortName(star.Name) == shortName);
+    }
+
+    /// <summary>
+    /// Gets the main star of the system (the star with distance zero to the arrival point).
+    /// </summary>
+    /// <value>The main star, or <see langword="null"/> when not scanned.</value>
+    public Star? MainStar
+    {
+        get
+        {
+            Star? mainStar = Stars.FirstOrDefault(star => star.Distance == 0.0);
+            mainStar ??= Stars.FirstOrDefault(star => star.Name == Name);
+            return mainStar;
+        }
+    }
+
+    /// <summary>
+    /// Gets the type of the main star.
+    /// </summary>
+    /// <value>The main star type, or the class known from the jump event.</value>
+    public string MainStarType => MainStar?.StarType ?? StarClass ?? string.Empty;
+
+    /// <summary>
+    /// Gets the luminosity class of the main star.
+    /// </summary>
+    /// <value>The main star luminosity, or an empty string when unknown.</value>
+    public string MainStarLuminosity => MainStar?.Luminosity ?? string.Empty;
+
+    /// <summary>
+    /// Resolves the parent stars of a planet from its name letters, like BioScan does
+    /// (leading capital letters of the body short name, e.g. "BC 1" orbits stars B and C).
+    /// Bodies without a leading letter fall back to the main star.
+    /// </summary>
+    /// <param name="planet">The planet whose parent stars are resolved.</param>
+    /// <returns>The list of parent stars (may be empty when the stars are not scanned).</returns>
+    public List<Star> GetParentStars(Planet planet)
+    {
+        var parentStars = new List<Star>();
+        var seen = new HashSet<string>();
+        string shortName = GetBodyShortName(planet.Name);
+        var match = System.Text.RegularExpressions.Regex.Match(shortName, "^([A-Z]+)\\s");
+        if (match.Success)
+        {
+            foreach (char letter in match.Groups[1].Value)
+            {
+                Star? star = GetStarByShortName(letter.ToString());
+                if (star != null && seen.Add(star.Name))
+                {
+                    parentStars.Add(star);
+                }
+            }
+        }
+        if (parentStars.Count == 0 && MainStar is { } mainStar && seen.Add(mainStar.Name))
+        {
+            parentStars.Add(mainStar);
+        }
+        return parentStars;
+    }
+
+    /// <summary>
+    /// Checks whether the system contains a body of one of the given planet classes.
+    /// </summary>
+    /// <param name="planetClasses">The planet classes to look for.</param>
+    /// <returns><see langword="true"/> when a matching body exists.</returns>
+    public bool HasPlanetClass(IEnumerable<string> planetClasses)
+    {
+        var wanted = new HashSet<string>(planetClasses);
+        return _bodies.Values.OfType<Planet>().Any(planet => wanted.Contains(planet.PlanetClass));
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="StarSystem"/> class.
     /// </summary>
     public StarSystem()
@@ -332,9 +456,11 @@ public class StarSystem
     /// <param name="isTripHistory">Whether this system is part of the trip history.</param>
     /// <param name="allBodiesFound">Whether all bodies were found.</param>
     /// <param name="population">The population.</param>
-    public StarSystem(long id, string name, string starClass, string primaryStarName, long totalBodyCount, long totalNonBodyCount, long wasReadFromJournal, long wasReadFromEdsm, long wasRequestedFromEdsm, string edsmName, string edsmPrimaryStarType, string edsmPrimaryStarName, long edsmPrimaryStarIsScoopable, long? edsmTotalBodyCount, double starPositionX, double starPositionY, double starPositionZ, long isTripHistory, long allBodiesFound, long population)
+    /// <param name="region">The galactic region identifier.</param>
+    public StarSystem(long id, string name, string starClass, string primaryStarName, long totalBodyCount, long totalNonBodyCount, long wasReadFromJournal, long wasReadFromEdsm, long wasRequestedFromEdsm, string edsmName, string edsmPrimaryStarType, string edsmPrimaryStarName, long edsmPrimaryStarIsScoopable, long? edsmTotalBodyCount, double starPositionX, double starPositionY, double starPositionZ, long isTripHistory, long allBodiesFound, long population, long? region)
         : this(id, name, isTripHistory)
     {
+        Region = region.HasValue ? (int?)Convert.ToInt32(region.Value) : null;
         StarPositionX = Convert.ToDouble(starPositionX);
         StarPositionY = Convert.ToDouble(starPositionY);
         StarPositionZ = Convert.ToDouble(starPositionZ);
@@ -463,11 +589,11 @@ public class StarSystem
             }
             else
             {
+                log.Debug($"First discovery speech for body '{body.Name}' ({body.Type})");
                 PlatformServices.Speech?.SpeakFirstDiscoveryBody(new SpeechOutputBody(body));
                 if (body.Type == BodyType.Planet)
                 {
                     Planet obj = (Planet)body;
-                    PlatformServices.Speech?.SpeakFirstDiscoveryBody(new SpeechOutputBody(body));
                     if (obj.IsTerraformable)
                     {
                         PlatformServices.Speech?.SpeakTerraformable(new SpeechOutputPlanet(obj));

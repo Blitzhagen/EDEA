@@ -64,7 +64,7 @@
 
   <DataTemplate x:Key="BodyBiologicalsTooltipTemplate" x:DataType="vm:BodyViewModel">
     <Border Background="{DynamicResource MainBackgroundColor}" Padding="0,4,4,4">
-      <StackPanel>
+      <StackPanel Grid.IsSharedSizeScope="True">
         <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto">
           <TextBlock Grid.Column="0" Text="{x:Static properties:Resources.Templates_Tooltip_BiologicalSignalsDetected}" Foreground="{DynamicResource MainColor}" Margin="0,0,8,0" />
           <TextBlock Grid.Column="1" Text="{Binding BiologicalsCount}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" />
@@ -84,104 +84,57 @@
           <TextBlock Grid.Column="1" Grid.Row="2" Text="{x:Static properties:Resources.Templates_Tooltip_No}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" IsVisible="{Binding WasMapped}" />
         </Grid>
 
-        <DataGrid Margin="0" Padding="0" Background="Transparent" BorderThickness="0" GridLinesVisibility="None" ItemsSource="{Binding Genuses}" IsVisible="{Binding GenusesAvailable}" AutoGenerateColumns="False" HeadersVisibility="None" CanUserResizeColumns="False" CanUserReorderColumns="False" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden">
-          <DataGrid.Styles>
-            <Style Selector="DataGridCell">
-              <Setter Property="Padding" Value="0,1,2,1" />
-              <Setter Property="HorizontalContentAlignment" Value="Left" />
-            </Style>
-            <Style Selector="DataGridRow">
-              <Setter Property="Background" Value="Transparent" />
-            </Style>
-          </DataGrid.Styles>
-          <DataGrid.Columns>
-            <DataGridTemplateColumn>
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate x:DataType="vm:GenusViewModel">
-                  <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Name}" IsVisible="{Binding SpeciesNotSet}" Foreground="{DynamicResource MainColor}" FontWeight="Bold" Margin="0,0,12,0" />
-                    <TextBlock Text="{Binding Species}" IsVisible="{Binding SpeciesSet}" Foreground="{DynamicResource MainColor}" FontWeight="Bold" Margin="0,0,12,0" />
-                  </StackPanel>
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn>
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate x:DataType="vm:GenusViewModel">
-                  <Grid HorizontalAlignment="Center" Margin="0,0,8,0">
-                    <TextBlock Text="{Binding ScanCountDisplay}" IsVisible="{Binding AnalysisNotComplete}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Center" />
-                    <materialIcons:MaterialIcon Kind="Check" IsVisible="{Binding AnalysisComplete}" Foreground="{DynamicResource CompleteIconColor}" Width="16" Height="16" HorizontalAlignment="Center" />
-                  </Grid>
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn>
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate x:DataType="vm:GenusViewModel">
-                  <TextBlock Text="{Binding ClonalColonyRange}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" Margin="0,0,8,0" />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn>
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate x:DataType="vm:GenusViewModel">
-                  <TextBlock Text="{Binding VistaGenomicsValueDisplay}" Foreground="{Binding AnalysisNotComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='HighlightGrey;MainColor'}" HorizontalAlignment="Right" />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-          </DataGrid.Columns>
-        </DataGrid>
+        <ItemsControl ItemsSource="{Binding Genuses}" IsVisible="{Binding GenusesAvailable}" Margin="0" FontSize="{DynamicResource MainFontSize}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:GenusViewModel">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="GenusName" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="GenusScan" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="GenusRange" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="GenusValue" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                  <TextBlock Text="{Binding Name}" IsVisible="{Binding SpeciesNotSet}" Foreground="{DynamicResource MainColor}" FontWeight="Bold" Margin="0,1,12,1" />
+                  <TextBlock Text="{Binding Species}" IsVisible="{Binding SpeciesSet}" Foreground="{DynamicResource MainColor}" FontWeight="Bold" Margin="0,1,12,1" />
+                </StackPanel>
+                <Grid Grid.Column="1" HorizontalAlignment="Center" Margin="0,1,8,1">
+                  <TextBlock Text="{Binding ScanCountDisplay}" IsVisible="{Binding AnalysisNotComplete}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Center" />
+                  <materialIcons:MaterialIcon Kind="Check" IsVisible="{Binding AnalysisComplete}" Foreground="{DynamicResource CompleteIconColor}" Width="16" Height="16" HorizontalAlignment="Center" />
+                </Grid>
+                <TextBlock Grid.Column="2" Text="{Binding ClonalColonyRange}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" Margin="0,1,8,1" />
+                <TextBlock Grid.Column="3" Text="{Binding VistaGenomicsMaxValue}" Foreground="{Binding AnalysisNotComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='HighlightGrey;MainColor'}" HorizontalAlignment="Right" Margin="0,1,0,1" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
 
         <TextBlock Text="{x:Static properties:Resources.Templates_Tooltip_PossibleOccurrences}" IsVisible="{Binding PredictedSpeciesAvailable}" Foreground="{DynamicResource MainColor}" FontWeight="Bold" Margin="0,4,0,0" />
 
-        <DataGrid Margin="0" Padding="0" Background="Transparent" BorderThickness="0" GridLinesVisibility="None" ItemsSource="{Binding PredictedSpecies}" IsVisible="{Binding PredictedSpeciesAvailable}" AutoGenerateColumns="False" HeadersVisibility="None" CanUserResizeColumns="False" CanUserReorderColumns="False" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden">
-          <DataGrid.Styles>
-            <Style Selector="DataGridCell">
-              <Setter Property="Padding" Value="0,1,2,1" />
-              <Setter Property="HorizontalContentAlignment" Value="Left" />
-            </Style>
-            <Style Selector="DataGridRow">
-              <Setter Property="Background" Value="Transparent" />
-            </Style>
-          </DataGrid.Styles>
-          <DataGrid.Columns>
-            <DataGridTemplateColumn>
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-                  <TextBlock Text="{Binding Species}" Foreground="{DynamicResource HighlightGrey}" Margin="0,0,12,0" />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn>
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-                  <TextBlock Text="{Binding ClonalColonyRange}" Foreground="{DynamicResource HighlightGrey}" HorizontalAlignment="Right" Margin="0,0,8,0" />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn>
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-                  <TextBlock Text="{Binding VistaGenomicsMaxValue}" Foreground="{DynamicResource HighlightGrey}" HorizontalAlignment="Right" Margin="0,0,8,0" />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn>
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-                  <materialIcons:MaterialIcon Kind="DiamondStone" IsVisible="{Binding IsValuable}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" HorizontalAlignment="Center" />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn>
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-                  <materialIcons:MaterialIcon Kind="PlusCircle" IsVisible="{Binding IsFirstDiscovery}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" HorizontalAlignment="Center" />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-          </DataGrid.Columns>
-        </DataGrid>
+        <ItemsControl ItemsSource="{Binding PredictedSpecies}" IsVisible="{Binding PredictedSpeciesAvailable}" Margin="0" FontSize="{DynamicResource MainFontSize}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:GenusClassificationViewModel">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="PredSpecies" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="PredRange" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="PredValue" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="PredValuable" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="PredNew" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="PredCodexGalaxy" />
+                  <ColumnDefinition Width="Auto" SharedSizeGroup="PredCodexRegion" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Species}" Foreground="{DynamicResource HighlightGrey}" Margin="0,1,12,1" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{Binding ClonalColonyRange}" Foreground="{DynamicResource HighlightGrey}" HorizontalAlignment="Right" Margin="0,1,8,1" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="2" Text="{Binding VistaGenomicsMaxValue}" Foreground="{DynamicResource HighlightGrey}" HorizontalAlignment="Right" Margin="0,1,8,1" VerticalAlignment="Center" />
+                <materialIcons:MaterialIcon Grid.Column="3" Kind="DiamondStone" IsVisible="{Binding IsValuable}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <materialIcons:MaterialIcon Grid.Column="4" Kind="PlusCircle" IsVisible="{Binding IsFirstDiscovery}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <materialIcons:MaterialIcon Grid.Column="5" Kind="Earth" IsVisible="{Binding IsNotInGalaxyCodex}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip.Tip="{x:Static properties:Resources.TooltipNewSpeciesToGalaxy}" />
+                <materialIcons:MaterialIcon Grid.Column="6" Kind="BookOpenVariant" IsVisible="{Binding IsNotInCodexOnlyRegion}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip.Tip="{x:Static properties:Resources.TooltipNewSpeciesToRegion}" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
       </StackPanel>
     </Border>
   </DataTemplate>

@@ -763,10 +763,10 @@ public class BodyViewModel : ViewModelBase
                                                                where genusEntry.Value.AnalysisComplete
                                                                select genusEntry.Value.VistaGenomicsValue).Sum());
                         }
-                        PredictedSpecies = from species in planet.PredictedSpecies
-                                           select new GenusClassificationViewModel(species, planet) into speciesVm
-                                           orderby speciesVm.VistaGenomicsBaseValueSort descending
-                                           select speciesVm;
+                        PredictedSpecies = (from species in planet.PredictedSpecies
+                                            select new GenusClassificationViewModel(species, planet) into speciesVm
+                                            orderby speciesVm.VistaGenomicsBaseValueSort descending
+                                            select speciesVm).ToList();
                         PredictedSpeciesCount = PredictedSpecies.Count();
                         HasValuablePredictedSpecies = PredictedSpecies.Any(vm => vm.IsValuable);
                         PredictedSpeciesAvailable = PredictedSpeciesCount > 0;
@@ -776,10 +776,10 @@ public class BodyViewModel : ViewModelBase
             }
             if (planet.MatchingPlanetClassifications.Count() != 0)
             {
-                MatchingPlanetClassifications = from item in planet.MatchingPlanetClassifications
-                                                select new PlanetClassificationViewModel(item) into item
-                                                orderby item.Name
-                                                select item;
+                MatchingPlanetClassifications = (from item in planet.MatchingPlanetClassifications
+                                                 select new PlanetClassificationViewModel(item) into item
+                                                 orderby item.Name
+                                                 select item).ToList();
                 MatchingPlanetClassificationsSort = MatchingPlanetClassifications.Count();
                 MatchingPlanetClassificationsCount = MatchingPlanetClassificationsSort.ToString();
                 MatchingPlanetClassificationsAvailable = MatchingPlanetClassificationsSort > 0;

@@ -134,14 +134,22 @@ public class JournalProvider
         {
             body = (!jObject.ContainsKey("StarType")
                 ? new Body(bodyId, jSystemAddress, bodyName, distance, radius, 0.0, orbitalInclination)
-                : new Star(bodyId, jSystemAddress, bodyName, distance, Helpsters.ConvertJObjectValue(jObject, "StarType", string.Empty), radius, Helpsters.ConvertJObjectValue(jObject, "StellarMass", 0.0), orbitalInclination));
+                : new Star(bodyId, jSystemAddress, bodyName, distance, Helpsters.ConvertJObjectValue(jObject, "StarType", string.Empty), radius, Helpsters.ConvertJObjectValue(jObject, "StellarMass", 0.0), orbitalInclination)
+                {
+                    Luminosity = Helpsters.ConvertJObjectValue(jObject, "Luminosity", string.Empty)
+                });
         }
         else
         {
-            body = new Planet(bodyId, jSystemAddress, bodyName, distance, Helpsters.ConvertJObjectValue(jObject, "PlanetClass", string.Empty), Helpsters.ConvertJObjectValue(jObject, "Landable", false), Helpsters.ConvertJObjectValue(jObject, "TerraformState", string.Empty), Helpsters.ConvertJObjectValue(jObject, "SurfaceGravity", 0.0) * 0.101971621297793, Helpsters.ConvertJObjectValue(jObject, "SurfaceTemperature", 0.0), Helpsters.ConvertJObjectValue(jObject, "Volcanism", string.Empty), Helpsters.ConvertJObjectValue(jObject, "Atmosphere", string.Empty), radius, Helpsters.DetermineParentIdsOfBody(jObject, DataSource.Journal).parentStarId, Helpsters.DetermineParentIdsOfBody(jObject, DataSource.Journal).parentPlanetId, Helpsters.ConvertJObjectValue(jObject, "MassEM", 0.0), orbitalInclination)
+            body = new Planet(bodyId, jSystemAddress, bodyName, distance, Helpsters.ConvertJObjectValue(jObject, "PlanetClass", string.Empty), Helpsters.ConvertJObjectValue(jObject, "Landable", false), Helpsters.ConvertJObjectValue(jObject, "TerraformState", string.Empty), Helpsters.ConvertJObjectValue(jObject, "SurfaceGravity", 0.0) / 9.797759, Helpsters.ConvertJObjectValue(jObject, "SurfaceTemperature", 0.0), Helpsters.ConvertJObjectValue(jObject, "Volcanism", string.Empty), Helpsters.ConvertJObjectValue(jObject, "Atmosphere", string.Empty), radius, Helpsters.DetermineParentIdsOfBody(jObject, DataSource.Journal).parentStarId, Helpsters.DetermineParentIdsOfBody(jObject, DataSource.Journal).parentPlanetId, Helpsters.ConvertJObjectValue(jObject, "MassEM", 0.0), orbitalInclination)
             {
                 WasMapped = Helpsters.ConvertJObjectValue(jObject, "WasMapped", true),
-                WasFootfalled = Helpsters.ConvertJObjectValue<bool?>(jObject, "WasMapped")
+                WasFootfalled = Helpsters.ConvertJObjectValue<bool?>(jObject, "WasMapped"),
+                AtmosphereType = Helpsters.ConvertJObjectValue(jObject, "AtmosphereType", string.Empty),
+                AtmosphereComposition = ReadAtmosphereComposition(jObject),
+                SurfacePressure = Helpsters.ConvertJObjectValue(jObject, "SurfacePressure", 0.0) / 101231.656250,
+                Materials = ReadMaterials(jObject),
+                OrbitalPeriod = Helpsters.ConvertJObjectValue<double?>(jObject, "OrbitalPeriod")
             };
             if (_journalPlanetMemory.Contains(body.StarSystemId, body.Id))
             {
@@ -228,6 +236,48 @@ public class JournalProvider
         }
     }
 
+    /// <summary>
+    /// Reads the atmosphere composition array of a journal Scan event.
+    /// </summary>
+    /// <param name="jObject">The journal event object.</param>
+    /// <returns>A dictionary of gas name to percentage.</returns>
+    private static Dictionary<string, double> ReadAtmosphereComposition(JsonObject jObject)
+    {
+        var composition = new Dictionary<string, double>();
+        foreach (JsonObject? component in Helpsters.ConvertJObjectValue(jObject, "AtmosphereComposition", new JsonArray()).OfType<JsonObject>())
+        {
+            if (component == null)
+            {
+                continue;
+            }
+            string name = Helpsters.ConvertJObjectValue<string>(component, "Name");
+            if (!string.IsNullOrEmpty(name))
+            {
+                composition[name] = Helpsters.ConvertJObjectValue(component, "Percent", 0.0);
+            }
+        }
+        return composition;
+    }
+
+    /// <summary>
+    /// Reads the materials array of a journal Scan event.
+    /// </summary>
+    /// <param name="jObject">The journal event object.</param>
+    /// <returns>A set of material names.</returns>
+    private static HashSet<string> ReadMaterials(JsonObject jObject)
+    {
+        var materials = new HashSet<string>();
+        foreach (JsonObject? material in Helpsters.ConvertJObjectValue(jObject, "Materials", new JsonArray()).OfType<JsonObject>())
+        {
+            string name = Helpsters.ConvertJObjectValue<string>(material, "Name");
+            if (!string.IsNullOrEmpty(name))
+            {
+                materials.Add(name);
+            }
+        }
+        return materials;
+    }
+
     /// <summary>Performs the processJournalStartJumpEvent operation.</summary>
     /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
     /// <param name="journalSystemMemory">The JournalSystemMemory value of the journalSystemMemory parameter.</param>
@@ -277,6 +327,7 @@ public class JournalProvider
                 starSystem.StarClass = journalSystemMemoryItem.StarClass;
             }
         }
+        starSystem.UpdateRegion();
         return starSystem;
     }
 
@@ -403,7 +454,7 @@ public class JournalProvider
             {
                 if (genusNode == null)
                     continue;
-                planet.TryAddOrUpdateGenus(new Genus(Helpsters.ConvertJObjectValue<string>(genusNode, "Genus_Localised"), planet.StarSystemId, planet.Id, null), starSystemProvider?.LocationOnCurrentPlanet);
+                planet.TryAddOrUpdateGenus(new Genus(Helpsters.ConvertJObjectValue<string>(genusNode, "Genus_Localised"), planet.StarSystemId, planet.Id, null, codexKey: Helpsters.ConvertJObjectValue<string>(genusNode, "Genus")), starSystemProvider?.LocationOnCurrentPlanet);
             }
             if (!journalFirstParse)
             {
@@ -432,7 +483,7 @@ public class JournalProvider
             {
                 if (genus == null)
                     continue;
-                journalPlanetMemoryItem.Genera.Add(new Genus(Helpsters.ConvertJObjectValue<string>(genus, "Genus_Localised"), jSystemAddress, bodyId, null));
+                journalPlanetMemoryItem.Genera.Add(new Genus(Helpsters.ConvertJObjectValue<string>(genus, "Genus_Localised"), jSystemAddress, bodyId, null, codexKey: Helpsters.ConvertJObjectValue<string>(genus, "Genus")));
             }
         }
         journalPlanetMemory.AddOrUpdate(journalPlanetMemoryItem);
@@ -464,7 +515,7 @@ public class JournalProvider
         }
         if (starSystem.Bodies.TryGetValue(Helpsters.ConvertJObjectValue(jObject, "Body", 0), out var existingBody) && existingBody is Planet)
         {
-            Genus genus = new Genus(Helpsters.ConvertJObjectValue<string>(jObject, "Genus_Localised"), existingBody.StarSystemId, existingBody.Id, Helpsters.ConvertJObjectValue<bool?>(jObject, "WasLogged"), Helpsters.ConvertJObjectValue<string>(jObject, "Species_Localised"), Helpsters.ConvertJObjectValue<string>(jObject, "Variant_Localised"));
+            Genus genus = new Genus(Helpsters.ConvertJObjectValue<string>(jObject, "Genus_Localised"), existingBody.StarSystemId, existingBody.Id, Helpsters.ConvertJObjectValue<bool?>(jObject, "WasLogged"), Helpsters.ConvertJObjectValue<string>(jObject, "Species_Localised"), Helpsters.ConvertJObjectValue<string>(jObject, "Variant_Localised"), Helpsters.ConvertJObjectValue<string>(jObject, "Genus"), Helpsters.ConvertJObjectValue<string>(jObject, "Species"), Helpsters.ConvertJObjectValue<string>(jObject, "Variant"));
             string? scanType = Helpsters.ConvertJObjectValue<string>(jObject, "ScanType");
             if (scanType == "Log")
             {
@@ -479,6 +530,60 @@ public class JournalProvider
         else
         {
             log.Warn($"Could not create genus from journal entry - no planet found: {jObject}");
+        }
+    }
+
+    /// <summary>Performs the processJournalCodexEntryEvent operation.</summary>
+    /// <param name="jObject">The JsonObject value of the jObject parameter.</param>
+    /// <param name="starSystem">The StarSystem value of the starSystem parameter.</param>
+    public void processJournalCodexEntryEvent(JsonObject jObject, StarSystem starSystem)
+    {
+        var processableEvents = new List<string> { "CodexEntry" };
+        if (!isProcessable(jObject, starSystem, processableEvents, out var jSystemAddress, out var _))
+        {
+            return;
+        }
+        if (Helpsters.ConvertJObjectValue<string>(jObject, "Category") != "$Codex_Category_Biology;")
+        {
+            return;
+        }
+        string codexName = Helpsters.ConvertJObjectValue<string>(jObject, "Name");
+        if (string.IsNullOrEmpty(codexName))
+        {
+            return;
+        }
+        // The region is taken from the codex entry itself ($Codex_RegionName_XX;),
+        // falling back to the current system region.
+        int? region = null;
+        string regionKey = Helpsters.ConvertJObjectValue<string>(jObject, "Region");
+        var regionMatch = System.Text.RegularExpressions.Regex.Match(regionKey ?? string.Empty, @"\$Codex_RegionName_(\d+);");
+        if (regionMatch.Success)
+        {
+            region = int.Parse(regionMatch.Groups[1].Value);
+        }
+        region ??= starSystem.Region;
+        if (!region.HasValue)
+        {
+            region = GalacticRegionProvider.FindRegionForBoxel(jSystemAddress).id;
+        }
+        if (!region.HasValue)
+        {
+            log.Debug($"Codex entry '{codexName}' without resolvable region was not stored");
+            return;
+        }
+        (string genus, string species, string color) = BiologyCatalogProvider.ParseVariant(codexName);
+        CodexTracker.MarkFound(region.Value, codexName, jSystemAddress);
+        log.Info($"Codex entry '{codexName}' (genus '{genus}', species '{species}', color '{color}') recorded for region {region}");
+        // Invalidate the prediction of the affected body so codex markers are refreshed.
+        if (jObject.ContainsKey("BodyID")
+            && starSystem.Bodies.TryGetValue(Helpsters.ConvertJObjectValue(jObject, "BodyID", 0), out var codexBody)
+            && codexBody is Planet codexPlanet)
+        {
+            BiologyCatalogProvider.InvalidatePrediction(codexPlanet);
+            if (!JournalFirstParse)
+            {
+                _starSystemProvider.PredictOccurrenceOfSpeciesForPlanet(codexPlanet, announce: false);
+            }
         }
     }
 
@@ -647,6 +752,9 @@ public class JournalProvider
                         break;
                     case "ScanOrganic":
                         processJournalScanOrganicEvent(jObject, providerSystem, _starSystemProvider, JournalFirstParse);
+                        break;
+                    case "CodexEntry":
+                        processJournalCodexEntryEvent(jObject, providerSystem);
                         break;
                     case "Shutdown":
                         if (!JournalFirstParse)

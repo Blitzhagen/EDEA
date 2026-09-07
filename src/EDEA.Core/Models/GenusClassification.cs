@@ -68,6 +68,24 @@ public class GenusClassification
     public int ClonalColonyRange { get; }
 
     /// <summary>
+    /// Gets or sets the codex genus identifier this classification belongs to.
+    /// </summary>
+    /// <value>The codex genus key.</value>
+    public string GenusKey { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this species is already recorded in the codex of the current region.
+    /// </summary>
+    /// <value><see langword="true"/> when a codex entry exists in the region.</value>
+    public bool IsInCodex { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this species is already recorded in the codex galaxy-wide.
+    /// </summary>
+    /// <value><see langword="true"/> when a codex entry exists in any region.</value>
+    public bool IsInGalaxyCodex { get; set; }
+
+    /// <summary>
     /// Gets or sets the compatible planet classes.
     /// </summary>
     /// <value>The list of planet classes.</value>

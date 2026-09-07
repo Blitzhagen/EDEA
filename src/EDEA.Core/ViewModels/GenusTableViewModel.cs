@@ -40,7 +40,7 @@ public class GenusTableViewModel : TabViewModel
     /// Gets the predicted species for the current planet.
     /// </summary>
     /// <value>The predicted species view models.</value>
-    public IEnumerable<GenusClassificationViewModel> PredictedSpecies => _starSystemProvider.CurrentPlanet?.PredictedSpecies.Select((GenusClassification species) => new GenusClassificationViewModel(species, _starSystemProvider.CurrentPlanet)).OrderByDescending((GenusClassificationViewModel speciesVm) => speciesVm.VistaGenomicsBaseValueSort) ?? Enumerable.Empty<GenusClassificationViewModel>();
+    public IEnumerable<GenusClassificationViewModel> PredictedSpecies => _starSystemProvider.CurrentPlanet?.PredictedSpecies.Select((GenusClassification species) => new GenusClassificationViewModel(species, _starSystemProvider.CurrentPlanet)).OrderByDescending((GenusClassificationViewModel speciesVm) => speciesVm.VistaGenomicsBaseValueSort).ToList() ?? Enumerable.Empty<GenusClassificationViewModel>();
 
     /// <summary>
     /// Gets the info text for unknown biological signals.

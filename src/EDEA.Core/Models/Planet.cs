@@ -143,6 +143,80 @@ public class Planet : Body
     public string Atmosphere { get; set; }
 
     /// <summary>
+    /// Gets or sets the journal atmosphere type identifier (e.g. "CarbonDioxide").
+    /// </summary>
+    /// <value>The atmosphere type identifier, distinct from the localized <see cref="Atmosphere"/> description.</value>
+    public string AtmosphereType { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the atmosphere composition as gas name to percentage.
+    /// </summary>
+    /// <value>A dictionary mapping gas names to their percentage share.</value>
+    public Dictionary<string, double> AtmosphereComposition { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the surface pressure in atmospheres.
+    /// </summary>
+    /// <value>The surface pressure in atm (the journal reports pascal; it is converted on ingest).</value>
+    public double SurfacePressure { get; set; }
+
+    /// <summary>
+    /// Gets or sets the materials found on the planet surface.
+    /// </summary>
+    /// <value>A set of journal material names.</value>
+    public HashSet<string> Materials { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the orbital period in seconds.
+    /// </summary>
+    /// <value>The orbital period, or <see langword="null"/> if unknown.</value>
+    public double? OrbitalPeriod { get; set; }
+
+    /// <summary>
+    /// Gets or sets the materials serialized for database persistence.
+    /// </summary>
+    /// <value>The material names separated by ';'.</value>
+    public string MaterialsCsv
+    {
+        get => string.Join(";", Materials);
+        set
+        {
+            Materials = new HashSet<string>();
+            if (!string.IsNullOrEmpty(value))
+            {
+                foreach (string material in value.Split(';', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    Materials.Add(material);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the atmosphere composition serialized for database persistence.
+    /// </summary>
+    /// <value>The "Gas:Percent" entries separated by ';'.</value>
+    public string AtmosphereCompositionCsv
+    {
+        get => string.Join(";", AtmosphereComposition.Select(entry => entry.Key + ":" + entry.Value));
+        set
+        {
+            AtmosphereComposition = new Dictionary<string, double>();
+            if (!string.IsNullOrEmpty(value))
+            {
+                foreach (string entry in value.Split(';', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    int separator = entry.LastIndexOf(':');
+                    if (separator > 0 && double.TryParse(entry[(separator + 1)..], out double percent))
+                    {
+                        AtmosphereComposition[entry[..separator]] = percent;
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the parent star identifier.
     /// </summary>
     /// <value>The parent star identifier, or <see langword="null"/> if not specified.</value>
@@ -158,7 +232,7 @@ public class Planet : Body
     /// Gets the list of predicted species.
     /// </summary>
     /// <value>The predicted species.</value>
-    public List<GenusClassification> PredictedSpecies { get; }
+    public List<GenusClassification> PredictedSpecies { get; internal set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether an initial species prediction was made.
@@ -348,7 +422,12 @@ public class Planet : Body
     /// <param name="cartographicFirstDiscoveryBonusWithoutEfficiencyValue">The first discovery bonus without efficiency value.</param>
     /// <param name="cartographicFirstDiscoveryBonusWithoutSurfaceScanValue">The first discovery bonus without surface scan value.</param>
     /// <param name="ringsReserveLevel">The rings reserve level.</param>
-    public Planet(long id, long starSystemId, string name, long type, double distance, long wasDiscovered, long wasMapped, long? wasFootfalled, long wasReadFromJournal, long wasReadFromEdsm, string edsmDiscoveryCommander, string planetClass, long isLandable, string terraformingState, long surfaceScanned, double gravity, long geologicalCount, long biologicalCount, string starType, double surfaceTemperature, long touchdown, string volcanism, string atmosphere, double radius, long? parentStarId, long? parentPlanetId, double mass, double? orbitalInclination, long efficientlyScanned, long cartographicValue, long cartographicMaxValue, long cartographicBaseValue, long cartographicFirstDiscoveryBonusValue, long cartographicSurfaceScanValue, long cartographicFirstSurfaceScanBonusValue, long cartographicEfficientlyScannedBonusValue, long cartographicFirstDiscoveryBonusWithoutEfficiencyValue, long cartographicFirstDiscoveryBonusWithoutSurfaceScanValue, long ringsReserveLevel)
+    /// <param name="atmosphereType">The journal atmosphere type identifier.</param>
+    /// <param name="atmosphereCompositionCsv">The serialized atmosphere composition ("Gas:Percent" entries separated by ';').</param>
+    /// <param name="surfacePressure">The surface pressure in atmospheres.</param>
+    /// <param name="materialsCsv">The serialized material list (names separated by ';').</param>
+    /// <param name="orbitalPeriod">The orbital period in seconds.</param>
+    public Planet(long id, long starSystemId, string name, long type, double distance, long wasDiscovered, long wasMapped, long? wasFootfalled, long wasReadFromJournal, long wasReadFromEdsm, string edsmDiscoveryCommander, string planetClass, long isLandable, string terraformingState, long surfaceScanned, double gravity, long geologicalCount, long biologicalCount, string starType, double surfaceTemperature, long touchdown, string volcanism, string atmosphere, double radius, long? parentStarId, long? parentPlanetId, double mass, double? orbitalInclination, long efficientlyScanned, long cartographicValue, long cartographicMaxValue, long cartographicBaseValue, long cartographicFirstDiscoveryBonusValue, long cartographicSurfaceScanValue, long cartographicFirstSurfaceScanBonusValue, long cartographicEfficientlyScannedBonusValue, long cartographicFirstDiscoveryBonusWithoutEfficiencyValue, long cartographicFirstDiscoveryBonusWithoutSurfaceScanValue, long ringsReserveLevel, string? atmosphereType, string? atmosphereCompositionCsv, double? surfacePressure, string? materialsCsv, double? orbitalPeriod)
         : this(Convert.ToInt32(id), starSystemId, name, distance, planetClass, Convert.ToBoolean(isLandable), terraformingState, gravity, surfaceTemperature, volcanism ?? string.Empty, atmosphere ?? string.Empty, radius, (int?)parentStarId, (int?)parentPlanetId, mass, orbitalInclination)
     {
         base.WasDiscovered = Convert.ToBoolean(wasDiscovered);
@@ -373,6 +452,11 @@ public class Planet : Body
         base.CartographicFirstDiscoveryBonusWithoutEfficiencyValue = Convert.ToInt32(cartographicFirstDiscoveryBonusWithoutEfficiencyValue);
         base.CartographicFirstDiscoveryBonusWithoutSurfaceScanValue = Convert.ToInt32(cartographicFirstDiscoveryBonusWithoutSurfaceScanValue);
         base.RingsReserveLevel = (RingReserveLevel)ringsReserveLevel;
+        AtmosphereType = atmosphereType ?? string.Empty;
+        SurfacePressure = surfacePressure ?? 0.0;
+        OrbitalPeriod = orbitalPeriod;
+        AtmosphereCompositionCsv = atmosphereCompositionCsv ?? string.Empty;
+        MaterialsCsv = materialsCsv ?? string.Empty;
         PredictedSpecies = new List<GenusClassification>();
         InitialPredictionOfSpecies = false;
         MatchingPlanetClassificationsAnnounced = true;
@@ -386,6 +470,7 @@ public class Planet : Body
     /// <param name="dataSource">The data source that provided the new data.</param>
     public void UpdatePlanet(Planet planet, DataSource dataSource)
     {
+        string bioSignature = BiologySignature();
         UpdateBody(planet, dataSource);
         if (dataSource != DataSource.Edsm || !base.WasReadFromJournal)
         {
@@ -415,6 +500,26 @@ public class Planet : Body
             Touchdown = planet.Touchdown;
             Volcanism = planet.Volcanism;
             Atmosphere = planet.Atmosphere;
+            if (!string.IsNullOrEmpty(planet.AtmosphereType))
+            {
+                AtmosphereType = planet.AtmosphereType;
+            }
+            if (planet.AtmosphereComposition.Count > 0)
+            {
+                AtmosphereComposition = new Dictionary<string, double>(planet.AtmosphereComposition);
+            }
+            if (planet.SurfacePressure > 0)
+            {
+                SurfacePressure = planet.SurfacePressure;
+            }
+            if (planet.Materials.Count > 0)
+            {
+                Materials = new HashSet<string>(planet.Materials);
+            }
+            if (planet.OrbitalPeriod.HasValue)
+            {
+                OrbitalPeriod = planet.OrbitalPeriod;
+            }
             if (planet.ParentStarId.HasValue)
             {
                 ParentStarId = planet.ParentStarId;
@@ -431,6 +536,29 @@ public class Planet : Body
             CartographicFirstSurfaceScanBonusValue = planet.CartographicFirstSurfaceScanBonusValue;
             CartographicEfficientlyScannedBonusValue = planet.CartographicEfficientlyScannedBonusValue;
         }
+        if (BiologySignature() != bioSignature)
+        {
+            if (PredictedSpecies.Count > 0)
+            {
+                log.Debug($"Invalidating {PredictedSpecies.Count} predicted species for '{base.Name}' because biology input changed: {string.Join(", ", PredictedSpecies.Select(p => p.Species))}");
+            }
+            PredictedSpecies = new List<GenusClassification>();
+            InitialPredictionOfSpecies = false;
+        }
+    }
+
+    /// <summary>
+    /// Builds a signature over all fields that influence species prediction so that
+    /// predictions computed from incomplete data can be invalidated when data arrives.
+    /// </summary>
+    /// <returns>The biology signature string.</returns>
+    private string BiologySignature()
+    {
+        return PlanetClass + "|" + AtmosphereType + "|" + Volcanism + "|" + Gravity.ToString("F6")
+            + "|" + SurfaceTemperature.ToString("F2") + "|" + SurfacePressure.ToString("F6") + "|" + OrbitalPeriod
+            + "|" + ParentStarId + "|" + ParentPlanetId
+            + "|" + string.Join(";", Materials.OrderBy(material => material, StringComparer.Ordinal))
+            + "|" + string.Join(";", AtmosphereComposition.OrderBy(entry => entry.Key, StringComparer.Ordinal).Select(entry => entry.Key + ":" + entry.Value));
     }
 
     /// <summary>
@@ -501,7 +629,7 @@ public class Planet : Body
         }
         if (Genuses[genus.Name].ClonalColonyRange == 0)
         {
-            Genuses[genus.Name].ClonalColonyRange = GeneraIndexProvider.GetClonalColonyRangeForGenus(genus.Name);
+            Genuses[genus.Name].ClonalColonyRange = BiologyCatalogProvider.GetClonalColonyRangeForGenus(!string.IsNullOrEmpty(genus.CodexKey) ? genus.CodexKey : genus.Name);
         }
         DetermineFirstDiscoveryStatusForGenus(Genuses[genus.Name]);
         switch (scanType)

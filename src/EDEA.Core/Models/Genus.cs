@@ -21,6 +21,12 @@ public class Genus
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the codex genus identifier (e.g. "$Codex_Ent_Bacterial_Genus_Name;").
+    /// </summary>
+    /// <value>The language-independent codex key from the journal "Genus" field.</value>
+    public string CodexKey { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the star system identifier.
     /// </summary>
     /// <value>The star system identifier.</value>
@@ -53,6 +59,18 @@ public class Genus
     /// </summary>
     /// <value>The variant name.</value>
     public string Variant { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the codex species identifier (e.g. "$Codex_Ent_Bacterial_01_Name;").
+    /// </summary>
+    /// <value>The language-independent codex key from the journal "Species" field.</value>
+    public string SpeciesKey { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the codex variant identifier.
+    /// </summary>
+    /// <value>The language-independent codex key from the journal "Variant" field.</value>
+    public string VariantKey { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets the short species name.
@@ -102,7 +120,7 @@ public class Genus
     /// Gets the base Vista Genomics value for this species.
     /// </summary>
     /// <value>The base Vista Genomics value.</value>
-    public int VistaGenomicsBaseValue => GeneraIndexProvider.GetVistaGenomicsValueForSpecies(Species);
+    public int VistaGenomicsBaseValue => BiologyCatalogProvider.GetVistaGenomicsValueForSpecies(!string.IsNullOrEmpty(SpeciesKey) ? SpeciesKey : Species);
 
     /// <summary>
     /// Gets the first discovery bonus for Vista Genomics.
@@ -319,13 +337,19 @@ public class Genus
     /// <param name="wasLogged">Whether the genus was logged, or <see langword="null"/> if unspecified.</param>
     /// <param name="species">The species name.</param>
     /// <param name="variant">The variant name.</param>
-    public Genus(string name, long starSystemId, int bodyId, bool? wasLogged, string species = "", string variant = "")
+    /// <param name="codexKey">The codex genus identifier.</param>
+    /// <param name="speciesKey">The codex species identifier.</param>
+    /// <param name="variantKey">The codex variant identifier.</param>
+    public Genus(string name, long starSystemId, int bodyId, bool? wasLogged, string species = "", string variant = "", string codexKey = "", string speciesKey = "", string variantKey = "")
     {
         Name = name;
+        CodexKey = codexKey;
         BodyId = bodyId;
         StarSystemId = starSystemId;
         Species = species;
+        SpeciesKey = speciesKey;
         Variant = variant;
+        VariantKey = variantKey;
         ScanCount = 0;
         AnalysisComplete = false;
         IsFirstDiscovery = false;
@@ -336,7 +360,7 @@ public class Genus
         LatitudeAt2ndScan = null;
         CurrentDistanceToLocationAt1stScan = null;
         CurrentDistanceToLocationAt2ndScan = null;
-        ClonalColonyRange = GeneraIndexProvider.GetClonalColonyRangeForGenus(Name);
+        ClonalColonyRange = BiologyCatalogProvider.GetClonalColonyRangeForGenus(!string.IsNullOrEmpty(CodexKey) ? CodexKey : Name);
     }
 
     /// <summary>
@@ -359,13 +383,19 @@ public class Genus
     /// <param name="vistaGenomicsFirstDiscoveryBonusValue">The first discovery bonus value.</param>
     /// <param name="isFirstDiscovery">Whether this is a first discovery.</param>
     /// <param name="wasLogged">Whether the genus was logged, or <see langword="null"/> if unspecified.</param>
-    public Genus(string name, long bodyId, long starSystemId, string species, string variant, long scanCount, long analysisComplete, long vistaGenomicsValue, double? longitudeAt1stScan, double? latitudeAt1stScan, double? longitudeAt2ndScan, double? latitudeAt2ndScan, long vistaGenomicsMaxValue, long vistaGenomicsBaseValue, long vistaGenomicsFirstDiscoveryBonusValue, long isFirstDiscovery, long? wasLogged)
+    /// <param name="codexKey">The codex genus identifier.</param>
+    /// <param name="speciesKey">The codex species identifier.</param>
+    /// <param name="variantKey">The codex variant identifier.</param>
+    public Genus(string name, long bodyId, long starSystemId, string species, string variant, long scanCount, long analysisComplete, long vistaGenomicsValue, double? longitudeAt1stScan, double? latitudeAt1stScan, double? longitudeAt2ndScan, double? latitudeAt2ndScan, long vistaGenomicsMaxValue, long vistaGenomicsBaseValue, long vistaGenomicsFirstDiscoveryBonusValue, long isFirstDiscovery, long? wasLogged, string? codexKey, string? speciesKey, string? variantKey)
     {
         Name = name;
+        CodexKey = codexKey ?? string.Empty;
         BodyId = Convert.ToInt32(bodyId);
         StarSystemId = starSystemId;
         Species = species;
+        SpeciesKey = speciesKey ?? string.Empty;
         Variant = variant;
+        VariantKey = variantKey ?? string.Empty;
         ScanCount = Convert.ToInt32(scanCount);
         AnalysisComplete = Convert.ToBoolean(analysisComplete);
         IsFirstDiscovery = Convert.ToBoolean(isFirstDiscovery);
@@ -377,7 +407,7 @@ public class Genus
         CurrentDistanceToLocationAt1stScan = null;
         CurrentDistanceToLocationAt2ndScan = null;
         _vistaGenomicsValue = vistaGenomicsValue;
-        ClonalColonyRange = GeneraIndexProvider.GetClonalColonyRangeForGenus(Name);
+        ClonalColonyRange = BiologyCatalogProvider.GetClonalColonyRangeForGenus(!string.IsNullOrEmpty(CodexKey) ? CodexKey : Name);
     }
 
     /// <summary>

@@ -62,7 +62,8 @@ public class SQLiteStore
                 StarPositionZ,
                 IsTripHistory,
                 AllBodiesFound,
-                Population
+                Population,
+                Region
             ) VALUES (
                 @Id,
                 @Name,
@@ -83,7 +84,8 @@ public class SQLiteStore
                 @StarPositionZ,
                 @IsTripHistory,
                 @AllBodiesFound,
-                @Population
+                @Population,
+                @Region
             ) ON CONFLICT(Id64) DO UPDATE SET
                 PrimaryStarName = CASE WHEN @PrimaryStarName IS NULL OR TRIM(@PrimaryStarName) = '' THEN PrimaryStarName ELSE @PrimaryStarName END,
                 TotalBodyCount = @TotalBodyCount,
@@ -101,7 +103,8 @@ public class SQLiteStore
                 StarPositionZ = @StarPositionZ,
                 IsTripHistory = @IsTripHistory,
                 AllBodiesFound = @AllBodiesFound,
-                Population = @Population
+                Population = @Population,
+                Region = CASE WHEN @Region IS NULL THEN Region ELSE @Region END
         ";
 
     private const string UPSERT_BODY_SQL = @"
@@ -220,7 +223,12 @@ public class SQLiteStore
                 HasBiological,
                 HasGeological,
                 IsValuable,
-                IsTerraformable
+                IsTerraformable,
+                AtmosphereType,
+                AtmosphereCompositionCsv,
+                SurfacePressure,
+                MaterialsCsv,
+                OrbitalPeriod
             ) VALUES (
                 @Id64,
                 @StarSystemId,
@@ -264,7 +272,12 @@ public class SQLiteStore
                 @HasBiological,
                 @HasGeological,
                 @IsValuable,
-                @IsTerraformable
+                @IsTerraformable,
+                @AtmosphereType,
+                @AtmosphereCompositionCsv,
+                @SurfacePressure,
+                @MaterialsCsv,
+                @OrbitalPeriod
             ) ON CONFLICT(Id64) DO UPDATE SET
                 Name = @Name,
                 Type = @Type,
@@ -305,7 +318,12 @@ public class SQLiteStore
                 HasBiological = @HasBiological,
                 HasGeological = @HasGeological,
                 IsValuable = @IsValuable,
-                IsTerraformable = @IsTerraformable
+                IsTerraformable = @IsTerraformable,
+                AtmosphereType = @AtmosphereType,
+                AtmosphereCompositionCsv = @AtmosphereCompositionCsv,
+                SurfacePressure = @SurfacePressure,
+                MaterialsCsv = @MaterialsCsv,
+                OrbitalPeriod = @OrbitalPeriod
         ";
 
     private const string UPSERT_STAR_BODY_SQL = @"
@@ -321,6 +339,7 @@ public class SQLiteStore
                 WasReadFromEdsm,
                 EdsmDiscoveryCommander,
                 StarType,
+                Luminosity,
                 Radius,
                 Mass,
                 OrbitalInclination,
@@ -346,6 +365,7 @@ public class SQLiteStore
                 @WasReadFromEdsm,
                 @EdsmDiscoveryCommander,
                 @StarType,
+                @Luminosity,
                 @Radius,
                 @Mass,
                 @OrbitalInclination,
@@ -368,6 +388,7 @@ public class SQLiteStore
                 WasReadFromEdsm = CASE WHEN WasReadFromEdsm = 1 THEN WasReadFromEdsm ELSE @WasReadFromEdsm END,
                 EdsmDiscoveryCommander = @EdsmDiscoveryCommander,
                 StarType = @StarType,
+                Luminosity = @Luminosity,
                 Radius = @Radius,
                 Mass = @Mass,
                 OrbitalInclination = @OrbitalInclination,
@@ -396,11 +417,14 @@ public class SQLiteStore
         ";
 
     private const string UPSERT_GENUS_SQL = @"
-            INSERT INTO Genera (Name, BodyId, StarSystemId, Species, Variant, ScanCount, IsAnalysed, VistaGenomicsValue, LongitudeAt1stScan, LatitudeAt1stScan, LongitudeAt2ndScan, LatitudeAt2ndScan, VistaGenomicsMaxValue, VistaGenomicsBaseValue, VistaGenomicsFirstDiscoveryBonusValue, IsFirstDiscovered, WasLogged)
-            VALUES (@Name, @BodyId, @StarSystemId, @Species, @Variant, @ScanCount, @IsAnalysed, @VistaGenomicsValue, @LongitudeAt1stScan, @LatitudeAt1stScan, @LongitudeAt2ndScan, @LatitudeAt2ndScan, @VistaGenomicsMaxValue, @VistaGenomicsBaseValue, @VistaGenomicsFirstDiscoveryBonusValue, @IsFirstDiscovered, @WasLogged)
+            INSERT INTO Genera (Name, BodyId, StarSystemId, Species, Variant, CodexKey, SpeciesKey, VariantKey, ScanCount, IsAnalysed, VistaGenomicsValue, LongitudeAt1stScan, LatitudeAt1stScan, LongitudeAt2ndScan, LatitudeAt2ndScan, VistaGenomicsMaxValue, VistaGenomicsBaseValue, VistaGenomicsFirstDiscoveryBonusValue, IsFirstDiscovered, WasLogged)
+            VALUES (@Name, @BodyId, @StarSystemId, @Species, @Variant, @CodexKey, @SpeciesKey, @VariantKey, @ScanCount, @IsAnalysed, @VistaGenomicsValue, @LongitudeAt1stScan, @LatitudeAt1stScan, @LongitudeAt2ndScan, @LatitudeAt2ndScan, @VistaGenomicsMaxValue, @VistaGenomicsBaseValue, @VistaGenomicsFirstDiscoveryBonusValue, @IsFirstDiscovered, @WasLogged)
             ON CONFLICT(StarSystemId, BodyId, Name) DO UPDATE SET
                 Species = @Species,
                 Variant = @Variant,
+                CodexKey = CASE WHEN @CodexKey IS NULL OR @CodexKey = '' THEN CodexKey ELSE @CodexKey END,
+                SpeciesKey = CASE WHEN @SpeciesKey IS NULL OR @SpeciesKey = '' THEN SpeciesKey ELSE @SpeciesKey END,
+                VariantKey = CASE WHEN @VariantKey IS NULL OR @VariantKey = '' THEN VariantKey ELSE @VariantKey END,
                 ScanCount = @ScanCount,
                 IsAnalysed = @IsAnalysed,
                 VistaGenomicsValue = @VistaGenomicsValue,
@@ -480,7 +504,8 @@ public class SQLiteStore
                 StarPositionZ REAL,
                 IsTripHistory INTEGER NOT NULL DEFAULT 0,
                 AllBodiesFound INTEGER,
-                Population INTEGER
+                Population INTEGER,
+                Region INTEGER
             );
 
             CREATE TABLE IF NOT EXISTS Bodies (
@@ -527,7 +552,13 @@ public class SQLiteStore
                 HasGeological INTEGER,
                 HasBiological INTEGER,
                 IsValuable INTEGER,
-                IsTerraformable INTEGER
+                IsTerraformable INTEGER,
+                AtmosphereType TEXT,
+                AtmosphereCompositionCsv TEXT,
+                SurfacePressure REAL,
+                MaterialsCsv TEXT,
+                OrbitalPeriod REAL,
+                Luminosity TEXT
             );
 
             CREATE TABLE IF NOT EXISTS Rings (
@@ -563,7 +594,18 @@ public class SQLiteStore
                 VistaGenomicsFirstDiscoveryBonusValue INTEGER,
                 IsFirstDiscovered INTEGER,
                 WasLogged INTEGER,
+                CodexKey TEXT,
+                SpeciesKey TEXT,
+                VariantKey TEXT,
                 UNIQUE(StarSystemId, BodyId, Name)
+            );
+
+            CREATE TABLE IF NOT EXISTS CodexScans (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Region INTEGER NOT NULL,
+                Biological TEXT NOT NULL,
+                StarSystemId INTEGER,
+                UNIQUE(Region, Biological)
             );
 
             CREATE TABLE IF NOT EXISTS ImportedJournalFiles (
@@ -574,7 +616,86 @@ public class SQLiteStore
 
         ");
 
+        // Schema migration for databases created before the biology rewrite.
+        EnsureColumn(db, "StarSystems", "Region", "INTEGER");
+        EnsureColumn(db, "Bodies", "AtmosphereType", "TEXT");
+        EnsureColumn(db, "Bodies", "AtmosphereCompositionCsv", "TEXT");
+        EnsureColumn(db, "Bodies", "SurfacePressure", "REAL");
+        EnsureColumn(db, "Bodies", "MaterialsCsv", "TEXT");
+        EnsureColumn(db, "Bodies", "OrbitalPeriod", "REAL");
+        EnsureColumn(db, "Bodies", "Luminosity", "TEXT");
+        EnsureColumn(db, "Genera", "CodexKey", "TEXT");
+        EnsureColumn(db, "Genera", "SpeciesKey", "TEXT");
+        EnsureColumn(db, "Genera", "VariantKey", "TEXT");
+
+        // Schema version 2 (biology rewrite): the new body fields only exist in journal
+        // Scan events, so journals imported before this version must be re-imported once.
+        long userVersion = db.ExecuteScalar<long>("PRAGMA user_version");
+        if (userVersion < 3)
+        {
+            db.Execute("DELETE FROM ImportedJournalFiles");
+            db.Execute("PRAGMA user_version = 3");
+            log.Info("Journal file import list cleared - journals will be re-imported once to backfill biology scan data");
+        }
+
         _initialized = true;
+    }
+
+    /// <summary>
+    /// Adds a column to a table when it does not exist yet.
+    /// </summary>
+    /// <param name="db">The open database connection.</param>
+    /// <param name="table">The table name.</param>
+    /// <param name="column">The column name.</param>
+    /// <param name="type">The SQLite column type.</param>
+    private static void EnsureColumn(IDbConnection db, string table, string column, string type)
+    {
+        // PRAGMA table_info returns rows; the column name is the second field.
+        var existing = db.Query<(long cid, string name, string type, long notnull, object? dflt_value, long pk)>($"PRAGMA table_info({table})")
+            .Select(row => row.name).ToList();
+        if (!existing.Contains(column))
+        {
+            db.Execute($"ALTER TABLE {table} ADD COLUMN {column} {type}");
+            log.Info($"Added column {column} to table {table}");
+        }
+    }
+
+    /// <summary>
+    /// Stores a codex biological discovery for the given region (idempotent).
+    /// </summary>
+    /// <param name="region">The galactic region identifier.</param>
+    /// <param name="biological">The codex entry name.</param>
+    /// <param name="starSystemId">The star system identifier.</param>
+    public void UpsertCodexScan(int region, string biological, long starSystemId)
+    {
+        using var db = Connect();
+        db.Open();
+        db.Execute(@"
+            INSERT INTO CodexScans (Region, Biological, StarSystemId)
+            VALUES (@region, @biological, @starSystemId)
+            ON CONFLICT(Region, Biological) DO UPDATE SET StarSystemId = @starSystemId",
+            new { region, biological, starSystemId });
+    }
+
+    /// <summary>
+    /// Checks whether a codex biological identifier exists, optionally limited to a region.
+    /// </summary>
+    /// <param name="region">The region identifier, or <see langword="null"/> for a galaxy-wide check.</param>
+    /// <param name="biological">The codex entry name.</param>
+    /// <returns><see langword="true"/> when a matching entry exists.</returns>
+    public bool CodexScanExists(int? region, string biological)
+    {
+        using var db = Connect();
+        db.Open();
+        if (region.HasValue)
+        {
+            return db.ExecuteScalar<int>(
+                "SELECT COUNT(1) FROM CodexScans WHERE Region = @region AND Biological = @biological",
+                new { region = region.Value, biological }) > 0;
+        }
+        return db.ExecuteScalar<int>(
+            "SELECT COUNT(1) FROM CodexScans WHERE Biological = @biological",
+            new { biological }) > 0;
     }
 
     /// <summary>
@@ -590,7 +711,7 @@ public class SQLiteStore
             @"SELECT Id64 AS Id, Name, StarClass, PrimaryStarName, TotalBodyCount, TotalNonBodyCount,
                      WasReadFromJournal, WasReadFromEdsm, WasRequestedFromEdsm,
                      EdsmName, EdsmPrimaryStarType, EdsmPrimaryStarName, EdsmPrimaryStarIsScoopable, EdsmTotalBodyCount,
-                     StarPositionX, StarPositionY, StarPositionZ, IsTripHistory, AllBodiesFound, Population
+                     StarPositionX, StarPositionY, StarPositionZ, IsTripHistory, AllBodiesFound, Population, Region
               FROM StarSystems WHERE Id64 = @id64",
             new { id64 });
     }
@@ -619,6 +740,7 @@ public class SQLiteStore
             return existing;
 
         var s = new StarSystem { Id = id64, Name = name, StarPositionX = x, StarPositionY = y, StarPositionZ = z, StarClass = starClass, IsTripHistory = true };
+        s.UpdateRegion();
         db.Execute(@"
             INSERT INTO StarSystems (Id64, Name, StarClass, StarPositionX, StarPositionY, StarPositionZ, IsTripHistory)
             VALUES (@Id, @Name, @StarClass, @StarPositionX, @StarPositionY, @StarPositionZ, @IsTripHistory)
@@ -659,7 +781,8 @@ public class SQLiteStore
                     StarPositionZ,
                     IsTripHistory,
                     AllBodiesFound,
-                    Population
+                    Population,
+                    Region
                 FROM StarSystems").ToList();
         }
         catch (Exception exception)
@@ -716,7 +839,7 @@ public class SQLiteStore
                 @"SELECT Id64 AS Id, Name, StarClass, PrimaryStarName, TotalBodyCount, TotalNonBodyCount,
                          WasReadFromJournal, WasReadFromEdsm, WasRequestedFromEdsm,
                          EdsmName, EdsmPrimaryStarType, EdsmPrimaryStarName, EdsmPrimaryStarIsScoopable, EdsmTotalBodyCount,
-                         StarPositionX, StarPositionY, StarPositionZ, IsTripHistory, AllBodiesFound, Population
+                         StarPositionX, StarPositionY, StarPositionZ, IsTripHistory, AllBodiesFound, Population, Region
                   FROM StarSystems WHERE Id64 = @starSystemId",
                 new { starSystemId });
 

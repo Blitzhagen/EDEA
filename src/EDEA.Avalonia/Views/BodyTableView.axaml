@@ -200,7 +200,7 @@
                   <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <materialIcons:MaterialIcon Grid.Column="0" Kind="AirplaneLanding" Foreground="{DynamicResource LandableIconColor}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipLandableIcon}" />
-                <TextBlock Grid.Column="1" Text="{Binding Touchdown, StringFormat='T'}" Foreground="{DynamicResource LandableIconColor}" HorizontalAlignment="Right" Margin="2,0,0,0" IsVisible="{Binding Touchdown}" ToolTip.Tip="{x:Static properties:Resources.TooltipTouchdownIcon}" />
+                <TextBlock Grid.Column="1" Text="T" Foreground="{DynamicResource LandableIconColor}" HorizontalAlignment="Right" Margin="2,0,0,0" IsVisible="{Binding Touchdown}" ToolTip.Tip="{x:Static properties:Resources.TooltipTouchdownIcon}" />
               </Grid>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>

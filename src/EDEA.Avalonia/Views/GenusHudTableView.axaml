@@ -97,7 +97,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="VistaGenomicsValueSort" Header="{x:Static properties:Resources.ColumnHeaderVistaGenomicsValue}" IsVisible="{Binding GenusColumnVistaGenomicsValueVisible, Source={x:Static edea:Preferences.HudWindow}}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="VistaGenomicsMaxValueSort" Header="{x:Static properties:Resources.ColumnHeaderVistaGenomicsValue}" IsVisible="{Binding GenusColumnVistaGenomicsValueVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
               <Grid HorizontalAlignment="Right" IsVisible="{Binding SpeciesSet}">
@@ -191,6 +191,28 @@
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusClassificationViewModel">
               <materialIcons:MaterialIcon Kind="PlusCircle" IsVisible="{Binding IsFirstDiscovery}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsNotInGalaxyCodex" IsVisible="{Binding GenusColumnNewIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
+          <DataGridTemplateColumn.Header>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipNewSpeciesToGalaxy}"><materialIcons:MaterialIcon Kind="Earth" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+          </DataGridTemplateColumn.Header>
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="vm:GenusClassificationViewModel">
+              <materialIcons:MaterialIcon Kind="Earth" IsVisible="{Binding IsNotInGalaxyCodex}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipNewSpeciesToGalaxy}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsNotInCodexOnlyRegion" IsVisible="{Binding GenusColumnNewIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
+          <DataGridTemplateColumn.Header>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipNewSpeciesToRegion}"><materialIcons:MaterialIcon Kind="BookOpenVariant" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+          </DataGridTemplateColumn.Header>
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="vm:GenusClassificationViewModel">
+              <materialIcons:MaterialIcon Kind="BookOpenVariant" IsVisible="{Binding IsNotInCodexOnlyRegion}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipNewSpeciesToRegion}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>

@@ -79,12 +79,6 @@ public class GenusViewModel : ViewModelBase
     public string ScanCountDisplay => _genus.ScanCount.ToString();
 
     /// <summary>
-    /// Gets the formatted Vista Genomics value, always showing the numeric value.
-    /// </summary>
-    /// <value>The formatted value string, including zero.</value>
-    public string VistaGenomicsValueDisplay => $"{_genus.VistaGenomicsValue:n0} {"Cr"}";
-
-    /// <summary>
     /// Gets the Vista Genomics base value used for sorting.
     /// </summary>
     /// <value>The sortable base value.</value>
@@ -149,12 +143,6 @@ public class GenusViewModel : ViewModelBase
             return string.Empty;
         }
     }
-
-    /// <summary>
-    /// Gets the Vista Genomics value used for sorting.
-    /// </summary>
-    /// <value>The sortable value.</value>
-    public int VistaGenomicsValueSort => (int)_genus.VistaGenomicsValue;
 
     /// <summary>
     /// Gets the formatted Vista Genomics value.
@@ -304,7 +292,7 @@ public class GenusViewModel : ViewModelBase
     {
         get
         {
-            int range = _genus.ClonalColonyRange != 0 ? _genus.ClonalColonyRange : GeneraIndexProvider.GetClonalColonyRangeForGenus(_genus.Name);
+            int range = _genus.ClonalColonyRange != 0 ? _genus.ClonalColonyRange : BiologyCatalogProvider.GetClonalColonyRangeForGenus(!string.IsNullOrEmpty(_genus.CodexKey) ? _genus.CodexKey : _genus.Name);
             if (range != 0)
             {
                 return $"{range:n0} m";

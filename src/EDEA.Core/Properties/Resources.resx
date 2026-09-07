@@ -1308,4 +1308,10 @@
   <data name="StatusBodiesMissing" xml:space="preserve">
     <value>{0} missing</value>
   </data>
+  <data name="TooltipNewSpeciesToGalaxy" xml:space="preserve">
+    <value>Species not yet recorded in the codex - new to the galaxy</value>
+  </data>
+  <data name="TooltipNewSpeciesToRegion" xml:space="preserve">
+    <value>Species not yet recorded in the codex of this region</value>
+  </data>
 </root>

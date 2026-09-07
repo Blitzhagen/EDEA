@@ -247,9 +247,9 @@ public class StarSystemProvider
             starSystem.IsTripHistory = true;
             CurrentSystem = starSystem;
             log.Debug($"Restored current system '{CurrentSystem.Name}' ({CurrentSystem.Id}) from the history");
+            PredictOccurrenceOfSpeciesForCurrentSystem();
             if (!_journalProvider.JournalFirstParse)
             {
-                PredictOccurrenceOfSpeciesForCurrentSystem();
                 FindMatchingClassificationsForSystem(CurrentSystem, ignoreSpeechOutput: false);
                 calculateCartographicValues(CurrentSystem);
             }
@@ -445,7 +445,7 @@ public class StarSystemProvider
     /// <summary>Predicts the occurrence of valuable species for all planets in the current system.</summary>
     public void PredictOccurrenceOfSpeciesForCurrentSystem()
     {
-        GeneraIndexProvider.PredictOccurrenceOfSpecies(CurrentSystem);
+        BiologyCatalogProvider.PredictOccurrenceOfSpecies(CurrentSystem);
         foreach (Body body in CurrentSystem.Bodies.Values)
         {
             if (body.Type == BodyType.Planet)
@@ -459,10 +459,14 @@ public class StarSystemProvider
 
     /// <summary>Predicts the occurrence of valuable species for the specified planet.</summary>
     /// <param name="planet">The <see cref="Planet"/> for which to predict species occurrence.</param>
-    public void PredictOccurrenceOfSpeciesForPlanet(Planet planet)
+    /// <param name="announce">Whether to announce the prediction via speech.</param>
+    public void PredictOccurrenceOfSpeciesForPlanet(Planet planet, bool announce = true)
     {
-        GeneraIndexProvider.PredictOccurrenceOfSpecies(planet);
-        announcePredictedOccurrenceOfSpecies(planet);
+        BiologyCatalogProvider.PredictOccurrenceOfSpecies(planet);
+        if (announce)
+        {
+            announcePredictedOccurrenceOfSpecies(planet);
+        }
         planet.InitialPredictionOfSpecies = false;
         triggerGuiDataUpdateEvent();
     }
@@ -612,7 +616,7 @@ public class StarSystemProvider
 
     private void announcePredictedOccurrenceOfSpecies(Planet planet)
     {
-        if (_journalProvider.JournalFirstParse || !planet.InitialPredictionOfSpecies)
+        if (_journalProvider.JournalFirstParse || JournalHistoryImporter.Current?.IsRunning == true || !planet.InitialPredictionOfSpecies)
         {
             return;
         }
@@ -953,7 +957,7 @@ public class StarSystemProvider
             CurrentPlanet.IsCurrentPlanetInSystem = true;
             if (!planet.PredictedSpecies.Any())
             {
-                GeneraIndexProvider.PredictOccurrenceOfSpecies(planet);
+                BiologyCatalogProvider.PredictOccurrenceOfSpecies(planet);
                 planet.InitialPredictionOfSpecies = false;
             }
             CurrentPlanetChanged?.Invoke(this, EventArgs.Empty);
