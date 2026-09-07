@@ -59,7 +59,13 @@ Vista Genomics values&#x0a;and statistical data&#x0a;for species prediction by
         <TextBlock Grid.Row="4" Grid.Column="0" Text="System and route data by" Foreground="{StaticResource AccentBrush}" TextAlignment="Right" TextWrapping="Wrap" Margin="0,0,6,6" VerticalAlignment="Top"/>
         <TextBlock Grid.Row="4" Grid.Column="1" Foreground="#00BFFF" TextAlignment="Left" TextWrapping="Wrap" Margin="0,0,0,6" VerticalAlignment="Top" Text="EDSM, Spansh"/>
 
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="Thanks to" Foreground="{StaticResource AccentBrush}" TextAlignment="Right" TextWrapping="Wrap" Margin="0,0,6,20" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Foreground="{StaticResource AccentBrush}" TextAlignment="Right" TextWrapping="Wrap" Margin="0,0,6,20" VerticalAlignment="Top">
+          <TextBlock.Text>
+Thanks to the author of the
+original Elite Dangerous
+Exploration Buddy
+          </TextBlock.Text>
+        </TextBlock>
         <TextBlock Grid.Row="5" Grid.Column="1" Text="CMDR Panostrede" Foreground="#00BFFF" TextAlignment="Left" TextWrapping="Wrap" Margin="0,0,0,20" VerticalAlignment="Top"/>
       </Grid>
 

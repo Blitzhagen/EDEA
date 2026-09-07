@@ -64,7 +64,7 @@ Keine Telemetrie, kein Auto-Updater, keine Original-Spiel-Assets. Alle Daten ble
 
 ## Ursprung und Dank
 
-Dieses Projekt basiert auf dem Quellcode des ursprünglichen EDEA-Programms. Der ursprüngliche Code wurde durch **Dekompilierung des Original-Programms** gewonnen und als Grundlage für diese Weiterentwicklung verwendet.
+Dieses Projekt basiert auf dem Quellcode des ursprünglichen **Elite Dangerous Exploration Buddy** von **CMDR Panostrede**. Der ursprüngliche Code wurde durch **Dekompilierung des Original-Programms mit `ilspycmd` (ILSpy)** gewonnen und als Grundlage für diese Weiterentwicklung verwendet.
 
 Ein besonderer Dank geht an den ursprünglichen Entwickler **CMDR Panostrede**, der uns freundlicherweise erlaubt hat, den Code zu nutzen und das Programm in dieser Form bereitzustellen.
 
