@@ -1,10 +1,11 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:EDEA.Avalonia.Localization"
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         xmlns:vm="clr-namespace:EDEA.Avalonia.ViewModels"
         x:Class="EDEA.Avalonia.Windows.AboutWindow"
         x:DataType="vm:AboutViewModel"
-        Title="{x:Static properties:Resources.AboutWindow_Title}"
+        Title="{l:Loc AboutWindow_Title}"
         Width="580" MinWidth="500" MaxHeight="780"
         Background="{StaticResource BackgroundBrush}"
         Foreground="{StaticResource ForegroundBrush}"
@@ -62,7 +63,7 @@ Vista Genomics values&#x0a;and statistical data&#x0a;for species prediction by
         <TextBlock Grid.Row="5" Grid.Column="1" Text="CMDR Panostrede" Foreground="#00BFFF" TextAlignment="Left" TextWrapping="Wrap" Margin="0,0,0,20" VerticalAlignment="Top"/>
       </Grid>
 
-      <Button Content="{x:Static properties:Resources.AboutWindow_OK}" HorizontalAlignment="Right" Padding="16,4" Click="OkButton_Click" Margin="0,0,0,8"/>
+      <Button Content="{l:Loc AboutWindow_OK}" HorizontalAlignment="Right" Padding="16,4" Click="OkButton_Click" Margin="0,0,0,8"/>
     </StackPanel>
   </ScrollViewer>
 </Window>

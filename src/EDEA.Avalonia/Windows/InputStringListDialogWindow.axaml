@@ -1,8 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:EDEA.Avalonia.Localization"
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         x:Class="EDEA.Avalonia.Windows.InputStringListDialogWindow"
-        Title="{x:Static properties:Resources.InputStringListDialogWindow_Title}" Height="300" Width="420"
+        Title="{l:Loc InputStringListDialogWindow_Title}" Height="300" Width="420"
         Background="{StaticResource BackgroundBrush}"
         Foreground="{StaticResource ForegroundBrush}"
         WindowStartupLocation="CenterScreen" CanResize="False">
@@ -12,8 +13,8 @@
     <ListBox Grid.Row="1" x:Name="ValuesListBox" Margin="0,0,0,12" SelectionMode="Multiple" KeyDown="ValuesListBox_KeyDown"/>
 
     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-      <Button Content="{x:Static properties:Resources.InputStringListDialogWindow_OK}" Padding="16,4" Margin="0,0,10,0" Click="OkButton_Click"/>
-      <Button Content="{x:Static properties:Resources.InputStringListDialogWindow_Cancel}" Padding="16,4" Click="CancelButton_Click"/>
+      <Button Content="{l:Loc InputStringListDialogWindow_OK}" Padding="16,4" Margin="0,0,10,0" Click="OkButton_Click"/>
+      <Button Content="{l:Loc InputStringListDialogWindow_Cancel}" Padding="16,4" Click="CancelButton_Click"/>
     </StackPanel>
   </Grid>
 </Window>

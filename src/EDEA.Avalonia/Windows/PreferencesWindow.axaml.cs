@@ -245,6 +245,13 @@ public partial class PreferencesWindow : Window
 
         AutomaticTabSwitchingCheckBox.IsChecked = Preferences.Other.AutomaticTabSwitching;
 
+        LanguageComboBox.SelectedIndex = Preferences.Application.Language?.ToLowerInvariant() switch
+        {
+            "en" => 1,
+            "de" => 2,
+            _ => 0,
+        };
+
         RebuildColorList();
         if (ColorListBox.Items.Count > 0)
         {
@@ -383,6 +390,25 @@ public partial class PreferencesWindow : Window
         }
 
         Preferences.Other.AutomaticTabSwitching = AutomaticTabSwitchingCheckBox.IsChecked == true;
+    }
+
+    /// <summary>
+    /// Stores the selected application language; it is applied on the next start.
+    /// </summary>
+    private void LanguageComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (LanguageComboBox == null)
+        {
+            return;
+        }
+
+        Preferences.Application.Language = LanguageComboBox.SelectedIndex switch
+        {
+            1 => "en",
+            2 => "de",
+            _ => "Auto",
+        };
+        App.ApplyLanguage();
     }
 
     /// <summary>

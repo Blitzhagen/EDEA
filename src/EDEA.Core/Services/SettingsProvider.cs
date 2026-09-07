@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO;
 using System.Text.Json;
 using EDEA.Core.Drawing;
@@ -31,6 +32,7 @@ public class SettingsProvider
         Directory.CreateDirectory(Path.GetDirectoryName(_path)!);
         Settings = Load();
         Preferences.User = Settings;
+        Resources.CultureChanged += () => MigrateSpeechDefaults(Preferences.User);
     }
 
     private static readonly JsonSerializerOptions Options = new()
@@ -61,14 +63,40 @@ public class SettingsProvider
     }
 
     /// <summary>
-    /// Replaces speech texts that still contain the old default application name.
+    /// Replaces speech texts that still hold a known default (any supported language or a legacy
+    /// value) with the default of the current UI culture. User-customized texts are kept.
     /// </summary>
     /// <param name="settings">The loaded user settings.</param>
     private static void MigrateSpeechDefaults(UserSettings settings)
     {
-        if (settings.Speech.WelcomeSpeech is "o7 Commander {CommanderName}, Erkundungsassistent ist bereit." or "o7 Commander {CommanderName}, EDEA at your service!")
+        var knownCultures = new[] { new CultureInfo("en"), new CultureInfo("de") };
+        foreach (var property in typeof(UserSettingsSpeech).GetProperties())
         {
-            settings.Speech.WelcomeSpeech = Resources.Speech_Welcome;
+            if (!property.Name.EndsWith("Speech", StringComparison.Ordinal)
+                || property.PropertyType != typeof(string)
+                || !property.CanWrite)
+            {
+                continue;
+            }
+
+            var key = "Speech_" + property.Name[..^"Speech".Length];
+            var current = (string?)property.GetValue(settings.Speech);
+            if (string.IsNullOrEmpty(current))
+            {
+                continue;
+            }
+
+            var defaults = knownCultures.Select(culture => Resources.LookupFor(key, culture)).ToHashSet();
+            if (property.Name == nameof(UserSettingsSpeech.WelcomeSpeech))
+            {
+                defaults.Add("o7 Commander {CommanderName}, Erkundungsassistent ist bereit.");
+                defaults.Add("o7 Commander {CommanderName}, EDEA at your service!");
+            }
+
+            if (defaults.Contains(current))
+            {
+                property.SetValue(settings.Speech, Resources.Lookup(key));
+            }
         }
     }
 

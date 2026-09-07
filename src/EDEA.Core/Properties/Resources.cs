@@ -12,12 +12,40 @@ public static class Resources
     /// <summary>The <see cref="CultureInfo"/> used for resource lookups.</summary>
     private static CultureInfo _culture = CultureInfo.CurrentUICulture;
 
+    /// <summary>Raised after <see cref="Culture"/> changed so bound strings can refresh.</summary>
+    public static event Action? CultureChanged;
+
     /// <summary>Gets or sets the culture used for resource lookups.</summary>
     /// <value>The current UI culture for resources.</value>
     public static CultureInfo Culture
     {
         get => _culture;
-        set => _culture = value;
+        set
+        {
+            if (_culture.Name == value.Name)
+            {
+                return;
+            }
+            _culture = value;
+            CultureChanged?.Invoke();
+        }
+    }
+
+    /// <summary>Gets the resource string with the specified name.</summary>
+    /// <param name="name">The name of the resource.</param>
+    /// <returns>The resource string, or the name wrapped in brackets if not found.</returns>
+    public static string Lookup(string name)
+    {
+        return Get(name);
+    }
+
+    /// <summary>Gets the resource string for a specific culture.</summary>
+    /// <param name="name">The name of the resource.</param>
+    /// <param name="culture">The culture to look up.</param>
+    /// <returns>The resource string for the given culture.</returns>
+    public static string LookupFor(string name, CultureInfo culture)
+    {
+        return _resourceManager.GetString(name, culture) ?? Get(name);
     }
 
     /// <summary>Gets the resource string with the specified name.</summary>
@@ -458,6 +486,12 @@ public static class Resources
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>
     public static string TooltipNewSpeciesToRegion => Get(nameof(TooltipNewSpeciesToRegion));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string PreferencesWindow_Label_Language => Get(nameof(PreferencesWindow_Label_Language));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string PreferencesWindow_Combo_LanguageAuto => Get(nameof(PreferencesWindow_Combo_LanguageAuto));
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>
     public static string TooltipDistanceToPreviousSystem => Get(nameof(TooltipDistanceToPreviousSystem));

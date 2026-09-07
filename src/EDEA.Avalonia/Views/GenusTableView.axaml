@@ -1,7 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
-             xmlns:properties="using:EDEA.Properties"
+             xmlns:l="clr-namespace:EDEA.Avalonia.Localization"
+        xmlns:properties="using:EDEA.Properties"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="EDEA.Avalonia.Views.GenusTableView"
              x:DataType="vm:GenusTableViewModel">
@@ -54,24 +55,24 @@
               ScrollViewer.HorizontalScrollBarVisibility="Hidden"
               GridLinesVisibility="Horizontal">
       <DataGrid.Columns>
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="Name" Header="{x:Static properties:Resources.ColumnHeaderName}" Binding="{Binding Name}" />
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="SpeciesShort" Header="{x:Static properties:Resources.ColumnHeaderSpecies}" Binding="{Binding SpeciesShort}" />
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="VariantShort" Header="{x:Static properties:Resources.ColumnHeaderVariant}" Binding="{Binding VariantShort}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="Name" Header="{l:Loc ColumnHeaderName}" Binding="{Binding Name}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="SpeciesShort" Header="{l:Loc ColumnHeaderSpecies}" Binding="{Binding SpeciesShort}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="VariantShort" Header="{l:Loc ColumnHeaderVariant}" Binding="{Binding VariantShort}" />
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="AnalysisComplete">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipAnalysisCompleteIcon}"><materialIcons:MaterialIcon Kind="CheckCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipAnalysisCompleteIcon}"><materialIcons:MaterialIcon Kind="CheckCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
-              <materialIcons:MaterialIcon Kind="Check" IsVisible="{Binding AnalysisComplete}" Foreground="{DynamicResource MainColor}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipAnalysisCompleteIcon}" />
+              <materialIcons:MaterialIcon Kind="Check" IsVisible="{Binding AnalysisComplete}" Foreground="{DynamicResource MainColor}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipAnalysisCompleteIcon}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="ScanCount" Header="{x:Static properties:Resources.ColumnHeaderScans}" Binding="{Binding ScanCount}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="ScanCount" Header="{l:Loc ColumnHeaderScans}" Binding="{Binding ScanCount}" />
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ClonalColonyRangeSort" Header="{x:Static properties:Resources.ColumnHeaderClonalColonyRange}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ClonalColonyRangeSort" Header="{l:Loc ColumnHeaderClonalColonyRange}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
               <TextBlock Text="{Binding ClonalColonyRange}" Foreground="{DynamicResource MainColor}" HorizontalAlignment="Right" />
@@ -79,7 +80,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="CurrentDistanceToLocationAt1stScanSort" Header="{x:Static properties:Resources.ColumnHeader1stScanDistance}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="CurrentDistanceToLocationAt1stScanSort" Header="{l:Loc ColumnHeader1stScanDistance}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
               <Border HorizontalAlignment="Right" CornerRadius="7" Padding="4,0" IsVisible="{Binding CurrentDistanceToLocationAt1stScanAvailable}" Background="{Binding Is1stScanOutOfClonalColonyRange, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='OutOfClonalColonyRangeColor;InClonalColonyRangeColor;Transparent'}">
@@ -89,7 +90,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="CurrentDistanceToLocationAt2ndScanSort" Header="{x:Static properties:Resources.ColumnHeader2ndScanDistance}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="CurrentDistanceToLocationAt2ndScanSort" Header="{l:Loc ColumnHeader2ndScanDistance}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
               <Border HorizontalAlignment="Right" CornerRadius="7" Padding="4,0" IsVisible="{Binding CurrentDistanceToLocationAt2ndScanAvailable}" Background="{Binding Is2ndScanOutOfClonalColonyRange, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='OutOfClonalColonyRangeColor;InClonalColonyRangeColor;Transparent'}">
@@ -99,7 +100,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="VistaGenomicsMaxValueSort" Header="{x:Static properties:Resources.ColumnHeaderVistaGenomicsValue}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="VistaGenomicsMaxValueSort" Header="{l:Loc ColumnHeaderVistaGenomicsValue}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
               <Grid HorizontalAlignment="Right" IsVisible="{Binding SpeciesSet}">
@@ -114,22 +115,22 @@
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsValuableGenus">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableGenusIcon}"><materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipValuableGenusIcon}"><materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
-              <materialIcons:MaterialIcon Kind="DiamondStone" IsVisible="{Binding IsValuableGenus}" Foreground="{Binding AnalysisComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='MainColor;ValuableIconColor'}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableGenusIcon}" />
+              <materialIcons:MaterialIcon Kind="DiamondStone" IsVisible="{Binding IsValuableGenus}" Foreground="{Binding AnalysisComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='MainColor;ValuableIconColor'}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipValuableGenusIcon}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsFirstDiscoveryAndSpeciesSet">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}"><materialIcons:MaterialIcon Kind="PlusCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipGenusIsFirstDiscovery}"><materialIcons:MaterialIcon Kind="PlusCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusViewModel">
-              <materialIcons:MaterialIcon Kind="PlusCircle" IsVisible="{Binding IsFirstDiscoveryAndSpeciesSet}" Foreground="{Binding AnalysisComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='NewIconColor;HighlightGrey'}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}" />
+              <materialIcons:MaterialIcon Kind="PlusCircle" IsVisible="{Binding IsFirstDiscoveryAndSpeciesSet}" Foreground="{Binding AnalysisComplete, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='NewIconColor;HighlightGrey'}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipGenusIsFirstDiscovery}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -137,7 +138,7 @@
     </DataGrid>
 
     <TextBlock Grid.Row="2"
-               Text="{x:Static properties:Resources.GenusTable_PossibleOccurrences}"
+               Text="{l:Loc GenusTable_PossibleOccurrences}"
                IsVisible="{Binding PredictedSpeciesAvailable}"
                Classes="DataGridHeadline" />
 
@@ -151,10 +152,10 @@
               ScrollViewer.HorizontalScrollBarVisibility="Hidden"
               GridLinesVisibility="Horizontal">
       <DataGrid.Columns>
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="Name" Header="{x:Static properties:Resources.ColumnHeaderName}" Binding="{Binding Name}" />
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="SpeciesShort" Header="{x:Static properties:Resources.ColumnHeaderSpecies}" Binding="{Binding SpeciesShort}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="Name" Header="{l:Loc ColumnHeaderName}" Binding="{Binding Name}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="SpeciesShort" Header="{l:Loc ColumnHeaderSpecies}" Binding="{Binding SpeciesShort}" />
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ClonalColonyRangeSort" Header="{x:Static properties:Resources.ColumnHeaderClonalColonyRange}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ClonalColonyRangeSort" Header="{l:Loc ColumnHeaderClonalColonyRange}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusClassificationViewModel">
               <TextBlock Text="{Binding ClonalColonyRange}" Foreground="{DynamicResource HighlightGrey}" HorizontalAlignment="Right" />
@@ -162,7 +163,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="VistaGenomicsMaxValueSort" Header="{x:Static properties:Resources.ColumnHeaderVistaGenomicsValue}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="VistaGenomicsMaxValueSort" Header="{l:Loc ColumnHeaderVistaGenomicsValue}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusClassificationViewModel">
               <Grid HorizontalAlignment="Right">
@@ -177,44 +178,44 @@
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsValuable">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableGenusPredictedIcon}"><materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipValuableGenusPredictedIcon}"><materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-              <materialIcons:MaterialIcon Kind="DiamondStone" IsVisible="{Binding IsValuable}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableGenusPredictedIcon}" />
+              <materialIcons:MaterialIcon Kind="DiamondStone" IsVisible="{Binding IsValuable}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipValuableGenusPredictedIcon}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsFirstDiscovery">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}"><materialIcons:MaterialIcon Kind="PlusCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipGenusIsFirstDiscovery}"><materialIcons:MaterialIcon Kind="PlusCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-              <materialIcons:MaterialIcon Kind="PlusCircle" IsVisible="{Binding IsFirstDiscovery}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipGenusIsFirstDiscovery}" />
+              <materialIcons:MaterialIcon Kind="PlusCircle" IsVisible="{Binding IsFirstDiscovery}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipGenusIsFirstDiscovery}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsNotInGalaxyCodex">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipNewSpeciesToGalaxy}"><materialIcons:MaterialIcon Kind="Earth" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipNewSpeciesToGalaxy}"><materialIcons:MaterialIcon Kind="Earth" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-              <materialIcons:MaterialIcon Kind="Earth" IsVisible="{Binding IsNotInGalaxyCodex}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipNewSpeciesToGalaxy}" />
+              <materialIcons:MaterialIcon Kind="Earth" IsVisible="{Binding IsNotInGalaxyCodex}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipNewSpeciesToGalaxy}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsNotInCodexOnlyRegion">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipNewSpeciesToRegion}"><materialIcons:MaterialIcon Kind="BookOpenVariant" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipNewSpeciesToRegion}"><materialIcons:MaterialIcon Kind="BookOpenVariant" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-              <materialIcons:MaterialIcon Kind="BookOpenVariant" IsVisible="{Binding IsNotInCodexOnlyRegion}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipNewSpeciesToRegion}" />
+              <materialIcons:MaterialIcon Kind="BookOpenVariant" IsVisible="{Binding IsNotInCodexOnlyRegion}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipNewSpeciesToRegion}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>

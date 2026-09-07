@@ -230,8 +230,9 @@ public partial class App : Application
 
     /// <summary>
     /// Sets the current UI and thread culture based on the configured language.
+    /// Can be called at runtime; bound strings refresh via <see cref="EDEA.Properties.Resources.CultureChanged"/>.
     /// </summary>
-    private static void ApplyLanguage()
+    internal static void ApplyLanguage()
     {
         var supported = new[] { "en", "de", "es", "fr", "ru", "pt-BR" };
         var setting = Preferences.Application.Language;

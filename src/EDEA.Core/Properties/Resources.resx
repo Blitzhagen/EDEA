@@ -1314,4 +1314,10 @@
   <data name="TooltipNewSpeciesToRegion" xml:space="preserve">
     <value>Species not yet recorded in the codex of this region</value>
   </data>
+  <data name="PreferencesWindow_Label_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="PreferencesWindow_Combo_LanguageAuto" xml:space="preserve">
+    <value>Auto (system language)</value>
+  </data>
 </root>

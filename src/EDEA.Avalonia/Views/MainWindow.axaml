@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="using:System"
+        xmlns:l="clr-namespace:EDEA.Avalonia.Localization"
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         xmlns:vm="clr-namespace:EDEA.Avalonia.ViewModels"
         xmlns:vmcore="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
@@ -97,24 +98,24 @@
           <MenuItem Header="Toggle HUD" Command="{Binding OpenCloseHudWindowCommand}"/>
           <MenuItem Header="{Binding ToggleHudMousePassThroughMenuItemHeader}" Command="{Binding ToggleHudMousePassThroughCommand}" ToggleType="CheckBox" IsChecked="{Binding HudWindowMousePassThroughEnabled, Mode=OneWay}" />
           <Separator/>
-          <MenuItem Header="{x:Static properties:Resources.MenuItem_ReloadEdsm}" Command="{Binding ReloadEdsmDataCommand}"/>
+          <MenuItem Header="{l:Loc MenuItem_ReloadEdsm}" Command="{Binding ReloadEdsmDataCommand}"/>
           <Separator/>
           <MenuItem Header="{Binding GenerateClearPlotterRouteMenuItemHeader}" Command="{Binding GenerateClearPlotterRouteCommand}"/>
           <MenuItem Header="{Binding LockUnlockRouteMenuItemHeader}" Command="{Binding LockUnlockRouteCommand}" IsEnabled="{Binding IsRouteAvailable}"/>
-          <MenuItem Header="{x:Static properties:Resources.MenuItem_ImportLockedRoute}" Command="{Binding ImportSpanshRouteCommand}"/>
+          <MenuItem Header="{l:Loc MenuItem_ImportLockedRoute}" Command="{Binding ImportSpanshRouteCommand}"/>
           <Separator/>
-          <MenuItem Header="{x:Static properties:Resources.MenuItem_ImportJournalHistory}" Command="{Binding ImportJournalHistoryCommand}"/>
+          <MenuItem Header="{l:Loc MenuItem_ImportJournalHistory}" Command="{Binding ImportJournalHistoryCommand}"/>
           <Separator/>
-          <MenuItem Header="{x:Static properties:Resources.MenuItem_Preferences}" Command="{Binding ShowPreferencesWindowCommand}"/>
+          <MenuItem Header="{l:Loc MenuItem_Preferences}" Command="{Binding ShowPreferencesWindowCommand}"/>
           <Separator/>
-          <MenuItem Header="{x:Static properties:Resources.MenuItem_FeedbackReportIssue}" Command="{Binding ShowFeedbackReportIssueWindowCommand}"/>
-          <MenuItem Header="{x:Static properties:Resources.MenuItem_About}" Command="{Binding ShowAboutWindowCommand}"/>
+          <MenuItem Header="{l:Loc MenuItem_FeedbackReportIssue}" Command="{Binding ShowFeedbackReportIssueWindowCommand}"/>
+          <MenuItem Header="{l:Loc MenuItem_About}" Command="{Binding ShowAboutWindowCommand}"/>
         </MenuItem>
       </Menu>
 
       <StackPanel Grid.Column="1" Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
-          <TextBlock Text="{x:Static properties:Resources.StatusBar_CurrentSystem}" Classes="StatusBarHeadline" />
+          <TextBlock Text="{l:Loc StatusBar_CurrentSystem}" Classes="StatusBarHeadline" />
           <Border Background="{DynamicResource MainColor}" CornerRadius="7" Margin="0,13,22,2" Padding="3,0"
                   IsVisible="{Binding CurrentSystemViewModel.HasTotalBodies}">
             <TextBlock Text="{Binding CurrentSystemViewModel.ExplorationStatus}" Classes="StatusBarExplorationStatus" />
@@ -124,22 +125,22 @@
       </StackPanel>
 
       <StackPanel Grid.Column="2" Orientation="Vertical">
-        <TextBlock Text="{x:Static properties:Resources.StatusBar_DiscoveredBodies}" Classes="StatusBarHeadline" />
+        <TextBlock Text="{l:Loc StatusBar_DiscoveredBodies}" Classes="StatusBarHeadline" />
         <TextBlock Text="{Binding BodyExplorationStatus}" Classes="StatusBarContent" />
       </StackPanel>
 
       <StackPanel Grid.Column="3" Orientation="Vertical">
-        <TextBlock Text="{x:Static properties:Resources.StatusBar_NonBodySignals}" Classes="StatusBarHeadline" />
+        <TextBlock Text="{l:Loc StatusBar_NonBodySignals}" Classes="StatusBarHeadline" />
         <TextBlock Text="{Binding NonBodyExplorationStatus}" Classes="StatusBarContent" />
       </StackPanel>
 
       <StackPanel Grid.Column="4" Orientation="Vertical">
-        <TextBlock Text="{x:Static properties:Resources.ColumnHeaderOverallProgress}" Classes="StatusBarHeadline" />
+        <TextBlock Text="{l:Loc ColumnHeaderOverallProgress}" Classes="StatusBarHeadline" />
         <TextBlock Text="{Binding CurrentSystemViewModel.OverallProgress}" Classes="StatusBarContent" />
       </StackPanel>
 
       <StackPanel Grid.Column="5" Orientation="Vertical">
-        <TextBlock Text="{x:Static properties:Resources.StatusBar_CurrentActivity}" Classes="StatusBarHeadline" />
+        <TextBlock Text="{l:Loc StatusBar_CurrentActivity}" Classes="StatusBarHeadline" />
         <TextBlock Text="{Binding CurrentStatus}" Classes="StatusBarContent" />
       </StackPanel>
 

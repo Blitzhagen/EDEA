@@ -1,11 +1,12 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:EDEA.Avalonia.Localization"
         xmlns:properties="clr-namespace:EDEA.Properties;assembly=EDEA.Core"
         xmlns:local="clr-namespace:EDEA;assembly=EDEA.Core"
         xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker.AvaloniaUI"
         x:Class="EDEA.Avalonia.Windows.PreferencesWindow"
         x:Name="ThisWindow"
-        Title="{x:Static properties:Resources.PreferencesWindow_Title}"
+        Title="{l:Loc PreferencesWindow_Title}"
         Height="617" MinHeight="617" Width="920" MinWidth="920"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
@@ -46,12 +47,12 @@
     </Grid.RowDefinitions>
 
     <TabControl Grid.Column="1" Grid.Row="1" Focusable="False">
-      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Appearance}">
+      <TabItem Header="{l:Loc PreferencesWindow_Tab_Appearance}">
         <Grid>
           <Border Classes="PreferencesTabContent">
             <StackPanel Orientation="Horizontal">
               <StackPanel Classes="PreferencesSection">
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Colors}" Classes="PreferencesSectionHeadline" />
+                <TextBlock Text="{l:Loc PreferencesWindow_Label_Colors}" Classes="PreferencesSectionHeadline" />
                 <Border Classes="PreferencesSectionBody">
                   <StackPanel Orientation="Horizontal">
                     <ListBox x:Name="ColorListBox" Classes="PreferencesListbox" Width="260" SelectionChanged="ColorListBox_SelectionChanged" />
@@ -65,21 +66,33 @@
               </StackPanel>
               <StackPanel>
                 <StackPanel Classes="PreferencesSection">
-                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_DisplaySize}" Classes="PreferencesSectionHeadline" />
+                  <TextBlock Text="{l:Loc PreferencesWindow_Label_DisplaySize}" Classes="PreferencesSectionHeadline" />
                   <Border Classes="PreferencesSectionBody">
                     <StackPanel>
-                      <RadioButton x:Name="DisplaySizeSmall" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Small}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
-                      <RadioButton x:Name="DisplaySizeStandard" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Standard}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
-                      <RadioButton x:Name="DisplaySizeLarge" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Large}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
-                      <RadioButton x:Name="DisplaySizeHuge" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Radio_Huge}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
+                      <RadioButton x:Name="DisplaySizeSmall" Classes="PreferencesRadioButton" Content="{l:Loc PreferencesWindow_Radio_Small}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
+                      <RadioButton x:Name="DisplaySizeStandard" Classes="PreferencesRadioButton" Content="{l:Loc PreferencesWindow_Radio_Standard}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
+                      <RadioButton x:Name="DisplaySizeLarge" Classes="PreferencesRadioButton" Content="{l:Loc PreferencesWindow_Radio_Large}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
+                      <RadioButton x:Name="DisplaySizeHuge" Classes="PreferencesRadioButton" Content="{l:Loc PreferencesWindow_Radio_Huge}" GroupName="DisplaySize" IsCheckedChanged="DisplaySize_Changed" />
                     </StackPanel>
                   </Border>
                 </StackPanel>
                 <StackPanel Classes="PreferencesSection">
-                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Behavior}" Classes="PreferencesSectionHeadline" />
+                  <TextBlock Text="{l:Loc PreferencesWindow_Label_Behavior}" Classes="PreferencesSectionHeadline" />
                   <Border Classes="PreferencesSectionBody">
                     <StackPanel>
-                      <CheckBox x:Name="AutomaticTabSwitchingCheckBox" Content="{x:Static properties:Resources.PreferencesWindow_Checkbox_AutomaticTabSwitching}" IsCheckedChanged="AutomaticTabSwitching_Changed" />
+                      <CheckBox x:Name="AutomaticTabSwitchingCheckBox" Content="{l:Loc PreferencesWindow_Checkbox_AutomaticTabSwitching}" IsCheckedChanged="AutomaticTabSwitching_Changed" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+                <StackPanel Classes="PreferencesSection">
+                  <TextBlock Text="{l:Loc PreferencesWindow_Label_Language}" Classes="PreferencesSectionHeadline" />
+                  <Border Classes="PreferencesSectionBody">
+                    <StackPanel>
+                      <ComboBox x:Name="LanguageComboBox" Classes="PreferencesComboBox" MinWidth="170" SelectionChanged="LanguageComboBox_SelectionChanged">
+                        <ComboBoxItem Content="{l:Loc PreferencesWindow_Combo_LanguageAuto}" />
+                        <ComboBoxItem Content="English" />
+                        <ComboBoxItem Content="Deutsch" />
+                      </ComboBox>
                     </StackPanel>
                   </Border>
                 </StackPanel>
@@ -89,49 +102,49 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_HudWindow}">
+      <TabItem Header="{l:Loc PreferencesWindow_Tab_HudWindow}">
         <Grid>
           <Border Classes="PreferencesTabContent">
             <StackPanel Orientation="Horizontal">
               <StackPanel Classes="PreferencesSection">
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Columns}" Classes="PreferencesSectionHeadline" />
+                <TextBlock Text="{l:Loc PreferencesWindow_Label_Columns}" Classes="PreferencesSectionHeadline" />
                 <Border Classes="PreferencesSectionBody">
                   <StackPanel Width="185">
                     <ComboBox x:Name="HudColumnComboBox" SelectedIndex="0" Classes="PreferencesComboBox" SelectionChanged="HudColumnComboBox_SelectionChanged">
-                      <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Bodies}" />
-                      <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Route}" />
-                      <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Biologicals}" />
+                      <ComboBoxItem Content="{l:Loc PreferencesWindow_Bodies}" />
+                      <ComboBoxItem Content="{l:Loc PreferencesWindow_Route}" />
+                      <ComboBoxItem Content="{l:Loc PreferencesWindow_Biologicals}" />
                     </ComboBox>
                     <StackPanel x:Name="HudBodiesPanel" IsVisible="True">
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderName}" IsChecked="True" IsEnabled="False" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderType}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnTypeVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderAtmosphere}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnAtmosphereVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderTemperature}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnTemperatureVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_SurfaceScanIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnSurfaceScannedIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_PlanetOfInterestIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnPlanetOfInterestIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_BodiesColumn_SurfaceScanIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnSurfaceScannedIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_BodiesColumn_PlanetOfInterestIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnPlanetOfInterestIconVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderCartographicValue}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnCartographicValueVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_ValuableBodyIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnValuableIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_RingsIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnRingsIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_GeologicalsIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnGeologicalsIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_BiologicalsIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnBiologicalsIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_TerraformableIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnTerraformableIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_LandableIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnLandableIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_BodiesColumn_FirstDiscoveryIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnNewIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_BodiesColumn_ValuableBodyIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnValuableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_BodiesColumn_RingsIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnRingsIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_BodiesColumn_GeologicalsIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnGeologicalsIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_BodiesColumn_BiologicalsIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnBiologicalsIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_BodiesColumn_TerraformableIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnTerraformableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_BodiesColumn_LandableIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnLandableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_BodiesColumn_FirstDiscoveryIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnNewIconVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderEdsmDiscoverer}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnEdsmDiscovererVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderDistance}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="BodiesColumnDistanceVisible" />
                     </StackPanel>
                     <StackPanel x:Name="HudRoutePanel" IsVisible="False">
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderJump}" IsChecked="True" IsEnabled="False" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderSystemName}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnSystemNameVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_ScoopableStarIconStarClass}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnStarClassVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_ExplorationStatusIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnExplorationStatusIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_RouteColumn_ScoopableStarIconStarClass}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnStarClassVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_RouteColumn_ExplorationStatusIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnExplorationStatusIconVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderCartographicValue}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnCartographicValueVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderOverallProgress}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnProgressVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_PlanetOfInterestIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnPlanetOfInterestIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_ValuableBodiesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnValuableIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_TerraformablesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnTerraformableIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_LandablesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnLandableIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_RouteColumn_PopulatedIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnPopulatedIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_RouteColumn_PlanetOfInterestIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnPlanetOfInterestIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_RouteColumn_ValuableBodiesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnValuableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_RouteColumn_TerraformablesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnTerraformableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_RouteColumn_LandablesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnLandableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_RouteColumn_PopulatedIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnPopulatedIconVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderEdsmDiscoverer}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnEdsmDiscovererVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderDistance}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="RouteColumnDistanceVisible" />
                     </StackPanel>
@@ -139,57 +152,57 @@
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderName}" IsChecked="True" IsEnabled="False" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderSpecies}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnSpeciesVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderVariant}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnVariantVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_GenusColumn_AnalysisCompleteIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnAnalysisCompleteIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_GenusColumn_AnalysisCompleteIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnAnalysisCompleteIconVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderScans}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnScansVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderClonalColonyRange}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnClonalColonyRangeVisible" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeader1stScanDistance}" IsChecked="True" IsEnabled="False" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeader2ndScanDistance}" IsChecked="True" IsEnabled="False" />
                       <CheckBox Classes="PreferencesCheckbox" Content="{x:Static local:Globals.ColumnHeaderVistaGenomicsValue}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnVistaGenomicsValueVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_GenusColumn_ValuableSpeciesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnValuableIconVisible" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_GenusColumn_FirstDiscoveryIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnNewIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_GenusColumn_ValuableSpeciesIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnValuableIconVisible" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_GenusColumn_FirstDiscoveryIcon}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="GenusColumnNewIconVisible" />
                     </StackPanel>
                   </StackPanel>
                 </Border>
               </StackPanel>
               <StackPanel>
                 <StackPanel Classes="PreferencesSection">
-                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Opacity}" Classes="PreferencesSectionHeadline" />
+                  <TextBlock Text="{l:Loc PreferencesWindow_Label_Opacity}" Classes="PreferencesSectionHeadline" />
                   <Border Classes="PreferencesSectionBody">
                     <Slider x:Name="HudOpacitySlider" Minimum="0" Maximum="1" TickFrequency="0.1" Width="200" HorizontalAlignment="Left" ValueChanged="HudOpacitySlider_ValueChanged" />
                   </Border>
                 </StackPanel>
                 <StackPanel Classes="PreferencesSection">
-                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_View}" Classes="PreferencesSectionHeadline" />
+                  <TextBlock Text="{l:Loc PreferencesWindow_Label_View}" Classes="PreferencesSectionHeadline" />
                   <Border Classes="PreferencesSectionBody">
                     <StackPanel>
-                      <RadioButton x:Name="HudViewAutoRadioButton" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Radio_SyncedWithMainWindow}" Tag="Auto" IsCheckedChanged="HudViewRadioButton_Changed" />
-                      <RadioButton x:Name="HudViewRouteRadioButton" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Route}" Tag="NavRouteTableViewModel" IsCheckedChanged="HudViewRadioButton_Changed" />
-                      <RadioButton x:Name="HudViewBodiesRadioButton" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Bodies}" Tag="BodyTableViewModel" IsCheckedChanged="HudViewRadioButton_Changed" />
-                      <RadioButton x:Name="HudViewGenusRadioButton" Classes="PreferencesRadioButton" Content="{x:Static properties:Resources.PreferencesWindow_Biologicals}" Tag="GenusTableViewModel" IsCheckedChanged="HudViewRadioButton_Changed" />
+                      <RadioButton x:Name="HudViewAutoRadioButton" Classes="PreferencesRadioButton" Content="{l:Loc PreferencesWindow_Radio_SyncedWithMainWindow}" Tag="Auto" IsCheckedChanged="HudViewRadioButton_Changed" />
+                      <RadioButton x:Name="HudViewRouteRadioButton" Classes="PreferencesRadioButton" Content="{l:Loc PreferencesWindow_Route}" Tag="NavRouteTableViewModel" IsCheckedChanged="HudViewRadioButton_Changed" />
+                      <RadioButton x:Name="HudViewBodiesRadioButton" Classes="PreferencesRadioButton" Content="{l:Loc PreferencesWindow_Bodies}" Tag="BodyTableViewModel" IsCheckedChanged="HudViewRadioButton_Changed" />
+                      <RadioButton x:Name="HudViewGenusRadioButton" Classes="PreferencesRadioButton" Content="{l:Loc PreferencesWindow_Biologicals}" Tag="GenusTableViewModel" IsCheckedChanged="HudViewRadioButton_Changed" />
                     </StackPanel>
                   </Border>
                 </StackPanel>
               </StackPanel>
               <StackPanel>
                 <StackPanel Classes="PreferencesSection">
-                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AutomaticHideOn}" Classes="PreferencesSectionHeadline" />
+                  <TextBlock Text="{l:Loc PreferencesWindow_Label_AutomaticHideOn}" Classes="PreferencesSectionHeadline" />
                   <Border Classes="PreferencesSectionBody">
                     <StackPanel x:Name="HideOnStackPanel">
-                      <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_InShipSrvFighter}" Classes="PreferencesCheckBoxesHeadline" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_NoActivePanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnNoFocus" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_InternalPanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnInternalPanel" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_ExternalPanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnExternalPanel" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_CommsPanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnCommsPanel" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_RolePanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnRolePanel" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_StationServices}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnStationServices" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_GalaxyMap}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnGalaxyMap" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_SystemMap}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnSystemMap" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_Orrery}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnOrrery" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_FssMode}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnFSSmode" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_SaaMode}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnSAAmode" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_Codex}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnCodex" />
-                      <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_OnFoot}" Classes="PreferencesCheckBoxesHeadline" />
-                      <CheckBox Classes="PreferencesCheckbox" Content="{x:Static properties:Resources.PreferencesWindow_HideOn_Always}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnOnFoot" />
+                      <TextBlock Text="{l:Loc PreferencesWindow_Label_InShipSrvFighter}" Classes="PreferencesCheckBoxesHeadline" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_NoActivePanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnNoFocus" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_InternalPanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnInternalPanel" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_ExternalPanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnExternalPanel" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_CommsPanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnCommsPanel" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_RolePanel}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnRolePanel" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_StationServices}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnStationServices" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_GalaxyMap}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnGalaxyMap" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_SystemMap}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnSystemMap" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_Orrery}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnOrrery" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_FssMode}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnFSSmode" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_SaaMode}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnSAAmode" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_Codex}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnCodex" />
+                      <TextBlock Text="{l:Loc PreferencesWindow_Label_OnFoot}" Classes="PreferencesCheckBoxesHeadline" />
+                      <CheckBox Classes="PreferencesCheckbox" Content="{l:Loc PreferencesWindow_HideOn_Always}" IsCheckedChanged="HudWindowCheckBox_Changed" Tag="HideOnOnFoot" />
                     </StackPanel>
                   </Border>
                 </StackPanel>
@@ -199,12 +212,12 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Speech}">
+      <TabItem Header="{l:Loc PreferencesWindow_Tab_Speech}">
         <Grid>
           <Border Classes="PreferencesTabContent">
             <StackPanel Orientation="Horizontal">
               <StackPanel Classes="PreferencesSection">
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Outputs}" Classes="PreferencesSectionHeadline" />
+                <TextBlock Text="{l:Loc PreferencesWindow_Label_Outputs}" Classes="PreferencesSectionHeadline" />
                 <Border Classes="PreferencesSectionBody">
                   <StackPanel Orientation="Horizontal">
                     <Grid>
@@ -230,7 +243,7 @@
                           </DataTemplate>
                         </ListBox.ItemTemplate>
                       </ListBox>
-                      <TextBlock Grid.Row="0" Grid.Column="2" Text="{x:Static properties:Resources.PreferencesWindow_Label_SpeechOutputText}" Classes="PreferencesBodyHeadline" />
+                      <TextBlock Grid.Row="0" Grid.Column="2" Text="{l:Loc PreferencesWindow_Label_SpeechOutputText}" Classes="PreferencesBodyHeadline" />
                       <TextBox x:Name="SpeechOutputPhraseTextBox" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="300" Height="100" Margin="0,2,0,0" TextWrapping="Wrap" MaxLength="500" TextChanged="SpeechOutputPhraseTextBox_TextChanged" />
                       <CheckBox x:Name="SpeechOutputEnabledCheckBox" Grid.Row="2" Grid.Column="2" Content="Enabled" IsCheckedChanged="SpeechOutputEnabledCheckBox_IsCheckedChanged" />
                       <Grid Grid.Row="4" Grid.Column="2">
@@ -239,8 +252,8 @@
                           <ColumnDefinition MinWidth="10" MaxWidth="10" />
                           <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{x:Static properties:Resources.PreferencesWindow_Label_TextPlaceholder}" Classes="PreferencesBodyHeadlineLight" />
-                        <TextBlock Grid.Column="2" Text="{x:Static properties:Resources.PreferencesWindow_Label_Example}" Classes="PreferencesBodyHeadlineLight" />
+                        <TextBlock Grid.Column="0" Text="{l:Loc PreferencesWindow_Label_TextPlaceholder}" Classes="PreferencesBodyHeadlineLight" />
+                        <TextBlock Grid.Column="2" Text="{l:Loc PreferencesWindow_Label_Example}" Classes="PreferencesBodyHeadlineLight" />
                       </Grid>
                       <ScrollViewer Grid.Row="5" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="140" Width="300">
                         <Grid>
@@ -253,20 +266,20 @@
                           <StackPanel x:Name="SpeechOutputExamples" Grid.Column="2" />
                         </Grid>
                       </ScrollViewer>
-                      <Button x:Name="SpeechTestButton" Grid.Row="7" Grid.Column="2" VerticalAlignment="Top" Content="{x:Static properties:Resources.PreferencesWindow_Button_TestSpeechOutput}" Click="SpeechTestButton_Click" />
+                      <Button x:Name="SpeechTestButton" Grid.Row="7" Grid.Column="2" VerticalAlignment="Top" Content="{l:Loc PreferencesWindow_Button_TestSpeechOutput}" Click="SpeechTestButton_Click" />
                     </Grid>
                   </StackPanel>
                 </Border>
               </StackPanel>
               <StackPanel>
                 <StackPanel Classes="PreferencesSection">
-                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Voice}" Classes="PreferencesSectionHeadline" />
+                  <TextBlock Text="{l:Loc PreferencesWindow_Label_Voice}" Classes="PreferencesSectionHeadline" />
                   <Border Classes="PreferencesSectionBody">
                     <StackPanel Width="170">
                       <ComboBox x:Name="SpeechVoiceComboBox" Margin="0,0,0,17" SelectionChanged="SpeechVoiceComboBox_SelectionChanged" />
-                      <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Rate}" Classes="PreferencesBodyHeadline" />
+                      <TextBlock Text="{l:Loc PreferencesWindow_Label_Rate}" Classes="PreferencesBodyHeadline" />
                       <Slider x:Name="SpeechRateSlider" Margin="0,0,0,12" Minimum="-4" Maximum="4" TickFrequency="2" ValueChanged="SpeechRateSlider_ValueChanged" />
-                      <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Volume}" Classes="PreferencesBodyHeadline" />
+                      <TextBlock Text="{l:Loc PreferencesWindow_Label_Volume}" Classes="PreferencesBodyHeadline" />
                       <Slider x:Name="SpeechVolumeSlider" Minimum="0" Maximum="100" TickFrequency="25" ValueChanged="SpeechVolumeSlider_ValueChanged" />
                     </StackPanel>
                   </Border>
@@ -277,11 +290,11 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_PlanetsOfInterest}">
+      <TabItem Header="{l:Loc PreferencesWindow_Tab_PlanetsOfInterest}">
         <ScrollViewer>
           <Border Classes="PreferencesTabContent">
             <StackPanel Classes="PreferencesSection">
-              <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_CriteriaSets}" Classes="PreferencesSectionHeadline" />
+              <TextBlock Text="{l:Loc PreferencesWindow_Label_CriteriaSets}" Classes="PreferencesSectionHeadline" />
               <Border Classes="PreferencesSectionBody" MinHeight="385">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                   <StackPanel>
@@ -296,151 +309,151 @@
                       </ListBox.ItemTemplate>
                     </ListBox>
                     <StackPanel Orientation="Horizontal" Spacing="4">
-                      <Button x:Name="AddPlanetFilterButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Add}" Click="AddPlanetFilterButton_Click" />
-                      <Button x:Name="RenamePlanetFilterButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Rename}" IsEnabled="False" Click="RenamePlanetFilterButton_Click" />
-                      <Button x:Name="DeletePlanetFilterButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Delete}" IsEnabled="False" Click="DeletePlanetFilterButton_Click" />
+                      <Button x:Name="AddPlanetFilterButton" Content="{l:Loc PreferencesWindow_Button_Add}" Click="AddPlanetFilterButton_Click" />
+                      <Button x:Name="RenamePlanetFilterButton" Content="{l:Loc PreferencesWindow_Button_Rename}" IsEnabled="False" Click="RenamePlanetFilterButton_Click" />
+                      <Button x:Name="DeletePlanetFilterButton" Content="{l:Loc PreferencesWindow_Button_Delete}" IsEnabled="False" Click="DeletePlanetFilterButton_Click" />
                     </StackPanel>
                   </StackPanel>
                                     <TabControl x:Name="PlanetsOfInterestTabControl" Margin="0,0,0,22" SelectionChanged="PlanetsOfInterestTabControl_SelectionChanged">
-                    <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_BasicAttributes}">
+                    <TabItem Header="{l:Loc PreferencesWindow_SubTab_BasicAttributes}">
                       <StackPanel x:Name="PlanetBasicAttributesPanel" IsEnabled="False" Spacing="12" MaxWidth="590">
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_DistanceToMainStar}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_DistanceToMainStar}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetDistanceMinTextBox" Tag="DistanceMin" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetDistanceMaxTextBox" Tag="DistanceMax" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
                         </StackPanel>
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_BodyRadius}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_BodyRadius}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRadiusMinTextBox" Tag="RadiusMin" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRadiusMaxTextBox" Tag="RadiusMax" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
                         </StackPanel>
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_OrbitalInclination}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_OrbitalInclination}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetOrbitalInclinationMinTextBox" Tag="OrbitalInclinationMin" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetOrbitalInclinationMaxTextBox" Tag="OrbitalInclinationMax" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Spacing="6">
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_IsLandable}" Classes="PreferencesBodyHeadline" VerticalAlignment="Center" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_IsLandable}" Classes="PreferencesBodyHeadline" VerticalAlignment="Center" />
                           <ComboBox x:Name="PlanetLandableComboBox" MinWidth="120" SelectionChanged="PlanetLandableComboBox_SelectionChanged">
-                            <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Combo_DoesNotMatter}" />
-                            <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Combo_No}" />
-                            <ComboBoxItem Content="{x:Static properties:Resources.PreferencesWindow_Combo_Yes}" />
+                            <ComboBoxItem Content="{l:Loc PreferencesWindow_Combo_DoesNotMatter}" />
+                            <ComboBoxItem Content="{l:Loc PreferencesWindow_Combo_No}" />
+                            <ComboBoxItem Content="{l:Loc PreferencesWindow_Combo_Yes}" />
                           </ComboBox>
                         </StackPanel>
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_PlanetClassOneOf}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_PlanetClassOneOf}" Classes="PreferencesBodyHeadline" />
                           <Grid ColumnDefinitions="*,Auto">
                             <TextBox x:Name="PlanetPlanetClassesTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
-                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="PlanetClasses" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
+                            <Button Grid.Column="1" Content="{l:Loc PreferencesWindow_Button_Set}" Tag="PlanetClasses" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
                           </Grid>
                         </StackPanel>
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_StarClassOneOf}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_StarClassOneOf}" Classes="PreferencesBodyHeadline" />
                           <Grid ColumnDefinitions="*,Auto">
                             <TextBox x:Name="PlanetStarClassesTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
-                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="StarClasses" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
+                            <Button Grid.Column="1" Content="{l:Loc PreferencesWindow_Button_Set}" Tag="StarClasses" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
                           </Grid>
                         </StackPanel>
                       </StackPanel>
                     </TabItem>
-                    <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_SurfaceConditions}">
+                    <TabItem Header="{l:Loc PreferencesWindow_SubTab_SurfaceConditions}">
                       <StackPanel x:Name="PlanetSurfaceConditionsPanel" IsEnabled="False" Spacing="12" MaxWidth="590">
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Gravity}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_Gravity}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetGravityMinTextBox" Tag="GravityMin" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetGravityMaxTextBox" Tag="GravityMax" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
                         </StackPanel>
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Temperature}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_Temperature}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetTemperatureMinTextBox" Tag="TemperatureMin" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetTemperatureMaxTextBox" Tag="TemperatureMax" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
                         </StackPanel>
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AtmosphereOneOf}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_AtmosphereOneOf}" Classes="PreferencesBodyHeadline" />
                           <Grid ColumnDefinitions="*,Auto">
                             <TextBox x:Name="PlanetAtmospheresTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
-                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="Atmospheres" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
+                            <Button Grid.Column="1" Content="{l:Loc PreferencesWindow_Button_Set}" Tag="Atmospheres" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
                           </Grid>
                         </StackPanel>
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_VolcanismOneOf}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_VolcanismOneOf}" Classes="PreferencesBodyHeadline" />
                           <Grid ColumnDefinitions="*,Auto">
                             <TextBox x:Name="PlanetVolcanismsTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
-                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="Volcanisms" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
+                            <Button Grid.Column="1" Content="{l:Loc PreferencesWindow_Button_Set}" Tag="Volcanisms" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
                           </Grid>
                         </StackPanel>
                       </StackPanel>
                     </TabItem>
-                    <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_RingRelated}">
+                    <TabItem Header="{l:Loc PreferencesWindow_SubTab_RingRelated}">
                       <StackPanel x:Name="PlanetRingRelatedPanel" IsEnabled="False" Spacing="12" MaxWidth="590">
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingsTotalWidth}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_RingsTotalWidth}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRingsTotalWidthMinTextBox" Tag="RingsTotalWidthMin" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRingsTotalWidthMaxTextBox" Tag="RingsTotalWidthMax" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
                         </StackPanel>
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingWidth}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_RingWidth}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRingWidthMinTextBox" Tag="RingWidthMin" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRingWidthMaxTextBox" Tag="RingWidthMax" MaxLength="7" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
                         </StackPanel>
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingDensity}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_RingDensity}" Classes="PreferencesBodyHeadline" />
                           <StackPanel Orientation="Horizontal" Spacing="6">
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_HigherThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRingDensityMinTextBox" Tag="RingDensityMin" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
-                            <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc PreferencesWindow_Label_AndLowerThan}" Classes="PreferencesBodyHeadlineLight" VerticalAlignment="Center" />
                             <TextBox x:Name="PlanetRingDensityMaxTextBox" Tag="RingDensityMax" MaxLength="5" Width="60" TextChanged="PlanetNumberTextBox_TextChanged" />
                           </StackPanel>
                         </StackPanel>
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingTypeOneOf}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_RingTypeOneOf}" Classes="PreferencesBodyHeadline" />
                           <Grid ColumnDefinitions="*,Auto">
                             <TextBox x:Name="PlanetRingTypesTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
-                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="RingTypes" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
+                            <Button Grid.Column="1" Content="{l:Loc PreferencesWindow_Button_Set}" Tag="RingTypes" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
                           </Grid>
                         </StackPanel>
                         <StackPanel>
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_RingReserveLevelOneOf}" Classes="PreferencesBodyHeadline" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_RingReserveLevelOneOf}" Classes="PreferencesBodyHeadline" />
                           <Grid ColumnDefinitions="*,Auto">
                             <TextBox x:Name="PlanetRingReserveLevelsTextBox" Grid.Column="0" TextWrapping="WrapWithOverflow" MinLines="2" MaxLines="2" IsReadOnly="True" />
-                            <Button Grid.Column="1" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Tag="RingReserveLevels" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
+                            <Button Grid.Column="1" Content="{l:Loc PreferencesWindow_Button_Set}" Tag="RingReserveLevels" Margin="5,0,0,0" VerticalAlignment="Top" MinWidth="70" Padding="6,3" Click="SelectPlanetStringsButton_Click" />
                           </Grid>
                         </StackPanel>
                       </StackPanel>
                     </TabItem>
-                    <TabItem Header="{x:Static properties:Resources.PreferencesWindow_SubTab_ParentPlanet}">
+                    <TabItem Header="{l:Loc PreferencesWindow_SubTab_ParentPlanet}">
                       <StackPanel x:Name="PlanetParentPlanetPanel" IsEnabled="False" Spacing="12" MaxWidth="590">
-                        <TextBlock Classes="PreferencesInfoText" Text="{x:Static properties:Resources.PreferencesWindow_Tooltip_ParentPlanetCriteria}" />
+                        <TextBlock Classes="PreferencesInfoText" Text="{l:Loc PreferencesWindow_Tooltip_ParentPlanetCriteria}" />
                         <StackPanel Orientation="Horizontal" Spacing="6">
-                          <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_CriteriaSetForParentPlanet}" Classes="PreferencesBodyHeadline" VerticalAlignment="Center" />
+                          <TextBlock Text="{l:Loc PreferencesWindow_Label_CriteriaSetForParentPlanet}" Classes="PreferencesBodyHeadline" VerticalAlignment="Center" />
                           <ComboBox x:Name="ParentPlanetClassificationsComboBox" MinWidth="150" SelectionChanged="ParentPlanetClassificationsComboBox_SelectionChanged" />
                         </StackPanel>
                       </StackPanel>
@@ -453,11 +466,11 @@
         </ScrollViewer>
       </TabItem>
 
-      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_GlobalHotkeys}">
+      <TabItem Header="{l:Loc PreferencesWindow_Tab_GlobalHotkeys}">
         <Grid>
           <Border Classes="PreferencesTabContent">
             <StackPanel Classes="PreferencesSection">
-              <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Assignment}" Classes="PreferencesSectionHeadline" />
+              <TextBlock Text="{l:Loc PreferencesWindow_Label_Assignment}" Classes="PreferencesSectionHeadline" />
               <Border Classes="PreferencesSectionBody">
                 <ScrollViewer Height="300">
                   <ListBox x:Name="HotkeysListBox" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single">
@@ -477,37 +490,37 @@
         </Grid>
       </TabItem>
 
-      <TabItem Header="{x:Static properties:Resources.PreferencesWindow_Tab_Configuration}">
+      <TabItem Header="{l:Loc PreferencesWindow_Tab_Configuration}">
         <ScrollViewer>
           <Border Classes="PreferencesTabContent">
             <StackPanel>
               <StackPanel Classes="PreferencesSection">
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_JournalFilesPath}" Classes="PreferencesSectionHeadline" />
+                <TextBlock Text="{l:Loc PreferencesWindow_Label_JournalFilesPath}" Classes="PreferencesSectionHeadline" />
                 <Border Classes="PreferencesSectionBody">
                   <StackPanel Orientation="Horizontal" Spacing="8">
                     <TextBox x:Name="EdSavedGamePathTextBox" IsReadOnly="True" Width="600" />
-                    <Button x:Name="SetJournalFolderButton" Content="{x:Static properties:Resources.PreferencesWindow_Button_Set}" Click="SetJournalFolderButton_Click" />
+                    <Button x:Name="SetJournalFolderButton" Content="{l:Loc PreferencesWindow_Button_Set}" Click="SetJournalFolderButton_Click" />
                   </StackPanel>
                 </Border>
               </StackPanel>
               <StackPanel Orientation="Horizontal">
                 <StackPanel Classes="PreferencesSection">
-                  <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_Thresholds}" Classes="PreferencesSectionHeadline" />
+                  <TextBlock Text="{l:Loc PreferencesWindow_Label_Thresholds}" Classes="PreferencesSectionHeadline" />
                   <Border Classes="PreferencesSectionBody">
                     <StackPanel Orientation="Horizontal" Spacing="17">
                       <StackPanel>
-                        <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableBodies}" Classes="PreferencesBodyHeadline" />
-                        <TextBlock Classes="PreferencesInfoText" Width="170" Margin="0,0,0,7" Text="{x:Static properties:Resources.PreferencesWindow_Info_BodyValueThreshold}" />
+                        <TextBlock Text="{l:Loc PreferencesWindow_Label_ValuableBodies}" Classes="PreferencesBodyHeadline" />
+                        <TextBlock Classes="PreferencesInfoText" Width="170" Margin="0,0,0,7" Text="{l:Loc PreferencesWindow_Info_BodyValueThreshold}" />
                         <TextBox x:Name="ValuableBodyThresholdTextBox" MaxLength="7" TextChanged="ValuableBodyThresholdTextBox_TextChanged" />
                       </StackPanel>
                       <StackPanel>
-                        <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_ValuableSpecies}" Classes="PreferencesBodyHeadline" />
-                        <TextBlock Classes="PreferencesInfoText" Width="170" Margin="0,0,0,7" Text="{x:Static properties:Resources.PreferencesWindow_Info_SpeciesValueThreshold}" />
+                        <TextBlock Text="{l:Loc PreferencesWindow_Label_ValuableSpecies}" Classes="PreferencesBodyHeadline" />
+                        <TextBlock Classes="PreferencesInfoText" Width="170" Margin="0,0,0,7" Text="{l:Loc PreferencesWindow_Info_SpeciesValueThreshold}" />
                         <TextBox x:Name="ValuableGenusThresholdTextBox" MaxLength="8" TextChanged="ValuableGenusThresholdTextBox_TextChanged" />
                       </StackPanel>
                       <StackPanel>
-                        <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_BiologicalsViewAltitude}" Classes="PreferencesBodyHeadline" />
-                        <TextBlock Classes="PreferencesInfoText" Width="170" Margin="0,0,0,7" Text="{x:Static properties:Resources.PreferencesWindow_Info_BiologicalsViewAltitude}" />
+                        <TextBlock Text="{l:Loc PreferencesWindow_Label_BiologicalsViewAltitude}" Classes="PreferencesBodyHeadline" />
+                        <TextBlock Classes="PreferencesInfoText" Width="170" Margin="0,0,0,7" Text="{l:Loc PreferencesWindow_Info_BiologicalsViewAltitude}" />
                         <TextBox x:Name="BiologicalsViewAltitudeThresholdTextBox" MaxLength="6" TextChanged="BiologicalsViewAltitudeThresholdTextBox_TextChanged" />
                       </StackPanel>
                     </StackPanel>
@@ -515,11 +528,11 @@
                 </StackPanel>
               </StackPanel>
               <StackPanel Classes="PreferencesSection">
-                <TextBlock Text="{x:Static properties:Resources.PreferencesWindow_Label_ResetPreferences}" Classes="PreferencesSectionHeadline" />
+                <TextBlock Text="{l:Loc PreferencesWindow_Label_ResetPreferences}" Classes="PreferencesSectionHeadline" />
                 <Border Classes="PreferencesSectionBody">
                   <StackPanel>
-                    <TextBlock Classes="PreferencesInfoText" Text="{x:Static properties:Resources.PreferencesWindow_ResetWarning}" />
-                    <Button x:Name="RestoreDefaultButton" Content="{x:Static properties:Resources.PreferencesWindow_ResetPreferences}" Click="RestoreDefaultButton_Click" HorizontalAlignment="Left" Padding="12,4" />
+                    <TextBlock Classes="PreferencesInfoText" Text="{l:Loc PreferencesWindow_ResetWarning}" />
+                    <Button x:Name="RestoreDefaultButton" Content="{l:Loc PreferencesWindow_ResetPreferences}" Click="RestoreDefaultButton_Click" HorizontalAlignment="Left" Padding="12,4" />
                   </StackPanel>
                 </Border>
               </StackPanel>
@@ -530,8 +543,8 @@
     </TabControl>
 
     <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Spacing="8">
-      <Button x:Name="OkButton" Content="{x:Static properties:Resources.PreferencesWindow_Save}" Padding="16,4" Click="OkButton_Click" />
-      <Button x:Name="CancelButton" Content="{x:Static properties:Resources.PreferencesWindow_Cancel}" Padding="16,4" Click="CancelButton_Click" />
+      <Button x:Name="OkButton" Content="{l:Loc PreferencesWindow_Save}" Padding="16,4" Click="OkButton_Click" />
+      <Button x:Name="CancelButton" Content="{l:Loc PreferencesWindow_Cancel}" Padding="16,4" Click="CancelButton_Click" />
     </StackPanel>
   </Grid>
 </Window>

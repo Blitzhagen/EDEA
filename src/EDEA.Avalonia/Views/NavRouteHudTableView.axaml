@@ -1,7 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
-             xmlns:properties="using:EDEA.Properties"
+             xmlns:l="clr-namespace:EDEA.Avalonia.Localization"
+        xmlns:properties="using:EDEA.Properties"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:edea="using:EDEA"
              xmlns:views="clr-namespace:EDEA.Avalonia.Views"
@@ -12,12 +13,12 @@
   <UserControl.Resources>
     <DataTemplate x:Key="IconStarSystemCurrentAndJumpDestinationTemplate" x:DataType="vm:StarSystemViewModel">
       <Grid>
-        <materialIcons:MaterialIcon Kind="GpsFixed" IsVisible="{Binding IsCurrentSystemInRoute}" Foreground="{DynamicResource CurrentEntityIconColor}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipCurrentSystemIcon}" />
-        <materialIcons:MaterialIcon Kind="RocketLaunch" IsVisible="{Binding IsJumpDestinationSystemInRoute}" Foreground="{DynamicResource MainColor}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipJumpDestinationSystemIcon}" />
+        <materialIcons:MaterialIcon Kind="GpsFixed" IsVisible="{Binding IsCurrentSystemInRoute}" Foreground="{DynamicResource CurrentEntityIconColor}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipCurrentSystemIcon}" />
+        <materialIcons:MaterialIcon Kind="RocketLaunch" IsVisible="{Binding IsJumpDestinationSystemInRoute}" Foreground="{DynamicResource MainColor}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipJumpDestinationSystemIcon}" />
       </Grid>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemEdsmOnlyTemplate" x:DataType="vm:StarSystemViewModel">
-      <materialIcons:MaterialIcon Kind="Globe" IsVisible="{Binding WasReadFromEdsmOnly}" Foreground="{DynamicResource EdsmIconColor}" Width="14" Height="14" ToolTip.Tip="{x:Static properties:Resources.TooltipEdsmOnly}" />
+      <materialIcons:MaterialIcon Kind="Globe" IsVisible="{Binding WasReadFromEdsmOnly}" Foreground="{DynamicResource EdsmIconColor}" Width="14" Height="14" ToolTip.Tip="{l:Loc TooltipEdsmOnly}" />
     </DataTemplate>
     <DataTemplate x:Key="TextStarSystemJumpDistanceTemplate" x:DataType="vm:StarSystemViewModel">
       <TextBlock Text="{Binding JumpDistance}" Foreground="{DynamicResource MainColor}" />
@@ -26,7 +27,7 @@
       <TextBlock Text="{Binding Name}" Foreground="{DynamicResource MainColor}" />
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemScoopableTemplate" x:DataType="vm:StarSystemViewModel">
-      <materialIcons:MaterialIcon Kind="Fuel" IsVisible="{Binding PrimaryStarIsScoopable}" Foreground="{DynamicResource ScoopableIconColor}" Width="16" Height="16" ToolTip.Tip="{x:Static properties:Resources.TooltipScoopableIcon}" />
+      <materialIcons:MaterialIcon Kind="Fuel" IsVisible="{Binding PrimaryStarIsScoopable}" Foreground="{DynamicResource ScoopableIconColor}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipScoopableIcon}" />
     </DataTemplate>
     <DataTemplate x:Key="TextStarSystemStarClassTemplate" x:DataType="vm:StarSystemViewModel">
       <TextBlock Text="{Binding StarClass}" Foreground="{DynamicResource MainColor}" />
@@ -53,19 +54,19 @@
       </controls:BadgePanel>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemValuableTemplate" x:DataType="vm:StarSystemViewModel">
-      <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasValuableBodies}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableBodyIcon}">
+      <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasValuableBodies}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipValuableBodyIcon}">
         <materialIcons:MaterialIcon Kind="DiamondStone" Foreground="{Binding AllValuableBodiesSurfaceScanned, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='CompleteIconColor;ValuableIconColor'}" Width="16" Height="16" />
         <TextBlock Text="{Binding ValuableBodiesCount}" Foreground="{Binding AllValuableBodiesSurfaceScanned, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='CompleteIconColor;ValuableIconColor'}" VerticalAlignment="Center" />
       </controls:BadgePanel>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemTerraformableTemplate" x:DataType="vm:StarSystemViewModel">
-      <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasExploredTerraformables}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipTerraformableIcon}">
+      <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasExploredTerraformables}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipTerraformableIcon}">
         <materialIcons:MaterialIcon Kind="Terraform" Foreground="{DynamicResource TerraformableIconColor}" Width="16" Height="16" />
         <TextBlock Text="{Binding ExploredTerraformablesCount}" Foreground="{DynamicResource TerraformableIconColor}" VerticalAlignment="Center" />
       </controls:BadgePanel>
     </DataTemplate>
     <DataTemplate x:Key="IconStarSystemLandableTemplate" x:DataType="vm:StarSystemViewModel">
-      <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasExploredLandables}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipLandableIcon}">
+      <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasExploredLandables}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipLandableIcon}">
         <materialIcons:MaterialIcon Kind="AirplaneLanding" Foreground="{DynamicResource LandableIconColor}" Width="16" Height="16" />
         <TextBlock Text="{Binding ExploredLandablesCount}" Foreground="{DynamicResource LandableIconColor}" VerticalAlignment="Center" />
       </controls:BadgePanel>
@@ -98,7 +99,7 @@
               VerticalAlignment="Stretch"
               GridLinesVisibility="Horizontal">
       <DataGrid.Columns>
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="JumpDistance" Header="{x:Static properties:Resources.ColumnHeaderJump}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="JumpDistance" Header="{l:Loc ColumnHeaderJump}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
               <Grid>
@@ -114,8 +115,8 @@
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Name" Header="{x:Static properties:Resources.ColumnHeaderSystemName}" CellTemplate="{StaticResource TextStarSystemNameTemplate}" IsVisible="{Binding RouteColumnSystemNameVisible, Source={x:Static edea:Preferences.HudWindow}}" />
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="StarClass" Header="{x:Static properties:Resources.ColumnHeaderStarClass}" IsVisible="{Binding RouteColumnStarClassVisible, Source={x:Static edea:Preferences.HudWindow}}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Name" Header="{l:Loc ColumnHeaderSystemName}" CellTemplate="{StaticResource TextStarSystemNameTemplate}" IsVisible="{Binding RouteColumnSystemNameVisible, Source={x:Static edea:Preferences.HudWindow}}" />
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="StarClass" Header="{l:Loc ColumnHeaderStarClass}" IsVisible="{Binding RouteColumnStarClassVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
               <Grid>
@@ -129,7 +130,7 @@
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ExplorationStatus" Header="{x:Static properties:Resources.ColumnHeaderDiscoveryStatus}" IsVisible="{Binding RouteColumnExplorationStatusIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ExplorationStatus" Header="{l:Loc ColumnHeaderDiscoveryStatus}" IsVisible="{Binding RouteColumnExplorationStatusIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
               <Grid ToolTip.Tip="{Binding ExplorationStatusBodiesInfo}">
@@ -143,35 +144,35 @@
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="BodiesCartographicMaxValueSort" Header="{x:Static properties:Resources.ColumnHeaderCartographicValue}" Binding="{Binding BodiesCartographicMaxValue}" IsVisible="{Binding RouteColumnCartographicValueVisible, Source={x:Static edea:Preferences.HudWindow}}" />
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="ExplorationValueSort" Header="{x:Static properties:Resources.ColumnHeaderOverallProgress}" Binding="{Binding OverallProgress}" IsVisible="{Binding RouteColumnProgressVisible, Source={x:Static edea:Preferences.HudWindow}}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="BodiesCartographicMaxValueSort" Header="{l:Loc ColumnHeaderCartographicValue}" Binding="{Binding BodiesCartographicMaxValue}" IsVisible="{Binding RouteColumnCartographicValueVisible, Source={x:Static edea:Preferences.HudWindow}}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="ExplorationValueSort" Header="{l:Loc ColumnHeaderOverallProgress}" Binding="{Binding OverallProgress}" IsVisible="{Binding RouteColumnProgressVisible, Source={x:Static edea:Preferences.HudWindow}}" />
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="MatchingPlanetClassificationsSort" CellTemplate="{StaticResource IconStarSystemPlanetOfInterestTemplate}" IsVisible="{Binding RouteColumnPlanetOfInterestIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipPlanetOfInterestIcon}"><materialIcons:MaterialIcon Kind="StarCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipPlanetOfInterestIcon}"><materialIcons:MaterialIcon Kind="StarCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
         </DataGridTemplateColumn>
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ValuableBodiesSort" CellTemplate="{StaticResource IconStarSystemValuableTemplate}" IsVisible="{Binding RouteColumnValuableIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableBodyIcon}"><materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipValuableBodyIcon}"><materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
         </DataGridTemplateColumn>
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ExploredTerraformablesSort" CellTemplate="{StaticResource IconStarSystemTerraformableTemplate}" IsVisible="{Binding RouteColumnTerraformableIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipTerraformableIcon}"><materialIcons:MaterialIcon Kind="Terraform" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipTerraformableIcon}"><materialIcons:MaterialIcon Kind="Terraform" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
         </DataGridTemplateColumn>
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ExploredLandablesSort" CellTemplate="{StaticResource IconStarSystemLandableTemplate}" IsVisible="{Binding RouteColumnLandableIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipLandableIcon}"><materialIcons:MaterialIcon Kind="AirplaneLanding" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipLandableIcon}"><materialIcons:MaterialIcon Kind="AirplaneLanding" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
         </DataGridTemplateColumn>
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="PopulationSort" CellTemplate="{StaticResource IconStarSystemPopulatedTemplate}" IsVisible="{Binding RouteColumnPopulatedIconVisible, Source={x:Static edea:Preferences.HudWindow}}">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipPopulatedIcon}"><materialIcons:MaterialIcon Kind="AccountGroup" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipPopulatedIcon}"><materialIcons:MaterialIcon Kind="AccountGroup" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
         </DataGridTemplateColumn>
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="EdsmDiscoveryCommander" Header="{x:Static properties:Resources.ColumnHeaderEdsmDiscoverer}" Binding="{Binding EdsmDiscoveryCommander}" IsVisible="{Binding RouteColumnEdsmDiscovererVisible, Source={x:Static edea:Preferences.HudWindow}}" />
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="JumpDistanceLySort" Header="{x:Static properties:Resources.ColumnHeaderDistance}" CellTemplate="{StaticResource TextStarSystemJumpDistanceLyTemplate}" IsVisible="{Binding RouteColumnDistanceVisible, Source={x:Static edea:Preferences.HudWindow}}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="EdsmDiscoveryCommander" Header="{l:Loc ColumnHeaderEdsmDiscoverer}" Binding="{Binding EdsmDiscoveryCommander}" IsVisible="{Binding RouteColumnEdsmDiscovererVisible, Source={x:Static edea:Preferences.HudWindow}}" />
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="JumpDistanceLySort" Header="{l:Loc ColumnHeaderDistance}" CellTemplate="{StaticResource TextStarSystemJumpDistanceLyTemplate}" IsVisible="{Binding RouteColumnDistanceVisible, Source={x:Static edea:Preferences.HudWindow}}" />
       </DataGrid.Columns>
     </DataGrid>
   </Grid>

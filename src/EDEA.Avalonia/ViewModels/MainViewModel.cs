@@ -252,11 +252,13 @@ public partial class MainViewModel : ObservableObject
         _starSystemProvider.RouteLoadingStatusChanged += (_, _) => Dispatcher.UIThread.Post(() => DataIsLoading = _starSystemProvider.RouteIsLoading);
         _routeProvider.RouteChanged += () => Dispatcher.UIThread.Post(RefreshMenuItems);
 
-        var navRouteTableViewModel = new NavRouteTableViewModel(Resources.TabHeader_Route, "Visible", starSystemProvider, routeProvider);
-        var bodyTableViewModel = new BodyTableViewModel(Resources.TabHeader_Bodies, "Visible", starSystemProvider);
-        var genusTableViewModel = new GenusTableViewModel(Resources.TabHeader_Biologicals, "Collapsed", starSystemProvider);
-        var surroundingsTableViewModel = new SurroundingsTableViewModel(Resources.TabHeader_Surroundings, "Visible", starSystemProvider);
-        var historyViewModel = new HistoryViewModel(Resources.TabHeader_History, "Visible", historyProvider);
+        var navRouteTableViewModel = new NavRouteTableViewModel(Resources.TabHeader_Route, "Visible", starSystemProvider, routeProvider) { TabHeaderKey = "TabHeader_Route" };
+        var bodyTableViewModel = new BodyTableViewModel(Resources.TabHeader_Bodies, "Visible", starSystemProvider) { TabHeaderKey = "TabHeader_Bodies" };
+        var genusTableViewModel = new GenusTableViewModel(Resources.TabHeader_Biologicals, "Collapsed", starSystemProvider) { TabHeaderKey = "TabHeader_Biologicals" };
+        var surroundingsTableViewModel = new SurroundingsTableViewModel(Resources.TabHeader_Surroundings, "Visible", starSystemProvider) { TabHeaderKey = "TabHeader_Surroundings" };
+        var historyViewModel = new HistoryViewModel(Resources.TabHeader_History, "Visible", historyProvider) { TabHeaderKey = "TabHeader_History" };
+
+        Resources.CultureChanged += () => OnPropertyChanged(string.Empty);
 
         TabViewModels = new ObservableCollection<TabViewModel>
         {

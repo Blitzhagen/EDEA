@@ -1,7 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:EDEA.ViewModels;assembly=EDEA.Core"
-             xmlns:properties="using:EDEA.Properties"
+             xmlns:l="clr-namespace:EDEA.Avalonia.Localization"
+        xmlns:properties="using:EDEA.Properties"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:EDEA.Avalonia.Views"
              xmlns:controls="clr-namespace:EDEA.Avalonia.Controls"
@@ -35,7 +36,7 @@
               CanUserReorderColumns="True"
               CanUserResizeColumns="True">
       <DataGrid.Columns>
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Name" Header="{x:Static properties:Resources.ColumnHeaderSystemName}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Name" Header="{l:Loc ColumnHeaderSystemName}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
               <Grid>
@@ -51,7 +52,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="StarClass" Header="{x:Static properties:Resources.ColumnHeaderStarClass}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="StarClass" Header="{l:Loc ColumnHeaderStarClass}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
               <Grid>
@@ -66,7 +67,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ExplorationStatus" Header="{x:Static properties:Resources.ColumnHeaderDiscoveryStatus}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ExplorationStatus" Header="{l:Loc ColumnHeaderDiscoveryStatus}">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
               <TextBlock Text="{Binding ExplorationStatus}" Foreground="{DynamicResource MainColor}" />
@@ -74,12 +75,12 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="BodiesCartographicMaxValueSort" Header="{x:Static properties:Resources.ColumnHeaderCartographicValue}" Binding="{Binding BodiesCartographicMaxValue}" />
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="ExplorationValueSort" Header="{x:Static properties:Resources.ColumnHeaderOverallProgress}" Binding="{Binding OverallProgress}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="BodiesCartographicMaxValueSort" Header="{l:Loc ColumnHeaderCartographicValue}" Binding="{Binding BodiesCartographicMaxValue}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="ExplorationValueSort" Header="{l:Loc ColumnHeaderOverallProgress}" Binding="{Binding OverallProgress}" />
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="MatchingPlanetClassificationsSort">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipPlanetOfInterestIcon}"><materialIcons:MaterialIcon Kind="StarCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipPlanetOfInterestIcon}"><materialIcons:MaterialIcon Kind="StarCircle" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
@@ -96,11 +97,11 @@
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ValuableBodiesSort">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableBodyIcon}"><materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipValuableBodyIcon}"><materialIcons:MaterialIcon Kind="DiamondStone" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasValuableBodies}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipValuableBodyIcon}">
+              <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasValuableBodies}" Background="Transparent" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipValuableBodyIcon}">
                 <materialIcons:MaterialIcon Kind="DiamondStone" Foreground="{Binding AllValuableBodiesSurfaceScanned, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='CompleteIconColor;ValuableIconColor'}" Width="16" Height="16" />
                 <TextBlock Text="{Binding ValuableBodiesCount}" Foreground="{Binding AllValuableBodiesSurfaceScanned, Converter={StaticResource BoolToResourceBrushConverter}, ConverterParameter='CompleteIconColor;ValuableIconColor'}" VerticalAlignment="Center" />
               </controls:BadgePanel>
@@ -110,11 +111,11 @@
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ExploredTerraformablesSort">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipTerraformableIcon}"><materialIcons:MaterialIcon Kind="Terraform" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipTerraformableIcon}"><materialIcons:MaterialIcon Kind="Terraform" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasExploredTerraformables}" ToolTip.Tip="{x:Static properties:Resources.TooltipTerraformableIcon}">
+              <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasExploredTerraformables}" ToolTip.Tip="{l:Loc TooltipTerraformableIcon}">
                 <materialIcons:MaterialIcon Kind="Terraform" Foreground="{DynamicResource TerraformableIconColor}" Width="16" Height="16" />
                 <TextBlock Text="{Binding ExploredTerraformablesCount}" Foreground="{DynamicResource TerraformableIconColor}" VerticalAlignment="Center" />
               </controls:BadgePanel>
@@ -124,11 +125,11 @@
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="ExploredLandablesSort">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipLandableIcon}"><materialIcons:MaterialIcon Kind="AirplaneLanding" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipLandableIcon}"><materialIcons:MaterialIcon Kind="AirplaneLanding" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasExploredLandables}" ToolTip.Tip="{x:Static properties:Resources.TooltipLandableIcon}">
+              <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasExploredLandables}" ToolTip.Tip="{l:Loc TooltipLandableIcon}">
                 <materialIcons:MaterialIcon Kind="AirplaneLanding" Foreground="{DynamicResource LandableIconColor}" Width="16" Height="16" />
                 <TextBlock Text="{Binding ExploredLandablesCount}" Foreground="{DynamicResource LandableIconColor}" VerticalAlignment="Center" />
               </controls:BadgePanel>
@@ -138,11 +139,11 @@
 
         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="PopulationSort">
           <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{x:Static properties:Resources.TooltipPopulatedIcon}"><materialIcons:MaterialIcon Kind="AccountGroup" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
+            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipPopulatedIcon}"><materialIcons:MaterialIcon Kind="AccountGroup" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
           </DataGridTemplateColumn.Header>
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
-              <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasPopulation}" ToolTip.Tip="{x:Static properties:Resources.TooltipPopulatedIcon}">
+              <controls:BadgePanel HorizontalAlignment="Center" IsVisible="{Binding HasPopulation}" ToolTip.Tip="{l:Loc TooltipPopulatedIcon}">
                 <materialIcons:MaterialIcon Kind="AccountGroup" Foreground="{DynamicResource PopulatedIconColor}" Width="16" Height="16" />
                 <TextBlock Text="{Binding Population}" Foreground="{DynamicResource PopulatedIconColor}" VerticalAlignment="Center" />
               </controls:BadgePanel>
@@ -150,9 +151,9 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="EdsmDiscoveryCommander" Header="{x:Static properties:Resources.ColumnHeaderEdsmDiscoverer}" Binding="{Binding EdsmDiscoveryCommander}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="EdsmDiscoveryCommander" Header="{l:Loc ColumnHeaderEdsmDiscoverer}" Binding="{Binding EdsmDiscoveryCommander}" />
 
-        <DataGridTextColumn CanUserSort="True" SortMemberPath="JumpDistanceLySort" Header="{x:Static properties:Resources.ColumnHeaderDistance}" Binding="{Binding JumpDistanceLy}" />
+        <DataGridTextColumn CanUserSort="True" SortMemberPath="JumpDistanceLySort" Header="{l:Loc ColumnHeaderDistance}" Binding="{Binding JumpDistanceLy}" />
       </DataGrid.Columns>
     </DataGrid>
   </Grid>

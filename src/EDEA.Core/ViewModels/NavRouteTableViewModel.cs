@@ -175,7 +175,7 @@ public class NavRouteTableViewModel : TabViewModel
                     .OrderBy(item => item.JumpDistance)
                     .ToList();
 
-                TabHeader = _routeProvider.IsCustomRoute ? Resources.TabHeader_PlotterRoute : Resources.TabHeader_Route;
+                TabHeaderKey = _routeProvider.IsCustomRoute ? "TabHeader_PlotterRoute" : "TabHeader_Route";
 
                 OnPropertyChanged("Route");
                 OnPropertyChanged("RouteIsLoading");
