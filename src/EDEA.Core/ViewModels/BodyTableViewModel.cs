@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using EDEA.Models;
 using EDEA.Properties;
 using EDEA.Services;
@@ -32,12 +31,6 @@ public class BodyTableViewModel : TabViewModel
     /// Provides star system and related data.
     /// </summary>
     public StarSystemProvider StarSystemProvider { get; }
-
-    /// <summary>
-    /// Gets or sets the command that copies the selected body name to the clipboard.
-    /// </summary>
-    /// <value>The copy command.</value>
-    public ICommand? CopyBodyNameToClipboardCommand { get; set; }
 
     /// <summary>
     /// Gets the collection of view models representing the current system's bodies.

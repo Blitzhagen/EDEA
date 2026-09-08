@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using EDEA.Models;
 using EDEA.Properties;
 using EDEA.Services;
@@ -32,12 +31,6 @@ public class SurroundingsTableViewModel : TabViewModel
     /// The provider for star system data.
     /// </summary>
     private StarSystemProvider _starSystemProvider;
-
-    /// <summary>
-    /// Gets or sets the command that copies the selected system name to the clipboard.
-    /// </summary>
-    /// <value>The copy command.</value>
-    public ICommand? CopySystemNameToClipboardCommand { get; set; }
 
     /// <summary>
     /// Gets the collection of surrounding star system view models.

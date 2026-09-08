@@ -186,7 +186,7 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
             }
         }
         catch (Exception exception)
-        
+
         {
             log.Error("Error loading window states", exception);
         }

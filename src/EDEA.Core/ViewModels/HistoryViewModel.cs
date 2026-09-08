@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using EDEA.Models;
 using EDEA.Properties;
 using EDEA.Services;
@@ -29,12 +28,6 @@ public class HistoryViewModel : TabViewModel
     /// The provider for history data.
     /// </summary>
     private readonly HistoryProvider _historyProvider;
-
-    /// <summary>
-    /// Gets or sets the command that copies the history data to the clipboard.
-    /// </summary>
-    /// <value>The copy command.</value>
-    public ICommand? CopyHistoryDataToClipboardCommand { get; set; }
 
     /// <summary>
     /// Gets or sets the formatted history data.

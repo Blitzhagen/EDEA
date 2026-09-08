@@ -391,7 +391,9 @@ public class BiologyRuleEvaluatorTests
     {
         var system = new StarSystem(49660500676435L, "Test Sys")
         {
-            StarPositionX = 933.375, StarPositionY = 178.71875, StarPositionZ = 15156.1875,
+            StarPositionX = 933.375,
+            StarPositionY = 178.71875,
+            StarPositionZ = 15156.1875,
             StarClass = "G"
         };
         var mainStar = new Star(0, 49660500676435L, "Test Sys", 0.0, "G", 695500000.0, 1.0, null)
