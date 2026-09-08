@@ -1310,12 +1310,6 @@
   <data name="StatusBodiesMissing" xml:space="preserve">
     <value>отсутствует: {0}</value>
   </data>
-  <data name="TooltipNewSpeciesToGalaxy" xml:space="preserve">
-    <value>Вид ещё не записан в кодекс — новый для галактики</value>
-  </data>
-  <data name="TooltipNewSpeciesToRegion" xml:space="preserve">
-    <value>Вид ещё не записан в кодекс этого региона</value>
-  </data>
   <data name="PreferencesWindow_Label_Language" xml:space="preserve">
     <value>Язык</value>
   </data>

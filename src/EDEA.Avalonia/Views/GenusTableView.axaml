@@ -198,27 +198,6 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsNotInGalaxyCodex">
-          <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipNewSpeciesToGalaxy}"><materialIcons:MaterialIcon Kind="Earth" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
-          </DataGridTemplateColumn.Header>
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-              <materialIcons:MaterialIcon Kind="Earth" IsVisible="{Binding IsNotInGalaxyCodex}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipNewSpeciesToGalaxy}" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
-
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="IsNotInCodexOnlyRegion">
-          <DataGridTemplateColumn.Header>
-            <Border Background="Transparent" Padding="4" ToolTip.ShowDelay="100" ToolTip.Tip="{l:Loc TooltipNewSpeciesToRegion}"><materialIcons:MaterialIcon Kind="BookOpenVariant" Width="16" Height="16" Foreground="{DynamicResource MainBackgroundColor}"  /></Border>
-          </DataGridTemplateColumn.Header>
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate x:DataType="vm:GenusClassificationViewModel">
-              <materialIcons:MaterialIcon Kind="BookOpenVariant" IsVisible="{Binding IsNotInCodexOnlyRegion}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipNewSpeciesToRegion}" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
       </DataGrid.Columns>
     </DataGrid>
   </Grid>

@@ -163,30 +163,6 @@ public class GenusClassificationViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// Gets a value indicating whether this species is already recorded in the codex of the current region.
-    /// </summary>
-    /// <value><c>true</c> when a codex entry exists in the region; otherwise, <c>false</c>.</value>
-    public bool IsInCodex => _genusClassification.IsInCodex;
-
-    /// <summary>
-    /// Gets a value indicating whether this species is already recorded in the codex galaxy-wide.
-    /// </summary>
-    /// <value><c>true</c> when a codex entry exists in any region; otherwise, <c>false</c>.</value>
-    public bool IsInGalaxyCodex => _genusClassification.IsInGalaxyCodex;
-
-    /// <summary>
-    /// Gets a value indicating whether this species is missing from the codex galaxy-wide.
-    /// </summary>
-    /// <value><c>true</c> when no codex entry exists in any region.</value>
-    public bool IsNotInGalaxyCodex => !_genusClassification.IsInGalaxyCodex;
-
-    /// <summary>
-    /// Gets a value indicating whether this species is missing from the codex of the current region only.
-    /// </summary>
-    /// <value><c>true</c> when a codex entry exists somewhere but not in the current region.</value>
-    public bool IsNotInCodexOnlyRegion => _genusClassification.IsInGalaxyCodex && !_genusClassification.IsInCodex;
-
-    /// <summary>
     /// Gets a value indicating whether this classification is valuable.
     /// </summary>
     /// <value><c>true</c> if this classification is valuable; otherwise, <c>false</c>.</value>

@@ -122,16 +122,12 @@
                   <ColumnDefinition Width="Auto" SharedSizeGroup="PredValue" />
                   <ColumnDefinition Width="Auto" SharedSizeGroup="PredValuable" />
                   <ColumnDefinition Width="Auto" SharedSizeGroup="PredNew" />
-                  <ColumnDefinition Width="Auto" SharedSizeGroup="PredCodexGalaxy" />
-                  <ColumnDefinition Width="Auto" SharedSizeGroup="PredCodexRegion" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding Species}" Foreground="{DynamicResource HighlightGrey}" Margin="0,1,12,1" VerticalAlignment="Center" />
                 <TextBlock Grid.Column="1" Text="{Binding ClonalColonyRange}" Foreground="{DynamicResource HighlightGrey}" HorizontalAlignment="Right" Margin="0,1,8,1" VerticalAlignment="Center" />
                 <TextBlock Grid.Column="2" Text="{Binding VistaGenomicsMaxValue}" Foreground="{DynamicResource HighlightGrey}" HorizontalAlignment="Right" Margin="0,1,8,1" VerticalAlignment="Center" />
                 <materialIcons:MaterialIcon Grid.Column="3" Kind="DiamondStone" IsVisible="{Binding IsValuable}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <materialIcons:MaterialIcon Grid.Column="4" Kind="PlusCircle" IsVisible="{Binding IsFirstDiscovery}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <materialIcons:MaterialIcon Grid.Column="5" Kind="Earth" IsVisible="{Binding IsNotInGalaxyCodex}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip.Tip="{l:Loc TooltipNewSpeciesToGalaxy}" />
-                <materialIcons:MaterialIcon Grid.Column="6" Kind="BookOpenVariant" IsVisible="{Binding IsNotInCodexOnlyRegion}" Foreground="{DynamicResource HighlightGrey}" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip.Tip="{l:Loc TooltipNewSpeciesToRegion}" />
               </Grid>
             </DataTemplate>
           </ItemsControl.ItemTemplate>

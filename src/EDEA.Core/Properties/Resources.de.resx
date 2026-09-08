@@ -1310,12 +1310,6 @@
   <data name="StatusBodiesMissing" xml:space="preserve">
     <value>{0} fehlen</value>
   </data>
-  <data name="TooltipNewSpeciesToGalaxy" xml:space="preserve">
-    <value>Art noch nicht im Codex - neu für die Galaxie</value>
-  </data>
-  <data name="TooltipNewSpeciesToRegion" xml:space="preserve">
-    <value>Art noch nicht im Codex dieser Region</value>
-  </data>
   <data name="PreferencesWindow_Label_Language" xml:space="preserve">
     <value>Sprache</value>
   </data>
