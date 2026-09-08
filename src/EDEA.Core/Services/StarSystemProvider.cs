@@ -267,6 +267,7 @@ public class StarSystemProvider
             log.Info($"{(historyResult == 1 ? "Added" : "Updated")} current system '{CurrentSystem.Name}' ({CurrentSystem.Id}) to history, history count: {_historyProvider.GetCount()}");
         }
         RekeyCurrentSystemInRoute(CurrentSystem, StarSystemsOnRoute);
+        log.Info($"HandleCurrentSystemChange after rekey: CurrentSystem={CurrentSystem.Name} (id={CurrentSystem.Id}, jd={CurrentSystem.JumpDistance}), IsCurrentSystemInRoute={IsCurrentSystemInRoute}, StarSystemsOnRouteKeys=[{string.Join(", ", StarSystemsOnRoute.Keys.Take(20))}]");
         if (IsCurrentSystemInRoute)
         {
             try
@@ -811,19 +812,10 @@ public class StarSystemProvider
                 {
                     _WebApiProvider.EdsmCheckAndRequestStarSystemInformation(new WebApiParameterEdsmStarystem(StarSystemsOnRoute[routeEntry.Key]), onRequestedStarSystemInformation, forceUpdate: false, ignoreSpeechOutput: true);
                 }
-                if (currentSystemInNewRoute && StarSystemsOnRoute[routeEntry.Key].JumpDistance < currentSystemJumpDistance)
-                {
-                    StarSystemsOnRoute[routeEntry.Key].IsPastSystemInRoute = true;
-                }
-                else if (currentSystemInNewRoute && StarSystemsOnRoute[routeEntry.Key].JumpDistance == currentSystemJumpDistance)
-                {
-                    StarSystemsOnRoute[routeEntry.Key].IsCurrentSystemInRoute = true;
-                }
                 SetRouteIsLoadingStatus(status: true, $"Setting up route: {Math.Round(routeProgressCounter / (double)systemsOnNewRoute.Count * 100.0)} %");
                 routeProgressCounter++;
             }
             CopyNextSystemNametoClipboard();
-            triggerGuiDataUpdateEvent(force: true);
             if (firstRead)
             {
                 _journalProvider.Initialize();
@@ -832,8 +824,10 @@ public class StarSystemProvider
             // the route (e.g. on startup or reconnect). Match by name and re-key so the
             // current system is recognized and the next jump can be copied.
             RekeyCurrentSystemInRoute(CurrentSystem, StarSystemsOnRoute);
+            UpdateRouteSystemStateFlags();
             CopyNextSystemNametoClipboard();
 
+            triggerGuiDataUpdateEvent(force: true);
             if (!firstRead && currentSystemInNewRoute)
             {
                 CurrentSystemInRouteChanged?.Invoke(this, EventArgs.Empty);
@@ -849,21 +843,59 @@ public class StarSystemProvider
             log.Warn($"Could not replace star system '{starSystem.Name}' ({starSystem.Id}) in route because it is not part of the route");
             return;
         }
+        log.Info($"replaceStarSystemInRoute: {starSystem.Name} (id={starSystem.Id}) isCurrent={isCurrentSystem}, existingJumpDistance={StarSystemsOnRoute[starSystem.Id].JumpDistance}");
         int jumpDistance = StarSystemsOnRoute[starSystem.Id].JumpDistance;
         double jumpDistanceLy = StarSystemsOnRoute[starSystem.Id].JumpDistanceLy;
         StarSystemsOnRoute[starSystem.Id] = starSystem;
         StarSystemsOnRoute[starSystem.Id].JumpDistance = jumpDistance;
         StarSystemsOnRoute[starSystem.Id].JumpDistanceLy = jumpDistanceLy;
-        StarSystemsOnRoute[starSystem.Id].IsCurrentSystemInRoute = isCurrentSystem;
         if (isCurrentSystem && !_journalProvider.JournalFirstParse)
         {
             await SetPastStarSystemsOnRouteAndRequestEDSMDataForUpcomingStarSystemsOnRoute();
+        }
+
+        // Recompute route state flags for all entries in one pass so stale
+        // Current/Jump/Past flags from history objects do not survive.
+        UpdateRouteSystemStateFlags();
+
+        if (isCurrentSystem && !_journalProvider.JournalFirstParse)
+        {
             CurrentSystemInRouteChanged?.Invoke(this, EventArgs.Empty);
         }
         else
         {
             triggerGuiDataUpdateEvent();
         }
+    }
+
+    /// <summary>
+    /// Recomputes the IsCurrent/Past/JumpDestination flags for every route entry.
+    /// This clears stale values (e.g. from serialized history objects) and keeps
+    /// exactly one current and one jump-destination row marked.
+    /// </summary>
+    public void UpdateRouteSystemStateFlags()
+    {
+        if (StarSystemsOnRoute.IsEmpty)
+        {
+            return;
+        }
+
+        bool currentInRoute = IsCurrentSystemInRoute;
+        int currentJumpDistance = currentInRoute ? CurrentSystem.JumpDistance : -1;
+        long? destinationId = DestinationSystem?.Id;
+
+        log.Info($"UpdateRouteSystemStateFlags start: Current={CurrentSystem.Name} (id={CurrentSystem.Id}, jd={CurrentSystem.JumpDistance}), IsCurrentInRoute={currentInRoute}, Destination={(DestinationSystem == null ? "null" : $"{DestinationSystem.Name} (id={DestinationSystem.Id})")}, RouteCount={StarSystemsOnRoute.Count}");
+
+        foreach (StarSystem system in StarSystemsOnRoute.Values)
+        {
+            system.IsCurrentSystemInRoute = currentInRoute && system.JumpDistance == currentJumpDistance;
+            system.IsPastSystemInRoute = currentInRoute && system.JumpDistance < currentJumpDistance;
+            system.IsJumpDestinationSystemInRoute = destinationId.HasValue && system.Id == destinationId.Value;
+        }
+
+        var currentRows = StarSystemsOnRoute.Where(s => s.Value.IsCurrentSystemInRoute).Select(s => $"{s.Value.Name}({s.Value.JumpDistance})").ToList();
+        var jumpRows = StarSystemsOnRoute.Where(s => s.Value.IsJumpDestinationSystemInRoute).Select(s => $"{s.Value.Name}({s.Value.JumpDistance})").ToList();
+        log.Info($"UpdateRouteSystemStateFlags end: current=[{string.Join(", ", currentRows)}], jump=[{string.Join(", ", jumpRows)}], pastCount={StarSystemsOnRoute.Count(s => s.Value.IsPastSystemInRoute)}");
     }
 
     /// <summary>
@@ -972,10 +1004,15 @@ public class StarSystemProvider
         IsInTeam = isInTeam;
         _planetNameExploring = planetNameExploring;
         UpdateCurrentPlanet();
+        log.Info($"_statusProvider_StatusUpdated: nextActivity={nextActivity}, currentActivity={CurrentActivity}, destinationSystemId={destinationSystemId}, isInTeam={isInTeam}");
         if (CurrentActivity != nextActivity)
         {
             if (nextActivity == Activity.Jump && destinationSystemId.HasValue && StarSystemsOnRoute.ContainsKey(destinationSystemId.Value))
             {
+                if (DestinationSystem != null && DestinationSystem != StarSystemsOnRoute[destinationSystemId.Value])
+                {
+                    DestinationSystem.IsJumpDestinationSystemInRoute = false;
+                }
                 DestinationSystem = StarSystemsOnRoute[destinationSystemId.Value];
                 DestinationSystem.IsJumpDestinationSystemInRoute = true;
             }
@@ -987,6 +1024,7 @@ public class StarSystemProvider
             log.Info($"Current activity changing from {CurrentActivity} to {nextActivity}");
             CurrentActivity = nextActivity;
         }
+        UpdateRouteSystemStateFlags();
         triggerGuiDataUpdateEvent();
     }
 

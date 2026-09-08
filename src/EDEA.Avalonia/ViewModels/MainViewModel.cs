@@ -596,6 +596,16 @@ public partial class MainViewModel : ObservableObject
     {
         log.Debug($"OpenTabOfType({type.Name}, forceOpen={forceOpen}): lastActivity={_lastActivity}, currentActivity={_starSystemProvider.CurrentActivity}, automaticTabSwitching={Preferences.Other.AutomaticTabSwitching}");
         _pendingAutoTabType = null;
+
+        // Keep the Plotter-Route tab active when the user is on it; do not automatically
+        // switch away to Bodies/Biology tabs because of an activity change.
+        if (!forceOpen && _routeProvider.IsCustomRoute && SelectedTab is NavRouteTableViewModel &&
+            (type == typeof(BodyTableViewModel) || type == typeof(GenusTableViewModel)))
+        {
+            log.Debug($"Skipping automatic tab switch to {type.Name} because Plotter-Route tab is selected");
+            return;
+        }
+
         if (forceOpen || (_lastActivity != _starSystemProvider.CurrentActivity && Preferences.Other.AutomaticTabSwitching))
         {
             var match = TabViewModels.FirstOrDefault(x => x.GetType() == type);

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using EDEA.Models;
 using EDEA.Properties;
@@ -35,6 +37,30 @@ public class NavRouteTableViewModel : TabViewModel
     private bool _refreshTaskRunning;
 
     /// <summary>
+    /// A version counter used to discard stale route refresh results.
+    /// </summary>
+    private long _routeRefreshVersion;
+
+    /// <summary>
+    /// Snapshot of the previously displayed route row values.
+    /// This lets SyncRouteCollection detect property changes on reused StarSystem objects.
+    /// </summary>
+    private readonly record struct RouteRowState(
+        int JumpDistance,
+        string Name,
+        string JumpDistanceLy,
+        string ExplorationStatus,
+        string StarClass,
+        string EdsmName,
+        string OverallProgress,
+        string BodiesCartographicMaxValue,
+        bool HasMatchingPlanetClassifications,
+        bool HasValuableBodies,
+        bool IsCurrentSystemInRoute,
+        bool IsJumpDestinationSystemInRoute,
+        bool IsPastSystemInRoute);
+
+    /// <summary>
     /// The current loading info text for the route.
     /// </summary>
     private string _routeIsLoadingInfoText = string.Empty;
@@ -42,7 +68,7 @@ public class NavRouteTableViewModel : TabViewModel
     /// <summary>
     /// The collection of star systems in the route.
     /// </summary>
-    public IEnumerable<StarSystemViewModel> Route { get; private set; } = Array.Empty<StarSystemViewModel>();
+    public ObservableCollection<StarSystemViewModel> Route { get; } = new ObservableCollection<StarSystemViewModel>();
 
     /// <summary>
     /// Gets the localized info text shown when no route is available.
@@ -163,30 +189,63 @@ public class NavRouteTableViewModel : TabViewModel
     /// </summary>
     public async void RefreshRouteDataView()
     {
+        long version = Interlocked.Increment(ref _routeRefreshVersion);
         try
         {
             _refreshTaskRunning = true;
             OnPropertyChanged("RouteIsLoading");
             OnPropertyChanged("ShowNoRouteInfo");
 
-            await Task.Run(delegate
+            // Capture the currently displayed values before recomputing flags.
+            // This lets us detect stale rows even when the same StarSystem object
+            // is reused and its properties change in place.
+            var previousState = Route.Select(vm => new RouteRowState(
+                vm.JumpDistance,
+                vm.Name,
+                vm.JumpDistanceLy,
+                vm.ExplorationStatus,
+                vm.StarClass,
+                vm.EdsmName,
+                vm.OverallProgress,
+                vm.BodiesCartographicMaxValue,
+                vm.HasMatchingPlanetClassifications,
+                vm.HasValuableBodies,
+                vm.IsCurrentSystemInRoute,
+                vm.IsJumpDestinationSystemInRoute,
+                vm.IsPastSystemInRoute)).ToList();
+
+            // Recompute route flags from authoritative state before building the view.
+            // This acts as a safety net for events that may not have updated them.
+            _starSystemProvider.UpdateRouteSystemStateFlags();
+
+            var route = await Task.Run(() => _starSystemProvider.StarSystemsOnRoute
+                .Select((KeyValuePair<long, StarSystem> entry) => new StarSystemViewModel(entry.Value))
+                .OrderBy(item => item.JumpDistance)
+                .ToList());
+
+            // A newer refresh was requested while we were building; discard this result.
+            if (version != _routeRefreshVersion)
             {
-                Route = _starSystemProvider.StarSystemsOnRoute
-                    .Select((KeyValuePair<long, StarSystem> entry) => new StarSystemViewModel(entry.Value))
-                    .OrderBy(item => item.JumpDistance)
-                    .ToList();
+                log.Debug($"RefreshRouteDataView discarding stale result (version {version}, current {_routeRefreshVersion})");
+                return;
+            }
 
-                TabHeaderKey = _routeProvider.IsCustomRoute ? "TabHeader_PlotterRoute" : "TabHeader_Route";
+            var currentNames = route.Where(r => r.IsCurrentSystemInRoute).Select(r => $"{r.Name}({r.JumpDistance})").ToList();
+            var jumpNames = route.Where(r => r.IsJumpDestinationSystemInRoute).Select(r => $"{r.Name}({r.JumpDistance})").ToList();
+            log.Info($"RefreshRouteDataView applying version {version}: rows={route.Count}, current=[{string.Join(", ", currentNames)}], jump=[{string.Join(", ", jumpNames)}]");
 
-                OnPropertyChanged("Route");
-                OnPropertyChanged("RouteIsLoading");
-                OnPropertyChanged("ShowNoRouteInfo");
-                OnPropertyChanged("CurrentSystem");
-                OnPropertyChanged("HasNoCurrentSystem");
-                OnPropertyChanged("CommanderName");
-                OnPropertyChanged("TeammateNames");
-                OnPropertyChanged("TabHeader");
-            });
+            string tabHeaderKey = _routeProvider.IsCustomRoute ? "TabHeader_PlotterRoute" : "TabHeader_Route";
+
+            SyncRouteCollection(route, previousState);
+            TabHeaderKey = tabHeaderKey;
+
+            OnPropertyChanged("RouteIsLoading");
+            OnPropertyChanged("ShowNoRouteInfo");
+            OnPropertyChanged("CurrentSystem");
+            OnPropertyChanged("HasNoCurrentSystem");
+            OnPropertyChanged("CommanderName");
+            OnPropertyChanged("TeammateNames");
+            OnPropertyChanged("TabHeader");
         }
         catch (Exception exception)
         {
@@ -197,6 +256,62 @@ public class NavRouteTableViewModel : TabViewModel
             _refreshTaskRunning = false;
             OnPropertyChanged("RouteIsLoading");
             OnPropertyChanged("ShowNoRouteInfo");
+        }
+    }
+
+    /// <summary>
+    /// Updates the existing route collection in place to avoid resetting the
+    /// DataGrid scroll position on every refresh.
+    /// </summary>
+    /// <param name="newRoute">The newly built route list.</param>
+    /// <param name="previousState">The values displayed before this refresh started.</param>
+    private void SyncRouteCollection(List<StarSystemViewModel> newRoute, List<RouteRowState> previousState)
+    {
+        bool sameIdentity = Route.Count == newRoute.Count;
+        if (sameIdentity)
+        {
+            for (int i = 0; i < newRoute.Count; i++)
+            {
+                if (Route[i].JumpDistance != newRoute[i].JumpDistance ||
+                    Route[i].Name != newRoute[i].Name)
+                {
+                    sameIdentity = false;
+                    break;
+                }
+            }
+        }
+
+        if (sameIdentity)
+        {
+            // Only replace rows whose displayed data has changed.
+            for (int i = 0; i < newRoute.Count; i++)
+            {
+                StarSystemViewModel newRow = newRoute[i];
+                RouteRowState? previous = i < previousState.Count ? previousState[i] : null;
+
+                if (previous?.JumpDistanceLy != newRow.JumpDistanceLy ||
+                    previous?.ExplorationStatus != newRow.ExplorationStatus ||
+                    previous?.StarClass != newRow.StarClass ||
+                    previous?.EdsmName != newRow.EdsmName ||
+                    previous?.OverallProgress != newRow.OverallProgress ||
+                    previous?.BodiesCartographicMaxValue != newRow.BodiesCartographicMaxValue ||
+                    previous?.HasMatchingPlanetClassifications != newRow.HasMatchingPlanetClassifications ||
+                    previous?.HasValuableBodies != newRow.HasValuableBodies ||
+                    previous?.IsCurrentSystemInRoute != newRow.IsCurrentSystemInRoute ||
+                    previous?.IsJumpDestinationSystemInRoute != newRow.IsJumpDestinationSystemInRoute ||
+                    previous?.IsPastSystemInRoute != newRow.IsPastSystemInRoute)
+                {
+                    Route[i] = newRow;
+                }
+            }
+        }
+        else
+        {
+            Route.Clear();
+            foreach (var item in newRoute)
+            {
+                Route.Add(item);
+            }
         }
     }
 }

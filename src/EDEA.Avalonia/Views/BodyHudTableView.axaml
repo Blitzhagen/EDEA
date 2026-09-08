@@ -9,6 +9,11 @@
              xmlns:controls="clr-namespace:EDEA.Avalonia.Controls"
              x:Class="EDEA.Avalonia.Views.BodyHudTableView"
              x:DataType="vm:BodyTableViewModel">
+  <UserControl.Styles>
+    <Style Selector="DataGridCell.BodyNameCell">
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+    </Style>
+  </UserControl.Styles>
   <Grid>
     <TextBlock Text="{Binding NoBodiesInfo}"
                IsVisible="{Binding AreNoBodiesAvailable}"
@@ -28,7 +33,7 @@
               CanUserResizeColumns="True"
               GridLinesVisibility="Horizontal">
       <DataGrid.Columns>
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Id" Header="{l:Loc ColumnHeaderName}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Id" Header="{l:Loc ColumnHeaderName}" CellStyleClasses="BodyNameCell">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:BodyViewModel">
               <Grid>
@@ -37,8 +42,8 @@
                   <ColumnDefinition Width="Auto" />
                   <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <materialIcons:MaterialIcon Grid.Column="0" Kind="GpsFixed" IsVisible="{Binding IsCurrentPlanetInSystem}" Foreground="{DynamicResource CurrentEntityIconColor}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipCurrentBodyIcon}" />
-                <materialIcons:MaterialIcon Grid.Column="1" Kind="Globe" IsVisible="{Binding WasReadFromEdsmOnly}" Foreground="{DynamicResource EdsmIconColor}" Width="14" Height="14" ToolTip.Tip="{l:Loc TooltipEdsmOnly}" Margin="2,0,0,0" />
+                <materialIcons:MaterialIcon Grid.Column="0" Kind="Globe" IsVisible="{Binding WasReadFromEdsmOnly}" Foreground="{DynamicResource EdsmIconColor}" Width="14" Height="14" ToolTip.Tip="{l:Loc TooltipEdsmOnly}" />
+                <materialIcons:MaterialIcon Grid.Column="1" Kind="GpsFixed" IsVisible="{Binding IsCurrentPlanetInSystem}" Foreground="{DynamicResource CurrentEntityIconColor}" Width="16" Height="16" ToolTip.Tip="{l:Loc TooltipCurrentBodyIcon}" Margin="2,0,0,0" />
                 <TextBlock Grid.Column="2" Text="{Binding ShortName}" Foreground="{DynamicResource MainColor}" Margin="4,0,0,0" />
               </Grid>
             </DataTemplate>

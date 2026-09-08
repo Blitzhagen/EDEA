@@ -8,6 +8,11 @@
              xmlns:controls="clr-namespace:EDEA.Avalonia.Controls"
              x:Class="EDEA.Avalonia.Views.SurroundingsTableView"
              x:DataType="vm:SurroundingsTableViewModel">
+  <UserControl.Styles>
+    <Style Selector="DataGridCell.SurroundingsNameCell">
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+    </Style>
+  </UserControl.Styles>
   <Grid>
     <TextBlock Text="{Binding NoSurroundingsInfo}"
                IsVisible="{Binding ShowNoSurroundingsInfo}"
@@ -36,7 +41,7 @@
               CanUserReorderColumns="True"
               CanUserResizeColumns="True">
       <DataGrid.Columns>
-        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Name" Header="{l:Loc ColumnHeaderSystemName}">
+        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Name" Header="{l:Loc ColumnHeaderSystemName}" CellStyleClasses="SurroundingsNameCell">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate x:DataType="vm:StarSystemViewModel">
               <Grid>
