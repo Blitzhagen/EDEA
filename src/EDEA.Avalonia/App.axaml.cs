@@ -88,18 +88,19 @@ public partial class App : Application
         Directory.CreateDirectory(Path.GetDirectoryName(logFileFullPath)!);
         GlobalContext.Properties["LogFileFullPath"] = logFileFullPath;
 
-        string log4netConfig = $@"
+#if DEBUG
+        const string log4netConfig = @"
 <log4net>
   <appender name=""TraceAppender"" type=""log4net.Appender.TraceAppender"">
     <layout type=""log4net.Layout.PatternLayout"">
-      <conversionPattern value=""%date{{HH:mm:ss,fff}} %-5level | %message (%logger)%newline%exception"" />
+      <conversionPattern value=""%date{HH:mm:ss,fff} %-5level | %message (%logger)%newline%exception"" />
     </layout>
   </appender>
   <appender name=""RollingFileAppender"" type=""log4net.Appender.RollingFileAppender"">
     <filter type=""log4net.Filter.LevelRangeFilter"">
       <levelMin value=""DEBUG"" />
     </filter>
-    <file type=""log4net.Util.PatternString"" value=""%property{{LogFileFullPath}}"" />
+    <file type=""log4net.Util.PatternString"" value=""%property{LogFileFullPath}"" />
     <appendToFile value=""true"" />
     <immediateFlush value=""true"" />
     <rollingStyle value=""Size"" />
@@ -107,7 +108,7 @@ public partial class App : Application
     <maxSizeRollBackups value=""5"" />
     <staticLogFileName value=""true"" />
     <layout type=""log4net.Layout.PatternLayout"">
-      <conversionPattern value=""%date{{dd MMM yyyy HH:mm:ss,fff}} %-5level | %message (%logger)%newline%exception"" />
+      <conversionPattern value=""%date{dd MMM yyyy HH:mm:ss,fff} %-5level | %message (%logger)%newline%exception"" />
     </layout>
   </appender>
   <root>
@@ -116,6 +117,30 @@ public partial class App : Application
     <appender-ref ref=""RollingFileAppender"" />
   </root>
 </log4net>";
+#else
+        const string log4netConfig = @"
+<log4net>
+  <appender name=""RollingFileAppender"" type=""log4net.Appender.RollingFileAppender"">
+    <filter type=""log4net.Filter.LevelRangeFilter"">
+      <levelMin value=""INFO"" />
+    </filter>
+    <file type=""log4net.Util.PatternString"" value=""%property{LogFileFullPath}"" />
+    <appendToFile value=""true"" />
+    <immediateFlush value=""true"" />
+    <rollingStyle value=""Size"" />
+    <maximumFileSize value=""5MB"" />
+    <maxSizeRollBackups value=""5"" />
+    <staticLogFileName value=""true"" />
+    <layout type=""log4net.Layout.PatternLayout"">
+      <conversionPattern value=""%date{dd MMM yyyy HH:mm:ss,fff} %-5level | %message (%logger)%newline%exception"" />
+    </layout>
+  </appender>
+  <root>
+    <level value=""INFO"" />
+    <appender-ref ref=""RollingFileAppender"" />
+  </root>
+</log4net>";
+#endif
 
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes(log4netConfig));
         XmlConfigurator.Configure(stream);

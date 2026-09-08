@@ -47,6 +47,7 @@ artifacts/
 # Others
 *.db
 *.db-journal
+*.log
 publish/
 EDEA-win-x64.zip
 
