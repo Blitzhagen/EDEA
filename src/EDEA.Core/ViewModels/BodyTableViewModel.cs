@@ -103,6 +103,10 @@ public class BodyTableViewModel : TabViewModel
                 RefreshBodiesDataView();
             });
         };
+        Resources.CultureChanged += delegate
+        {
+            PlatformServices.Dispatcher?.Invoke(RefreshBodiesDataView);
+        };
     }
 
     /// <summary>

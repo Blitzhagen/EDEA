@@ -269,6 +269,7 @@ public sealed class AvaloniaSpeechService : ISpeechService
     /// </summary>
     private async Task LoadVoicesAsync()
     {
+        var requestedLang = Resources.Culture.TwoLetterISOLanguageName;
         try
         {
             var allVoices = await global::SayIt.SayIt.ListVoicesAsync();
@@ -302,6 +303,15 @@ public sealed class AvaloniaSpeechService : ISpeechService
         finally
         {
             Interlocked.Exchange(ref _voicesLoading, 0);
+
+            // The UI language may have changed while the request was in flight;
+            // reload so the list always matches the current culture.
+            if (!string.Equals(requestedLang, Resources.Culture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase)
+                && Interlocked.CompareExchange(ref _voicesLoading, 1, 0) == 0)
+            {
+                _voicesLoaded = false;
+                _ = LoadVoicesAsync();
+            }
         }
     }
 
@@ -311,7 +321,8 @@ public sealed class AvaloniaSpeechService : ISpeechService
     private global::SayIt.SayItConfig BuildSayItConfig()
     {
         string voice = Preferences.Speech.SpeechSynthesizerVoice;
-        if (string.IsNullOrEmpty(voice))
+        if (string.IsNullOrEmpty(voice)
+            || (_installedVoices.Count > 0 && !_installedVoices.Contains(voice)))
         {
             voice = GetDefaultVoice();
         }
@@ -335,10 +346,10 @@ public sealed class AvaloniaSpeechService : ISpeechService
     /// </summary>
     private string GetDefaultVoice()
     {
+        // _installedVoices is already filtered to the current UI culture.
         var defaultVoice = _installedVoices.FirstOrDefault(v => v.Contains("-KatjaNeural"))
             ?? _installedVoices.FirstOrDefault(v => v.Contains("-ConradNeural"))
-            ?? _installedVoices.FirstOrDefault(v => v.StartsWith("de-", StringComparison.OrdinalIgnoreCase))
-            ?? _installedVoices.FirstOrDefault(v => v.StartsWith("en-", StringComparison.OrdinalIgnoreCase));
+            ?? _installedVoices.FirstOrDefault();
 
         if (defaultVoice != null)
         {

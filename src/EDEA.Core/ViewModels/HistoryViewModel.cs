@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using EDEA.Models;
+using EDEA.Properties;
 using EDEA.Services;
 using log4net;
 
@@ -55,6 +56,7 @@ public class HistoryViewModel : TabViewModel
         getHistoryData().ContinueWith(delegate
         {
             _historyProvider.HistoryUpdated += _historyProvider_HistoryUpdated;
+            Resources.CultureChanged += () => _ = getHistoryData();
         });
     }
 

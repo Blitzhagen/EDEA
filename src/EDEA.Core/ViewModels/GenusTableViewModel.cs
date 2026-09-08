@@ -125,6 +125,10 @@ public class GenusTableViewModel : TabViewModel
                 updateCurrentLocation();
             });
         };
+        Resources.CultureChanged += delegate
+        {
+            PlatformServices.Dispatcher?.Invoke(refreshView);
+        };
     }
 
     /// <summary>

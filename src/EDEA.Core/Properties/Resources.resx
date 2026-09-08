@@ -1320,4 +1320,7 @@
   <data name="PreferencesWindow_Combo_LanguageAuto" xml:space="preserve">
     <value>Auto (system language)</value>
   </data>
+  <data name="PreferencesWindow_Checkbox_SpeechOutputEnabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
 </root>

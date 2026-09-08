@@ -114,6 +114,8 @@ public partial class JournalHistoryImportViewModel : ObservableObject
             _journalHistoryImporter.JournalHistoryImportProgressChanged += OnJournalHistoryImportProgressChanged;
             _journalHistoryImporter.JournalHistoryImportFinished += OnJournalHistoryImportFinished;
         }
+
+        Resources.CultureChanged += () => OnPropertyChanged(string.Empty);
     }
 
     /// <summary>

@@ -208,6 +208,7 @@ public partial class RoutePlotterViewModel : ObservableObject
         _starSystemProvider.GuiDataUpdated += OnGuiDataUpdated;
         _starSystemProvider.GuiShipFuelDataUpdated += OnGuiShipFuelDataUpdated;
         _webApiProvider.WebApiLoadingStatusChanged += OnWebApiLoadingStatusChanged;
+        Resources.CultureChanged += () => OnPropertyChanged(string.Empty);
     }
 
     /// <summary>

@@ -3,6 +3,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using EDEA;
 using EDEA.Models;
+using EDEA.Properties;
 using EDEA.Services;
 using EDEA.ViewModels;
 using log4net;
@@ -71,6 +72,12 @@ public partial class HudViewModel : ObservableObject
 
         CurrentSystem = new StarSystemViewModel(_starSystemProvider.CurrentSystem);
         UpdateView();
+
+        Resources.CultureChanged += () =>
+        {
+            CurrentSystem = new StarSystemViewModel(_starSystemProvider.CurrentSystem);
+            UpdateView();
+        };
     }
 
     /// <summary>

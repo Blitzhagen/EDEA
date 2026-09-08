@@ -107,5 +107,6 @@ public class HotkeyViewModel : ViewModelBase
     {
         _hotkey = hotkey;
         Description = description;
+        Resources.CultureChanged += () => OnPropertyChanged(string.Empty);
     }
 }

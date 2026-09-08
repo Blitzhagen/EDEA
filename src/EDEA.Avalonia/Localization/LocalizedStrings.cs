@@ -14,7 +14,13 @@ public sealed class LocalizedStrings : INotifyPropertyChanged
 
     private LocalizedStrings()
     {
-        Resources.CultureChanged += () => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
+        Resources.CultureChanged += () =>
+        {
+            // Avalonia invalidates indexer bindings on "Item" (WPF convention "Item[]" is
+            // kept as well so the source also works for WPF-style binding engines).
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
+        };
     }
 
     /// <summary>Gets the localized string for the given resource key.</summary>

@@ -1322,4 +1322,7 @@
   <data name="PreferencesWindow_Combo_LanguageAuto" xml:space="preserve">
     <value>Авто (язык системы)</value>
   </data>
+  <data name="PreferencesWindow_Checkbox_SpeechOutputEnabled" xml:space="preserve">
+    <value>Включено</value>
+  </data>
 </root>

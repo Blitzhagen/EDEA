@@ -93,6 +93,11 @@ public class SurroundingsTableViewModel : TabViewModel
         _starSystemProvider = starSystemProvider;
         SurroundingsLoadingInfo = string.Empty;
         ShowNoSurroundingsInfo = false;
+        Resources.CultureChanged += delegate
+        {
+            PlatformServices.Dispatcher?.Invoke(refreshView);
+        };
+
         _starSystemProvider.GuiDataUpdated += delegate
         {
             PlatformServices.Dispatcher?.Invoke(delegate

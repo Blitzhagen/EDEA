@@ -11,6 +11,7 @@ using Avalonia.Threading;
 using AvaloniaInput = global::Avalonia.Input;
 using EDEA.Enums;
 using EDEA.Models;
+using EDEA.Properties;
 using EDEA.Services;
 
 namespace EDEA.Avalonia.Windows;
@@ -144,6 +145,8 @@ public partial class PreferencesWindow : Window
         {
             PlatformServices.Speech.VoicesLoaded += OnVoicesLoaded;
             Closed += (_, _) => PlatformServices.Speech.VoicesLoaded -= OnVoicesLoaded;
+            EDEA.Properties.Resources.CultureChanged += OnCultureChanged;
+            Closed += (_, _) => EDEA.Properties.Resources.CultureChanged -= OnCultureChanged;
         }
     }
 
@@ -274,39 +277,7 @@ public partial class PreferencesWindow : Window
         SpeechRateSlider.Value = speech.SpeechSynthesizerRate;
         SpeechVolumeSlider.Value = speech.SpeechSynthesizerVolume;
 
-        var speechType = speech.GetType();
-        var items = new List<SpeechOutputItem>();
-        foreach (var property in speechType.GetProperties())
-        {
-            if (property.PropertyType != typeof(bool))
-            {
-                continue;
-            }
-
-            var speechTextProperty = speechType.GetProperty(property.Name + "Speech");
-            if (speechTextProperty is null || speechTextProperty.PropertyType != typeof(string))
-            {
-                continue;
-            }
-
-            var value = (bool?)property.GetValue(speech) ?? false;
-            var text = (string?)speechTextProperty.GetValue(speech) ?? string.Empty;
-            var label = PlatformServices.Speech?.GetLabelForSpeechOutput(property.Name) ?? property.Name;
-
-            items.Add(new SpeechOutputItem
-            {
-                Name = property.Name,
-                Label = label,
-                IsEnabled = value,
-                Phrase = text,
-            });
-        }
-
-        SpeechOutputListBox.ItemsSource = items;
-        if (items.Count > 0)
-        {
-            SpeechOutputListBox.SelectedIndex = 0;
-        }
+        PopulateSpeechOutputs();
 
         var hud = Preferences.HudWindow;
         HudOpacitySlider.Value = hud.Opacity;
@@ -391,6 +362,69 @@ public partial class PreferencesWindow : Window
         }
 
         Preferences.Other.AutomaticTabSwitching = AutomaticTabSwitchingCheckBox.IsChecked == true;
+    }
+
+    /// <summary>
+    /// Rebuilds the speech output list when the UI language changes so labels,
+    /// migrated phrases and examples reflect the new culture.
+    /// </summary>
+    private void OnCultureChanged()
+    {
+        if (SpeechOutputListBox == null)
+        {
+            return;
+        }
+
+        var selectedName = (SpeechOutputListBox.SelectedItem as SpeechOutputItem)?.Name;
+        PopulateSpeechOutputs();
+
+        var items = SpeechOutputListBox.ItemsSource as List<SpeechOutputItem>;
+        if (items != null && items.Count > 0)
+        {
+            var index = selectedName == null ? 0 : items.FindIndex(i => i.Name == selectedName);
+            SpeechOutputListBox.SelectedIndex = index >= 0 ? index : 0;
+        }
+    }
+
+    /// <summary>
+    /// Builds the list of configurable speech outputs from the current settings.
+    /// </summary>
+    private void PopulateSpeechOutputs()
+    {
+        var speech = Preferences.Speech;
+        var speechType = speech.GetType();
+        var items = new List<SpeechOutputItem>();
+        foreach (var property in speechType.GetProperties())
+        {
+            if (property.PropertyType != typeof(bool))
+            {
+                continue;
+            }
+
+            var speechTextProperty = speechType.GetProperty(property.Name + "Speech");
+            if (speechTextProperty is null || speechTextProperty.PropertyType != typeof(string))
+            {
+                continue;
+            }
+
+            var value = (bool?)property.GetValue(speech) ?? false;
+            var text = (string?)speechTextProperty.GetValue(speech) ?? string.Empty;
+            var label = PlatformServices.Speech?.GetLabelForSpeechOutput(property.Name) ?? property.Name;
+
+            items.Add(new SpeechOutputItem
+            {
+                Name = property.Name,
+                Label = label,
+                IsEnabled = value,
+                Phrase = text,
+            });
+        }
+
+        SpeechOutputListBox.ItemsSource = items;
+        if (items.Count > 0)
+        {
+            SpeechOutputListBox.SelectedIndex = 0;
+        }
     }
 
     /// <summary>

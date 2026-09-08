@@ -246,7 +246,7 @@
                       </ListBox>
                       <TextBlock Grid.Row="0" Grid.Column="2" Text="{l:Loc PreferencesWindow_Label_SpeechOutputText}" Classes="PreferencesBodyHeadline" />
                       <TextBox x:Name="SpeechOutputPhraseTextBox" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="300" Height="100" Margin="0,2,0,0" TextWrapping="Wrap" MaxLength="500" TextChanged="SpeechOutputPhraseTextBox_TextChanged" />
-                      <CheckBox x:Name="SpeechOutputEnabledCheckBox" Grid.Row="2" Grid.Column="2" Content="Enabled" IsCheckedChanged="SpeechOutputEnabledCheckBox_IsCheckedChanged" />
+                      <CheckBox x:Name="SpeechOutputEnabledCheckBox" Grid.Row="2" Grid.Column="2" Content="{l:Loc PreferencesWindow_Checkbox_SpeechOutputEnabled}" IsCheckedChanged="SpeechOutputEnabledCheckBox_IsCheckedChanged" />
                       <Grid Grid.Row="4" Grid.Column="2">
                         <Grid.ColumnDefinitions>
                           <ColumnDefinition MinWidth="132" MaxWidth="132" />

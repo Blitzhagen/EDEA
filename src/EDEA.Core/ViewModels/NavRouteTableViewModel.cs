@@ -155,6 +155,11 @@ public class NavRouteTableViewModel : TabViewModel
                 OnPropertyChanged("ShowNoRouteInfo");
             });
         };
+
+        Resources.CultureChanged += delegate
+        {
+            PlatformServices.Dispatcher?.Invoke(RefreshRouteDataView);
+        };
     }
 
     /// <summary>

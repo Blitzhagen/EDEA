@@ -258,7 +258,11 @@ public partial class MainViewModel : ObservableObject
         var surroundingsTableViewModel = new SurroundingsTableViewModel(Resources.TabHeader_Surroundings, "Visible", starSystemProvider) { TabHeaderKey = "TabHeader_Surroundings" };
         var historyViewModel = new HistoryViewModel(Resources.TabHeader_History, "Visible", historyProvider) { TabHeaderKey = "TabHeader_History" };
 
-        Resources.CultureChanged += () => OnPropertyChanged(string.Empty);
+        Resources.CultureChanged += () =>
+        {
+            UpdateDataView();
+            OnPropertyChanged(string.Empty);
+        };
 
         TabViewModels = new ObservableCollection<TabViewModel>
         {
