@@ -114,7 +114,68 @@ namespace EDEA
         public static readonly string ApplicationFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
         public static readonly string AppDataFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create),
-            Assembly.GetExecutingAssembly().GetName().Name!);
+            "EDEA");
+
+        static Globals()
+        {
+            MigrateFromLegacyAppDataFolder();
+        }
+
+        /// <summary>
+        /// Migrates user data from the legacy %LocalAppData%\EDEA.Core folder to %LocalAppData%\EDEA.
+        /// </summary>
+        private static void MigrateFromLegacyAppDataFolder()
+        {
+            string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create);
+            string legacyFolder = Path.Combine(localAppData, "EDEA.Core");
+            if (!Directory.Exists(legacyFolder))
+            {
+                return;
+            }
+
+            Directory.CreateDirectory(AppDataFolder);
+
+            foreach (string sourcePath in Directory.EnumerateFileSystemEntries(legacyFolder, "*", SearchOption.AllDirectories))
+            {
+                string relativePath = sourcePath.Substring(legacyFolder.Length + 1);
+                string destinationPath = Path.Combine(AppDataFolder, relativePath);
+
+                if (Directory.Exists(sourcePath))
+                {
+                    Directory.CreateDirectory(destinationPath);
+                    continue;
+                }
+
+                string? destinationDirectory = Path.GetDirectoryName(destinationPath);
+                if (destinationDirectory != null)
+                {
+                    Directory.CreateDirectory(destinationDirectory);
+                }
+
+                if (!File.Exists(destinationPath) || File.GetLastWriteTimeUtc(sourcePath) > File.GetLastWriteTimeUtc(destinationPath))
+                {
+                    File.Copy(sourcePath, destinationPath, overwrite: true);
+                }
+            }
+
+            try
+            {
+                string backupFolder = Path.Combine(localAppData, "EDEA.Core.legacy");
+                int suffix = 1;
+                while (Directory.Exists(backupFolder))
+                {
+                    backupFolder = Path.Combine(localAppData, $"EDEA.Core.legacy.{suffix}");
+                    suffix++;
+                }
+
+                Directory.Move(legacyFolder, backupFolder);
+            }
+            catch
+            {
+                // Best effort: if the legacy folder cannot be renamed, leave it in place.
+            }
+        }
+
         public static readonly string AppVersionString = $"{Assembly.GetExecutingAssembly().GetName().Version!.Major}.{Assembly.GetExecutingAssembly().GetName().Version!.Minor}.{Assembly.GetExecutingAssembly().GetName().Version!.Build}{(string.IsNullOrWhiteSpace(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration) ? string.Empty : (" " + Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration))}";
 
         public static readonly ImmutableDictionary<string, string> EdsmToJournalPlanetClasses = new Dictionary<string, string>

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.2] - 2026-09-08
+
+### Changed
+- **AppData-Ordner:** Löscht `EDEA.Core` und verwendet jetzt `%LocalAppData%\EDEA`. Vorhandene Einstellungen, Datenbank, Fensterzustand und Routen-Datei werden automatisch migriert.
+- **Version** auf `1.0.2.0` gesetzt.
+
 ## [1.0.1] - 2026-09-08
 
 ### Added

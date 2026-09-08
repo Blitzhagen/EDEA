@@ -35,9 +35,11 @@ public sealed class AvaloniaWindowStateService : IWindowStateService
 
         var legacyPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "EDEA",
+            "EDEA.Core",
             "windowstate.json");
-        if (File.Exists(legacyPath) && !File.Exists(_stateFilePath))
+        if (File.Exists(legacyPath)
+            && !File.Exists(_stateFilePath)
+            && !string.Equals(Path.GetFullPath(legacyPath), Path.GetFullPath(_stateFilePath), StringComparison.OrdinalIgnoreCase))
         {
             try
             {

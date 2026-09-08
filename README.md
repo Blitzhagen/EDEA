@@ -96,7 +96,7 @@ Tests:
 dotnet test EDEA.slnx
 ```
 
-Einstellungen, Datenbank und Logs liegen unter `%LOCALAPPDATA%\EDEA.Core`.
+Einstellungen, Datenbank und Logs liegen unter `%LOCALAPPDATA%\EDEA`.
 
 ## Dokumentation
 
