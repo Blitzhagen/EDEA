@@ -4,6 +4,7 @@
 
 ### Changed
 - **AppData-Ordner:** Löscht `EDEA.Core` und verwendet jetzt `%LocalAppData%\EDEA`. Vorhandene Einstellungen, Datenbank, Fensterzustand und Routen-Datei werden automatisch migriert.
+- **Release-Builds:** `DebugType=none` und `DebugSymbols=false` — keine `.pdb`-Dateien mehr im Release-Paket.
 - **Version** auf `1.0.2.0` gesetzt.
 
 ## [1.0.1] - 2026-09-08
