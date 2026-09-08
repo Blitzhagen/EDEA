@@ -93,8 +93,6 @@ public sealed class AvaloniaSpeechService : ISpeechService
         _preferencesParameter = new Dictionary<string, (string, SpeechOutput[])>();
         GeneratePreferencesParameter();
         Log.Info("Speech provider initialized with SayIt (Edge TTS).");
-        Interlocked.Exchange(ref _voicesLoading, 1);
-        _ = LoadVoicesAsync();
         Resources.CultureChanged += () =>
         {
             _voicesLoaded = false;
@@ -320,9 +318,12 @@ public sealed class AvaloniaSpeechService : ISpeechService
     /// </summary>
     private global::SayIt.SayItConfig BuildSayItConfig()
     {
+        // Trigger async voice loading on first use; if the list is not yet
+        // available fall back to the culture-specific default voice.
+        var voices = InstalledVoices;
         string voice = Preferences.Speech.SpeechSynthesizerVoice;
         if (string.IsNullOrEmpty(voice)
-            || (_installedVoices.Count > 0 && !_installedVoices.Contains(voice)))
+            || (voices.Count > 0 && !voices.Contains(voice)))
         {
             voice = GetDefaultVoice();
         }
