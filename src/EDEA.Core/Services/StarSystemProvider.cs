@@ -266,6 +266,7 @@ public class StarSystemProvider
         {
             log.Info($"{(historyResult == 1 ? "Added" : "Updated")} current system '{CurrentSystem.Name}' ({CurrentSystem.Id}) to history, history count: {_historyProvider.GetCount()}");
         }
+        RekeyCurrentSystemInRoute(CurrentSystem, StarSystemsOnRoute);
         if (IsCurrentSystemInRoute)
         {
             try
@@ -276,16 +277,7 @@ public class StarSystemProvider
             {
                 log.Error($"Unable to replace current system '{CurrentSystem.Name}' in route", exception);
             }
-            if (_routeProvider.IsCustomRoute)
-            {
-                StarSystem nextJumpSystem = (from system in StarSystemsOnRoute
-                                             where system.Value.JumpDistance == CurrentSystem.JumpDistance + 1
-                                             select system.Value).FirstOrDefault();
-                if (nextJumpSystem != null)
-                {
-                    copySystemNameToClipboard(nextJumpSystem.Name);
-                }
-            }
+            CopyNextSystemNametoClipboard();
         }
         if (isSystemInRoute(currentSystem, StarSystemsOnRoute))
         {
@@ -430,15 +422,22 @@ public class StarSystemProvider
     /// <summary>Copies the name of the next route system to the clipboard.</summary>
     public void CopyNextSystemNametoClipboard()
     {
-        if (IsCurrentSystemInRoute && _routeProvider.IsCustomRoute)
+        if (!IsCurrentSystemInRoute || !_routeProvider.IsCustomRoute)
         {
-            StarSystem starSystem = (from system in StarSystemsOnRoute
-                                     where system.Value.JumpDistance == CurrentSystem.JumpDistance + 1
-                                     select system.Value).FirstOrDefault();
-            if (starSystem != null)
-            {
-                copySystemNameToClipboard(starSystem.Name);
-            }
+            return;
+        }
+
+        StarSystem starSystem = (from system in StarSystemsOnRoute
+                                 where system.Value.JumpDistance == CurrentSystem.JumpDistance + 1
+                                 select system.Value).FirstOrDefault();
+        if (starSystem != null)
+        {
+            log.Debug($"Route next jump: copying system name '{starSystem.Name}' (JumpDistance {starSystem.JumpDistance}, current {CurrentSystem.Name} at {CurrentSystem.JumpDistance})");
+            copySystemNameToClipboard(starSystem.Name);
+        }
+        else
+        {
+            log.Debug($"Route next jump: no next system found for {CurrentSystem.Name} at JumpDistance {CurrentSystem.JumpDistance}");
         }
     }
 
@@ -776,6 +775,7 @@ public class StarSystemProvider
 
     private async Task setRoute(ConcurrentDictionary<long, StarSystem> systemsOnNewRoute, bool firstRead = false)
     {
+        RekeyCurrentSystemInRoute(CurrentSystem, systemsOnNewRoute);
         bool currentSystemInNewRoute = isSystemInRoute(CurrentSystem, systemsOnNewRoute);
         int currentSystemJumpDistance = 0;
         if (currentSystemInNewRoute)
@@ -819,18 +819,21 @@ public class StarSystemProvider
                 {
                     StarSystemsOnRoute[routeEntry.Key].IsCurrentSystemInRoute = true;
                 }
-                else if (currentSystemInNewRoute && StarSystemsOnRoute[routeEntry.Key].JumpDistance == currentSystemJumpDistance + 1 && _routeProvider.IsCustomRoute)
-                {
-                    copySystemNameToClipboard(routeEntry.Value.Name);
-                }
                 SetRouteIsLoadingStatus(status: true, $"Setting up route: {Math.Round(routeProgressCounter / (double)systemsOnNewRoute.Count * 100.0)} %");
                 routeProgressCounter++;
             }
+            CopyNextSystemNametoClipboard();
             triggerGuiDataUpdateEvent(force: true);
             if (firstRead)
             {
                 _journalProvider.Initialize();
             }
+            // The current system may have been set by the journal while we were building
+            // the route (e.g. on startup or reconnect). Match by name and re-key so the
+            // current system is recognized and the next jump can be copied.
+            RekeyCurrentSystemInRoute(CurrentSystem, StarSystemsOnRoute);
+            CopyNextSystemNametoClipboard();
+
             if (!firstRead && currentSystemInNewRoute)
             {
                 CurrentSystemInRouteChanged?.Invoke(this, EventArgs.Empty);
@@ -1028,5 +1031,38 @@ public class StarSystemProvider
             return route.ContainsKey(starSystem.Id);
         }
         return false;
+    }
+
+    /// <summary>
+    /// Re-keys the route dictionary for a current system whose real id does not yet match
+    /// the imported route key (e.g. CSV routes using a name hash). When the names match,
+    /// the current system is inserted with its real id and the placeholder entry is removed.
+    /// </summary>
+    private void RekeyCurrentSystemInRoute(StarSystem starSystem, ConcurrentDictionary<long, StarSystem> route)
+    {
+        if (starSystem.Id == 0L || route.ContainsKey(starSystem.Id))
+        {
+            return;
+        }
+
+        foreach (var routeEntry in route)
+        {
+            if (string.Equals(routeEntry.Value.Name, starSystem.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                starSystem.JumpDistance = routeEntry.Value.JumpDistance;
+                starSystem.JumpDistanceLy = routeEntry.Value.JumpDistanceLy;
+                route[starSystem.Id] = starSystem;
+                if (route.TryRemove(routeEntry.Key, out _))
+                {
+                    log.Debug($"Rekeyed route system '{starSystem.Name}' from placeholder id {routeEntry.Key} to real id {starSystem.Id}");
+                }
+                else
+                {
+                    log.Warn($"Could not remove placeholder route entry '{starSystem.Name}' ({routeEntry.Key})");
+                }
+
+                return;
+            }
+        }
     }
 }

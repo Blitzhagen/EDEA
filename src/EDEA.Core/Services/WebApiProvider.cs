@@ -1005,6 +1005,15 @@ public class WebApiProvider
         var name = Helpsters.ConvertJObjectValue(jStarSystem, "name", string.Empty);
         if (id != starSystem.Id)
         {
+            // Plotter routes (especially CSV imports) may use placeholder IDs such as
+            // a name hash. Accept the EDSM response when the name matches, so route
+            // systems still get their body counts and discovery status.
+            if (string.Equals(name, starSystem.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                log.Debug($"EDSM returned id {id} for '{name}', but local id is {starSystem.Id}; accepting by name match");
+                return true;
+            }
+
             log.Info($"Requested EDSM star system '{(name)}' has a different id ({(id)}) than the star system '{(starSystem.Name)}' to be updated ({(starSystem.Id)})");
             return false;
         }
@@ -1024,8 +1033,13 @@ public class WebApiProvider
             var name = Helpsters.ConvertJObjectValue(jStarSystem, "name", string.Empty);
             if (id != starSystem.Id)
             {
-                log.Info($"Requested EDSM star system '{(name)}' has a different id ({(id)}) than the star system '{(starSystem.Name)}' to be updated ({(starSystem.Id)}) - aborting update!");
-                return false;
+                if (!string.Equals(name, starSystem.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    log.Info($"Requested EDSM star system '{(name)}' has a different id ({(id)}) than the star system '{(starSystem.Name)}' to be updated ({(starSystem.Id)}) - aborting update!");
+                    return false;
+                }
+
+                log.Debug($"EDSM returned id {id} for '{name}', but local id is {starSystem.Id}; applying data by name match");
             }
 
             if (Helpsters.ConvertJObjectValue(jStarSystem, "distance", 0.0) != 0.0)

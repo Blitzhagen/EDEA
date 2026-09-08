@@ -174,6 +174,7 @@ public partial class App : Application
                     (mainWindow.DataContext as MainViewModel)?.OnMainWindowClosing();
                 };
                 mainWindow.Show();
+                (mainWindow.DataContext as MainViewModel)?.CopyNextSystemToClipboard();
                 (mainWindow.DataContext as MainViewModel)?.RestoreWindows();
             }
         }

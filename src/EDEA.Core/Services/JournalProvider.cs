@@ -599,6 +599,7 @@ public class JournalProvider
         await _starSystemProvider.SetPastStarSystemsOnRouteAndRequestEDSMDataForUpcomingStarSystemsOnRoute();
         _starSystemProvider.CopyNextSystemNametoClipboard();
         _starSystemProvider.InitializeCurrentSystem();
+        _starSystemProvider.CopyNextSystemNametoClipboard();
         _journalStore.JournalUpdated += _journalStore_JournalUpdated;
     }
 

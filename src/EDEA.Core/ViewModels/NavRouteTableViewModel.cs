@@ -128,11 +128,7 @@ public class NavRouteTableViewModel : TabViewModel
         {
             PlatformServices.Dispatcher?.Invoke(delegate
             {
-                if (CurrentSystem == null)
-                {
-                    RefreshRouteDataView();
-                }
-
+                RefreshRouteDataView();
                 OnPropertyChanged("CurrentSystem");
                 OnPropertyChanged("HasNoCurrentSystem");
             });
