@@ -2,16 +2,31 @@
 
 ## [1.0.0] - 2026-09-08
 
-### Added
-- Windows-x64 Publish-Profil (`dotnet publish -p:PublishProfile=Windows`)
-- `.gitignore` um `*.log` und `releases/` ergänzt
+EDEA (Elite Dangerous Exploration Assistant) ist ein Open-Source-Begleitprogramm für **Elite Dangerous**, das sich auf die Erkundung der Galaxie spezialisiert.
 
-### Changed
-- **AppData-Ordner:** Löscht `EDEA.Core` und verwendet jetzt `%LocalAppData%\EDEA`. Vorhandene Einstellungen, Datenbank, Fensterzustand und Routen-Datei werden automatisch migriert.
-- **Logging:** Debug-Logs werden jetzt nur im `Debug`-Build geschrieben; im `Release`-Build werden nur `INFO`, `WARN`, `ERROR` und `FATAL` geloggt.
-- **Release-Builds:** `DebugType=none` und `DebugSymbols=false` — keine `.pdb`-Dateien mehr im Release-Paket.
-- **Version** auf `1.0.0.0` gesetzt.
+### Funktionen
 
-### Fixed
-- **Body-/Surroundings-HUD:** EDSM-Globe-Icon und Current-Body-GPS-Icon werden jetzt linksbündig ausgerichtet, sodass die Symbole sauber untereinander stehen.
-- **Route-HUD:** Scroll-Position, Auto-Scroll, Tab-Guard und Berechnung/Aktualisierung der Route-Status-Flags (`current`/`jump`/`past`) stabilisiert.
+- **Live-Journal-Auswertung:** Liest das Spiel-Journal in Echtzeit und zeigt Systeme, Himmelskörper, biologische Signale, Route und Erkundungsdaten an.
+- **Systemübersicht:** Anzahl der Körper, Entdeckungsstatus, FSS-Signale (geologisch/biologisch), EDSM-Anreicherung und geschätzte Systemwerte.
+- **Himmelskörper:** Terraformbarkeit, Landbarkeit, wertvolle Welten, Ringe, „Planets of Interest“, Entdeckerstatus und geschätzte Kartografie-Werte.
+- **Exobiologie:** Artenvorhersage auf Basis von Körpertyp, Atmosphäre und Region (Canonn-Research-Daten), Scan-Fortschritt, Klonkolonie-Abstand und Vista-Genomics-Werte.
+- **Route:** NavRoute mit Sprungnummern, Sternklassen, tankbaren Sternen und Systeminformationen; Hotkey zum Kopieren des nächsten Ziels in die Zwischenablage.
+- **HUD-Overlay:** Transparentes, immer im Vordergrund liegendes Fenster mit den Tabs **Route**, **Himmelskörper** und **Biologie**; Maus-Durchgriff (Click-Through) wahlweise aktivierbar.
+- **Sprachausgabe:** Konfigurierbare Text-to-Speech-Ansagen für fast alle Ereignisse, inklusive individueller Texte und Testfunktion.
+- **Einstellungen:** Frei wählbare Farben, vier Schriftgrößenstufen, HUD-Spalten, Deckkraft, automatischer Tab-Wechsel, Globale Hotkeys und mehr.
+- **Historie und Statistik:** Lokale SQLite-Datenbank für die aktuelle Tour und die gesamte Erkundungshistorie; Journal-Import älterer Dateien.
+- **Datenquellen:** EDSM, Spansh und Canonn Research.
+
+### Technik
+
+- .NET 8 / C#
+- Avalonia UI 11
+- Windows-x64, self-contained
+- SQLite (Microsoft.Data.Sqlite + Dapper)
+- log4net, NAudio, SayIt, Material.Icons.Avalonia
+
+### Hinweise
+
+- Dieses Release ist **Windows-only**.
+- Einstellungen, Datenbank und Logs liegen unter `%LOCALAPPDATA%\EDEA`.
+- Das Release-Paket enthält **keine Debug-Symbole (`.pdb`)** und kein Debug-Logging.
