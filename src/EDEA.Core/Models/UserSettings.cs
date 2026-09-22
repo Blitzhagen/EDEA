@@ -491,6 +491,25 @@ public partial class UserSettingsOther : ObservableObject
             return path;
         }
 
+        // On Linux, Elite Dangerous runs via Steam Proton and stores journals
+        // inside the Proton prefix (app id 359320).
+        var protonJournalDir = Path.Combine("users", "steamuser", "Saved Games", "Frontier Developments", "Elite Dangerous");
+        var candidates = new[]
+        {
+            Path.Combine(userProfile, ".steam", "steam", "steamapps", "compatdata", "359320", "pfx", "drive_c"),
+            Path.Combine(userProfile, ".local", "share", "Steam", "steamapps", "compatdata", "359320", "pfx", "drive_c"),
+            Path.Combine(userProfile, ".var", "app", "com.valvesoftware.Steam", ".local", "share", "Steam", "steamapps", "compatdata", "359320", "pfx", "drive_c"),
+        };
+
+        foreach (var prefix in candidates)
+        {
+            var protonPath = Path.Combine(prefix, protonJournalDir);
+            if (Directory.Exists(protonPath))
+            {
+                return protonPath;
+            }
+        }
+
         return string.Empty;
     }
 }
