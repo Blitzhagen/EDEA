@@ -24,6 +24,7 @@
     <PackageReference Include="PixiEditor.ColorPicker.AvaloniaUI" Version="1.0.11" />
     <PackageReference Include="PortAudioSharp2" Version="1.0.6" />
     <PackageReference Include="SayIt" Version="1.0.6" />
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.94.0" />
   </ItemGroup>
 
   <ItemGroup>

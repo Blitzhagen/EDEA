@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using Avalonia.Threading;
 using EDEA;
 using EDEA.Avalonia.Helpers;
 using EDEA.Avalonia.Services;
+using EDEA.Avalonia.Services.Hotkeys;
 using EDEA.Avalonia.ViewModels;
 using EDEA.Avalonia.Views;
 using EDEA.Services;
@@ -299,6 +301,8 @@ public partial class App : Application
         PlatformServices.ColorTheme = new AvaloniaColorThemeService();
         PlatformServices.UiTimer = new AvaloniaUiTimerService();
         PlatformServices.Screen = new AvaloniaScreenService();
-        PlatformServices.GlobalHotkey = new AvaloniaGlobalHotkeyService();
+        PlatformServices.GlobalHotkey = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? new AvaloniaGlobalHotkeyService()
+            : new CompositeGlobalHotkeyService(new X11GlobalHotkeyService(), new PortalGlobalHotkeyService());
     }
 }
