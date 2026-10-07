@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=EDEA
+Name[de]=EDEA
+Comment=Elite Dangerous Exploration Assistant
+Comment[de]=Elite Dangerous Exploration Assistant
+Exec=EDEA.Avalonia
+Icon=edea
+Terminal=false
+Type=Application
+Categories=Game;Utility;
+StartupWMClass=EDEA

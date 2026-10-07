@@ -49,9 +49,12 @@ artifacts/
 *.db-journal
 *.log
 publish/
+publish-linux/
 releases/
+dist/
 EDEA-win-x64.zip
 EDEA-*.zip
+EDEA-*.tar.gz
 
 # Agent tooling / working notes (not part of the repository)
 .devin/

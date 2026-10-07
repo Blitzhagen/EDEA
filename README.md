@@ -79,7 +79,8 @@ Keine Telemetrie, kein Auto-Updater, keine Original-Spiel-Assets. Alle Daten ble
 - log4net
 - Material.Icons.Avalonia
 - PixiEditor.ColorPicker.AvaloniaUI
-- NAudio + SayIt (Sprachausgabe)
+- NAudio (Windows) bzw. PortAudioSharp2 + NLayer (Linux) + SayIt (Sprachausgabe)
+- Tmds.DBus.Protocol (XDG-Portal-Global-Shortcuts unter Linux)
 
 ## Bauen und starten
 
@@ -96,7 +97,15 @@ Tests:
 dotnet test EDEA.slnx
 ```
 
-Einstellungen, Datenbank und Logs liegen unter `%LOCALAPPDATA%\EDEA`.
+Linux x64 (self-contained Tarball, läuft auf X11 und Wayland/XWayland):
+
+```bash
+bash packaging/linux/build-linux.sh
+```
+
+Erzeugt `dist/EDEA-<Version>-linux-x64.tar.gz` (Launcher `EDEA.Avalonia`, `.desktop`-Datei und Icon enthalten).
+
+Einstellungen, Datenbank und Logs liegen unter `%LOCALAPPDATA%\EDEA` (Windows) bzw. `~/.local/share/EDEA` (Linux).
 
 ## Dokumentation
 
