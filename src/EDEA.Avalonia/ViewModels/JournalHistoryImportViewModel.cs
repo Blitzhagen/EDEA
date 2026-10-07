@@ -142,7 +142,9 @@ public partial class JournalHistoryImportViewModel : ObservableObject
         }
         else
         {
-            IntroText = Resources.JournalHistoryImport_IntroText_None;
+            IntroText = _journalHistoryImporter.AlreadyImportedFileCount > 0
+                ? Resources.JournalHistoryImport_IntroText_AllImported
+                : Resources.JournalHistoryImport_IntroText_None;
             IsStartVisible = false;
             IsStopCloseVisible = true;
             StopCloseButtonContent = Resources.Button_Close;

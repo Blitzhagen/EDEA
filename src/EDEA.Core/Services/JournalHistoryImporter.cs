@@ -71,6 +71,10 @@ public class JournalHistoryImporter
     /// <value>A int value.</value>
     public int StatusPercentage { get; private set; }
 
+    /// <summary>Gets the number of journal files skipped by the last ReadJournalFiles call because they were already imported unchanged.</summary>
+    /// <value>A int value.</value>
+    public int AlreadyImportedFileCount { get; private set; }
+
     /// <summary>Occurs when the JournalHistoryImportProgressChanged event is raised.</summary>
     public event EventHandler JournalHistoryImportProgressChanged = delegate
     {
@@ -175,16 +179,16 @@ public class JournalHistoryImporter
     /// <returns>A int result.</returns>
     public int ReadJournalFiles()
     {
-        var allFiles = (from f in Helpsters.GetJournalFiles(Preferences.Other.EdSavedGamePath)
-                        orderby f.LastWriteTime
-                        select f).ToList();
+        AlreadyImportedFileCount = 0;
+        var allFiles = Helpsters.GetJournalFiles(Preferences.Other.EdSavedGamePath)?.OrderBy(f => f.LastWriteTime).ToList();
         if (allFiles == null || allFiles.Count == 0)
         {
             journalFiles = new List<FileInfo>();
             return 0;
         }
 
-        if (allFiles.Count > 1)
+        var newestFile = allFiles[allFiles.Count - 1];
+        if (allFiles.Count > 1 && IsJournalStillBeingWritten(newestFile))
         {
             allFiles.RemoveAt(allFiles.Count - 1);
         }
@@ -209,7 +213,28 @@ public class JournalHistoryImporter
         }
 
         journalFiles = filesToImport;
+        AlreadyImportedFileCount = skippedCount;
         return journalFiles.Count;
+    }
+
+    /// <summary>Determines whether the newest journal file is likely still written to by a running Elite Dangerous session.</summary>
+    /// <param name="file">The newest journal file.</param>
+    /// <returns><c>true</c> when the file was modified very recently or is still held open by another process; otherwise, <c>false</c>.</returns>
+    private static bool IsJournalStillBeingWritten(FileInfo file)
+    {
+        if (DateTime.Now - file.LastWriteTime < TimeSpan.FromMinutes(5))
+        {
+            return true;
+        }
+        try
+        {
+            using var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            return false;
+        }
+        catch (IOException)
+        {
+            return true;
+        }
     }
 
     /// <summary>Determines whether CancelJournalImport.</summary>

@@ -1025,6 +1025,9 @@
   <data name="JournalHistoryImport_IntroText_None" xml:space="preserve">
     <value>Файлы старых журналов для импорта не найдены. Создайте новые файлы журнала, играя в Elite Dangerous несколько дней.</value>
   </data>
+  <data name="JournalHistoryImport_IntroText_AllImported" xml:space="preserve">
+    <value>Все найденные файлы старых журналов уже импортированы. Новые файлы журнала создаются во время игры в Elite Dangerous.</value>
+  </data>
   <data name="RouteIsLoading_PleaseWait" xml:space="preserve">
     <value>Пожалуйста, подождите ...</value>
   </data>

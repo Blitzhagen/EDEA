@@ -1105,6 +1105,9 @@ public static class Resources
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>
     public static string JournalHistoryImport_IntroText_None => Get(nameof(JournalHistoryImport_IntroText_None));
+    /// <summary>Gets the localized string for this resource.</summary>
+    /// <value>The resource string value.</value>
+    public static string JournalHistoryImport_IntroText_AllImported => Get(nameof(JournalHistoryImport_IntroText_AllImported));
 
     /// <summary>Gets the localized string for this resource.</summary>
     /// <value>The resource string value.</value>

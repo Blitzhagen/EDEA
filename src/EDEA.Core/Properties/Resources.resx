@@ -1023,6 +1023,9 @@
   <data name="JournalHistoryImport_IntroText_None" xml:space="preserve">
     <value>No historical journal files were found for the import. Please create additional journal files by playing Elite Dangerous for several days.</value>
   </data>
+  <data name="JournalHistoryImport_IntroText_AllImported" xml:space="preserve">
+    <value>All found historical journal files have already been imported. New journal files are created by playing Elite Dangerous.</value>
+  </data>
   <data name="RouteIsLoading_PleaseWait" xml:space="preserve">
     <value>Please wait ...</value>
   </data>
