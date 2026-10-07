@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.0.1] - 2026-10-07
+
+Bugfix-Release.
+
+### Behoben
+
+- **Journal-Historien-Import:** Der Dialog behauptete „keine Journal-Dateien gefunden", obwohl alle vorhandenen Dateien bereits unverändert importiert waren. Dafür gibt es jetzt einen eigenen Hinweistext.
+- **Journal-Historien-Import:** Die neueste Journal-Datei wurde immer vom Import ausgeschlossen, sodass die zuletzt gespielte Session nicht importierbar war, bis ein neueres Journal existierte. Sie wird jetzt nur noch übersprungen, solange sie vermutlich noch von Elite Dangerous beschrieben wird.
+- **Journal-Historien-Import:** Ein leeres oder nicht gefundenes Journal-Verzeichnis löste einen Fehler aus, statt die „keine Dateien"-Meldung anzuzeigen.
+
+### Verbessert
+
+- **Linux:** Der Journal-Pfad wird jetzt auch im Steam-Proton-Präfix (App-ID 359320) erkannt.
+
+### Hinweise
+
+- Dieses Release ist weiterhin **Windows-only** (die Proton-Erkennung betrifft selbst gebaute Linux-Varianten).
+- Einstellungen, Datenbank und Logs liegen unter `%LOCALAPPDATA%\EDEA`.
+- Das Release-Paket enthält **keine Debug-Symbole (`.pdb`)** und kein Debug-Logging.
+
 ## [1.0.0] - 2026-09-08
 
 EDEA (Elite Dangerous Exploration Assistant) ist ein Open-Source-Begleitprogramm für **Elite Dangerous**, das sich auf die Erkundung der Galaxie spezialisiert.
