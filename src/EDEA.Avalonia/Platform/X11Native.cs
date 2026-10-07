@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace EDEA.Avalonia.Services.Hotkeys;
+namespace EDEA.Avalonia.Platform;
 
 /// <summary>
 /// Minimal libX11/libXext interop used for global hotkeys (XGrabKey) and
@@ -145,6 +145,15 @@ internal static class X11Native
     [DllImport(LibXext)]
     internal static extern void XShapeCombineRectangles(IntPtr display, ulong window, int shapeKind,
         int xOff, int yOff, IntPtr rects, int nRects, int op, int ordering);
+
+    /// <summary>
+    /// Combines a pixmap mask with the specified shape kind. Passing 0 (None) as
+    /// <paramref name="srcMask"/> resets the shape to its default — for
+    /// <see cref="ShapeInput"/> that restores the full window input region.
+    /// </summary>
+    [DllImport(LibXext)]
+    internal static extern void XShapeCombineMask(IntPtr display, ulong window, int shapeKind,
+        int xOff, int yOff, ulong srcMask, int op);
 
     /// <summary>Queries whether the XShape extension is available.</summary>
     [DllImport(LibXext)]

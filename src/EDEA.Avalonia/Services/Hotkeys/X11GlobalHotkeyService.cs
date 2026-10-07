@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Avalonia.Threading;
+using EDEA.Avalonia.Platform;
 using EDEA.Core.Input;
 using EDEA.Enums;
 using EDEA.Services;
