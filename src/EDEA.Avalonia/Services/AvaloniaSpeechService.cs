@@ -6,22 +6,24 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using EDEA;
+using EDEA.Avalonia.Services.Audio;
 using EDEA.Models;
 using EDEA.Properties;
 using EDEA.Services;
 using log4net;
-using NAudio.Wave;
 
 namespace EDEA.Avalonia.Services;
 
 /// <summary>
 /// Avalonia/cross-platform implementation of <see cref="ISpeechService"/> using SayIt
-/// (Microsoft Edge TTS) and NAudio for playback, matching the original WPF behavior.
+/// (Microsoft Edge TTS) and an <see cref="IAudioPlayer"/> for playback, matching the
+/// original WPF behavior.
 /// </summary>
 public sealed class AvaloniaSpeechService : ISpeechService
 {
@@ -46,14 +48,9 @@ public sealed class AvaloniaSpeechService : ISpeechService
     private readonly Dictionary<string, (string Label, SpeechOutput[] SpeechOutputs)> _preferencesParameter;
 
     /// <summary>
-    /// The current NAudio output device.
+    /// The platform-specific audio player (lazy).
     /// </summary>
-    private WaveOutEvent? _waveOut;
-
-    /// <summary>
-    /// The current NAudio reader.
-    /// </summary>
-    private AudioFileReader? _audioReader;
+    private IAudioPlayer? _audioPlayer;
 
     /// <summary>
     /// Whether a voice list request is currently in flight.
@@ -188,7 +185,7 @@ public sealed class AvaloniaSpeechService : ISpeechService
     public void ShutUp()
     {
         _speechQueue.Clear();
-        _waveOut?.Stop();
+        _audioPlayer?.Stop();
         SetIsSpeaking(false);
     }
 
@@ -199,7 +196,7 @@ public sealed class AvaloniaSpeechService : ISpeechService
         {
             if (_isSpeaking)
             {
-                _waveOut?.Stop();
+                _audioPlayer?.Stop();
             }
 
             var voice = Preferences.Speech.SpeechSynthesizerVoice;
@@ -432,43 +429,33 @@ public sealed class AvaloniaSpeechService : ISpeechService
     }
 
     /// <summary>
-    /// Plays the specified MP3 file through NAudio and waits for completion.
+    /// Plays the specified MP3 file through the platform audio player and waits for completion.
     /// </summary>
     private async Task PlayTempFileAsync(string tempFile)
     {
-        var tcs = new TaskCompletionSource();
         try
         {
-            _audioReader?.Dispose();
-            _waveOut?.Dispose();
-
-            _audioReader = new AudioFileReader(tempFile);
-            _audioReader.Volume = Preferences.Speech.SpeechSynthesizerVolume / 100.0f;
-
-            _waveOut = new WaveOutEvent();
-            _waveOut.PlaybackStopped += (s, e) =>
-            {
-                SetIsSpeaking(false);
-                _audioReader?.Dispose();
-                _audioReader = null;
-                _waveOut?.Dispose();
-                _waveOut = null;
-                tcs.TrySetResult();
-                Log.Debug("NAudio finished playback");
-            };
-            _waveOut.Init(_audioReader);
-            _waveOut.Play();
-
+            var volume = Preferences.Speech.SpeechSynthesizerVolume / 100.0f;
             SetIsSpeaking(true);
-            Log.Info($"Playing synthesized speech from {tempFile} at volume {_audioReader.Volume}");
-            await tcs.Task;
+            Log.Info($"Playing synthesized speech from {tempFile} at volume {volume}");
+            await AudioPlayer.PlayAsync(tempFile, volume);
         }
         catch (Exception ex)
         {
             Log.Error("Could not play synthesized speech", ex);
-            tcs.TrySetResult();
+        }
+        finally
+        {
+            SetIsSpeaking(false);
         }
     }
+
+    /// <summary>
+    /// Gets the platform-specific audio player, creating it on first use.
+    /// </summary>
+    private IAudioPlayer AudioPlayer => _audioPlayer ??= RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+        ? new NAudioAudioPlayer()
+        : new PortAudioAudioPlayer();
 
     /// <summary>
     /// Builds and speaks a configured speech output.
