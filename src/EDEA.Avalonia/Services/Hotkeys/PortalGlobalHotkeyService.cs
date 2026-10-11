@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
@@ -32,6 +33,13 @@ internal sealed class PortalGlobalHotkeyService : IGlobalHotkeyService, IDisposa
     private const string GlobalShortcutsInterface = "org.freedesktop.portal.GlobalShortcuts";
     private const string RequestInterface = "org.freedesktop.portal.Request";
     private const string SessionInterface = "org.freedesktop.portal.Session";
+    private const string HostRegistryInterface = "org.freedesktop.host.portal.Registry";
+
+    /// <summary>
+    /// Application id registered via the host portal registry. Must match the
+    /// basename of an installed .desktop file (see <c>packaging/linux/edea.desktop</c>).
+    /// </summary>
+    private const string AppId = "edea";
 
     /// <summary>
     /// Debounce interval for batching Register/Unregister calls into one BindShortcuts call
@@ -199,6 +207,8 @@ internal sealed class PortalGlobalHotkeyService : IGlobalHotkeyService, IDisposa
             var connection = new DBusConnection(address);
             await connection.ConnectAsync();
 
+            await RegisterHostAppAsync(connection);
+
             _requestObserver = await connection.AddMatchAsync(
                 new MatchRule
                 {
@@ -256,6 +266,81 @@ internal sealed class PortalGlobalHotkeyService : IGlobalHotkeyService, IDisposa
             Log.Info($"GlobalShortcuts portal unavailable: {ex.Message}");
             _connection?.Dispose();
         }
+    }
+
+    /// <summary>
+    /// Declares our application id to the portal via org.freedesktop.host.portal.Registry
+    /// so portal calls requiring an app id (e.g. GlobalShortcuts.CreateSession) succeed
+    /// when running unsandboxed. The registry validates the id against an installed
+    /// .desktop file, so one is created if the app was not installed via a package.
+    /// Registration must happen before any other portal method call; failures are
+    /// non-fatal (older portals may not expose the interface).
+    /// </summary>
+    private static async Task RegisterHostAppAsync(DBusConnection connection)
+    {
+        try
+        {
+            EnsureDesktopFile();
+
+            var message = BuildRegisterMessage(connection);
+            await connection.CallMethodAsync(message, static (m, s) => true);
+            Log.Info($"Registered app id '{AppId}' with the XDG portal host registry.");
+        }
+        catch (Exception ex)
+        {
+            // Registration is best-effort: older portals lack the interface, and some
+            // backends resolve the app id from the cgroup instead.
+            Log.Debug($"Portal host app registration failed (continuing anyway): {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Builds the Registry.Register method call message. Kept synchronous because
+    /// <see cref="MessageWriter"/> is a ref struct that cannot cross await boundaries.
+    /// </summary>
+    private static MessageBuffer BuildRegisterMessage(DBusConnection connection)
+    {
+        using var writer = connection.GetMessageWriter();
+        writer.WriteMethodCallHeader(
+            destination: PortalBusName,
+            path: PortalObjectPath,
+            @interface: HostRegistryInterface,
+            signature: "sa{sv}",
+            member: "Register");
+        writer.WriteString(AppId);
+        writer.WriteDictionary(new Dictionary<string, VariantValue>());
+        return writer.CreateMessage();
+    }
+
+    /// <summary>
+    /// Writes a minimal hidden .desktop file to ~/.local/share/applications if none
+    /// exists yet. The portal requires a desktop file whose basename matches the
+    /// registered app id; packaged installs already ship one.
+    /// </summary>
+    private static void EnsureDesktopFile()
+    {
+        var dataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME");
+        if (string.IsNullOrEmpty(dataHome))
+        {
+            dataHome = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local", "share");
+        }
+
+        var applicationsDir = Path.Combine(dataHome, "applications");
+        var desktopPath = Path.Combine(applicationsDir, $"{AppId}.desktop");
+        if (File.Exists(desktopPath))
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(applicationsDir);
+        var execPath = Environment.ProcessPath ?? AppId;
+        File.WriteAllText(desktopPath,
+            "[Desktop Entry]\n" +
+            "Type=Application\n" +
+            "Name=EDEA\n" +
+            $"Exec={execPath}\n" +
+            "NoDisplay=true\n");
+        Log.Info($"Created hidden desktop file {desktopPath} for portal app id registration.");
     }
 
     /// <summary>
@@ -338,7 +423,9 @@ internal sealed class PortalGlobalHotkeyService : IGlobalHotkeyService, IDisposa
                     await connection.CallMethodAsync(bindMsg,
                         static (Message m, object? s) => m.GetBodyReader().ReadObjectPathAsString());
 
-                    var bindResponse = await WaitForResponseAsync(bindTcs, bindPath);
+                    // The portal may keep the request open while a confirmation/shortcut
+                    // assignment dialog is shown (KDE does this), so allow plenty of time.
+                    var bindResponse = await WaitForResponseAsync(bindTcs, bindPath, TimeSpan.FromMinutes(5));
                     if (bindResponse.Response == 0)
                     {
                         _sessionHandle = sessionHandle;
@@ -386,9 +473,10 @@ internal sealed class PortalGlobalHotkeyService : IGlobalHotkeyService, IDisposa
     /// Waits for a portal request response with a timeout.
     /// </summary>
     private static async Task<(uint Response, Dictionary<string, VariantValue> Results)> WaitForResponseAsync(
-        TaskCompletionSource<(uint Response, Dictionary<string, VariantValue> Results)> tcs, string requestPath)
+        TaskCompletionSource<(uint Response, Dictionary<string, VariantValue> Results)> tcs, string requestPath,
+        TimeSpan? timeout = null)
     {
-        var delay = Task.Delay(TimeSpan.FromSeconds(10));
+        var delay = Task.Delay(timeout ?? TimeSpan.FromSeconds(10));
         var completed = await Task.WhenAny(tcs.Task, delay);
         if (completed != tcs.Task)
         {
