@@ -23,7 +23,7 @@
     <PackageReference Include="NLayer" Version="3.0.0" />
     <PackageReference Include="PixiEditor.ColorPicker.AvaloniaUI" Version="1.0.11" />
     <PackageReference Include="PortAudioSharp2" Version="1.0.6" />
-    <PackageReference Include="SayIt" Version="1.0.6" />
+    <ProjectReference Include="..\..\third_party\SayIt\SayIt.csproj" />
     <PackageReference Include="Tmds.DBus.Protocol" Version="0.92.0" />
   </ItemGroup>
 

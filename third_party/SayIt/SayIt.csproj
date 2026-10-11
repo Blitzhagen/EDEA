@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Vendored fork of https://github.com/ylvict/SayIt (MIT, see LICENSE).
+       Patched: retry around the WebSocket handshake (intermittent HTTP 403
+       from the Edge TTS endpoint). Upstream version base: 1.0.7/master. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>SayIt</RootNamespace>
+    <AssemblyName>SayIt</AssemblyName>
+  </PropertyGroup>
+</Project>
