@@ -78,6 +78,14 @@ cd EDEA-<Version>-linux-x64
 ./EDEA.Avalonia
 ```
 
+Alternativ als einzelnes AppImage (`appimagetool` erforderlich, siehe
+`packaging/linux/build-appimage.sh`):
+
+```bash
+bash packaging/linux/build-appimage.sh
+./dist/EDEA-<Version>-x86_64.AppImage
+```
+
 ## Konfiguration
 
 ### Journal-Pfad

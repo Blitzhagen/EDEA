@@ -108,6 +108,14 @@ bash packaging/linux/build-linux.sh
 
 Erzeugt `dist/EDEA-<Version>-linux-x64.tar.gz` (Launcher `EDEA.Avalonia`, `.desktop`-Datei und Icon enthalten).
 
+Alternativ als AppImage (benötigt `appimagetool` auf `PATH` oder via `APPIMAGETOOL`):
+
+```bash
+bash packaging/linux/build-appimage.sh
+```
+
+Erzeugt `dist/EDEA-<Version>-x86_64.AppImage`.
+
 Einstellungen, Datenbank und Logs liegen unter `%LOCALAPPDATA%\EDEA` (Windows) bzw. `~/.local/share/EDEA` (Linux).
 
 ## Dokumentation
