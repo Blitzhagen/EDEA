@@ -9,6 +9,7 @@ Bugfix-Release.
 - **Journal-Historien-Import:** Der Dialog behauptete „keine Journal-Dateien gefunden", obwohl alle vorhandenen Dateien bereits unverändert importiert waren. Dafür gibt es jetzt einen eigenen Hinweistext.
 - **Journal-Historien-Import:** Die neueste Journal-Datei wurde immer vom Import ausgeschlossen, sodass die zuletzt gespielte Session nicht importierbar war, bis ein neueres Journal existierte. Sie wird jetzt nur noch übersprungen, solange sie vermutlich noch von Elite Dangerous beschrieben wird.
 - **Journal-Historien-Import:** Ein leeres oder nicht gefundenes Journal-Verzeichnis löste einen Fehler aus, statt die „keine Dateien"-Meldung anzuzeigen.
+- **Sprachausgabe:** Biologische und geologische Signale wurden nicht angesagt, wenn das Signal-Event einen bereits bekannten Himmelskörper betraf (typischer Live-Scan-Ablauf).
 
 ### Verbessert
 
