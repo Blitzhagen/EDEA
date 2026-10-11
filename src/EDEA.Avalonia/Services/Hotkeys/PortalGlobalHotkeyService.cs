@@ -208,13 +208,14 @@ internal sealed class PortalGlobalHotkeyService : IGlobalHotkeyService, IDisposa
                     Member = "Response"
                 },
                 static (Message m, object? s) => ReadResponseSignal(m),
-                (Notification<(string Path, uint Response, Dictionary<string, VariantValue> Results)> n) =>
+                (ex, value, readerState, handlerState) =>
                 {
-                    if (n.HasValue)
+                    if (ex is null)
                     {
-                        OnResponse(n.Value);
+                        OnResponse(value);
                     }
                 },
+                ObserverFlags.None,
                 emitOnCapturedContext: false);
 
             _activatedObserver = await connection.AddMatchAsync(
@@ -231,13 +232,14 @@ internal sealed class PortalGlobalHotkeyService : IGlobalHotkeyService, IDisposa
                     reader.ReadObjectPathAsString(); // session_handle, not needed
                     return reader.ReadString();      // shortcut_id
                 },
-                (Notification<string> n) =>
+                (ex, value, readerState, handlerState) =>
                 {
-                    if (n.HasValue)
+                    if (ex is null)
                     {
-                        OnActivated(n.Value);
+                        OnActivated(value);
                     }
                 },
+                ObserverFlags.None,
                 emitOnCapturedContext: false);
 
             lock (_lock)
