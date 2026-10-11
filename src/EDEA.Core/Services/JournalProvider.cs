@@ -428,6 +428,8 @@ public class JournalProvider
         if (starSystem.Bodies.TryGetValue(bodyId, out var existingBody) && existingBody.IsPlanet)
         {
             Planet planet = (Planet)existingBody;
+            var previousBiologicalCount = planet.BiologicalCount;
+            var previousGeologicalCount = planet.GeologicalCount;
             foreach (JsonObject? signal in signals.OfType<JsonObject>())
             {
                 if (signal == null)
@@ -444,6 +446,20 @@ public class JournalProvider
                 else if (signalType == "$SAA_SignalType_Geological;")
                 {
                     planet.GeologicalCount = Helpsters.ConvertJObjectValue(signal, "Count", 0);
+                }
+            }
+            if (!journalFirstParse)
+            {
+                // Signal events mutate the planet in place, so the 0->N transition that
+                // checkBodyAndSpeak watches for never happens through TryAddOrUpdateBody.
+                // Announce here, mirroring that transition logic.
+                if (planet.BiologicalCount > 0 && previousBiologicalCount == 0)
+                {
+                    PlatformServices.Speech?.SpeakBiologicalSignals(new SpeechOutputPlanet(planet));
+                }
+                if (planet.GeologicalCount > 0 && previousGeologicalCount == 0)
+                {
+                    PlatformServices.Speech?.SpeakGeologicalSignals(new SpeechOutputPlanet(planet));
                 }
             }
             if (genuses.Count <= 0)
