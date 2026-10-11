@@ -435,6 +435,7 @@ public partial class MainViewModel : ObservableObject
                 : Resources.MenuItem_HudPassThroughEnable;
 
             _hudWindow = new HudWindow(_starSystemProvider, this);
+            _hudWindow.UseManualMove = PlatformServices.HudWindow?.SetAboveFullscreen(_hudWindow) ?? false;
             _hudWindow.Opened += (_, _) =>
             {
                 PlatformServices.HudWindow?.SetClickThrough(_hudWindow, _hudClickThrough);

@@ -82,6 +82,36 @@ internal static class X11Native
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     internal delegate int XErrorHandler(IntPtr display, ref XErrorEvent errorEvent);
 
+    // XChangeWindowAttributes valuemask bits (X.h).
+    internal const ulong CWOverrideRedirect = 1UL << 9;
+
+    /// <summary>
+    /// XSetWindowAttributes structure (64-bit layout, 112 bytes). Only
+    /// <see cref="OverrideRedirect"/> is currently populated by callers, but the
+    /// full field list must be present so that field lands at its real offset
+    /// (88) — the server reads it positionally when the CWOverrideRedirect
+    /// valuemask bit is set.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct XSetWindowAttributes
+    {
+        public nuint BackgroundPixmap;
+        public nuint BackgroundPixel;
+        public nuint BorderPixmap;
+        public nuint BorderPixel;
+        public int BitGravity;
+        public int WinGravity;
+        public int BackingStore;
+        public nuint BackingPlanes;
+        public nuint BackingPixelValue;
+        public int SaveUnder;
+        public nint EventMask;
+        public nint DoNotPropagateMask;
+        public int OverrideRedirect;
+        public nuint Colormap;
+        public nint Cursor;
+    }
+
     /// <summary>
     /// Enables Xlib multi-threading. Must be called before any other Xlib call
     /// when more than one thread uses the display connection.
@@ -135,6 +165,11 @@ internal static class X11Native
     /// <summary>Installs a process-wide X error handler.</summary>
     [DllImport(LibX11)]
     internal static extern IntPtr XSetErrorHandler(XErrorHandler handler);
+
+    /// <summary>Changes selected attributes of a window (e.g. override_redirect).</summary>
+    [DllImport(LibX11)]
+    internal static extern int XChangeWindowAttributes(IntPtr display, ulong window,
+        ulong valueMask, ref XSetWindowAttributes attributes);
 
     /// <summary>
     /// Combines a region/rectangles with the specified shape kind of a window.

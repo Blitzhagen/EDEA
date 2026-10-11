@@ -20,6 +20,17 @@ public interface IHudWindowService
     void SetClickThrough(object window, bool enabled);
 
     /// <summary>
+    /// Makes the window render above fullscreen applications, if the platform
+    /// supports it. Must be called before the window is shown. On X11 this marks
+    /// the window as override-redirect so the compositor puts it in the
+    /// unmanaged layer, which stacks above active fullscreen windows.
+    /// </summary>
+    /// <param name="window">The window object.</param>
+    /// <returns><c>true</c> when the window was made unmanaged/override-redirect
+    /// and therefore needs client-side move handling; otherwise <c>false</c>.</returns>
+    bool SetAboveFullscreen(object window);
+
+    /// <summary>
     /// Starts a window drag operation (equivalent to WPF DragMove).
     /// </summary>
     /// <param name="window">The window object.</param>

@@ -27,6 +27,28 @@ public partial class HudWindow : Window
     /// The resize button used to initiate a resize operation.
     /// </summary>
     private Control? _resizeButton;
+
+    /// <summary>
+    /// The move grabber used to initiate a manual move operation.
+    /// </summary>
+    private Control? _moveGrabber;
+
+    /// <summary>
+    /// The pointer position on screen at the start of a manual move.
+    /// </summary>
+    private PixelPoint _moveStartPointer;
+
+    /// <summary>
+    /// The window position at the start of a manual move.
+    /// </summary>
+    private PixelPoint _moveStartPosition;
+
+    /// <summary>
+    /// Gets or sets whether window dragging is handled client-side instead of via
+    /// the window manager (required for override-redirect windows, which the WM
+    /// ignores for _NET_WM_MOVERESIZE requests).
+    /// </summary>
+    public bool UseManualMove { get; set; }
     /// <summary>
     /// Initializes a new instance of the <see cref="HudWindow"/> class.
     /// </summary>
@@ -73,7 +95,50 @@ public partial class HudWindow : Window
     /// <param name="e">The pointer event data.</param>
     private void HudWindowMoveGrabber_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        BeginMoveDrag(e);
+        if (!UseManualMove)
+        {
+            BeginMoveDrag(e);
+            return;
+        }
+
+        _moveGrabber = sender as Control;
+        _moveStartPosition = Position;
+        _moveStartPointer = this.PointToScreen(e.GetPosition(this));
+        e.Pointer.Capture(_moveGrabber);
+    }
+
+    /// <summary>
+    /// Moves the HUD window while the grabber is being dragged (manual move for
+    /// override-redirect windows).
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The pointer event data.</param>
+    private void HudWindowMoveGrabber_PointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (_moveGrabber == null || e.Pointer.Captured != _moveGrabber)
+        {
+            return;
+        }
+
+        var currentPointer = this.PointToScreen(e.GetPosition(this));
+        Position = new PixelPoint(
+            _moveStartPosition.X + currentPointer.X - _moveStartPointer.X,
+            _moveStartPosition.Y + currentPointer.Y - _moveStartPointer.Y);
+    }
+
+    /// <summary>
+    /// Ends the manual move drag on the HUD window.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The pointer event data.</param>
+    private void HudWindowMoveGrabber_PointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (e.Pointer.Captured == _moveGrabber)
+        {
+            e.Pointer.Capture(null);
+        }
+
+        _moveGrabber = null;
     }
 
     /// <summary>

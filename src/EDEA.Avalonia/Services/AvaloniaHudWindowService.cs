@@ -87,6 +87,59 @@ public sealed class AvaloniaHudWindowService : IHudWindowService
     }
 
     /// <summary>
+    /// Marks the HUD window as override-redirect on X11/XWayland so the compositor
+    /// renders it in the unmanaged layer, which stacks above active fullscreen
+    /// windows (e.g. Elite Dangerous in borderless mode). Must be called before
+    /// the window is mapped; once managed, the attribute change goes unnoticed
+    /// by the window manager. The returned flag tells the caller that window
+    /// dragging must be handled client-side because there is no WM to honor
+    /// _NET_WM_MOVERESIZE requests.
+    /// </summary>
+    public bool SetAboveFullscreen(object window)
+    {
+        if (window is not Window avaloniaWindow || !RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return false;
+        }
+
+        var platformHandle = avaloniaWindow.TryGetPlatformHandle();
+        if (platformHandle == null || platformHandle.Handle == 0 || platformHandle.HandleDescriptor != "XID")
+        {
+            Log.Debug($"Skipping override-redirect: platform handle is '{platformHandle?.HandleDescriptor}'");
+            return false;
+        }
+
+        try
+        {
+            var display = X11Native.XOpenDisplay(null);
+            if (display == IntPtr.Zero)
+            {
+                Log.Warn("Cannot apply HUD override-redirect: no X11 display available");
+                return false;
+            }
+
+            try
+            {
+                var attributes = new X11Native.XSetWindowAttributes { OverrideRedirect = 1 };
+                X11Native.XChangeWindowAttributes(display, (ulong)platformHandle.Handle,
+                    X11Native.CWOverrideRedirect, ref attributes);
+                X11Native.XSync(display, 0);
+                Log.Info("HUD window marked as override-redirect (unmanaged, above fullscreen).");
+                return true;
+            }
+            finally
+            {
+                X11Native.XCloseDisplay(display);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warn("Failed to apply X11 override-redirect", ex);
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Enables or disables click-through via the X11 XShape extension input region.
     /// Works on X11 sessions and on Wayland through XWayland (XWayland translates
     /// the input region to an empty wl_surface input region).
