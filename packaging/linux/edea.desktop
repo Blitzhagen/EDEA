@@ -8,4 +8,4 @@ Icon=edea
 Terminal=false
 Type=Application
 Categories=Game;Utility;
-StartupWMClass=EDEA
+StartupWMClass=EDEA.Avalonia
