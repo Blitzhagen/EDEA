@@ -26,6 +26,14 @@ Im Repository-Root:
 dotnet build EDEA.slnx
 ```
 
+> **Hinweis:** Das XML-Solution-Format `.slnx` benötigt .NET SDK 9.0.200 oder neuer.
+> Mit .NET 8 SDK die Projekte direkt bauen/testen:
+>
+> ```bash
+> dotnet build src/EDEA.Avalonia/EDEA.Avalonia.csproj
+> dotnet test test/EDEA.Tests/EDEA.Tests.csproj
+> ```
+
 Tests:
 
 ```powershell

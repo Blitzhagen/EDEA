@@ -30,6 +30,9 @@ dotnet build EDEA.slnx
 dotnet test EDEA.slnx --no-build
 ```
 
+> `.slnx` benötigt .NET SDK 9.0.200+; mit .NET 8 SDK direkt
+> `dotnet test test/EDEA.Tests/EDEA.Tests.csproj` verwenden.
+
 ## Empfohlene Erweiterungen
 
 - `CodexTracker`-Tests (regions-/galaxisweite Erstentdeckungen)

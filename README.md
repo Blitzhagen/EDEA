@@ -91,6 +91,9 @@ dotnet build EDEA.slnx
 dotnet run --project src\EDEA.Avalonia\EDEA.Avalonia.csproj
 ```
 
+> Das XML-Solution-Format `.slnx` benötigt .NET SDK 9.0.200+; mit .NET 8 SDK
+> stattdessen `src/EDEA.Avalonia/EDEA.Avalonia.csproj` direkt bauen.
+
 Tests:
 
 ```powershell
