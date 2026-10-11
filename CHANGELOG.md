@@ -12,12 +12,20 @@ Bugfix-Release.
 
 ### Verbessert
 
-- **Linux:** Der Journal-Pfad wird jetzt auch im Steam-Proton-Präfix (App-ID 359320) erkannt.
+- **Linux:** Der Journal-Pfad wird jetzt auch im Steam-Proton-Präfix (App-ID 359320) erkannt — inklusive zusätzlicher Steam-Library-Verzeichnisse (`libraryfolders.vdf`).
+
+### Hinzugefügt (Linux)
+
+- **Linux-Release-Pakete:** Tarball (`EDEA-1.0.1-linux-x64.tar.gz`) und AppImage (`EDEA-1.0.1-x86_64.AppImage`), jeweils self-contained (kein .NET nötig).
+- **HUD-Overlay:** Erscheint über dem randlosen Vollbild von Elite Dangerous (override-redirect-Fenster); Click-Through per XShape; clientseitiges Verschieben.
+- **Globale Hotkeys:** Über X11-Grabs (XWayland) und XDG-Portal (`GlobalShortcuts`, Wayland-nativ) parallel, mit Deduplizierung.
+- **Audio und Sprachausgabe:** Wiedergabe über PortAudio/NLayer; Edge-TTS (SayIt) mit Wiederholungslogik für intermittierende Verbindungsfehler.
+- **Desktop-Integration:** `.desktop`-Datei und Icon; App-ID-Registrierung für Portal-APIs.
 
 ### Hinweise
 
-- Dieses Release ist weiterhin **Windows-only** (die Proton-Erkennung betrifft selbst gebaute Linux-Varianten).
-- Einstellungen, Datenbank und Logs liegen unter `%LOCALAPPDATA%\EDEA`.
+- **Linux:** Erste offizielle Linux-Variante; benötigt X11 oder Wayland mit XWayland. Steam Deck: Desktop-Modus. Bekannte Einschränkungen (Gamescope, exklusives Vollbild) siehe `doc/GETTING_STARTED.md`.
+- Einstellungen, Datenbank und Logs liegen unter `%LOCALAPPDATA%\EDEA` (Windows) bzw. `~/.local/share/EDEA` (Linux).
 - Das Release-Paket enthält **keine Debug-Symbole (`.pdb`)** und kein Debug-Logging.
 
 ## [1.0.0] - 2026-09-08
