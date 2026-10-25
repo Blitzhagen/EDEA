@@ -14,7 +14,7 @@
         internal static string VoiceListUrl =>
             $"https://{BaseUrl}/voices/list?trustedclienttoken={TrustedClientToken}";
 
-        internal static string SecMsGecVersion => $"1-{ChromiumFullVersion}";
+        internal static string SecMsGecVersion => $"2-{ChromiumFullVersion}";
 
         internal static string UserAgent =>
             $"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
