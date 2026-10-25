@@ -16,6 +16,7 @@ Bugfix-Release.
 ### Verbessert
 
 - **Linux:** Der Journal-Pfad wird jetzt auch im Steam-Proton-Präfix (App-ID 359320) erkannt — inklusive zusätzlicher Steam-Library-Verzeichnisse (`libraryfolders.vdf`).
+- **Sprachausgabe:** Aufeinanderfolgende Ansagen starten jetzt ohne Synthese-Pause — die Sprachsynthese des nächsten Textes läuft bereits während der Wiedergabe des aktuellen.
 
 ### Hinzugefügt (Linux)
 
