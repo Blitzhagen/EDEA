@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using EDEA;
 using EDEA.Avalonia.Services.Audio;
@@ -386,36 +387,59 @@ public sealed class AvaloniaSpeechService : ISpeechService
     }
 
     /// <summary>
-    /// Processes the speech queue by synthesizing and playing each entry.
+    /// Processes the speech queue: a producer synthesizes each entry to a temp
+    /// MP3 while the consumer plays the finished files in order. Synthesizing
+    /// ahead while the current announcement plays hides most of the per-item
+    /// connection and synthesis latency behind playback time.
     /// </summary>
     private async Task ProcessQueueAsync()
     {
-        while (_speechQueue.TryDequeue(out var speechText) && speechText != null)
+        var ready = Channel.CreateUnbounded<string?>();
+
+        var producer = Task.Run(async () =>
         {
-            var tempFile = Path.GetTempFileName() + ".mp3";
             try
             {
-                var config = BuildSayItConfig();
-                await global::SayIt.SayIt.SaveAsync(speechText, tempFile, config);
-                Log.Info($"Saved synthesized speech to {tempFile}");
-                await PlayTempFileAsync(tempFile);
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Could not process queued speech", ex);
+                while (_speechQueue.TryDequeue(out var speechText) && speechText != null)
+                {
+                    var tempFile = Path.GetTempFileName() + ".mp3";
+                    try
+                    {
+                        var config = BuildSayItConfig();
+                        await global::SayIt.SayIt.SaveAsync(speechText, tempFile, config);
+                        Log.Info($"Saved synthesized speech to {tempFile}");
+                        ready.Writer.TryWrite(tempFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Could not process queued speech", ex);
+                        TryDeleteFile(tempFile);
+                    }
+                }
             }
             finally
             {
-                try
-                {
-                    File.Delete(tempFile);
-                }
-                catch
-                {
-                    // Ignore cleanup failures.
-                }
+                ready.Writer.Complete();
+            }
+        });
+
+        await foreach (var tempFile in ready.Reader.ReadAllAsync())
+        {
+            if (tempFile == null)
+            {
+                continue;
+            }
+            try
+            {
+                await PlayTempFileAsync(tempFile);
+            }
+            finally
+            {
+                TryDeleteFile(tempFile);
             }
         }
+
+        await producer;
 
         Interlocked.Exchange(ref _isProcessing, 0);
 
@@ -425,6 +449,18 @@ public sealed class AvaloniaSpeechService : ISpeechService
             {
                 _ = Task.Run(ProcessQueueAsync);
             }
+        }
+    }
+
+    private static void TryDeleteFile(string path)
+    {
+        try
+        {
+            File.Delete(path);
+        }
+        catch
+        {
+            // Ignore cleanup failures.
         }
     }
 
