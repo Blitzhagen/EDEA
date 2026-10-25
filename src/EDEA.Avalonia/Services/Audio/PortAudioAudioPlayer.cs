@@ -80,7 +80,11 @@ internal sealed class PortAudioAudioPlayer : IAudioPlayer
                 device = deviceIndex,
                 channelCount = channels,
                 sampleFormat = SampleFormat.Float32,
-                suggestedLatency = info.defaultLowOutputLatency,
+                // Low latency underruns when the process is busy (e.g. app startup
+                // with journal parsing); speech does not need it. Cap high latency
+                // at a reasonable buffer so playback is robust under load without
+                // feeling delayed.
+                suggestedLatency = Math.Min(info.defaultHighOutputLatency, 0.15),
                 hostApiSpecificStreamInfo = IntPtr.Zero
             };
 
